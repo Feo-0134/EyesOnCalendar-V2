@@ -1,6 +1,7 @@
-# mayocalendar
+# Apaccalendar
 
 > A mayonnaise powered calendar
+> update by Juncheng @M$ CSS SHZZ
 
 ## Run locally
 
