@@ -230,22 +230,24 @@ export default {
       })
     },
     init() {
-      let that = this
-      this.initUndo = false
-      //that.initDone = true
-      this.isLoading = true
-      this.$http.post(this.apiPath, this.apiPayload)//TBC
-      setTimeout(()=>{
-        that.isLoading = false
-      },7000)
-        
- 
+      let that = this 
+      if(this.emailUnderName.match("Karen Zheng") == "Karen Zheng"||this.emailUnderName.match("Anik Shen") == "Anik Shen"||this.emailUnderName.match("Anita Yang") == "Anita Yang"||this.emailUnderName.match("Van Pan") == "Van Pan"){// ||this.emailUnderName.match("Danielle Zhao") == "Danielle Zhao"  // this.userName.match(this.person.name) == this.person.name
+        this.initUndo = false
+        //that.initDone = true
+        this.isLoading = true
+        this.$http.post(this.apiPath, this.apiPayload)//TBC
+        setTimeout(()=>{
+          that.isLoading = false
+        },7000)
+      } 
     },
     reload() {
-      this.$http.post(this.apiPath2, this.apiPayload2);
-      setTimeout(function(){
-        location.reload()
-      },2000)
+      if(this.initUndo == false) {
+        this.$http.post(this.apiPath2, this.apiPayload2);
+        setTimeout(function(){
+          location.reload()
+        },2000)
+      }
     }
   }
 }
