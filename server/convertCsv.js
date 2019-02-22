@@ -1,0 +1,55 @@
+const csv = require('csvtojson')
+
+
+
+module.exports = function (stream) {
+    return new Promise(function (resolve, reject) {
+        var x = []
+        console.log("reading")
+        csv()
+            .fromStream(stream)
+            .on('csv', (jsonObj) => {
+                x.push(jsonObj)
+            })
+            .on('done', (error) => {
+                if (error) reject("ma-ta")
+                else
+                    resolve(parseCalendar(x))
+            })
+    })
+}
+
+var parseCalendar = function (calendar) {
+
+    console.log(calendar)
+    var keys = calendar
+    return calendar
+        .filter(row => {
+            if (row[2] != "") console.log("OK")
+            else console.log("REJECT")
+            console.log(row[0])
+            return row[2] != ""
+        })
+        .filter(row => {
+            return row[0] != "Employee Name"
+        })
+        .map(row => {
+            var z = {}
+            z.id = row[0]
+            console.log(z.id)
+            z.name = row[0].split("(")[0].trim()
+            z.region = row[0].split("(")[1].split("-")[1].split(")")[0]
+            row.shift()
+            z.days = row.map((y, index) => {
+                var q = 0
+                if (y == "W") q = 1
+                if (y == "T") q = 2
+                return {
+                    day: index + 1,
+                    workType: y,
+                    workDay: q
+                }
+            })
+            return z
+        })
+}

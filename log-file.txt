@@ -1,0 +1,8 @@
+2019-01-28T08:51:55  PID[3684] Verbose     Calling into external HTTP endpoint POST https://login.windows.net/72f988bf-86f1-41af-91ab-2d7cd011db47/oauth2/token.
+
+2019-01-28T08:51:55  PID[3684] Information Login completed for 't-juzhu@microsoft.com'. Provider: 'aad'.
+
+2019-01-28T08:51:55  PID[3684] Verbose     Writing 'AppServiceAuthSession' cookie for site 'apaccalendar.azurewebsites.net'. Length: 1112.
+
+2019-01-28T08:51:55  PID[3684] Information Redirecting: https://apaccalendar.azurewebsites.net/
+
