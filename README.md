@@ -1,4 +1,4 @@
-# mayocalendar
+# apaccalendar
 
 > A mayonnaise powered calendar
 
