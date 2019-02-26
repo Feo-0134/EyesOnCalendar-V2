@@ -6,6 +6,7 @@ import LoadCurrentMonth from '@/comps/LoadCurrentMonth'
 import MainView from '@/comps/MainView'
 import Repo from '@/comps/Repo'
 import NewPerson from '@/components/NewPerson'
+import DelPerson from '@/components/DelPerson'
 Vue.use(Router)
 
 export default new Router({
@@ -32,6 +33,11 @@ export default new Router({
       component: NewPerson
     },
     {
+      path: '/AppService/:year/:month/delete',
+      name: 'DelPerson',
+      component: DelPerson
+    },
+    {
       path: '/AppService/upload',
       name: 'Upload',
       component: Upload
@@ -50,6 +56,11 @@ export default new Router({
       path: '/DEV/:year/:month/person',
       name: 'NewPerson',
       component: NewPerson
+    },
+    {
+      path: '/DEV/:year/:month/delete',
+      name: 'DelPerson',
+      component: DelPerson
     },
     {
       path: '/DEV/upload',

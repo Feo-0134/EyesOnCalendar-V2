@@ -34,5 +34,6 @@ var monthSchema = new Schema({
 monthSchema.index({ year: 1, month: 1}, { unique: true });
 // monthSchema.index({ month: 1, "people.id": 1 }, { unique: true });
 module.exports = {
-  Month: mongoose.model("Month", monthSchema)
+  Month: mongoose.model("Month", monthSchema),
+  Person: mongoose.model("Person", personSchema)
 };

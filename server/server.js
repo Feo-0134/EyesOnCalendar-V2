@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const models = require('./models/Month')
 const Month = models.Month;
+const Person = models.Person;
 
 const Koa = require('koa');
 const Router = require('koa-router');
@@ -27,14 +28,14 @@ const uploadDict = ["january","february","march","april","may","june","july","au
 if (process.env.NODE_ENV == "production" || process.env.NODE_ENV === undefined) {
 
         var staticPath = "/dist/"
-        var connString = "mongodb://apaccalendardatabase-dev:jqySE4ELD21G4duwC2WdHM0mHVsk0z4VW9jSxWkpIDHAiUCclBAZkuKnNI48lmsxAD7BKzkuOAiqWy9KDNI4vCQ%3D%3D@apaccalendardatabase-dev.documents.azure.com:10255/?ssl=true&replicaSet=globaldb"
-        //var connString = "mongodb://apaccalendardatabase:ch6ANCUJX2zdRjm7sKXDBvqy6X93dTao2XabNBmvEBFSLM7pqHoqkwAPStsLeIXMYKr4DJxAcDyiCont6LXjKjpw%3D%3D@apaccalendardatabase.documents.azure.com:10255/?ssl=true&replicaSet=globaldb"
+        var connString = "mongodb://apaccalendardatabase-dev:qySE4ELD21G4duwC2WdHM0mHVsk0z4VW9jSxWkpIDHAiUCclBAZkuKnNI48lmsxAD7BKzkuOAiqWy9KDNI4vCQ%3D%3D@apaccalendardatabase-dev.documents.azure.com:10255/?ssl=true&replicaSet=globaldb"
+        //var connString = "mongodb://apaccalendardatabase:6ANCUJX2zdRjm7sKXDBvqy6X93dTao2XabNBmvEBFSLM7pqHoqkwAPStsLeIXMYKr4DJxAcDyiCont6LXjKjpw%3D%3D@apaccalendardatabase.documents.azure.com:10255/?ssl=true&replicaSet=globaldb"
 
     
 }
 else {
     var staticPath = "/../dist/"
-    var connString = "mongodb://mayocalendarv2-dev:jcCiXxW30UqowaAs8CiAVyNiLgJ2UkRmpN6KXBGcJWamGmN2sNYkwcfhRhXQqGfi6jOFH6imOniww5Wn6tX2dIIA%3D%3D@mayocalendarv2-dev.documents.azure.com:10255/?ssl=true&replicaSet=globaldb"
+    var connString = "mongodb://mayocalendarv2-dev:CiXxW30UqowaAs8CiAVyNiLgJ2UkRmpN6KXBGcJWamGmN2sNYkwcfhRhXQqGfi6jOFH6imOniww5Wn6tX2dIIA%3D%3D@mayocalendarv2-dev.documents.azure.com:10255/?ssl=true&replicaSet=globaldb"
 }
 
 router.use(bodyParser());
@@ -189,6 +190,19 @@ function incrementMonth(month, people) {
     return month
 }
 
+function decrementMonth(month, name) {
+    console.log('decrementMonth')
+    let count = 0
+    month.people.forEach(person => {
+       if(person.name == name){
+           position = count
+       }
+       count++
+    })
+    month.people.splice(position,1)
+    return month
+}
+
 /**************************************
  * Feature 7 Add a new member to the calendar
 **************************************/
@@ -262,35 +276,58 @@ router.post("/DEV/:year/:month/person", upload.any('csv'), bodyParser(),async (c
 /**************************************
  * Feature 10 Delete a member from the calendar
 **************************************/
-// router.post("/DEV/:year/:month/person/delete", upload.any('csv'), bodyParser(),async (ctx) => {
-//     var testLock = false;
-//     var b = ctx.request.body
-//     console.log(b)//get the request body DONE
+ router.post("/AppService/:year/:month/delete", bodyParser(), async (ctx) => {
+    var testLock = false;
+    var b = ctx.request.body
+    console.log(b)//get the request body DONE
 
-//     let src = fs.createReadStream('./uploads/852541.txt');
-//     console.log(src);//check the replacement application DONE
+    testLock = true;//check the replacement application
 
-//     let people = await json(src)
-//     people[0].name = b.name
-//     testLock = true;
-//     console.log(people);//check the replacement application
+    let currentMonth = await Month.findOne({ 'year': ctx.params.year, 'month': ctx.params.month,'section': 'AppService' })
+    
+    if(testLock)
+    {
+        //console.log("hahaha")
+        var payload = decrementMonth(currentMonth, b.name)
+        try {
+            await payload.save()
+            ctx.body = "all good"
+        }
+        catch(e) {
+            ctx.status = 400
+            ctx.body = "something went wrong"
+            console.log(e)
+        }
+    }
+ })
 
-//     let currentMonth = await Month.findOne({ 'year': ctx.params.year, 'month': ctx.params.month,'section': 'DEV' })
-//     if(testLock)
-//     {
-//         console.log("hahaha")
-//         var payload = incrementMonth(currentMonth, people)
-//         try {
-//             await payload.save()
-//             ctx.body = "all good"
-//         }
-//         catch(e) {
-//             ctx.status = 400
-//             ctx.body = "something went wrong"
-//             console.log(e)
-//         }
-//     }
-// })
+ /**************************************
+ * Feature 10 Delete a member from the calendar
+**************************************/
+router.post("/DEV/:year/:month/delete", bodyParser(), async (ctx) => {
+    var testLock = false;
+    var b = ctx.request.body
+    console.log(b)//get the request body DONE
+
+    testLock = true;//check the replacement application
+
+    let currentMonth = await Month.findOne({ 'year': ctx.params.year, 'month': ctx.params.month,'section': 'DEV' })
+    
+    if(testLock)
+    {
+        //console.log("hahaha")
+        var payload = decrementMonth(currentMonth, b.name)
+        try {
+            await payload.save()
+            ctx.body = "all good"
+        }
+        catch(e) {
+            ctx.status = 400
+            ctx.body = "something went wrong"
+            console.log(e)
+        }
+    }
+ })
 
 /**************************************
  * Feature 9 Init a new Calendar

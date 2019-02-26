@@ -47,29 +47,14 @@ For managers and TAs, they have the administrative permission to upload the draf
    # Enable websockets
    ```
 
-    
 
-2. Q: 
-
-   | StatusCode | HttpSubStatus | Time_Taken | Details |
-   | ---------- | ------------- | ---------- | ------- |
-   | 503        |               |            |         |
-
-   it turns out to be 503 Service Unavailable
-
-   A: A majority of issues in this area are caused by the application code.(In this case I lost the ./dist folder)
-
-   LINK: https://www.csssupportwiki.com/index.php/curated:Azure_App_Service_-_Perf_-_Crash
-
-
-
-3. Q: The WebApp is either slow or not responding at all. Symptoms are that the browser keeps on spinning and returns the page after a long time.
+2. Q: The WebApp is either slow or not responding at all. Symptoms are that the browser keeps on spinning and returns the page after a long time.
 
    A: Platform Issue includes: 
 
    1. CHECK_PLATFORM_OUTAGE - Any known outage or LSI happening during the time the customer reported an issue.
    2. IS_CANARY_WORKING - Platform Availability showing a number less than 100% during the time customer reported a problem
-   3. CPU_AND_MEMORY_CONSUMPTION_VERY_HIGH on the App Service Plan but customer’s worker process / webjobs / child processes started by the customer’s application are not consuming HIGH CPU or HIGH MEMORY
+   3. CPU_AND_MEMORY_CONSUMPTION_VERY_HIGH on the App Service Plan but customer’s worker process / web jobs / child processes started by the customer’s application are not consuming HIGH CPU or HIGH MEMORY
    4. STORAGE_FAILOVERS_OR_LATENCY - Storage blips and Storage File System Failovers causing worker process restarts
    5. INSTANCE_CHANGE_EVENTS – Most likely due to UD Walks or VM failovers
 
@@ -86,7 +71,18 @@ For managers and TAs, they have the administrative permission to upload the draf
 
 2. Easy Authentication
 
-![Configuration flows to the module via  environment variables. Most of these settings  are read-only and some of them can be  configured by the customer via App Settings.  All eg!u/AuthZ logic, including  crypto for token validation and  session management, executes in the  worker sandbox and outside of the  web app code. Identity information  flows directly into the app code.  App Service Web Worker VM(s)  Sandbox  Environment  Web App Code  easyauth.dll  WEBSITE AUTH  WEBSITE AUTH  WEBSITE AUTH  WEBSITE AUTH  WEBSITE AUTH  CLIENT ID  OPENID ISSUER  TRACE LEVEL  TOKEN STORE ENABLED  DEFAULT PROVIDER  Client(s)  Browser  Native App  External Service  App Service  Front Ends  By default, state is managed centrally on the  site's storage volume. This includes the token  store tokens, IIS logs and application traces.  It's also possible to store these additional  artifacts in other places, such as Azure  Storage.  HTTP X MS CLIENT PRINCIPAL NAME  HTTP X MS CLIENT PRINCIPAL ID  File Server  Storage Volume ](file:////Users/junchengzhu/Library/Group%20Containers/UBF8T346G9.Office/msoclip1/01/478642A7-7098-314F-9A86-E0E53E671D43.png)
-
 LINK: https://docs.microsoft.com/en-us/azure/app-service/app-service-web-tutorial-auth-aad#call-api-securely-from-server-code
+
+3. Studio3T trial expired
+
+   1. Run Script (studio3t.bat)
+
+      ``` bash
+      @echo off
+      FOR /f "tokens=1,2,* " %%i IN ('reg query "HKEY_CURRENT_USER\Software\JavaSoft\Prefs\3t\mongochef\enterprise" ^| find /V "installation" ^| find /V "HKEY"') DO ECHO yes | reg add "HKEY_CURRENT_USER\Software\JavaSoft\Prefs\3t\mongochef\enterprise" /v %%i /t REG_SZ /d ""
+      pause>nul
+      exit
+      ```
+
+      
 
