@@ -21,6 +21,8 @@ const fs = require('fs')
 const json = require('./convertCsv.js')
 const multer = require('koa-multer');
 const upload = multer({ dest: 'uploads/' });
+const uploadDict = ["january","february","march","april","may","june","july","auguest","september","october","november","december"]
+
 
 if (process.env.NODE_ENV == "production" || process.env.NODE_ENV === undefined) {
 
@@ -199,8 +201,8 @@ router.post("/AppService/:year/:month/person", upload.any('csv'), bodyParser(),a
     var testLock = false;
     var b = ctx.request.body
     console.log(b)//get the request body DONE
-
-    let src = fs.createReadStream('./uploads/852541.txt');
+    var month = ctx.params.month
+    let src = fs.createReadStream('./uploads/'+uploadDict[month-1]+'.txt');
     console.log(src);//check the replacement application DONE
 
     let people = await json(src)
@@ -233,7 +235,7 @@ router.post("/DEV/:year/:month/person", upload.any('csv'), bodyParser(),async (c
     var b = ctx.request.body
     console.log(b)//get the request body DONE
 
-    let src = fs.createReadStream('./uploads/852541.txt');
+    let src = fs.createReadStream('./uploads/'+uploadDict[month-1]+'.txt');
     console.log(src);//check the replacement application DONE
 
     let people = await json(src)
