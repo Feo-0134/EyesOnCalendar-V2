@@ -12,7 +12,7 @@
             <div class="legenda-container">
                 <div class="dayTypes">
                     <div class="box-container">
-                        <div v-on:click="cycle($event,0)" class="box green"></div><div v-on:click="cycle($event,5)" class="box green">MS</div><div v-on:click="cycle($event,6)" class="box green">NS</div><h5 class = "blackFont">Working day</h5>
+                        <div v-on:click="cycle($event,0)" class="box green"></div><div v-on:click="cycle($event,5)" class="box green">MS</div><div v-on:click="cycle($event,6)" class="box green">NS</div><h5 class = "blackFont">Work Day</h5>
                     </div>
                     <div class="box-container">
                         <div v-on:click="cycle($event,3)" class="box red" v-popover:myname>V</div><h5 class = "blackFont">Vacation</h5>
@@ -34,7 +34,7 @@
       Feature 8 Hint one to mail team about the absence
       **************************************/ -->
       <popover name="myname">
-       <div class="colorFont">Please inform the team about your absence.</div>
+       <div class="colorFont">Please inform the team about your absence.<a href="mailto:apgcpaas@microsoft.com"> Outlook </a></div>
       </popover>
   </div>
 </template>

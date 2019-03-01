@@ -21,11 +21,11 @@ For managers and TAs, they have the administrative permission to upload the draf
 | Feature Name                                                 | Logic: Need + Method                                         |      |
 | ------------------------------------------------------------ | ------------------------------------------------------------ | ---- |
 | 6. One can only change his own status;TA & Manager have higher permission to all data | Need: In case mis-operation, one can only have access to his or her status, while TA & Manager can have an admin access;                                                                                                                      Method: The permission system is build base on the Easy Authentication. The App would compare the username and the status owner. |      |
-| 7. Add a new member to the calendar                          | Need: Add newComers to the tool with a default status;                                                                                                                      Method: Get the personal info from front-end and call the Insert_Record_to_DB function: incrementMonth( ) | TBC  |
+| 7. Add a new member to the calendar                          | Need: Add newComers to the tool with a default status;                                                                                                                      Method: Get the personal info from front-end and call the Insert_Record_to_DB function: incrementMonth( ) |      |
 | 8. Hint one to mail team about the absence                   | Need: Hint one to mail team about the absence;                                                                                                                      Method: Add a pop dialog with the message to the choosed button | ∆    |
 | 9. Init a new Calendar                                       | Need: Generate the default calendar template automaticly(To replace the last uploading .csv file feature);                                                                                                                      Method: Get last month data as a parameter for the function join with a dictionary includes the day numbers to derivate the calendar for this month; | ∆    |
-| 10. Delete a member from the calendar                        | Need:;                                                                                                                      Method:; |      |
-| 11. Link the application with local Outlook and try to generate an email about AL/SL | Need:;                                                                                                                      Method:; |      |
+| 10. Delete a member from the calendar                        | Need: Delete member from the tool;                                                                                                                      Method: use decrement function to remove a record from the db.document; |      |
+| 11. Link the application with local Outlook and try to generate an email about AL/SL | Need:Open local Outlook through website;                                                                                                                      Method:use link to run the local Outlook App; |      |
 
 ## Scenario & Troubleshooting
 
@@ -47,8 +47,23 @@ For managers and TAs, they have the administrative permission to upload the draf
    # Enable websockets
    ```
 
+    
 
-2. Q: The WebApp is either slow or not responding at all. Symptoms are that the browser keeps on spinning and returns the page after a long time.
+2. Q: 
+
+   | StatusCode | HttpSubStatus | Time_Taken | Details |
+   | ---------- | ------------- | ---------- | ------- |
+   | 503        |               | 2.90s      |         |
+
+   It turns out to be 503 Service Unavailable
+
+   A: In this case the server is not responding. Wait and then refresh the page to get the web resource.
+
+   LINK: https://www.csssupportwiki.com/index.php/curated:Azure_App_Service_-_Perf_-_Crash
+
+
+
+3. Q: The WebApp is either slow or not responding at all. Symptoms are that the browser keeps on spinning and returns the page after a long time.
 
    A: Platform Issue includes: 
 

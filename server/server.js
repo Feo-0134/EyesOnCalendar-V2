@@ -22,14 +22,13 @@ const fs = require('fs')
 const json = require('./convertCsv.js')
 const multer = require('koa-multer');
 const upload = multer({ dest: 'uploads/' });
-const uploadDict = ["january","february","march","april","may","june","july","auguest","september","october","november","december"]
 
 
 if (process.env.NODE_ENV == "production" || process.env.NODE_ENV === undefined) {
 
         var staticPath = "/dist/"
-        var connString = "mongodb://apaccalendardatabase-dev:qySE4ELD21G4duwC2WdHM0mHVsk0z4VW9jSxWkpIDHAiUCclBAZkuKnNI48lmsxAD7BKzkuOAiqWy9KDNI4vCQ%3D%3D@apaccalendardatabase-dev.documents.azure.com:10255/?ssl=true&replicaSet=globaldb"
-        //var connString = "mongodb://apaccalendardatabase:6ANCUJX2zdRjm7sKXDBvqy6X93dTao2XabNBmvEBFSLM7pqHoqkwAPStsLeIXMYKr4DJxAcDyiCont6LXjKjpw%3D%3D@apaccalendardatabase.documents.azure.com:10255/?ssl=true&replicaSet=globaldb"
+        //var connString = "mongodb://apaccalendardatabase-dev:qySE4ELD21G4duwC2WdHM0mHVsk0z4VW9jSxWkpIDHAiUCclBAZkuKnNI48lmsxAD7BKzkuOAiqWy9KDNI4vCQ%3D%3D@apaccalendardatabase-dev.documents.azure.com:10255/?ssl=true&replicaSet=globaldb"
+        var connString = "mongodb://apaccalendardatabase:6ANCUJX2zdRjm7sKXDBvqy6X93dTao2XabNBmvEBFSLM7pqHoqkwAPStsLeIXMYKr4DJxAcDyiCont6LXjKjpw%3D%3D@apaccalendardatabase.documents.azure.com:10255/?ssl=true&replicaSet=globaldb"
 
     
 }
@@ -212,6 +211,7 @@ function decrementMonth(month, name) {
 //use incrementMonth function to update the database
 
 router.post("/AppService/:year/:month/person", upload.any('csv'), bodyParser(),async (ctx) => {
+    const uploadDict = ["january","february","march","april","may","june","july","auguest","september","october","november","december"]
     var testLock = false;
     var b = ctx.request.body
     console.log(b)//get the request body DONE
@@ -245,8 +245,10 @@ router.post("/AppService/:year/:month/person", upload.any('csv'), bodyParser(),a
  * Feature 7 Add a new member to the calendar
 **************************************/
 router.post("/DEV/:year/:month/person", upload.any('csv'), bodyParser(),async (ctx) => {
+    const uploadDict = ["january","february","march","april","may","june","july","auguest","september","october","november","december"]
     var testLock = false;
     var b = ctx.request.body
+    var month = ctx.params.month
     console.log(b)//get the request body DONE
 
     let src = fs.createReadStream('./uploads/'+uploadDict[month-1]+'.txt');
