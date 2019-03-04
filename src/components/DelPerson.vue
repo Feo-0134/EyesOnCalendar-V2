@@ -93,7 +93,7 @@ export default {
     },
     mounted() {
         this.personinfo();
-        console.log(this.$router.currentRoute.path)
+        //console.log(this.$router.currentRoute.path)
     },
     computed:{
         apiPath() {

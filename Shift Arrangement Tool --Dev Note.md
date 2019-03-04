@@ -1,31 +1,34 @@
-# Shift Arrangement Tool — Dev Note
+# Shift Arrangement Tool — Develop Note
 
-Shift Arrangement Website will help to show all team members shift data in a monthly calendar view. 
+Shift Arrangement Website will help to show all team members' shift data in a monthly calendar view. 
 
 Users can easily access the site to modify his/her own data: morning shift, night shift, working day, vacation(annual leave, sick leave). 
 
-For managers and TAs, they have the administrative permission to upload the draft data, view each day's on-duty percentage, export the monthly statistics . When a day is marked as Vacation, the site will notify the user to send S+ to team. 
+For managers and TAs, they have the administrative permission to upload the draft data, view each day's on-duty percentage, export the monthly statistics . When a day is marked as 'Desired Vacation / Vacation / Training', the site will notify the user to send S+ to team. 
 
 
 
-| Feature Name                                             | Logic: Need + Method                                         |      |
-| -------------------------------------------------------- | ------------------------------------------------------------ | ---- |
-| 1. Add new status: "MS"(morning shift),"NS"(night shift) | Need: Illustrate the Morning Shift & Night Shift status in the calendar;                                                                                                                      Method: Add two more dayType to the option array |      |
-| 2. Add a dialog for updating the status                  | Need: Replace an existing 'click' method of switch the status(dayType);                                                                                                                      Method: Set a dialog module in the PersonRow and its Children-Component  DayCell is the trigger（emit & property attributes are used） |      |
-| 3. Add a Line for on-duty rate                           | Need: Make it clear about when there would be a lack of engineer;                                                                                                                      Method: Calculate the number of people whose status fits working condition & show the digits on top of the calendar together with the date |      |
-| 4. Easy Authentication                                   | Need: Make this app a private tool;                                                                                                                      Method: Use "Promise" to get the authentication data and show the username in the app | ∆    |
-| 5. Monthly report                                        | Need: Summary the personal monthly attendance;                                                                                                                      Method: Get JSON file from api and put personal attendance status into a table |      |
+| Feature Name                | Logic: Need + Method                                         |      |
+| --------------------------- | ------------------------------------------------------------ | ---- |
+| 1. Add New Status           | Need: Illustrate the Morning Shift & Night Shift status in the calendar;                                                                                                                    Method: Add two more status(dayType) to the existing option array. |      |
+| 2. UX for Modify Status     | Need: Replace an existing 'click' method of switch the status (dayType);                                                                                                                      Method: Set a dialog module in the PersonRow and its Children-Component use DayCell click event as the trigger（emit & property attributes are used）. |      |
+| 3. On-Duty Rate             | Need: Make it clear about when there would be a lack of engineer;                                                                                                                      Method: Calculate the number of people whose status fits working condition and divided the total amount & show the digits on top of the calendar together with the date column. |      |
+| 5. Monthly Report           | Need: Summary the personal monthly attendance;                                                                                                                      Method: Get personal attendance status from API. Form a table as requests from the TAs. |      |
+| 4. Easy Authentication(AAD) | Need: Fetch the User Info & Make the application a private tool;                                                                                                                      Method: Use "Promise" to get the authentication data and show the username in the application. | ∆    |
+|                             |                                                              |      |
 
 
 
-| Feature Name                                                 | Logic: Need + Method                                         |      |
-| ------------------------------------------------------------ | ------------------------------------------------------------ | ---- |
-| 6. One can only change his own status;TA & Manager have higher permission to all data | Need: In case mis-operation, one can only have access to his or her status, while TA & Manager can have an admin access;                                                                                                                      Method: The permission system is build base on the Easy Authentication. The App would compare the username and the status owner. |      |
-| 7. Add a new member to the calendar                          | Need: Add newComers to the tool with a default status;                                                                                                                      Method: Get the personal info from front-end and call the Insert_Record_to_DB function: incrementMonth( ) |      |
-| 8. Hint one to mail team about the absence                   | Need: Hint one to mail team about the absence;                                                                                                                      Method: Add a pop dialog with the message to the choosed button | ∆    |
-| 9. Init a new Calendar                                       | Need: Generate the default calendar template automaticly(To replace the last uploading .csv file feature);                                                                                                                      Method: Get last month data as a parameter for the function join with a dictionary includes the day numbers to derivate the calendar for this month; | ∆    |
-| 10. Delete a member from the calendar                        | Need: Delete member from the tool;                                                                                                                      Method: use decrement function to remove a record from the db.document; |      |
-| 11. Link the application with local Outlook and try to generate an email about AL/SL | Need:Open local Outlook through website;                                                                                                                      Method:use link to run the local Outlook App; |      |
+| Feature Name               | Logic: Need + Method                                         |      |
+| :------------------------- | ------------------------------------------------------------ | ---- |
+| 6.PermissionControl        | Need: In case mis-operation, one only have access to his or her status, while TAs & Managers have an admin access to all data;                                                                                                      Method: The permission system is build base on the Easy Authentication. The App would compare the username and the record owner. |      |
+| 7. MongoDB Insert          | Need: Add newComers to the tool with a default status;                                                                                                                      Method: Get the personal info from front-end and call the Insert_Record_to_DB function: incrementMonth( ). | ∆    |
+| 8. MongoDB Delete          | Need: Delete member from the tool;                                                                                                                      Method: use decrement function to remove a record from the db.document. | ∆    |
+| 9. Initiate a new Calendar | Need: Generate the default calendar template automaticly(To replace the last uploading .csv file feature);                                                                                                                      Method: Get last month data as a parameter for the function join with a dictionary includes the day numbers to derivate the calendar for this month. |      |
+| 10. Absence Mail Service   | Need: Hint one to mail team about his absence;                                                                                                                      Method: Add a pop dialog with the message to the status set button and use html Hypertext Reference to start local Outlook file. |      |
+|                            |                                                              |      |
+
+
 
 ## Scenario & Troubleshooting
 
@@ -33,7 +36,7 @@ For managers and TAs, they have the administrative permission to upload the draf
 
    A:  
 
-   ``` bash
+   ```  
    # go to the app PATH
    npm run build
    
@@ -43,19 +46,19 @@ For managers and TAs, they have the administrative permission to upload the draf
    
    # Navigate to kudu console (http://yourSiteName.scm.azurewebsites.net) 
    # Click "Debug Console/CMD" & Go to PATH ./site/wwwroot/
-   # Zip deploy the contents of the server folder to the App Service
-   # Enable websockets
+   # Deploy the contents of the server folder and dist folder
+   # Enable App Service websockets from
    ```
 
     
 
 2. Q: 
 
-   | StatusCode | HttpSubStatus | Time_Taken | Details |
-   | ---------- | ------------- | ---------- | ------- |
-   | 503        |               | 2.90s      |         |
+   | StatusCode | HttpSubStatus | Time_Taken | Details                                    |
+   | ---------- | ------------- | ---------- | ------------------------------------------ |
+   | 503        |               | 2.90s      | It turns out to be 503 Service Unavailable |
 
-   It turns out to be 503 Service Unavailable
+   
 
    A: In this case the server is not responding. Wait and then refresh the page to get the web resource.
 

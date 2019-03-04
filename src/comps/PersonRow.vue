@@ -34,7 +34,10 @@
       Feature 8 Hint one to mail team about the absence
       **************************************/ -->
       <popover name="myname">
-       <div class="colorFont">Please inform the team about your absence.<a href="mailto:apgcpaas@microsoft.com"> Outlook </a></div>
+       <div class="colorFont">
+       <p>Please inform the team about your absence.</p>
+       <a href="mailto:apgcpaas@microsoft.com"><img class = "outlookLogo" src="../../static/img/outlook.png"  alt="Outlook" /></a>
+       </div>
       </popover>
   </div>
 </template>
@@ -316,5 +319,11 @@ export default {
   height: 40px;
   margin-left: 240px;
   margin-bottom: 20px;
+}
+.outlookLogo {
+  width: 70px;
+  height: 40px;
+  margin-left: 5px;
+  margin-bottom: 5px;
 }
 </style>
