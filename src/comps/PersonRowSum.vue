@@ -11,6 +11,7 @@ Feature 5 Monthly report
       <div class = "celly ">{{workDayCount4}}</div>
       <div class = "celly ">{{workDayCount5}}</div>
       <div class = "celly ">{{workDayCount6}}</div>
+      <div class = "celly ">{{workDayCount7}}</div>
   </div>
 </template>
 
@@ -24,7 +25,7 @@ export default {
         /**************************************
          * Feature 1 add two new status "MS"(morning shift),"NS"(night shift)
         **************************************/
-        workTypes: ["W", "PH", "DV", "V", "T", "MS", "NS"],
+        workTypes: ["W", "PH", "DV", "V", "T", "MS", "NS","PO","PM"],
         size: window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth,
       } 
   },
@@ -49,7 +50,7 @@ export default {
     workDayCount1() { 
       var wdctotal = 0;
       for(const w of this.person.days) {
-        if(w.workType == "W"||w.workType == "MS"||w.workType == "NS") {
+        if(w.workType == "W"||w.workType == "MS"||w.workType == "NS"||w.workType == "PO"||w.workType == "PM") {
           wdctotal = wdctotal + 1
         }
         //console.log(wdctotal)
@@ -59,7 +60,7 @@ export default {
     workDayCount2() { 
       var wdctotal = 0;
       for(const w of this.person.days) {
-        if(w.workType == "MS") {
+        if(w.workType == "MS"||w.workType == "PM") {
           wdctotal = wdctotal + 1
         }
         //console.log(wdctotal)
@@ -100,6 +101,16 @@ export default {
       var wdctotal = 0;
       for(const w of this.person.days) {
         if(w.workType == "PH") {
+          wdctotal = wdctotal + 1
+        }
+        //console.log(wdctotal)
+      }
+      return wdctotal;
+    },
+    workDayCount7() {
+      var wdctotal = 0;
+      for(const w of this.person.days) {
+        if(w.workType == "PO"||w.workType == "PM") {
           wdctotal = wdctotal + 1
         }
         //console.log(wdctotal)

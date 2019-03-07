@@ -24,6 +24,9 @@
                         <div v-on:click="cycle($event,1)" class="box red">PH</div><h5 class = "blackFont">Public Holiday</h5>
                     </div>
                     <div class="box-container">
+                        <div v-on:click="cycle($event,7)" class="box orange">PO</div><div v-on:click="cycle($event,8)" class="box orange">PM</div><h5 class = "blackFont">OnDuty/MorningShift(PH)</h5>
+                    </div>
+                    <div class="box-container">
                         <div v-on:click="cycle($event,4)" class="box blue" v-popover:myname>T</div><h5 class = "blackFont">Training</h5>
                     </div>
                 </div>
@@ -54,7 +57,7 @@ export default {
         /**************************************
         * Feature 2  add a dialog for updating the status
         **************************************/
-        workTypes: ["W", "PH", "DV", "V", "T", "MS", "NS"],//["W", "PH", "DV", "V", "T", "MS", "NS", "oc", "OC"],
+        workTypes: ["W", "PH", "DV", "V", "T", "MS", "NS", "PO", "PM"],//["W", "PH", "DV", "V", "T", "MS", "NS", "oc", "OC"],
         open: false,
         dayType: " ",
         date: null,

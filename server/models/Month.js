@@ -5,7 +5,10 @@ var daySchema = new Schema({
   day: Number,
   workType: {
     type: String,
-    enum: ["W", "WE", "V", "PH", "T", "oc", "OC", "DV","MS","NS"]
+    /**************************************
+     * Feature 1 add two new status "MS"(morning shift),"NS"(night shift)
+    **************************************/
+    enum: ["W", "WE", "V", "PH", "T", "oc", "OC", "DV","MS","NS","PO","PM"]
   },
   workDay: {
     type: Number,

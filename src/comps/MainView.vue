@@ -120,7 +120,7 @@ export default {
       return function(val) {
         var sum = 0;
         for(const b of Object.keys(this.month.people)) {
-          if(this.month.people[b].days[val].workType == "W"||this.month.people[b].days[val].workType == "MS"||this.month.people[b].days[val].workType == "NS") {
+          if(this.month.people[b].days[val].workType == "W"||this.month.people[b].days[val].workType == "MS"||this.month.people[b].days[val].workType == "NS"||this.month.people[b].days[val].workType == "PO"||this.month.people[b].days[val].workType == "PM") {
             sum++
           }
         }

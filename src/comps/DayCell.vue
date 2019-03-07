@@ -79,7 +79,7 @@ export default {
     /**************************************
      * Feature 1 add two new status "MS"(morning shift),"NS"(night shift)
     **************************************/
-      workTypes: ["W", "PH", "DV", "V", "T","MS","NS"] // original workTypes["W", "PH", "DV", "V", "T","MS","NS", "oc", "OC"]
+      workTypes: ["W", "PH", "DV", "V", "T","MS","NS","PO","PM"] // original workTypes["W", "PH", "DV", "V", "T","MS","NS", "oc", "OC"]
     };
   },
   computed: {
@@ -99,6 +99,8 @@ export default {
       if (this.day.workType == "NS") this.day.workDay = 1;
       if (this.day.workType == "DV") this.day.workDay = 2;
       if (this.day.workType == "T") this.day.workDay = 3;
+      if (this.day.workType == "PO") this.day.workDay = 4;
+      if (this.day.workType == "PM") this.day.workDay = 4;
       //console.log(this.day.workType)
       this.dbFunc()                                     // WHY SYNC TWO TIMES II is here
       }

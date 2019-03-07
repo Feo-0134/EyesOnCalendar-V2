@@ -1,5 +1,7 @@
 # Shift Arrangement Tool — Develop Note
 
+
+
 Shift Arrangement Website will help to show all team members' shift data in a monthly calendar view. 
 
 Users can easily access the site to modify his/her own data: morning shift, night shift, working day, vacation(annual leave, sick leave). 
@@ -7,6 +9,8 @@ Users can easily access the site to modify his/her own data: morning shift, nigh
 For managers and TAs, they have the administrative permission to upload the draft data, view each day's on-duty percentage, export the monthly statistics . When a day is marked as 'Desired Vacation / Vacation / Training', the site will notify the user to send S+ to team. 
 
 
+
+## Features
 
 | Feature Name                | Logic: Need + Method                                         |      |
 | --------------------------- | ------------------------------------------------------------ | ---- |
@@ -32,11 +36,11 @@ For managers and TAs, they have the administrative permission to upload the draf
 
 ## Scenario & Troubleshooting
 
-1. Q: How to deploy a web App-Service ( Vue.js + Node.js + CosmosDB(mongodb))
+1. Q: How to deploy a web App-Service ( Vue.js + Node.js + CosmosDB(mongodb)) to Azure App Service
 
    A:  
 
-   ```  
+   ```  bash
    # go to the app PATH
    npm run build
    
@@ -44,15 +48,87 @@ For managers and TAs, they have the administrative permission to upload the draf
    # Run ```npm install``` inside the server folder
    # The mongo connection string is hardcoded inside the server.js file
    
+   # Create an app service on Azure(http://yourSiteName.azurewebsites.net) 
+   # Enable App Service websockets from Azure portal
+   
    # Navigate to kudu console (http://yourSiteName.scm.azurewebsites.net) 
    # Click "Debug Console/CMD" & Go to PATH ./site/wwwroot/
    # Deploy the contents of the server folder and dist folder
-   # Enable App Service websockets from
    ```
 
     
 
-2. Q: 
+2. Q: User authentication and authorization usage problems
+
+   A:
+
+   1. Enable built-in authentication and authorization
+
+      :link:https://docs.microsoft.com/en-us/azure/app-service/configure-authentication-provider-aad
+
+      
+
+   2. Use Azure Active Directory as the identity provider
+
+      ```bash
+      GET https://<appname>.azurewebsites.net/.auth/me
+      Content-Type: application/json
+      
+      {"id_token":"<token>","access_token":"<token>"}
+      ```
+
+      Fuzzy Matching of access_token
+
+      
+
+   3. Secure service-to-service calls with token authentication
+      1. Use access tokens from server code
+      2. Use access tokens from client (browser) code
+
+   
+
+3. Q: mongoDB (CosmosDB)
+
+   1. connString
+
+      ```javascript
+      var connString = "mongodb://mayocalendarv2-dev:CiXxW30UqowaAs8CiAVyNiLgJ2UkRmpN6KXBGcJWamGmN2sNYkwcfhRhXQqGfi6jOFH6imOniww5Wn6tX2dIIA%3D%3D@mayocalendarv2-dev.documents.azure.com:10255/?ssl=true&replicaSet=globaldb"
+      
+      mongoose.connect(connString)
+      
+      const db = mongoose.connection;
+      
+      db.on('error', console.error.bind(console, 'connection error:'));
+      db.once('open', function () {
+          console.log("Connected to DB");
+      });
+      ```
+
+      
+
+   2. CURD 
+
+      ```javascript
+      collection.dialog.push()
+      var collectionObject = await collection.findOne()
+      await collectionObject.save()
+      collection.deleteOne()
+      ```
+
+      
+
+4. Q: Vue.js
+
+   1. Vue Devtools
+
+      ```javascript
+      // add this line to main.js to enable vue devtool
+      Vue.config.devtools = true
+      ```
+
+      
+
+5. Q:  Service Unavailable
 
    | StatusCode | HttpSubStatus | Time_Taken | Details                                    |
    | ---------- | ------------- | ---------- | ------------------------------------------ |
@@ -82,25 +158,27 @@ For managers and TAs, they have the administrative permission to upload the draf
 
 1. Deployment Crash
    - 400 Bad Request
+
    - 404 Not Found
+
    - 500 Internal Server Error
+
    - 502 Bad Gateway
+
    - 503 Service Unavailable
 
-2. Easy Authentication
+     
 
-LINK: https://docs.microsoft.com/en-us/azure/app-service/app-service-web-tutorial-auth-aad#call-api-securely-from-server-code
+2. Studio3T trial expired
 
-3. Studio3T trial expired
+   Run Script (studio3t.bat)
 
-   1. Run Script (studio3t.bat)
+   ``` bash
+   @echo off
+   FOR /f "tokens=1,2,* " %%i IN ('reg query "HKEY_CURRENT_USER\Software\JavaSoft\Prefs\3t\mongochef\enterprise" ^| find /V "installation" ^| find /V "HKEY"') DO ECHO yes | reg add "HKEY_CURRENT_USER\Software\JavaSoft\Prefs\3t\mongochef\enterprise" /v %%i /t REG_SZ /d ""
+   pause>nul
+   exit
+   ```
 
-      ``` bash
-      @echo off
-      FOR /f "tokens=1,2,* " %%i IN ('reg query "HKEY_CURRENT_USER\Software\JavaSoft\Prefs\3t\mongochef\enterprise" ^| find /V "installation" ^| find /V "HKEY"') DO ECHO yes | reg add "HKEY_CURRENT_USER\Software\JavaSoft\Prefs\3t\mongochef\enterprise" /v %%i /t REG_SZ /d ""
-      pause>nul
-      exit
-      ```
-
-      
+   
 
