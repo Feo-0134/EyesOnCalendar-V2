@@ -12,7 +12,7 @@
             <div v-for="(p,index) in month.people[0].days" :key="index" class="cellx">{{index+1}}</div>
           </div>
           <!-- /**************************************
-          Feature 3 add a Line for on-duty rate 
+          Feature 3 add a Line for on-duty rate
           **************************************/ -->
           <div id="tablehead" class="row tablehead">
             <div class="name attendance">On Duty</div>
@@ -65,7 +65,7 @@ export default {
           });
           res.data.people = res.data.people.sort((x,y)=>{
             return x.name.localeCompare(y.name)
-          })         
+          })
           //console.log(res.data)
           return res.data;
         } catch (e) {
@@ -94,17 +94,21 @@ export default {
       return moment(this.date, "/YYYY/M").format("MMMM YYYY");
     },
     nextMonth() {
-      return  ("/AppService"+moment(this.date, "/YYYY/M")
+      return  (
+        (this.date.split("/")[1] == "DEV"?"/DEV":"/AppService" )+
+        moment(this.date, "/YYYY/M")
         .add(1, "M")
         .format("/YYYY/M"))
     },
     prevMonth() {
-      return  ("/AppService"+moment(this.date, "/YYYY/M")
+      return  (
+        (this.date.split("/")[1] == "DEV"?"/DEV":"/AppService" )+
+        moment(this.date, "/YYYY/M")
         .subtract(1, "M")
         .format("/YYYY/M"));
     },
     /**************************************
-     * Router  
+     * Router
     **************************************/
     goAppService() {
       return ("/AppService" + moment(this.date, "/YYYY/M").format("/YYYY/M"));
@@ -114,7 +118,7 @@ export default {
     },
 
     /**************************************
-     * Feature 3 add a Line for on-duty rate 
+     * Feature 3 add a Line for on-duty rate
     **************************************/
     percentage:function() {
       return function(val) {
@@ -213,15 +217,15 @@ export default {
     },
     /**************************************
      * Feature 4 Easy Authentication
-     * Feature 6 One can only change his own status;TA & Manager have higher permission to all data 
+     * Feature 6 One can only change his own status;TA & Manager have higher permission to all data
     **************************************/
     personinfo: function() {
       return new Promise((resolve, reject) => {
         this.$http.get("/.auth/me").then((response)=> {
            for(const a of response.data[0].user_claims) {
-             if(a.typ == "name"){ 
+             if(a.typ == "name"){
                this.emailUnderName = a.val;
-             } 
+             }
            }
         }).catch((error) => {
           this.emailUnderName = "Danielle Zhao";
@@ -233,7 +237,7 @@ export default {
      * Feature 9 init a new calendar for the next month (update only allow to init the comming month)
     **************************************/
     init() {
-      if(this.emailUnderName.match("Karen Zheng") == "Karen Zheng"||this.emailUnderName.match("Anik Shen") == "Anik Shen"||this.emailUnderName.match("Anita Yang") == "Anita Yang"||this.emailUnderName.match("Van Pan") == "Van Pan"||this.emailUnderName.match("Danielle Zhao") == "Danielle Zhao"){// ||this.emailUnderName.match("Danielle Zhao") == "Danielle Zhao"  // this.userName.match(this.person.name) == this.person.name
+      if(this.emailUnderName.match("Karen Zheng") == "Karen Zheng"||this.emailUnderName.match("Anik Shen") == "Anik Shen"||this.emailUnderName.match("Anita Yang") == "Anita Yang"||this.emailUnderName.match("Van Pan") == "Van Pan"||this.emailUnderName.match("Danielle Zhao") == "Danielle Zhao" || this.emailUnderName.match("Sean Wu") == "Sean Wu"){// ||this.emailUnderName.match("Danielle Zhao") == "Danielle Zhao"  // this.userName.match(this.person.name) == this.person.name
         var that = this
         var dateNew = new Date();
         // console.log(this.date.substr(-1))
@@ -244,10 +248,10 @@ export default {
           this.$http.post(this.apiPath, this.apiPayload)//TBC
           setTimeout(()=>{
             that.isLoading = false
-           
+
           },5000)
-        }  
-      } 
+        }
+      }
     },
     reload() {
       if(this.initUndo == false) {
@@ -317,7 +321,7 @@ day {
   margin-left: 30px
 }
 .button {
-  
+
   border: none;
   margin: 10px;
   color: rgb(255, 255, 255);

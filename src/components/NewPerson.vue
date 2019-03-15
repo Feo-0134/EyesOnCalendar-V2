@@ -17,7 +17,7 @@ Feature 7 Add a new member to the calendar
 
           <div class="modal-body">
             <slot name="body">
-              
+
             </slot>
           </div>
 
@@ -66,13 +66,13 @@ export default {
           message: "",
           showModal: false,
           emailUnderName: null,
-      } 
+      }
     },
     methods:{
       //only TA and Manager have access to add a person
       upload() {
-        if(this.emailUnderName.match("Karen Zheng") == "Karen Zheng"||this.emailUnderName.match("Anik Shen") == "Anik Shen"||this.emailUnderName.match("Anita Yang") == "Anita Yang"||this.emailUnderName.match("Van Pan") == "Van Pan"||this.emailUnderName.match("Danielle Zhao") == "Danielle Zhao"){//this.userName.match(this.person.name) == this.person.name
-          this.$http.post(this.apiPath, this.apiPayload); 
+        if(this.emailUnderName.match("Karen Zheng") == "Karen Zheng"||this.emailUnderName.match("Anik Shen") == "Anik Shen"||this.emailUnderName.match("Anita Yang") == "Anita Yang"||this.emailUnderName.match("Van Pan") == "Van Pan"||this.emailUnderName.match("Danielle Zhao") == "Danielle Zhao" || this.emailUnderName.match("Sean Wu") == "Sean Wu"){//this.userName.match(this.person.name) == this.person.name
+          this.$http.post(this.apiPath, this.apiPayload);
           this.showModal = true
         }
       },
@@ -80,9 +80,9 @@ export default {
         return new Promise((resolve, reject) => {
           this.$http.get("/.auth/me").then((response)=> {
             for(const a of response.data[0].user_claims) {
-              if(a.typ == "name"){ 
+              if(a.typ == "name"){
                 this.emailUnderName = a.val;
-              } 
+              }
             }
           }).catch((error) => {
             this.emailUnderName = "Anik Shen";
@@ -116,7 +116,7 @@ export default {
   display: flex;
   margin-top: 200px;
   justify-content: center;
-  
+
 }
 .elem {
     margin-left: 20px;

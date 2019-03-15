@@ -30,7 +30,7 @@ if (process.env.NODE_ENV == "production" || process.env.NODE_ENV === undefined) 
         //var connString = "mongodb://apaccalendardatabase-dev:qySE4ELD21G4duwC2WdHM0mHVsk0z4VW9jSxWkpIDHAiUCclBAZkuKnNI48lmsxAD7BKzkuOAiqWy9KDNI4vCQ%3D%3D@apaccalendardatabase-dev.documents.azure.com:10255/?ssl=true&replicaSet=globaldb"
         var connString = "mongodb://apaccalendardatabase:6ANCUJX2zdRjm7sKXDBvqy6X93dTao2XabNBmvEBFSLM7pqHoqkwAPStsLeIXMYKr4DJxAcDyiCont6LXjKjpw%3D%3D@apaccalendardatabase.documents.azure.com:10255/?ssl=true&replicaSet=globaldb"
 
-    
+
 }
 else {
     var staticPath = "/../dist/"
@@ -132,7 +132,7 @@ router.post('/DEV/:year/:month/:person/:day', bodyParser(), async (ctx) => {
     var p = ctx.params
     var b = ctx.request.body
     try {
-        var currentMonth = await Month.findOne({ 'year': p.year, 'month': p.month })
+        var currentMonth = await Month.findOne({ 'year': p.year, 'month': p.month,'section': 'DEV' })
         if (currentMonth == null)
             throw 'Record not found'
         var day = currentMonth.people.id(p.person).days.id(p.day)
@@ -157,7 +157,7 @@ router.post("/AppService/upload/:year/:month/?mode=incremental", upload.any('csv
     let people = await json(src)
     var currentMonth = await Month.findOne({ 'year': ctx.params.year, 'month': ctx.params.month ,'section': 'AppService'})
     if (currentMonth == null) {
-        
+
     }
 })
 
@@ -167,7 +167,7 @@ router.post("/DEV/upload/:year/:month/?mode=incremental", upload.any('csv'), asy
     let people = await json(src)
     var currentMonth = await Month.findOne({ 'year': ctx.params.year, 'month': ctx.params.month,'section': 'DEV' })
     if (currentMonth == null) {
-        
+
     }
 })
 
@@ -286,7 +286,7 @@ router.post("/DEV/:year/:month/person", upload.any('csv'), bodyParser(),async (c
     testLock = true;//check the replacement application
 
     let currentMonth = await Month.findOne({ 'year': ctx.params.year, 'month': ctx.params.month,'section': 'AppService' })
-    
+
     if(testLock)
     {
         //console.log("hahaha")
@@ -314,7 +314,7 @@ router.post("/DEV/:year/:month/delete", bodyParser(), async (ctx) => {
     testLock = true;//check the replacement application
 
     let currentMonth = await Month.findOne({ 'year': ctx.params.year, 'month': ctx.params.month,'section': 'DEV' })
-    
+
     if(testLock)
     {
         //console.log("hahaha")
@@ -335,7 +335,7 @@ router.post("/DEV/:year/:month/delete", bodyParser(), async (ctx) => {
  * Feature 9 Init a new Calendar
 **************************************/
 function pushArray(j, arrinner, dayNuminner) {
-    
+
     while(j+6 < dayNuminner) {
         for(var k = 0;k<5;k++) {
             arrinner[j] = "W";
@@ -357,7 +357,7 @@ function pushArray(j, arrinner, dayNuminner) {
             j++;
         }
     }
-            
+
     return arrinner
 }
 
@@ -407,7 +407,7 @@ router.post("/AppService/:year/:month/init", upload.any('csv'), async (ctx) => {
     var dayNumArr = [31,28,31,30,31,30,31,31,30,31,30,31]
     var dayNum = dayNumArr[month-1];
     if(year % 4 == 0 && month == 2) { // leap year + Feb => 29 days
-        dayNum++; 
+        dayNum++;
     }
     while(arr[i] != "PH") {
         i++;
@@ -424,14 +424,14 @@ router.post("/AppService/:year/:month/init", upload.any('csv'), async (ctx) => {
             arr[1] = "W";
             arr[2] = "PH";
             arr[3] = "PH";
-            arr = pushArray(4, arr, dayNum);            
+            arr = pushArray(4, arr, dayNum);
         }else if(i == 1){
             arr[0] = "W";
             arr[1] = "W";
             arr[2] = "W";
             arr[3] = "PH";
             arr[4] = "PH";
-            arr = pushArray(5, arr, dayNum);             
+            arr = pushArray(5, arr, dayNum);
         }else if(i == 2){
             arr[0] = "W";
             arr[1] = "W";
@@ -439,7 +439,7 @@ router.post("/AppService/:year/:month/init", upload.any('csv'), async (ctx) => {
             arr[3] = "W";
             arr[4] = "PH";
             arr[5] = "PH";
-            arr = pushArray(6, arr, dayNum);             
+            arr = pushArray(6, arr, dayNum);
         }else if(i == 3){
             arr[0] = "W";
             arr[1] = "W";
@@ -448,7 +448,7 @@ router.post("/AppService/:year/:month/init", upload.any('csv'), async (ctx) => {
             arr[4] = "W";
             arr[5] = "PH";
             arr[6] = "PH";
-            arr = pushArray(7, arr, dayNum);             
+            arr = pushArray(7, arr, dayNum);
         }else if(i == 4){
             arr[0] = "PH";
             arr[1] = "W";
@@ -458,7 +458,7 @@ router.post("/AppService/:year/:month/init", upload.any('csv'), async (ctx) => {
             arr[5] = "W";
             arr[6] = "PH";
             arr[7] = "PH";
-            arr = pushArray(8, arr, dayNum);             
+            arr = pushArray(8, arr, dayNum);
         }else {
             arr[0] = "PH";
             arr[1] = "PH";
@@ -478,7 +478,7 @@ router.post("/AppService/:year/:month/init", upload.any('csv'), async (ctx) => {
             //     if (err) {
             //        return console.error(err);
             //     }
-            //     console.log("File opened successfully!");     
+            //     console.log("File opened successfully!");
             // });
 
             str3 = arr.join(",")
@@ -548,7 +548,7 @@ router.post("/DEV/:year/:month/init", upload.any('csv'), async (ctx) => {
     var dayNumArr = [31,28,31,30,31,30,31,31,30,31,30,31]
     var dayNum = dayNumArr[month-1];
     if(year % 4 == 0 && month == 2) { // leap year + Feb => 29 days
-        dayNum++; 
+        dayNum++;
     }
     while(arr[i] != "PH") {
         i++;
@@ -565,14 +565,14 @@ router.post("/DEV/:year/:month/init", upload.any('csv'), async (ctx) => {
             arr[1] = "W";
             arr[2] = "PH";
             arr[3] = "PH";
-            arr = pushArray(4, arr, dayNum);            
+            arr = pushArray(4, arr, dayNum);
         }else if(i == 1){
             arr[0] = "W";
             arr[1] = "W";
             arr[2] = "W";
             arr[3] = "PH";
             arr[4] = "PH";
-            arr = pushArray(5, arr, dayNum);             
+            arr = pushArray(5, arr, dayNum);
         }else if(i == 2){
             arr[0] = "W";
             arr[1] = "W";
@@ -580,7 +580,7 @@ router.post("/DEV/:year/:month/init", upload.any('csv'), async (ctx) => {
             arr[3] = "W";
             arr[4] = "PH";
             arr[5] = "PH";
-            arr = pushArray(6, arr, dayNum);             
+            arr = pushArray(6, arr, dayNum);
         }else if(i == 3){
             arr[0] = "W";
             arr[1] = "W";
@@ -589,7 +589,7 @@ router.post("/DEV/:year/:month/init", upload.any('csv'), async (ctx) => {
             arr[4] = "W";
             arr[5] = "PH";
             arr[6] = "PH";
-            arr = pushArray(7, arr, dayNum);             
+            arr = pushArray(7, arr, dayNum);
         }else if(i == 4){
             arr[0] = "PH";
             arr[1] = "W";
@@ -599,7 +599,7 @@ router.post("/DEV/:year/:month/init", upload.any('csv'), async (ctx) => {
             arr[5] = "W";
             arr[6] = "PH";
             arr[7] = "PH";
-            arr = pushArray(8, arr, dayNum);             
+            arr = pushArray(8, arr, dayNum);
         }
         setTimeout(function() {
             arrNew[0] = arr[dayNum-5];
@@ -615,7 +615,7 @@ router.post("/DEV/:year/:month/init", upload.any('csv'), async (ctx) => {
             //     if (err) {
             //        return console.error(err);
             //     }
-            //     console.log("File opened successfully!");     
+            //     console.log("File opened successfully!");
             // });
 
             str3 = arr.join(",")
@@ -639,8 +639,8 @@ router.post("/DEV/:year/:month/init", upload.any('csv'), async (ctx) => {
 })
 
 router.post("/DEV/:year/:month/reload", upload.any('csv'), async (ctx) => {
-    
-    
+
+
     let year = ctx.params.year - 0
     let month = ctx.params.month - 0
     let section = "DEV"

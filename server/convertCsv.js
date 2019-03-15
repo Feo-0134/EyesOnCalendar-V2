@@ -42,8 +42,15 @@ var parseCalendar = function (calendar) {
             row.shift()
             z.days = row.map((y, index) => {
                 var q = 0
-                if (y == "W") q = 1
-                if (y == "T") q = 2
+                if (y == "V") q = 0;
+                if (y == "PH") q = 0;
+                if (y == "W") q = 1;
+                if (y == "MS") q = 1;
+                if (y == "NS") q = 1;
+                if (y == "DV") q = 2;
+                if (y == "T") q = 3;
+                if (y == "PO") q = 4;
+                if (y == "PM") q = 4;
                 return {
                     day: index + 1,
                     workType: y,
