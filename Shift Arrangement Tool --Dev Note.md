@@ -2,11 +2,11 @@
 
 
 
-Shift Arrangement Website will help to show all team members' shift data in a monthly calendar view. 
+Shift Arrangement Website will help to show all team members' shift data in a monthly calendar view.
 
-Users can easily access the site to modify his/her own data: morning shift, night shift, working day, vacation(annual leave, sick leave). 
+Users can easily access the site to modify his/her own data: morning shift, night shift, working day, vacation(annual leave, sick leave).
 
-For managers and TAs, they have the administrative permission to upload the draft data, view each day's on-duty percentage, export the monthly statistics . When a day is marked as 'Desired Vacation / Vacation / Training', the site will notify the user to send S+ to team. 
+For managers and TAs, they have the administrative permission to upload the draft data, view each day's on-duty percentage, export the monthly statistics . When a day is marked as 'Desired Vacation / Vacation / Training', the site will notify the user to send S+ to team.
 
 
 
@@ -38,25 +38,25 @@ For managers and TAs, they have the administrative permission to upload the draf
 
 1. Q: How to deploy a web App-Service ( Vue.js + Node.js + CosmosDB(mongodb)) to Azure App Service
 
-   A:  
+   A:
 
    ```  bash
    # go to the app PATH
    npm run build
-   
+
    # Copy the resulting dist folder inside server
    # Run ```npm install``` inside the server folder
    # The mongo connection string is hardcoded inside the server.js file
-   
-   # Create an app service on Azure(http://yourSiteName.azurewebsites.net) 
+
+   # Create an app service on Azure(http://yourSiteName.azurewebsites.net)
    # Enable App Service websockets from Azure portal
-   
-   # Navigate to kudu console (http://yourSiteName.scm.azurewebsites.net) 
+
+   # Navigate to kudu console (http://yourSiteName.scm.azurewebsites.net)
    # Click "Debug Console/CMD" & Go to PATH ./site/wwwroot/
    # Deploy the contents of the server folder and dist folder
    ```
 
-    
+
 
 2. Q: User authentication and authorization usage problems
 
@@ -66,26 +66,26 @@ For managers and TAs, they have the administrative permission to upload the draf
 
       :link:https://docs.microsoft.com/en-us/azure/app-service/configure-authentication-provider-aad
 
-      
+
 
    2. Use Azure Active Directory as the identity provider
 
       ```bash
       GET https://<appname>.azurewebsites.net/.auth/me
       Content-Type: application/json
-      
+
       {"id_token":"<token>","access_token":"<token>"}
       ```
 
       Fuzzy Matching of access_token
 
-      
+
 
    3. Secure service-to-service calls with token authentication
       1. Use access tokens from server code
       2. Use access tokens from client (browser) code
 
-   
+
 
 3. Q: mongoDB (CosmosDB)
 
@@ -93,20 +93,18 @@ For managers and TAs, they have the administrative permission to upload the draf
 
       ```javascript
       var connString = "mongodb://mayocalendarv2-dev:CiXxW30UqowaAs8CiAVyNiLgJ2UkRmpN6KXBGcJWamGmN2sNYkwcfhRhXQqGfi6jOFH6imOniww5Wn6tX2dIIA%3D%3D@mayocalendarv2-dev.documents.azure.com:10255/?ssl=true&replicaSet=globaldb"
-      
+
       mongoose.connect(connString)
-      
+
       const db = mongoose.connection;
-      
+
       db.on('error', console.error.bind(console, 'connection error:'));
       db.once('open', function () {
           console.log("Connected to DB");
       });
       ```
 
-      
-
-   2. CURD 
+   2. CURD
 
       ```javascript
       collection.dialog.push()
@@ -115,7 +113,7 @@ For managers and TAs, they have the administrative permission to upload the draf
       collection.deleteOne()
       ```
 
-      
+
 
 4. Q: Vue.js
 
@@ -126,7 +124,7 @@ For managers and TAs, they have the administrative permission to upload the draf
       Vue.config.devtools = true
       ```
 
-      
+
 
 5. Q:  Service Unavailable
 
@@ -134,7 +132,7 @@ For managers and TAs, they have the administrative permission to upload the draf
    | ---------- | ------------- | ---------- | ------------------------------------------ |
    | 503        |               | 2.90s      | It turns out to be 503 Service Unavailable |
 
-   
+
 
    A: In this case the server is not responding. Wait and then refresh the page to get the web resource.
 
@@ -144,7 +142,7 @@ For managers and TAs, they have the administrative permission to upload the draf
 
 3. Q: The WebApp is either slow or not responding at all. Symptoms are that the browser keeps on spinning and returns the page after a long time.
 
-   A: Platform Issue includes: 
+   A: Platform Issue includes:
 
    1. CHECK_PLATFORM_OUTAGE - Any known outage or LSI happening during the time the customer reported an issue.
    2. IS_CANARY_WORKING - Platform Availability showing a number less than 100% during the time customer reported a problem
@@ -167,7 +165,7 @@ For managers and TAs, they have the administrative permission to upload the draf
 
    - 503 Service Unavailable
 
-     
+
 
 2. Studio3T trial expired
 
@@ -180,5 +178,5 @@ For managers and TAs, they have the administrative permission to upload the draf
    exit
    ```
 
-   
+
 
