@@ -92,7 +92,7 @@ export default {
      * Feature 6 One can only change his own status;TA & Manager have higher permission to all data
     **************************************/
     handleEvent:function(msg) {
-      if(this.userName == this.person.name || this.userName == "Sean Wu" || this.userName == "Anik Shen"|| this.userName == "Karen Zheng"||this.userName == "Anita Yang"||this.userName == "Van Pan"||this.userName == this.person.name + "(International Supplier)"||this.userName.match(this.person.name) == this.person.name) {
+      if(this.userName == this.person.name || this.userName == "Dingsong Zhang" || this.userName == "Sean Wu (AZURE)" || this.userName == "Anik Shen"|| this.userName == "Karen Zheng"||this.userName == "Anita Yang"||this.userName == this.person.name + "(International Supplier)"||this.userName == this.person.name + "(Wicresoft Co., LTD)"||this.userName.match(this.person.name) == this.person.name) {
         this.open = msg
         this.date = msg - 1
       }

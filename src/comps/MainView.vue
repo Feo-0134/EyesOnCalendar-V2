@@ -136,7 +136,7 @@ export default {
     **************************************/
     apiPath() {
       return (
-          "/api/" +
+          "/api" +
           this.$router.currentRoute.path +
           "/init"
       );
@@ -149,7 +149,7 @@ export default {
     },
     apiPath2() {
       return (
-          "/api/" +
+          "/api" +
           this.$router.currentRoute.path +
           "/reload"
       );
@@ -237,7 +237,7 @@ export default {
      * Feature 9 init a new calendar for the next month (update only allow to init the comming month)
     **************************************/
     init() {
-      if(this.emailUnderName.match("Karen Zheng") == "Karen Zheng"||this.emailUnderName.match("Anik Shen") == "Anik Shen"||this.emailUnderName.match("Anita Yang") == "Anita Yang"||this.emailUnderName.match("Van Pan") == "Van Pan"||this.emailUnderName.match("Danielle Zhao") == "Danielle Zhao" || this.emailUnderName.match("Sean Wu") == "Sean Wu"){// ||this.emailUnderName.match("Danielle Zhao") == "Danielle Zhao"  // this.userName.match(this.person.name) == this.person.name
+      if(this.emailUnderName.match("Karen Zheng") == "Karen Zheng"||this.emailUnderName.match("Anik Shen") == "Anik Shen"|| this.emailUnderName.match("Dingsong Zhang") == "Dingsong Zhang"||this.emailUnderName.match("Anita Yang") == "Anita Yang"||this.emailUnderName.match("Van Pan") == "Van Pan"||this.emailUnderName.match("Danielle Zhao") == "Danielle Zhao" || this.emailUnderName.match("Sean Wu (AZURE)") == "Sean Wu (AZURE)"){// ||this.emailUnderName.match("Danielle Zhao") == "Danielle Zhao"  // this.userName.match(this.person.name) == this.person.name
         var that = this
         var dateNew = new Date();
         // console.log(this.date.substr(-1))
