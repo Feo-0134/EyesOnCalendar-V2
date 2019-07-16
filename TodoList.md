@@ -1,3 +1,6 @@
+## ToDo-List
+
+
 | No.  | Due  | Name           | Description                                                  | Task                                                         |
 | ---- | ---- | -------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | 1    | 7/17 | Init           | Bug fix -> site always timed out when initial next month data from webpage | 0. Check the seed file                                                          1. Update the src and Init Aug schedule for DEV           2. Froze the Init & Reload Button                                         3. Come up with the TM/TA privilege |
