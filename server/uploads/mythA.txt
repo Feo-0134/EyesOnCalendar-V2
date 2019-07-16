@@ -1,1 +1,1 @@
-W,PH,PH,W,W
+W,W,W,W,W

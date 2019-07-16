@@ -237,12 +237,15 @@ export default {
      * Feature 9 init a new calendar for the next month (update only allow to init the comming month)
     **************************************/
     init() {
-      if(this.emailUnderName.match("Karen Zheng") == "Karen Zheng"||this.emailUnderName.match("Anik Shen") == "Anik Shen"|| this.emailUnderName.match("Dingsong Zhang") == "Dingsong Zhang"||this.emailUnderName.match("Anita Yang") == "Anita Yang"||this.emailUnderName.match("Van Pan") == "Van Pan"||this.emailUnderName.match("Danielle Zhao") == "Danielle Zhao" || this.emailUnderName.match("Sean Wu (AZURE)") == "Sean Wu (AZURE)"){// ||this.emailUnderName.match("Danielle Zhao") == "Danielle Zhao"  // this.userName.match(this.person.name) == this.person.name
+      // console.log(this.emailUnderName)
+      if(this.emailUnderName.match("Danielle Zhao") == "Danielle Zhao"){
+        // this.emailUnderName.match("Karen Zheng") == "Karen Zheng"||this.emailUnderName.match("Anik Shen") == "Anik Shen"|| this.emailUnderName.match("Dingsong Zhang") == "Dingsong Zhang"||this.emailUnderName.match("Anita Yang") == "Anita Yang"||this.emailUnderName.match("Van Pan") == "Van Pan"||this.emailUnderName.match("Danielle Zhao") == "Danielle Zhao" || this.emailUnderName.match("Sean Wu (AZURE)") == "Sean Wu (AZURE)"){// ||this.emailUnderName.match("Danielle Zhao") == "Danielle Zhao"  // this.userName.match(this.person.name) == this.person.name
+        // console.log(this.emailUnderName)
         var that = this
         var dateNew = new Date();
         // console.log(this.date.substr(-1))
         // console.log(dateNew.getMonth())
-        if( this.date.substr(-1)==((dateNew.getMonth()+2).toString().substr(-1))||(this.date.substr(-1)== "9"&&(dateNew.getMonth()+1).toString().substr(-1)=="0")||(this.date.substr(-1)== "2"&&(dateNew.getMonth()+1).toString().substr(-1)=="1")) {
+        if(true){ //this.date.substr(-1)==((dateNew.getMonth()+2).toString().substr(-1))||(this.date.substr(-1)== "9"&&(dateNew.getMonth()+1).toString().substr(-1)=="0")||(this.date.substr(-1)== "2"&&(dateNew.getMonth()+1).toString().substr(-1)=="1")) {
           this.isLoading = true
           this.initUndo = false
           this.$http.post(this.apiPath, this.apiPayload)//TBC
