@@ -36,7 +36,7 @@ Feature 7 Add a new member to the calendar
     </div>
   </transition>
 </script>
-    <h1>Adding Member</h1>
+    <h1>Delete Member</h1>
     <div>
     <div class="testClassII"><p>Welcome, {{emailUnderName}}</p></div>
     <div class="morespace">
@@ -71,7 +71,7 @@ export default {
     methods:{
       //only TA and Manager have access to add a person
       upload() {
-        if(this.emailUnderName.match("Juncheng Zhu") == "Juncheng Zhu"){// ||this.emailUnderName.match("Karen Zheng") == "Karen Zheng"||this.emailUnderName.match("Anik Shen") == "Anik Shen"||this.emailUnderName.match("Anita Yang") == "Anita Yang"||this.emailUnderName.match("Danielle Zhao") == "Danielle Zhao" || this.emailUnderName.match("Sean Wu (AZURE)") == "Sean Wu (AZURE)"){//this.userName.match(this.person.name) == this.person.name
+        if(this.emailUnderName.match("Juncheng Zhu") == "Juncheng Zhu"||this.emailUnderName.match("Karen Zheng") == "Karen Zheng"||this.emailUnderName.match("Anik Shen") == "Anik Shen"||this.emailUnderName.match("Anita Yang") == "Anita Yang"||this.emailUnderName.match("Danielle Zhao") == "Danielle Zhao" || this.emailUnderName.match("Sean Wu (AZURE)") == "Sean Wu (AZURE)"){//this.userName.match(this.person.name) == this.person.name
           this.$http.post(this.apiPath, this.apiPayload);
           this.showModal = true
         }
