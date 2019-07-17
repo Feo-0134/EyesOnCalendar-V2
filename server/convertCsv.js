@@ -31,7 +31,7 @@ var parseCalendar = function (calendar) {
             return row[2] != ""
         })
         .filter(row => {
-            return row[0] != "Employee Name"
+            return row[0]/* != "Employee Name"*/
         })
         .map(row => {
             var z = {}

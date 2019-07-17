@@ -71,7 +71,7 @@ export default {
     methods:{
       //only TA and Manager have access to add a person
       upload() {
-        if(this.emailUnderName.match("Karen Zheng") == "Karen Zheng"||this.emailUnderName.match("Anik Shen") == "Anik Shen"||this.emailUnderName.match("Anita Yang") == "Anita Yang"||this.emailUnderName.match("Van Pan") == "Van Pan"||this.emailUnderName.match("Danielle Zhao") == "Danielle Zhao" || this.emailUnderName.match("Sean Wu (AZURE)") == "Sean Wu (AZURE)"){//this.userName.match(this.person.name) == this.person.name
+        if(this.emailUnderName.match("Juncheng Zhu") == "Juncheng Zhu"||this.emailUnderName.match("Karen Zheng") == "Karen Zheng"||this.emailUnderName.match("Anik Shen") == "Anik Shen"||this.emailUnderName.match("Anita Yang") == "Anita Yang"||this.emailUnderName.match("Van Pan") == "Van Pan"||this.emailUnderName.match("Danielle Zhao") == "Danielle Zhao" || this.emailUnderName.match("Sean Wu (AZURE)") == "Sean Wu (AZURE)"){//this.userName.match(this.person.name) == this.person.name
           this.$http.post(this.apiPath, this.apiPayload);
           this.showModal = true
         }

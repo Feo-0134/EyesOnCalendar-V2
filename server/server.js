@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+mongoose.set('useCreateIndex', true);
 const models = require('./models/Month')
 const Month = models.Month;
 const Person = models.Person;
@@ -396,21 +397,24 @@ router.post("/AppService/:year/:month/init", upload.any('csv'), async (ctx) => {
     let lastMonth = await Month.findOne({ 'year': year, 'month': (month - 1),'section': section })
     var data = fs.readFileSync('./uploads/mythA.txt');
     var str1 = data.toString();
-    //console.log(str1)
+    // console.log(str1)
     var str2, str3
     var arr = str1.split(",");
-    //console.log(arr)
+    console.log(arr)
     var arrNew=new Array();
     var i = 0;
-    var countNum = 0;
     var monthArr = ["JanuaryA", "FebruaryA", "MarchA", "AprilA", "MayA", "JuneA", "JulyA", "AuguestA", "SeptemberA", "OctoberA", "NovemberA", "DecemberA"]
     var dayNumArr = [31,28,31,30,31,30,31,31,30,31,30,31]
     var dayNum = dayNumArr[month-1];
     if(year % 4 == 0 && month == 2) { // leap year + Feb => 29 days
         dayNum++;
     }
+    // here goes the BUG
     while(arr[i] != "PH") {
         i++;
+        if(i > 4) {
+            break;
+        }
     }
     setTimeout(function() {
         if(i == 0 && arr[i+1] != "PH") {
@@ -471,7 +475,7 @@ router.post("/AppService/:year/:month/init", upload.any('csv'), async (ctx) => {
             arrNew[3] = arr[dayNum-2];
             arrNew[4] = arr[dayNum-1];
             str2 = arrNew.join(",");
-            //console.log(str2)
+            console.log(str2)
             writeNewArrA(str2)
 
             // fs.open('./uploads/months/'+'March'+'.txt', 'r+', function(err, fd) {
@@ -537,13 +541,10 @@ router.post("/DEV/:year/:month/init", upload.any('csv'), async (ctx) => {
     let lastMonth = await Month.findOne({ 'year': year, 'month': (month - 1),'section': section })
     var data = fs.readFileSync('./uploads/mythD.txt');
     var str1 = data.toString();
-    //console.log(str1)
     var str2, str3
     var arr = str1.split(",");
-    //console.log(arr)
     var arrNew=new Array();
     var i = 0;
-    var countNum = 0;
     var monthArr = ["JanuaryD", "FebruaryD", "MarchD", "AprilD", "MayD", "JuneD", "JulyD", "AuguestD", "SeptemberD", "OctoberD", "NovemberD", "DecemberD"]
     var dayNumArr = [31,28,31,30,31,30,31,31,30,31,30,31]
     var dayNum = dayNumArr[month-1];
@@ -552,7 +553,11 @@ router.post("/DEV/:year/:month/init", upload.any('csv'), async (ctx) => {
     }
     while(arr[i] != "PH") {
         i++;
+        if(i > 4) {
+            break;
+        }
     }
+
     setTimeout(function() {
         if(i == 0 && arr[i+1] != "PH") {
             arr[0] = "W";
@@ -600,7 +605,12 @@ router.post("/DEV/:year/:month/init", upload.any('csv'), async (ctx) => {
             arr[6] = "PH";
             arr[7] = "PH";
             arr = pushArray(8, arr, dayNum);
+        }else {
+            arr[0] = "PH";
+            arr[1] = "PH";
+            arr = pushArray(2, arr, dayNum);
         }
+        
         setTimeout(function() {
             arrNew[0] = arr[dayNum-5];
             arrNew[1] = arr[dayNum-4];
@@ -608,7 +618,7 @@ router.post("/DEV/:year/:month/init", upload.any('csv'), async (ctx) => {
             arrNew[3] = arr[dayNum-2];
             arrNew[4] = arr[dayNum-1];
             str2 = arrNew.join(",");
-            //console.log(str2)
+            console.log(str2)
             writeNewArrD(str2)
 
             // fs.open('./uploads/months/'+'March'+'.txt', 'r+', function(err, fd) {

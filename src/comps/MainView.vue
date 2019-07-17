@@ -228,7 +228,7 @@ export default {
              }
            }
         }).catch((error) => {
-          this.emailUnderName = "Danielle Zhao";
+          this.emailUnderName = "Juncheng Zhu";
           reject(error)
         })
       })
@@ -238,7 +238,7 @@ export default {
     **************************************/
     init() {
       // console.log(this.emailUnderName)
-      if(this.emailUnderName.match("Danielle Zhao") == "Danielle Zhao"){
+      if(this.emailUnderName.match("Juncheng Zhu") == "Juncheng Zhu"){
         // this.emailUnderName.match("Karen Zheng") == "Karen Zheng"||this.emailUnderName.match("Anik Shen") == "Anik Shen"|| this.emailUnderName.match("Dingsong Zhang") == "Dingsong Zhang"||this.emailUnderName.match("Anita Yang") == "Anita Yang"||this.emailUnderName.match("Van Pan") == "Van Pan"||this.emailUnderName.match("Danielle Zhao") == "Danielle Zhao" || this.emailUnderName.match("Sean Wu (AZURE)") == "Sean Wu (AZURE)"){// ||this.emailUnderName.match("Danielle Zhao") == "Danielle Zhao"  // this.userName.match(this.person.name) == this.person.name
         // console.log(this.emailUnderName)
         var that = this
@@ -248,6 +248,8 @@ export default {
         if(true){ //this.date.substr(-1)==((dateNew.getMonth()+2).toString().substr(-1))||(this.date.substr(-1)== "9"&&(dateNew.getMonth()+1).toString().substr(-1)=="0")||(this.date.substr(-1)== "2"&&(dateNew.getMonth()+1).toString().substr(-1)=="1")) {
           this.isLoading = true
           this.initUndo = false
+          console.log(this.apiPath)
+          console.log(this.apiPayload)
           this.$http.post(this.apiPath, this.apiPayload)//TBC
           setTimeout(()=>{
             that.isLoading = false
