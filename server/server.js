@@ -1,8 +1,9 @@
+// Database
 const mongoose = require('mongoose');
 mongoose.set('useCreateIndex', true);
+
 const models = require('./models/Month')
 const Month = models.Month;
-const Person = models.Person;
 
 const Koa = require('koa');
 const Router = require('koa-router');
@@ -10,28 +11,24 @@ const bodyParser = require('koa-bodyparser');
 const serve = require('koa-static')
 const path = require('path')
 const send = require('koa-send');
-
 const app = new Koa();
 const router = new Router({ prefix: "/api"});
-//const router2 = new Router({ prefix: "/DEV/api"});
-
+const multer = require('koa-multer');
+const upload = multer({ dest: 'uploads/' });
 
 const server = require('http').createServer(app.callback())
 const io = require('socket.io')(server)
 
 const fs = require('fs')
 const json = require('./convertCsv.js')
-const multer = require('koa-multer');
-const upload = multer({ dest: 'uploads/' });
-
 
 if (process.env.NODE_ENV == "production" || process.env.NODE_ENV === undefined) {
-
         var staticPath = "/dist/"
-        //var connString = "mongodb://apaccalendardatabase-dev:qySE4ELD21G4duwC2WdHM0mHVsk0z4VW9jSxWkpIDHAiUCclBAZkuKnNI48lmsxAD7BKzkuOAiqWy9KDNI4vCQ%3D%3D@apaccalendardatabase-dev.documents.azure.com:10255/?ssl=true&replicaSet=globaldb"
+        /* Production Database */
+        // var connString = "mongodb://apaccalendardatabase-dev:qySE4ELD21G4duwC2WdHM0mHVsk0z4VW9jSxWkpIDHAiUCclBAZkuKnNI48lmsxAD7BKzkuOAiqWy9KDNI4vCQ%3D%3D@apaccalendardatabase-dev.documents.azure.com:10255/?ssl=true&replicaSet=globaldb"
+        
+        /* Develop Database */
         var connString = "mongodb://apaccalendardatabase:6ANCUJX2zdRjm7sKXDBvqy6X93dTao2XabNBmvEBFSLM7pqHoqkwAPStsLeIXMYKr4DJxAcDyiCont6LXjKjpw%3D%3D@apaccalendardatabase.documents.azure.com:10255/?ssl=true&replicaSet=globaldb"
-
-
 }
 else {
     var staticPath = "/../dist/"
@@ -40,14 +37,13 @@ else {
 
 router.use(bodyParser());
 mongoose.connect(connString)
-
 const db = mongoose.connection;
-
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function () {
     console.log("Connected to DB");
 });
 
+/* koa interface demo */
 // router.get('/', ctx => {
 //     ctx.body = "Hello"
 // })
