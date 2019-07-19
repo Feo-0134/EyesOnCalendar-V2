@@ -113,23 +113,10 @@ day {
   color: white;
 }
 
-.sectionPointer {
-  cursor: pointer;  margin: 0 5px 0 5px;
-  padding: 0 10px 0 10px;
-  text-decoration: none;
-  color: white;
-}
-
 .sectionPointer:hover {
   background-color: #555;
 }
 
-.testClass {
-    text-align:left;
-}
-.testClassII {
-    text-align: right;
-}
 .pointer:hover {
   background-color: #555;
 }
