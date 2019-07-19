@@ -1,6 +1,23 @@
 <template>
   <div>
-      <div class="testClass"><a :href="goAppService" class="sectionPointer">&gt; AppService</a><a :href="goDEV" class="sectionPointer">&gt; DEV</a></div>
+      <div>
+        <div class="testClass">
+          <el-dropdown @command="handleCommand">
+            <span class="el-dropdown-link"><i class="el-icon-arrow-down el-icon--right"></i> SELECT POD</span>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item command="/AppService">&gt; AppService</el-dropdown-item>
+              <el-dropdown-item command="/DEV">&gt; DEV</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
+          
+          <a :href="goAddPerson" class="sectionPointer">&gt; AddPerson</a>
+          <a :href="goDeletePerson" class="sectionPointer">&gt; DeletePerson</a>
+          <a :href="goReport" class="sectionPointer">&gt; Report</a>
+        </div>
+        <!-- <div class="testClass">
+          <a :href="goDEV" class="sectionPointer">&gt; DEV</a>
+        </div> -->
+      </div>
       <div class="testClassII"><p>Welcome, {{emailUnderName}}</p></div>
       <h1><a :href="prevMonth" class="pointer">&lt;</a>{{prettyDate}}<a :href="nextMonth" class="pointer">&gt;</a></h1>
       <h2 v-if="!month">{{message}}</h2>
@@ -110,13 +127,21 @@ export default {
     /**************************************
      * Router
     **************************************/
-    goAppService() {
-      return ("/AppService" + moment(this.date, "/YYYY/M").format("/YYYY/M"));
+    // goAppService() {
+    //   return ("/AppService" + moment(this.date, "/YYYY/M").format("/YYYY/M"));
+    // },
+    // goDEV() {
+    //   return ("/DEV" + moment(this.date, "/YYYY/M").format("/YYYY/M"));
+    // },
+    goReport() {
+      return ((this.date.split("/")[1] == "DEV"?"/DEV":"/AppService") + moment(this.date, "/YYYY/M").format("/YYYY/M") + "/report");
     },
-    goDEV() {
-      return ("/DEV" + moment(this.date, "/YYYY/M").format("/YYYY/M"));
+    goAddPerson() {
+      return ((this.date.split("/")[1] == "DEV"?"/DEV":"/AppService") + moment(this.date, "/YYYY/M").format("/YYYY/M") + "/person");
     },
-
+    goDeletePerson() {
+      return ((this.date.split("/")[1] == "DEV"?"/DEV":"/AppService") + moment(this.date, "/YYYY/M").format("/YYYY/M") + "/delete");
+    },
     /**************************************
      * Feature 3 add a Line for on-duty rate
     **************************************/
@@ -174,6 +199,12 @@ export default {
     this.personinfo();
   },
   methods: {
+    handleCommand(command) {
+          var path = (command + moment(this.date, "/YYYY/M").format("/YYYY/M"));
+          this.$router.push({ path: path });
+          location.reload()
+          // this.$message('click on item ' + command);
+    },
     addMonth() {
       var path = moment(this.date, "/YYYY/M")
         .add(1, "M")
@@ -303,18 +334,20 @@ day {
 }
 
 .sectionPointer {
-  cursor: pointer;  margin: 0 5px 0 5px;
-  padding: 0 10px 0 10px;
+  cursor: pointer;  
+  margin: 0 15px 0 15px;
   text-decoration: none;
-  color: white;
+  color: gray;
 }
 
 .sectionPointer:hover {
-  background-color: #555;
+  background-color:navy;
 }
 
 .testClass {
-    text-align:left;
+    margin-bottom: 55px;
+    /* text-align:left; */
+
 }
 .testClassII {
     text-align: right;
@@ -340,6 +373,13 @@ day {
 }
 .buttonBackground {
   background-color: #4CAF50; /* Green */
+}
+.el-dropdown-link {
+  cursor: pointer;
+  color:gray;
+}
+.el-icon-arrow-down {
+  font-size: 12px;
 }
 
 </style>

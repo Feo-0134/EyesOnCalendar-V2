@@ -8,11 +8,14 @@ import Vuex from 'vuex'
 import AsyncComputed from 'vue-async-computed'
 import state from './store.js'
 import Popover from 'vue-js-popover'
+import ElementUI from 'element-ui';
+import 'element-ui/lib/theme-chalk/index.css';
 
 Vue.use(require('@websanova/vue-upload'));
 Vue.use(Vuex)
 Vue.use(AsyncComputed)
 Vue.use(Popover)
+Vue.use(ElementUI);
 
 Vue.config.devtools = true
 
