@@ -56,6 +56,7 @@ Feature 7 Add a new member to the calendar
     <h3 slot="header">A Member Deleted</h3>
   </modal>
     </div>
+    <button class="modal-default-button"><a :href="linkToCalendar" class="linkFontStyle">Back To Calendar</a></button>
     </div>
 </template>
 
@@ -112,6 +113,9 @@ export default {
                 name: this.message,
                 randomNumber: this.$randomNumber
             };
+        },
+        linkToCalendar() {
+          return "/";
         },
     }
 }

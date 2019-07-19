@@ -56,6 +56,7 @@ Feature 7 Add a new member to the calendar
     <h3 slot="header">A New Member Added</h3>
   </modal>
     </div>
+    <button class="modal-default-button"><a :href="linkToCalendar" class="linkFontStyle">Back To Calendar</a></button>
     </div>
 </template>
 
@@ -112,6 +113,9 @@ export default {
                 randomNumber: this.$randomNumber
             };
         },
+        linkToCalendar() {
+          return "/";
+        },
     }
 }
 </script>
@@ -125,7 +129,7 @@ export default {
 }
 .elem {
     margin-left: 20px;
-    margin-right: 60px;
+    margin-right: 20px;
 }
 .textElem {
     margin: 15px;
@@ -216,6 +220,8 @@ export default {
   margin: 20px;
 }
 
+
+
 /*
  * The following styles are auto-applied to elements with
  * transition="modal" when their visibility is toggled
@@ -246,4 +252,6 @@ export default {
 .testClassII {
     text-align: right;
 }
+
+
 </style>

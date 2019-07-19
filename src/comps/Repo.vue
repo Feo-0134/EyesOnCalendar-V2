@@ -18,6 +18,7 @@ Feature 5 Monthly report
           </div>
           <Personsum class="marginLeft" v-for="(p,index) in month.people" v-bind:key="p._id" v-bind:pindex="index" v-bind:person="p"/>
       </div>
+      <button class="modal-default-button"><a :href="linkToCalendar" class="linkFontStyle">Back To Calendar</a></button>
   </div>
 </template>
 
@@ -73,6 +74,9 @@ export default {
     date() {
       this.changed=!this.changed
       return (this.$router.currentRoute.path).replace('/report','');
+    },
+    linkToCalendar() {
+      return "/";
     },
   }
 }
@@ -141,6 +145,22 @@ day {
   vertical-align: middle;
   width: 120px;
   margin: 10px;
+}
+.linkFontStyle {
+    font-size: 16px;
+    color: #FFF;
+    text-decoration: none;
+}
+.modal-default-button {
+  background-color: #4CAF50; /* Green */
+  border: none;
+  color: rgb(255, 255, 255);
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 20px;
 }
 
 </style>

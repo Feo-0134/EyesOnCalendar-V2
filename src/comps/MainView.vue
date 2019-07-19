@@ -10,9 +10,9 @@
             </el-dropdown-menu>
           </el-dropdown>
           
-          <a :href="goAddPerson" class="sectionPointer">&gt; AddPerson</a>
-          <a :href="goDeletePerson" class="sectionPointer">&gt; DeletePerson</a>
-          <a :href="goReport" class="sectionPointer">&gt; Report</a>
+          <a :href="goAddPerson" v-if="admin" class="sectionPointer">&gt; AddPerson</a>
+          <a :href="goDeletePerson" v-if="admin" class="sectionPointer">&gt; DeletePerson</a>
+          <a :href="goReport" v-if="admin" class="sectionPointer">&gt; Report</a>
         </div>
         <!-- <div class="testClass">
           <a :href="goDEV" class="sectionPointer">&gt; DEV</a>
@@ -59,6 +59,7 @@ export default {
       changed: false,
       emailUnderName: null,
       initUndo:true,
+      admin:false,
       //initDone:false,
       isLoading: false
     };
@@ -127,12 +128,6 @@ export default {
     /**************************************
      * Router
     **************************************/
-    // goAppService() {
-    //   return ("/AppService" + moment(this.date, "/YYYY/M").format("/YYYY/M"));
-    // },
-    // goDEV() {
-    //   return ("/DEV" + moment(this.date, "/YYYY/M").format("/YYYY/M"));
-    // },
     goReport() {
       return ((this.date.split("/")[1] == "DEV"?"/DEV":"/AppService") + moment(this.date, "/YYYY/M").format("/YYYY/M") + "/report");
     },
@@ -169,7 +164,6 @@ export default {
     apiPayload() {
       return {
           year: "2019",
-          //month: "3"
       };
     },
     apiPath2() {
@@ -182,7 +176,6 @@ export default {
     apiPayload2() {
       return {
           year: "2019",
-          //month: "3"
       };
     }
   },
@@ -197,6 +190,10 @@ export default {
       this.callUndo(ev);
     });
     this.personinfo();
+    //
+    setTimeout(()=>{
+    if(this.emailUnderName.match("Juncheng Zhu") == "Juncheng Zhu" || this.emailUnderName.match("Karen Zheng") == "Karen Zheng"||this.emailUnderName.match("Anik Shen") == "Anik Shen"|| this.emailUnderName.match("Dingsong Zhang") == "Dingsong Zhang"||this.emailUnderName.match("Anita Yang") == "Anita Yang"||this.emailUnderName.match("Van Pan") == "Van Pan"||this.emailUnderName.match("Danielle Zhao") == "Danielle Zhao" || this.emailUnderName.match("Sean Wu (AZURE)") == "Sean Wu (AZURE)")
+      this.admin = true;}, 500)
   },
   methods: {
     handleCommand(command) {
@@ -260,6 +257,7 @@ export default {
            }
         }).catch((error) => {
           this.emailUnderName = "Juncheng Zhu";
+          // this.admin = true;
           reject(error)
         })
       })
@@ -335,18 +333,19 @@ day {
 
 .sectionPointer {
   cursor: pointer;  
-  margin: 0 15px 0 15px;
+  margin: 0 10px 0 10px;
   text-decoration: none;
   color: gray;
 }
 
 .sectionPointer:hover {
-  background-color:navy;
+  background-color:none;
 }
 
 .testClass {
+  margin-right: 40px;
     margin-bottom: 55px;
-    /* text-align:left; */
+    text-align:right;
 
 }
 .testClassII {
