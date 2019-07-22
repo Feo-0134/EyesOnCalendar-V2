@@ -1,7 +1,7 @@
 <template>
   <div class="row">
-        <div v-if="large" class="cellx name">{{displayName}}</div>
-        <div v-if="!large" class="cellx name">{{shortName}}</div>
+        <div v-if="large" class="cellxII name">{{displayName}}</div>
+        <div v-if="!large" class="cellxII name">{{shortName}}</div>
       <day @customEvent="handleEvent" v-for="(d,index) in person.days" :large="large" :key="d._id" :day="d" :pindex="pindex" :dindex="index" :testparam="dayType" :testparamII="date"/>
       <!-- /**************************************
        Feature 2  add a dialog for updating the status
@@ -156,9 +156,9 @@ export default {
   cursor: pointer;
 }
 
-.cellx {
+.cellxII {
   border-radius: 2px;
-  text-transform: uppercase;
+  /*text-transform: uppercase;*/
   margin: 4px;
   user-select: none;
   border: 0px solid;

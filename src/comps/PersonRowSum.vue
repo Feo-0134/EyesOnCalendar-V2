@@ -175,9 +175,9 @@ export default {
   cursor: pointer;
 }
 
-.cellx {
+.cellxII {
   border-radius: 2px;
-  text-transform: uppercase;
+  /*text-transform: uppercase;*/
   margin: 4px;
   user-select: none;
   border: 0px solid;

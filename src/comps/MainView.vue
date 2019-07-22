@@ -58,6 +58,7 @@ export default {
       scrolled: false,
       changed: false,
       emailUnderName: null,
+      // emailAddress:null,
       initUndo:true,
       admin:false,
       //initDone:false,
@@ -250,13 +251,17 @@ export default {
     personinfo: function() {
       return new Promise((resolve, reject) => {
         this.$http.get("/.auth/me").then((response)=> {
-           for(const a of response.data[0].user_claims) {
-             if(a.typ == "name"){
-               this.emailUnderName = a.val;
-             }
+         for(const a of response.data[0].user_claims) {
+           if(a.typ == "name"){
+             this.emailUnderName = a.val
            }
+          //  if(a.typ == "http:\/\/schemas.xmlsoap.org\/ws\/2005\/05\/identity\/claims\/name") {
+          //    this.emailAddress = a.val
+          //  }
+         }
+          
         }).catch((error) => {
-          this.emailUnderName = "Juncheng Zhu";
+          this.emailUnderName = "Juncheng Zhu"
           // this.admin = true;
           reject(error)
         })

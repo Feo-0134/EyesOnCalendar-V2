@@ -25,10 +25,10 @@ const json = require('./convertCsv.js')
 if (process.env.NODE_ENV == "production" || process.env.NODE_ENV === undefined) {
         var staticPath = "/dist/"
         /* Production Database */
-        // var connString = "mongodb://apaccalendardatabase-dev:qySE4ELD21G4duwC2WdHM0mHVsk0z4VW9jSxWkpIDHAiUCclBAZkuKnNI48lmsxAD7BKzkuOAiqWy9KDNI4vCQ%3D%3D@apaccalendardatabase-dev.documents.azure.com:10255/?ssl=true&replicaSet=globaldb"
+        var connString = "mongodb://apaccalendardatabase-dev:qySE4ELD21G4duwC2WdHM0mHVsk0z4VW9jSxWkpIDHAiUCclBAZkuKnNI48lmsxAD7BKzkuOAiqWy9KDNI4vCQ%3D%3D@apaccalendardatabase-dev.documents.azure.com:10255/?ssl=true&replicaSet=globaldb"
         
         /* Develop Database */
-        var connString = "mongodb://apaccalendardatabase:6ANCUJX2zdRjm7sKXDBvqy6X93dTao2XabNBmvEBFSLM7pqHoqkwAPStsLeIXMYKr4DJxAcDyiCont6LXjKjpw%3D%3D@apaccalendardatabase.documents.azure.com:10255/?ssl=true&replicaSet=globaldb"
+        // var connString = "mongodb://apaccalendardatabase:6ANCUJX2zdRjm7sKXDBvqy6X93dTao2XabNBmvEBFSLM7pqHoqkwAPStsLeIXMYKr4DJxAcDyiCont6LXjKjpw%3D%3D@apaccalendardatabase.documents.azure.com:10255/?ssl=true&replicaSet=globaldb"
 }
 else {
     var staticPath = "/../dist/"
