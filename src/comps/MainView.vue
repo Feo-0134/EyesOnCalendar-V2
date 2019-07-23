@@ -408,7 +408,7 @@ day {
   color:white;
 }
 .el-tabs__nav-scroll {
-  margin-left:44%;
+  margin-left:auto;
 }
 
 </style>
