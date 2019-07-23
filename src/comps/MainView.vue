@@ -23,7 +23,9 @@
       <h2 v-if="!month">{{message}}</h2>
       <button v-if="!month" class = "button" v-bind:class="{buttonBackground: initUndo}" v-on:click="init">Init Table</button>
       <button v-if="!month" v-bind:class="{buttonBackground: !initUndo}" class = "button" v-on:click="reload">Reload Table</button>
-      <div v-if="month">
+      <div class="el-tabs__nav-wrap" v-if="month">
+          <el-tabs class="tabsJuncheng" v-model="activeName"  @tab-click="handleClick">
+            <el-tab-pane label="FTE members" name="first">
           <div id="tablehead" v-bind:class="{sticky: scrolled}" class="row tablehead">
             <div class="name"></div>
             <div v-for="(p,index) in month.people[0].days" :key="index" class="cellx">{{index+1}}</div>
@@ -36,6 +38,10 @@
             <div v-for="(p,index) in month.people[0].days" :key="index" class="cellx">{{percentage(index)}}%</div>
           </div>
           <person v-for="(p,index) in month.people" v-bind:key="p._id" v-bind:pindex="index" v-bind:person="p" :userName="emailUnderName"/>
+            </el-tab-pane>
+            <el-tab-pane label="vendor members" name="second">
+            </el-tab-pane>
+          </el-tabs>
       </div>
       <help-screen />
       <transition name="fade">
@@ -62,7 +68,8 @@ export default {
       initUndo:true,
       admin:false,
       //initDone:false,
-      isLoading: false
+      isLoading: false,
+      activeName: 'first'
     };
   },
   asyncComputed: {
@@ -299,6 +306,9 @@ export default {
           location.reload()
         },2000)
       }
+    },
+    handleClick(tab, event) {
+        console.log(tab, event);
     }
   }
 }
@@ -384,6 +394,21 @@ day {
 }
 .el-icon-arrow-down {
   font-size: 12px;
+}
+.tabsJuncheng {
+  margin: 40px;
+}
+.el-tabs__nav-wrap {
+  background-color:rgb(37, 37, 37);
+}
+.el-tabs__nav-wrap::after {
+  background-color:rgb(37, 37, 37);
+}
+.el-tabs__item {
+  color:white;
+}
+.el-tabs__nav-scroll {
+  margin-left:44%;
 }
 
 </style>
