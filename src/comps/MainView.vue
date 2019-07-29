@@ -25,21 +25,41 @@
       <button v-if="!month" v-bind:class="{buttonBackground: !initUndo}" class = "button" v-on:click="reload">Reload Table</button>
       <div class="el-tabs__nav-wrap" v-if="month">
           <el-tabs class="tabsJuncheng" v-model="activeName"  @tab-click="handleClick">
-            <el-tab-pane label="FTE members" name="first">
-              <div id="tablehead" v-bind:class="{sticky: scrolled}" class="row tablehead">
+            <el-tab-pane label="All Members" name="first">
+               <div id="tablehead" v-bind:class="{sticky: scrolled}" class="row tablehead">
                 <div class="name"></div>
                 <div v-for="(p,index) in month.people[0].days" :key="index" class="cellx">{{index+1}}</div>
               </div>
-              <!-- /**************************************
-              Feature 3 add a Line for on-duty rate
-              **************************************/ -->
+              <!-- /************************************** Feature 3 add a Line for on-duty rate **************************************/ -->
               <div id="tablehead" class="row tablehead">
                 <div class="name attendance">On Duty</div>
                 <div v-for="(p,index) in month.people[0].days" :key="index" class="cellx">{{percentage(index)}}%</div>
               </div>
-              <person  v-for="(p,index) in month.people" v-show="p.name | tagEx" v-bind:key="p._id" v-bind:pindex="index" v-bind:person="p" :userName="emailUnderName"/>
+              <person  v-for="(p,index) in month.people" v-bind:key="p._id" v-bind:pindex="index" v-bind:person="p" :userName="emailUnderName"/>
             </el-tab-pane>
-            <el-tab-pane label="vendor members" name="second">
+            <el-tab-pane label="FTE Members" name="second">
+              <div id="tablehead" v-bind:class="{sticky: scrolled}" class="row tablehead">
+                <div class="name"></div>
+                <div v-for="(p,index) in month.people[0].days" :key="index" class="cellx">{{index+1}}</div>
+              </div>
+              <!-- /**************************************Feature 3 add a Line for on-duty rate **************************************/ -->
+              <div id="tablehead" class="row tablehead">
+                <div class="name attendance">On Duty</div>
+                <div v-for="(p,index) in month.people[0].days" :key="index" class="cellx">{{percentage(index)}}%</div>
+              </div>
+              <person  v-for="(p,index) in month.people" v-show="p.name.match('FTE')=='FTE'" v-bind:key="p._id" v-bind:pindex="index" v-bind:person="p" :userName="emailUnderName"/>
+            </el-tab-pane>
+            <el-tab-pane label="Vendor Members" name="third">
+               <div id="tablehead" v-bind:class="{sticky: scrolled}" class="row tablehead">
+                <div class="name"></div>
+                <div v-for="(p,index) in month.people[0].days" :key="index" class="cellx">{{index+1}}</div>
+              </div>
+              <!-- /************************************** Feature 3 add a Line for on-duty rate **************************************/ -->
+              <div id="tablehead" class="row tablehead">
+                <div class="name attendance">On Duty</div>
+                <div v-for="(p,index) in month.people[0].days" :key="index" class="cellx">{{percentage(index)}}%</div>
+              </div>
+              <person  v-for="(p,index) in month.people" v-show="p.name.match('v-')=='v-'" v-bind:key="p._id" v-bind:pindex="index" v-bind:person="p" :userName="emailUnderName"/>
             </el-tab-pane>
           </el-tabs>
       </div>
@@ -408,17 +428,12 @@ day {
 .tabsJuncheng {
   margin: 40px;
 }
-.el-tabs__nav-wrap {
-  background-color:rgb(37, 37, 37);
-}
-.el-tabs__nav-wrap::after {
-  background-color:rgb(37, 37, 37);
-}
-.el-tabs__item {
-  color:white;
-}
 .el-tabs__nav-scroll {
   margin-left:auto;
+}
+
+.el-tabs__nav-wrap::after {
+  visibility: hidden;
 }
 
 </style>
