@@ -37,7 +37,7 @@
                 <div class="name attendance">On Duty</div>
                 <div v-for="(p,index) in month.people[0].days" :key="index" class="cellx">{{percentage(index)}}%</div>
               </div>
-              <person  v-for="(p,index) in month.people"   v-bind:key="p._id" v-bind:pindex="index" v-bind:person="p" :userName="emailUnderName"/>
+              <person  v-for="(p,index) in month.people" v-show="p.name | tagEx" v-bind:key="p._id" v-bind:pindex="index" v-bind:person="p" :userName="emailUnderName"/>
             </el-tab-pane>
             <el-tab-pane label="vendor members" name="second">
             </el-tab-pane>
@@ -56,6 +56,8 @@ import HelpScreen from "@/comps/HelpScreen";
 import Loading from "@/components/LoadButton";
 import moment from "moment";
 
+
+
 export default {
   components: { Person, HelpScreen, Loading },
   data() {
@@ -64,7 +66,6 @@ export default {
       scrolled: false,
       changed: false,
       emailUnderName: null,
-      // emailAddress:null,
       initUndo:true,
       admin:false,
       //initDone:false,
@@ -74,9 +75,11 @@ export default {
   },
   // filters: {
   //   tagEx: function(value) {
-  //     var people = this.month.people
-  //     if(people.name == "Anik Shen")
-  //       return ;
+  //     console.log(value)
+  //     if(value == "Anik Shen") {
+  //       return true;
+  //     }else 
+  //       return false;
   //   }
   // },
   asyncComputed: {
