@@ -12,22 +12,22 @@
             <div class="legenda-container">
                 <div class="dayTypes">
                     <div class="box-container">
-                        <div v-on:click="cycle($event,0)" class="box green"></div><div v-on:click="cycle($event,5)" class="box green">MS</div><div v-on:click="cycle($event,6)" class="box green">NS</div><h5 class = "blackFont">Work Day</h5>
+                        <div v-on:click="cycle($event,0)" class="cellJuncheng box green"></div><div v-on:click="cycle($event,5)" class="cellJuncheng box green">MS</div><div v-on:click="cycle($event,6)" class="cellJuncheng box green">NS</div><h5 class = "blackFont">Work Day</h5>
                     </div>
                     <div class="box-container">
-                        <div v-on:click="cycle($event,3)" class="box red" v-popover:myname>V</div><h5 class = "blackFont">Vacation</h5>
+                        <div v-on:click="cycle($event,3)" class="cellJuncheng box red" v-popover:myname>V</div><h5 class = "blackFont">Vacation</h5>
                     </div>
                     <div class="box-container">
-                        <div v-on:click="cycle($event,2)" class="box purple" v-popover:myname>DV</div><h5 class = "blackFont">Desired Vacation</h5>
+                        <div v-on:click="cycle($event,2)" class="cellJuncheng box purple" v-popover:myname>DV</div><h5 class = "blackFont">Desired Vacation</h5>
                     </div>
                     <div class="box-container">
-                        <div v-on:click="cycle($event,1)" class="box red">PH</div><h5 class = "blackFont">Public Holiday</h5>
+                        <div v-on:click="cycle($event,1)" class="cellJuncheng box red">PH</div><h5 class = "blackFont">Public Holiday</h5>
                     </div>
                     <div class="box-container">
-                        <div v-on:click="cycle($event,7)" class="box orange">PO</div><div v-on:click="cycle($event,8)" class="box orange">PM</div><h5 class = "blackFont">OnDuty/MorningShift(PH)</h5>
+                        <div v-on:click="cycle($event,7)" class="cellJuncheng box orange">PO</div><div v-on:click="cycle($event,8)" class="cellJuncheng box orange">PM</div><h5 class = "blackFont">OnDuty/MorningShift(PH)</h5>
                     </div>
                     <div class="box-container">
-                        <div v-on:click="cycle($event,4)" class="box blue" v-popover:myname>T</div><h5 class = "blackFont">Training</h5>
+                        <div v-on:click="cycle($event,4)" class="cellJuncheng box blue" v-popover:myname>T</div><h5 class = "blackFont">Training</h5>
                     </div>
                 </div>
             </div>
@@ -92,7 +92,8 @@ export default {
      * Feature 6 One can only change his own status;TA & Manager have higher permission to all data
     **************************************/
     handleEvent:function(msg) {
-      if(this.userName.match(this.person.name) == this.person.name|| this.userName == "Juncheng Zhu" || this.userName == "Dingsong Zhang" || this.userName == "Sean Wu (AZURE)" || this.userName == "Anik Shen"|| this.userName == "Karen Zheng"||this.userName == "Anita Yang") { // this.userName == this.person.name + "(International Supplier)"||this.userName == this.person.name + "(Wicresoft Co., LTD)"||
+      var nameArray = this.person.name.split(" ");
+      if(this.userName.match(nameArray[0] + " " + nameArray[1]) == nameArray[0] + " " + nameArray[1]|| this.userName == "Juncheng Zhu" || this.userName == "Dingsong Zhang" || this.userName == "Sean Wu (AZURE)" || this.userName == "Anik Shen"|| this.userName == "Karen Zheng"||this.userName == "Anita Yang") { // this.userName == this.person.name + "(International Supplier)"||this.userName == this.person.name + "(Wicresoft Co., LTD)"||
         this.open = msg
         this.date = msg - 1
       }
@@ -153,7 +154,7 @@ export default {
 }
 .workday {
   color: white;
-  cursor: pointer;
+  /* cursor: pointer; */
 }
 
 .cellxII {
@@ -163,6 +164,10 @@ export default {
   user-select: none;
   border: 0px solid;
   font-size: 16px;
+}
+
+.cellJuncheng {
+  cursor: pointer;
 }
 
 .workday:hover {
@@ -296,7 +301,7 @@ export default {
   color: white;
   font-weight: 700;
   font-size: 30px;
-  cursor: pointer;
+  /* cursor: pointer; */
   transition: all 0.1s ease-in-out;
 }
 

@@ -23,8 +23,8 @@
       <h2 v-if="!month">{{message}}</h2>
       <button v-if="!month" class = "button" v-bind:class="{buttonBackground: initUndo}" v-on:click="init">Init Table</button>
       <button v-if="!month" v-bind:class="{buttonBackground: !initUndo}" class = "button" v-on:click="reload">Reload Table</button>
-      <div class="el-tabs__nav-wrap" v-if="month">
-          <el-tabs class="tabsJuncheng" v-model="activeName"  @tab-click="handleClick">
+      <div v-if="month">
+          <el-tabs class="tabsJuncheng" v-model="activeName" @tab-click="handleClick">
             <el-tab-pane label="All Members" name="first">
                <div id="tablehead" v-bind:class="{sticky: scrolled}" class="row tablehead">
                 <div class="name"></div>
@@ -45,7 +45,7 @@
               <!-- /**************************************Feature 3 add a Line for on-duty rate **************************************/ -->
               <div id="tablehead" class="row tablehead">
                 <div class="name attendance">On Duty</div>
-                <div v-for="(p,index) in month.people[0].days" :key="index" class="cellx">{{percentage(index)}}%</div>
+                <div v-for="(p,index) in month.people[0].days" :key="index" class="cellx">{{percentageFTE(index)}}%</div>
               </div>
               <person  v-for="(p,index) in month.people" v-show="p.name.match('FTE')=='FTE'" v-bind:key="p._id" v-bind:pindex="index" v-bind:person="p" :userName="emailUnderName"/>
             </el-tab-pane>
@@ -57,7 +57,7 @@
               <!-- /************************************** Feature 3 add a Line for on-duty rate **************************************/ -->
               <div id="tablehead" class="row tablehead">
                 <div class="name attendance">On Duty</div>
-                <div v-for="(p,index) in month.people[0].days" :key="index" class="cellx">{{percentage(index)}}%</div>
+                <div v-for="(p,index) in month.people[0].days" :key="index" class="cellx">{{percentageVendor(index)}}%</div>
               </div>
               <person  v-for="(p,index) in month.people" v-show="p.name.match('v-')=='v-'" v-bind:key="p._id" v-bind:pindex="index" v-bind:person="p" :userName="emailUnderName"/>
             </el-tab-pane>
@@ -139,6 +139,24 @@ export default {
     totalamount() {
       return (this.month.people).length
     },
+    totalamountFTE() {
+      var sum = 0
+      for(const b of Object.keys(this.month.people)) {
+          if(this.month.people[b].name.match("FTE")=="FTE") {
+            sum++
+          }
+        }
+      return sum;
+    },
+    totalamountVendor() {
+      var sum = 0
+      for(const b of Object.keys(this.month.people)) {
+          if(this.month.people[b].name.match("v-")=="v-") {
+            sum++
+          }
+        }
+      return sum;
+    },
     date() {
       this.changed=!this.changed
       return this.$router.currentRoute.path;
@@ -182,11 +200,49 @@ export default {
       return function(val) {
         var sum = 0;
         for(const b of Object.keys(this.month.people)) {
-          if(this.month.people[b].days[val].workType == "W"||this.month.people[b].days[val].workType == "MS"||this.month.people[b].days[val].workType == "NS"||this.month.people[b].days[val].workType == "PO"||this.month.people[b].days[val].workType == "PM") {
+          if(this.month.people[b].days[val].workType == "W"
+          ||this.month.people[b].days[val].workType == "MS"
+          ||this.month.people[b].days[val].workType == "NS"
+          ||this.month.people[b].days[val].workType == "PO"
+          ||this.month.people[b].days[val].workType == "PM") {
             sum++
           }
         }
         return ((sum/this.totalamount)*100).toFixed(0)
+      }
+    },
+    percentageFTE:function() {
+      return function(val) {
+        var sum = 0;
+        for(const b of Object.keys(this.month.people)) {
+          if(this.month.people[b].name.match("FTE")=="FTE" 
+          && (this.month.people[b].days[val].workType == "W"
+          ||this.month.people[b].days[val].workType == "MS"
+          ||this.month.people[b].days[val].workType == "NS"
+          ||this.month.people[b].days[val].workType == "PO"
+          ||this.month.people[b].days[val].workType == "PM")) {
+            sum++
+          }
+        }
+        if(this.totalamountFTE == 0) return 0;
+        return ((sum/this.totalamountFTE)*100).toFixed(0)
+      }
+    },
+    percentageVendor:function() {
+      return function(val) {
+        var sum = 0;
+        for(const b of Object.keys(this.month.people)) {
+          if(this.month.people[b].name.match("v-")=="v-" 
+          && (this.month.people[b].days[val].workType == "W"
+          ||this.month.people[b].days[val].workType == "MS"
+          ||this.month.people[b].days[val].workType == "NS"
+          ||this.month.people[b].days[val].workType == "PO"
+          ||this.month.people[b].days[val].workType == "PM")) {
+            sum++
+          }
+        }
+        if(this.totalamountVendor == 0) return 0;
+        return ((sum/this.totalamountVendor)*100).toFixed(0)
       }
     },
     /**************************************
