@@ -72,7 +72,7 @@ export default {
     },
     shortName() {
       var nameArray = this.person.name.split(" ");
-      return nameArray[0] + " " + nameArray[nameArray.length - 1][0];
+      return nameArray[0]; // + " " + nameArray[nameArray.length - 1][0];
     },
     large() {
       if (this.size > 1600) return true;
