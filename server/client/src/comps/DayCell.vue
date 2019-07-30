@@ -9,20 +9,12 @@ import _ from 'lodash'
 export default {
   props: ["day", "pindex", "dindex","testparam","testparamII"],
   methods: {
-    /**************************************
-     * Feature 2  add a dialog for updating the status
-    **************************************/
+    /*************************************** Feature 2 status update menu **************************************/
     toggle() {
-
       this.open = !this.open
       this.$emit('customEvent',this.dindex + 1)
-
       // var undoStep = { path: this.apiPath, payload: this.apiPayload }; // UNDO STEP HERE -- TODO
       // this.$history.push(undoStep);
-
-      // if (this.day.workDay == 1) this.day.workDay = 0;              // WORKDAY(Green) WEEKEND(Red) SWITCH HERE -- TODO
-      // else if (this.day.workDay == 0) this.day.workDay = 1;
-      
       this.$http.post(this.apiPath, this.apiPayload);                 // Data upload WHY SYNC TWO TIMES I is here
     },
     debouncedPost() {
@@ -72,23 +64,17 @@ export default {
   },
   data() {
     return {
-    /**************************************
-     * Feature 2  add a dialog for updating the status
-    **************************************/
+    /*************************************** Feature 2 status update menu ***********************************/
       open:false,
-    /**************************************
-     * Feature 1 add two new status "MS"(morning shift),"NS"(night shift)
-    **************************************/
-      workTypes: ["W", "PH", "DV", "V", "T","MS","NS","PO","PM"] // original workTypes["W", "PH", "DV", "V", "T","MS","NS", "oc", "OC"]
+    /*************************************** Feature 1 new cell status **************************************/
+      workTypes: ["W", "PH", "DV", "V", "T","MS","NS","PO","PM"]
     };
   },
   computed: {
     dbFunc() {
       return _.debounce(()=>{this.$http.post(this.apiPath,this.apiPayload)},1080)
     },
-    /**************************************
-     * Feature 1 add two new status "MS"(morning shift),"NS"(night shift)
-    **************************************/
+    /*************************************** Feature 1 new cell status **************************************/
     displayValue() {
       if(this.testparamII == this.dindex) {
         this.day.workType = this.testparam
@@ -104,7 +90,7 @@ export default {
       //console.log(this.day.workType)
       this.dbFunc()                                     // WHY SYNC TWO TIMES II is here
       }
-      if (this.day.workType == "W") return " ";// not display "W" in the calendar for there are TOO MANY WORKING DAYS
+      if (this.day.workType == "W") return " "; // not display "W" in the calendar for there are TOO MANY WORKING DAYS
       else return this.day.workType;
     },
 

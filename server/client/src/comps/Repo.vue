@@ -87,9 +87,6 @@ export default {
   margin: 9px 0 0 0;
 }
 
-day {
-  color: black !important;
-}
 
 .tablehead {
   width: 100%;

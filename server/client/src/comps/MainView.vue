@@ -14,9 +14,6 @@
           <a :href="goDeletePerson" v-if="admin" class="sectionPointer">&gt; DeletePerson</a>
           <a :href="goReport" v-if="admin" class="sectionPointer">&gt; Report</a>
         </div>
-        <!-- <div class="testClass">
-          <a :href="goDEV" class="sectionPointer">&gt; DEV</a>
-        </div> -->
       </div>
       <div class="testClassII"><p>Welcome, {{emailUnderName}}</p></div>
       <h1><a :href="prevMonth" class="pointer">&lt;</a>{{prettyDate}}<a :href="nextMonth" class="pointer">&gt;</a></h1>
@@ -30,7 +27,7 @@
                 <div class="name"></div>
                 <div v-for="(p,index) in month.people[0].days" :key="index" class="cellx">{{index+1}}</div>
               </div>
-              <!-- /************************************** Feature 3 add a Line for on-duty rate **************************************/ -->
+              <!-- /************************************** Feature 3 on-duty rate **************************************/ -->
               <div id="tablehead" class="row tablehead">
                 <div class="name attendance">On Duty</div>
                 <div v-for="(p,index) in month.people[0].days" :key="index" class="cellx">{{percentage(index)}}%</div>
@@ -42,7 +39,7 @@
                 <div class="name"></div>
                 <div v-for="(p,index) in month.people[0].days" :key="index" class="cellx">{{index+1}}</div>
               </div>
-              <!-- /**************************************Feature 3 add a Line for on-duty rate **************************************/ -->
+              <!-- /************************************** Feature 3 on-duty rate **************************************/ -->
               <div id="tablehead" class="row tablehead">
                 <div class="name attendance">On Duty</div>
                 <div v-for="(p,index) in month.people[0].days" :key="index" class="cellx">{{percentageFTE(index)}}%</div>
@@ -54,7 +51,7 @@
                 <div class="name"></div>
                 <div v-for="(p,index) in month.people[0].days" :key="index" class="cellx">{{index+1}}</div>
               </div>
-              <!-- /************************************** Feature 3 add a Line for on-duty rate **************************************/ -->
+              <!-- /************************************** Feature 3 on-duty rate **************************************/ -->
               <div id="tablehead" class="row tablehead">
                 <div class="name attendance">On Duty</div>
                 <div v-for="(p,index) in month.people[0].days" :key="index" class="cellx">{{percentageVendor(index)}}%</div>
@@ -93,15 +90,6 @@ export default {
       activeName: 'first'
     };
   },
-  // filters: {
-  //   tagEx: function(value) {
-  //     console.log(value)
-  //     if(value == "Anik Shen") {
-  //       return true;
-  //     }else 
-  //       return false;
-  //   }
-  // },
   asyncComputed: {
     month: {
       async get() {
@@ -181,9 +169,7 @@ export default {
         .subtract(1, "M")
         .format("/YYYY/M"));
     },
-    /**************************************
-     * Router
-    **************************************/
+    /*************************************** Router **************************************/
     goReport() {
       return ((this.date.split("/")[1] == "DEV"?"/DEV":"/AppService") + moment(this.date, "/YYYY/M").format("/YYYY/M") + "/report");
     },
@@ -193,9 +179,7 @@ export default {
     goDeletePerson() {
       return ((this.date.split("/")[1] == "DEV"?"/DEV":"/AppService") + moment(this.date, "/YYYY/M").format("/YYYY/M") + "/delete");
     },
-    /**************************************
-     * Feature 3 add a Line for on-duty rate
-    **************************************/
+    /*************************************** Feature 3 on-duty rate **************************************/
     percentage:function() {
       return function(val) {
         var sum = 0;
@@ -245,9 +229,7 @@ export default {
         return ((sum/this.totalamountVendor)*100).toFixed(0)
       }
     },
-    /**************************************
-     * Feature 9 init a new calendar for the next month (update only allow to init the comming month)
-    **************************************/
+    /*************************************** Feature 9 init calendar **************************************/
     apiPath() {
       return (
           "/api" +
@@ -337,10 +319,7 @@ export default {
         this.scrolled = false;
       }
     },
-    /**************************************
-     * Feature 4 Easy Authentication
-     * Feature 6 One can only change his own status;TA & Manager have higher permission to all data
-    **************************************/
+    /*************************************** Feature 4 Easy Authentication * Feature 6 Permission control **************************************/
     personinfo: function() {
       return new Promise((resolve, reject) => {
         this.$http.get("/.auth/me").then((response)=> {
@@ -348,39 +327,35 @@ export default {
            if(a.typ == "name"){
              this.emailUnderName = a.val
            }
-          //  if(a.typ == "http:\/\/schemas.xmlsoap.org\/ws\/2005\/05\/identity\/claims\/name") {
-          //    this.emailAddress = a.val
-          //  }
          }
           
         }).catch((error) => {
           this.emailUnderName = "Juncheng Zhu"
-          // this.admin = true;
           reject(error)
         })
       })
     },
-    /**************************************
-     * Feature 9 init a new calendar for the next month (update only allow to init the comming month)
-    **************************************/
+    /*************************************** Feature 9 init calendar **************************************/
     init() {
       // console.log(this.emailUnderName)
       if(this.emailUnderName.match("Juncheng Zhu") == "Juncheng Zhu"){
-        // this.emailUnderName.match("Karen Zheng") == "Karen Zheng"||this.emailUnderName.match("Anik Shen") == "Anik Shen"|| this.emailUnderName.match("Dingsong Zhang") == "Dingsong Zhang"||this.emailUnderName.match("Anita Yang") == "Anita Yang"||this.emailUnderName.match("Van Pan") == "Van Pan"||this.emailUnderName.match("Danielle Zhao") == "Danielle Zhao" || this.emailUnderName.match("Sean Wu (AZURE)") == "Sean Wu (AZURE)"){// ||this.emailUnderName.match("Danielle Zhao") == "Danielle Zhao"  // this.userName.match(this.person.name) == this.person.name
-        // console.log(this.emailUnderName)
+        /* this.emailUnderName.match("Karen Zheng") == "Karen Zheng"
+        ||this.emailUnderName.match("Anik Shen") == "Anik Shen"
+        || this.emailUnderName.match("Dingsong Zhang") == "Dingsong Zhang"
+        ||this.emailUnderName.match("Anita Yang") == "Anita Yang"
+        ||this.emailUnderName.match("Danielle Zhao") == "Danielle Zhao" 
+        || this.emailUnderName.match("Sean Wu (AZURE)") == "Sean Wu (AZURE)" */
         var that = this
         var dateNew = new Date();
-        // console.log(this.date.substr(-1))
-        // console.log(dateNew.getMonth())
-        if(true){ //this.date.substr(-1)==((dateNew.getMonth()+2).toString().substr(-1))||(this.date.substr(-1)== "9"&&(dateNew.getMonth()+1).toString().substr(-1)=="0")||(this.date.substr(-1)== "2"&&(dateNew.getMonth()+1).toString().substr(-1)=="1")) {
+        if(true){ 
+          /* this.date.substr(-1)==((dateNew.getMonth()+2).toString().substr(-1))
+          ||(this.date.substr(-1)== "9"&&(dateNew.getMonth()+1).toString().substr(-1)=="0")
+          ||(this.date.substr(-1)== "2"&&(dateNew.getMonth()+1).toString().substr(-1)=="1")) */
           this.isLoading = true
           this.initUndo = false
-          console.log(this.apiPath)
-          console.log(this.apiPayload)
-          this.$http.post(this.apiPath, this.apiPayload)//TBC
+          this.$http.post(this.apiPath, this.apiPayload)
           setTimeout(()=>{
             that.isLoading = false
-
           },5000)
         }
       }
@@ -404,10 +379,6 @@ export default {
 <style>
 .attendance {
   margin: 9px 0 0 0;
-}
-
-day {
-  color: black !important;
 }
 
 .tablehead {

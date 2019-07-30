@@ -117,6 +117,9 @@ export default {
 
 <style>
 
+day {
+  color: black !important;
+}
 .row-head {
   display: flex;
   height: 40px;

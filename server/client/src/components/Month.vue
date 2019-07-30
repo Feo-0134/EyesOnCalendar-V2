@@ -36,7 +36,4 @@ export default {
 </script>
 
 <style>
-    day {
-        color: black !important;
-    }
 </style>

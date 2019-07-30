@@ -4,7 +4,6 @@
     <div class="help-dialog">
         <h1>Help</h1>
         <!-- <h5 class="help-subtitle">will improve this dialog, I promise!</h5> -->
-        <!-- <h5 class="help-subtitle">will improve this dialog, the author promise!</h5> -->
         <div class="legenda-container">
             <div class="dayTypes">
                 <div class="icon-container">
@@ -33,12 +32,6 @@
                 <div class="box-container">
                     <div class="box blue">T</div><h5>Training</h5>
                 </div>
-                <!-- <div class="box-container">
-                    <div class="box orange">OC</div><h5>On-call</h5>
-                </div> -->
-                <!-- <div class="box-container">
-                    <div class="box grey">WE</div><div class="box green">WE</div><h5>Weekend</h5>
-                </div> -->
             </div>
         </div>
         <div class="separator"></div>
@@ -48,7 +41,6 @@
                 <h5>You cannot change weekend days to any other type except OnCall</h5>
                 <h5>You cannot set V, DV, T to working</h5>
                 <h5>You cannot set a normal working day to Not Working (red), change day type first</h5>
-                <!-- <h5>You cannot set OC to not working</h5> -->
             </div>
         </div>
     </div>
