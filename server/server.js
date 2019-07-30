@@ -29,7 +29,7 @@ const runMode = "dev"
 if (runMode == "dev") {   // if (process.env.NODE_ENV == "production" || process.env.NODE_ENV === undefined) {
     /* Develop Database */
     // var staticPath = "/dist/"
-    var staticPath = "/../dist/"
+    var staticPath = "/client/dist/"
     var connString = "mongodb://apaccalendardatabase-dev:qySE4ELD21G4duwC2WdHM0mHVsk0z4VW9jSxWkpIDHAiUCclBAZkuKnNI48lmsxAD7BKzkuOAiqWy9KDNI4vCQ%3D%3D@apaccalendardatabase-dev.documents.azure.com:10255/?ssl=true&replicaSet=globaldb"
 }
 else {
