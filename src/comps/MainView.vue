@@ -24,7 +24,7 @@
       <button v-if="!month" class = "button" v-bind:class="{buttonBackground: initUndo}" v-on:click="init">Init Table</button>
       <button v-if="!month" v-bind:class="{buttonBackground: !initUndo}" class = "button" v-on:click="reload">Reload Table</button>
       <div v-if="month">
-          <el-tabs class="tabsJuncheng" v-model="activeName" @tab-click="handleClick">
+          <el-tabs id="tabsJuncheng" v-model="activeName" @tab-click="handleClick">
             <el-tab-pane label="All Members" name="first">
                <div id="tablehead" v-bind:class="{sticky: scrolled}" class="row tablehead">
                 <div class="name"></div>
@@ -481,11 +481,11 @@ day {
 .el-icon-arrow-down {
   font-size: 12px;
 }
-.tabsJuncheng {
-  margin: 40px;
+#tabsJuncheng .el-tabs__item{
+  color:#808080;
 }
-.el-tabs__nav-scroll {
-  margin-left:auto;
+#tabsJuncheng .el-tabs__nav-scroll {
+  margin-left:50px;
 }
 
 .el-tabs__nav-wrap::after {
