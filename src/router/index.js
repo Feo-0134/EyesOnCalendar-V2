@@ -7,6 +7,7 @@ import MainView from '@/comps/MainView'
 import Repo from '@/comps/Repo'
 import NewPerson from '@/components/NewPerson'
 import DelPerson from '@/components/DelPerson'
+import NotFound from '@/components/NotFound'
 Vue.use(Router)
 
 export default new Router({
@@ -67,6 +68,11 @@ export default new Router({
       path: '/DEV/upload',
       name: 'Upload',
       component: Upload
+    },
+    {
+      path:'*',
+      name: 'NotFound',
+      component: NotFound
     }
   ]
 })
