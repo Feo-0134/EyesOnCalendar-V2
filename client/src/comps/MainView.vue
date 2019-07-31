@@ -85,7 +85,6 @@ export default {
       emailUnderName: null,
       initUndo:true,
       admin:false,
-      //initDone:false,
       isLoading: false,
       activeName: 'first'
     };
@@ -110,9 +109,9 @@ export default {
           res.data.people = res.data.people.sort((x,y)=>{
             return x.name.localeCompare(y.name)
           })
-          //console.log(res.data)
           return res.data;
         } catch (e) {
+          console.log(e)
           this.socket = null;
           this.message = "Month not found";
           return null;

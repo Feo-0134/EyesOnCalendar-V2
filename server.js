@@ -35,7 +35,6 @@ if (runMode == "dev") {   // if (process.env.NODE_ENV == "production" || process
 else {
 
     // var connString = "mongodb://mayocalendarv2-dev:CiXxW30UqowaAs8CiAVyNiLgJ2UkRmpN6KXBGcJWamGmN2sNYkwcfhRhXQqGfi6jOFH6imOniww5Wn6tX2dIIA%3D%3D@mayocalendarv2-dev.documents.azure.com:10255/?ssl=true&replicaSet=globaldb"
-
     /* Production Database */
     var staticPath = "/dist/"
     var connString = "mongodb://apaccalendardatabase:6ANCUJX2zdRjm7sKXDBvqy6X93dTao2XabNBmvEBFSLM7pqHoqkwAPStsLeIXMYKr4DJxAcDyiCont6LXjKjpw%3D%3D@apaccalendardatabase.documents.azure.com:10255/?ssl=true&replicaSet=globaldb"
