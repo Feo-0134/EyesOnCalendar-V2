@@ -15,12 +15,13 @@ arrAll.forEach(date => {
             if (err) {
                 return console.error(err);
             }
-            console.log("File opened successfully!");
+            // console.log("File opened successfully!");
         })
     }
-    var dateStr = new Date(date.toString()).getDay()
+    var dateStr = new Date(date.toString()).getDay().toString()
     var chr = "";
-    if(dateStr == 0 || dateStr == 6) {
+    console.log(dateStr)
+    if(dateStr == "0" || dateStr == "6") {
         chr = "PH";
     }else {
         chr = "W"
@@ -29,6 +30,6 @@ arrAll.forEach(date => {
         if (err) {
             return console.error(err);
         }
-        console.log("File opened successfully!");
+        // console.log("File opened successfully!");
     })
 })

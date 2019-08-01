@@ -269,34 +269,51 @@ function writeNewArrD(strinner) {
      });
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 router.post("/AppService/:year/:month/init", upload.any('csv'), async (ctx) => {
     let section = "AppService"
     let p = ctx.params
     let lastMonth = await Month.findOne({ 'year': p.year, 'month': (p.month - 1),'section': section })
-    var data = fs.readFileSync('./uploads/mythA.txt');
-    var str1 = data.toString();
-    // console.log(str1)
-    var str2, str3
-    var arr = str1.split(",");
-    console.log(arr)
-    var arrNew=new Array();
-    var i = 0;
     var monthArr = ["JanuaryA", "FebruaryA", "MarchA", "AprilA", "MayA", "JuneA", "JulyA", "AuguestA", "SeptemberA", "OctoberA", "NovemberA", "DecemberA"]
+    // generate str3
+    var thisYear = p.year    
+    var thisMonth = p.month
+    var str2 = thisYear.toString() + "-" + thisMonth.toString() + "-";
+    console.log(str2)
+    var dayNum = new Date(thisYear, thisMonth, 0).getDate();
+    var arrMonth = new Array();
+    let cnt = 0;
     setTimeout(function() {
-        str3 = arr.join(",")
+        while(cnt < dayNum) {
+            var tmp = str2 + (cnt+1).toString();
+            var dayPtr = new Date(tmp).getDay().toString();
+            if(dayPtr == "0" || dayPtr == "6") {
+                arrMonth[cnt] = "PH";
+            }else {
+                arrMonth[cnt] = "W";
+            }
+            cnt++;
+        }
+        var str3 = arrMonth.join(",")
         str3 = "\n%DefaultName% (1107-MICROSOFT CHINA CO LTD)," + str3
-        console.log(str3)
         lastMonth.people.forEach(person => {
-            fs.writeFile('./uploads/months/'+ monthArr[month - 1] +'.txt', str3, {flag:'a',encoding:'utf-8',mode:'0666'}, function(err) {
+            fs.writeFile('./uploads/months/'+ monthArr[p.month - 1] +'.txt', str3, {flag:'a',encoding:'utf-8',mode:'0666'}, function(err) {
                 if (err) {
                     return console.error(err);
                 }
-                fs.readFile('./uploads/months/'+ monthArr[month - 1] +'.txt', function (err, data) {
-                if (err) {
-                    return console.error(err);
-                }
-                console.log(data.toString());
-                });
             });
         })
     },500)
@@ -304,23 +321,25 @@ router.post("/AppService/:year/:month/init", upload.any('csv'), async (ctx) => {
 })
 
 router.post("/AppService/:year/:month/reload", upload.any('csv'), async (ctx) => {
-    let year = ctx.params.year - 0
-    let month = ctx.params.month - 0
+    let p = ctx.params
     let section = "AppService"
     var monthArr = ["JanuaryA", "FebruaryA", "MarchA", "AprilA", "MayA", "JuneA", "JulyA", "AuguestA", "SeptemberA", "OctoberA", "NovemberA", "DecemberA"]
-    let src = fs.createReadStream('./uploads/months/'+ monthArr[month-1] +'.txt');
+    let src = fs.createReadStream('./uploads/months/'+ monthArr[p.month-1] +'.txt');
     let people = await json(src)
+ 
+    let lastMonth = await Month.findOne({ 'year': p.year, 'month': (p.month - 1),'section': section })
     let countNum = 0
-    let lastMonth = await Month.findOne({ 'year': year, 'month': (month - 1),'section': section })
-    let currentMonth = await Month.findOne({ 'year': year, 'month': month,'section': section })
     people.forEach(person => {
         person.name = lastMonth.people[countNum].name
         countNum ++
     })
-    if (currentMonth == null)
-        var payload = insertMonth(year, month, people, section)
-    else
-        var payload = incrementMonth(currentMonth, people)
+    let currentMonth = await Month.findOne({ 'year': p.year, 'month': p.month,'section': section })
+    if (currentMonth == null) {
+        var payload = insertMonth(p.year, p.month, people, section)
+    }
+    else {
+        console.log("Month Already There.")
+    }
     try {
         await payload.save()
         ctx.body = "all good"
@@ -331,6 +350,50 @@ router.post("/AppService/:year/:month/reload", upload.any('csv'), async (ctx) =>
         console.log(e)
     }
 })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 router.post("/DEV/:year/:month/init", upload.any('csv'), async (ctx) => {
     let section = "DEV"
