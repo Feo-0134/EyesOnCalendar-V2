@@ -22,26 +22,23 @@ const io = require('socket.io')(server)
 const fs = require('fs')
 const json = require('./convertCsv.js')
 
-const runMode = "dev"
-// const runMode = "production"
+require('dotenv').config();
 
 
-if (runMode == "dev") {   // if (process.env.NODE_ENV == "production" || process.env.NODE_ENV === undefined) {
-    /* Develop Database */
-    // var staticPath = "/dist/"
-    var staticPath = "/client/dist/"
-    var connString = "mongodb://apaccalendardatabase-dev:qySE4ELD21G4duwC2WdHM0mHVsk0z4VW9jSxWkpIDHAiUCclBAZkuKnNI48lmsxAD7BKzkuOAiqWy9KDNI4vCQ%3D%3D@apaccalendardatabase-dev.documents.azure.com:10255/?ssl=true&replicaSet=globaldb"
+
+if (process.env.NODE_ENV == "production" || process.env.NODE_ENV === undefined) {
+    var staticPath = "/dist/"
+    var connString = process.env.DB_CONNECTSTRING_PRODUCTION
 }
 else {
-
     // var connString = "mongodb://mayocalendarv2-dev:CiXxW30UqowaAs8CiAVyNiLgJ2UkRmpN6KXBGcJWamGmN2sNYkwcfhRhXQqGfi6jOFH6imOniww5Wn6tX2dIIA%3D%3D@mayocalendarv2-dev.documents.azure.com:10255/?ssl=true&replicaSet=globaldb"
-    /* Production Database */
-    var staticPath = "/dist/"
-    var connString = "mongodb://apaccalendardatabase:6ANCUJX2zdRjm7sKXDBvqy6X93dTao2XabNBmvEBFSLM7pqHoqkwAPStsLeIXMYKr4DJxAcDyiCont6LXjKjpw%3D%3D@apaccalendardatabase.documents.azure.com:10255/?ssl=true&replicaSet=globaldb"
+    var staticPath = "/client/dist/"
+    var connString = process.env.DB_CONNECTSTRING_DEV
 
 }
 
 router.use(bodyParser());
+
 mongoose.connect(connString)
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
@@ -54,64 +51,26 @@ db.once('open', function () {
 //     ctx.body = "Hello"
 // })
 
-router.get('/AppService/:year/:month', async (ctx) => {
+router.get('/:pod/:year/:month', async(ctx) => {
     var p = ctx.params
     try {
-        var result = await Month.findOne({ 'year': p.year, 'month': p.month,'section': 'AppService'})
+        var result = await Month.findOne({ 'year': p.year, 'month': p.month,'section': p.pod})
         if (result == null)
             throw "Record not found"
-
         else ctx.body = result
     }
-    catch (e) {
+    catch(e) {
         ctx.status = 404
         ctx.body = e
+        console.log(e)
     }
 })
 
-router.get('/DEV/:year/:month', async (ctx) => {
-    var p = ctx.params
-    try {
-        var result = await Month.findOne({ 'year': p.year, 'month': p.month,'section': 'DEV'})
-        if (result == null)
-            throw "Record not found"
-
-        else ctx.body = result
-    }
-    catch (e) {
-        ctx.status = 404
-        ctx.body = e
-    }
-})
-
-router.get('/AppService/:year', async (ctx) => {
-    try {
-        var results = await Month.find({'year': ctx.params.year-0}, 'year month')
-        ctx.body = results
-    }
-    catch (e) {
-         ctx.status = 404
-         ctx.body = e
-    }
-})
-
-router.get('/DEV/:year', async (ctx) => {
-    try {
-        var results = await Month.find({'year': ctx.params.year-0}, 'year month')
-        ctx.body = results
-    }
-    catch (e) {
-         ctx.status = 404
-         ctx.body = e
-    }
-})
-
-router.post('/AppService/:year/:month/:person/:day', bodyParser(), async (ctx) => {
-    //expect {workDay: true|false, workType: WE|W|PH|V};
+router.post('/:pod/:year/:month/:person/:day', bodyParser(), async (ctx) => {
     var p = ctx.params
     var b = ctx.request.body
     try {
-        var currentMonth = await Month.findOne({ 'year': p.year, 'month': p.month,'section': 'AppService' })
+        var currentMonth = await Month.findOne({ 'year': p.year, 'month': p.month,'section': p.pod})
         if (currentMonth == null)
             throw 'Record not found'
         var day = currentMonth.people.id(p.person).days.id(p.day)
@@ -124,57 +83,13 @@ router.post('/AppService/:year/:month/:person/:day', bodyParser(), async (ctx) =
         ctx.body = result
     }
     catch (e) {
-        console.log(e)
         ctx.status = 400
         ctx.body = e
-    }
-})
-
-router.post('/DEV/:year/:month/:person/:day', bodyParser(), async (ctx) => {
-    //expect {workDay: true|false, workType: WE|W|PH|V};
-    var p = ctx.params
-    var b = ctx.request.body
-    try {
-        var currentMonth = await Month.findOne({ 'year': p.year, 'month': p.month,'section': 'DEV' })
-        if (currentMonth == null)
-            throw 'Record not found'
-        var day = currentMonth.people.id(p.person).days.id(p.day)
-        day.workType = b.workType
-        day.workDay = b.workDay
-        var result = await currentMonth.save()
-        //if indexes are set, emit update
-        if (b.indexes !== undefined)
-            io.to("/" + p.year + "/" + p.month).emit('update', b)
-        ctx.body = result
-    }
-    catch (e) {
         console.log(e)
-        ctx.status = 400
-        ctx.body = e
     }
 })
 
-router.post("/AppService/upload/:year/:month/?mode=incremental", upload.any('csv'), async (ctx) => {
-    let tmp_path = ctx.req.files[0].path;
-    let src = fs.createReadStream(tmp_path);
-    let people = await json(src)
-    var currentMonth = await Month.findOne({ 'year': ctx.params.year, 'month': ctx.params.month ,'section': 'AppService'})
-    if (currentMonth == null) {
-
-    }
-})
-
-router.post("/DEV/upload/:year/:month/?mode=incremental", upload.any('csv'), async (ctx) => {
-    let tmp_path = ctx.req.files[0].path;
-    let src = fs.createReadStream(tmp_path);
-    let people = await json(src)
-    var currentMonth = await Month.findOne({ 'year': ctx.params.year, 'month': ctx.params.month,'section': 'DEV' })
-    if (currentMonth == null) {
-
-    }
-})
-
-function insertMonth(year, month, people,section) {
+function insertMonth(year, month, people, section) {
     console.log('Inserting Full Month')
     return new Month({
         year: year,
@@ -205,32 +120,22 @@ function decrementMonth(month, name) {
     return month
 }
 
-/**************************************
- * Feature 7 Add a new member to the calendar
-**************************************/
-//core code for Addind new guy into the TEAM
-//firstly copy from the exsiting default file
-//replace the defult name with a name from the parametre
-//use incrementMonth function to update the database
-
-router.post("/AppService/:year/:month/person", upload.any('csv'), bodyParser(),async (ctx) => {
+/*************************************** Feature 7 Add a new member to the calendar **************************************/
+router.post("/:pod/:year/:month/person", upload.any('csv'), bodyParser(),async (ctx) => {
     const uploadDict = ["january","february","march","april","may","june","july","auguest","september","october","november","december"]
     var testLock = false;
+    var p = ctx.params
     var b = ctx.request.body
-    console.log(b)//get the request body DONE
-    var month = ctx.params.month
-    let src = fs.createReadStream('./uploads/'+uploadDict[month-1]+'.txt');
-    console.log(src);//check the replacement application DONE
-
+    console.log(b) // get the request body
+    let src = fs.createReadStream('./uploads/'+uploadDict[p.month-1]+'.txt');
+    console.log(src); //check the replacement application 
     let people = await json(src)
     people[0].name = b.name
     testLock = true;
-    console.log(people);//check the replacement application
-
-    let currentMonth = await Month.findOne({ 'year': ctx.params.year, 'month': ctx.params.month,'section': 'AppService' })
+    console.log(people); //check the replacement application
+    let currentMonth = await Month.findOne({ 'year': p.year, 'month': p.month,'section': p.pod })
     if(testLock)
     {
-        console.log("hahaha")
         var payload = incrementMonth(currentMonth, people)
         try {
             await payload.save()
@@ -244,55 +149,16 @@ router.post("/AppService/:year/:month/person", upload.any('csv'), bodyParser(),a
     }
 })
 
-/**************************************
- * Feature 7 Add a new member to the calendar
-**************************************/
-router.post("/DEV/:year/:month/person", upload.any('csv'), bodyParser(),async (ctx) => {
-    const uploadDict = ["january","february","march","april","may","june","july","auguest","september","october","november","december"]
+/*************************************** Feature 10 Delete a member from the calendar **************************************/
+ router.post("/:pod/:year/:month/delete", bodyParser(), async (ctx) => {
     var testLock = false;
+    var p = ctx.params
     var b = ctx.request.body
-    var month = ctx.params.month
-    console.log(b)//get the request body DONE
-
-    let src = fs.createReadStream('./uploads/'+uploadDict[month-1]+'.txt');
-    console.log(src);//check the replacement application DONE
-
-    let people = await json(src)
-    people[0].name = b.name
-    testLock = true;
-    console.log(people);//check the replacement application
-
-    let currentMonth = await Month.findOne({ 'year': ctx.params.year, 'month': ctx.params.month,'section': 'DEV' })
+    console.log(b) // get the request body DONE
+    testLock = true; // check the replacement application
+    let currentMonth = await Month.findOne({ 'year': p.year, 'month': p.month,'section': p.pod })
     if(testLock)
     {
-        console.log("hahaha")
-        var payload = incrementMonth(currentMonth, people)
-        try {
-            await payload.save()
-            ctx.body = "all good"
-        }
-        catch(e) {
-            ctx.status = 400
-            ctx.body = "something went wrong"
-            console.log(e)
-        }
-    }
-})
-/**************************************
- * Feature 10 Delete a member from the calendar
-**************************************/
- router.post("/AppService/:year/:month/delete", bodyParser(), async (ctx) => {
-    var testLock = false;
-    var b = ctx.request.body
-    console.log(b)//get the request body DONE
-
-    testLock = true;//check the replacement application
-
-    let currentMonth = await Month.findOne({ 'year': ctx.params.year, 'month': ctx.params.month,'section': 'AppService' })
-
-    if(testLock)
-    {
-        //console.log("hahaha")
         var payload = decrementMonth(currentMonth, b.name)
         try {
             await payload.save()
@@ -306,37 +172,7 @@ router.post("/DEV/:year/:month/person", upload.any('csv'), bodyParser(),async (c
     }
  })
 
- /**************************************
- * Feature 10 Delete a member from the calendar
-**************************************/
-router.post("/DEV/:year/:month/delete", bodyParser(), async (ctx) => {
-    var testLock = false;
-    var b = ctx.request.body
-    console.log(b)//get the request body DONE
-
-    testLock = true;//check the replacement application
-
-    let currentMonth = await Month.findOne({ 'year': ctx.params.year, 'month': ctx.params.month,'section': 'DEV' })
-
-    if(testLock)
-    {
-        //console.log("hahaha")
-        var payload = decrementMonth(currentMonth, b.name)
-        try {
-            await payload.save()
-            ctx.body = "all good"
-        }
-        catch(e) {
-            ctx.status = 400
-            ctx.body = "something went wrong"
-            console.log(e)
-        }
-    }
- })
-
-/**************************************
- * Feature 9 Init a new Calendar
-**************************************/
+/*************************************** Feature 9 Init a new Calendar **************************************/
 function pushArray(j, arrinner, dayNuminner) {
 
     while(j+6 < dayNuminner) {
@@ -683,41 +519,15 @@ router.post("/DEV/:year/:month/reload", upload.any('csv'), async (ctx) => {
 
 
 
-router.post("/AppService/upload/:year/:month", upload.any('csv'), async (ctx) => {
+router.post("/:pod/upload/:year/:month", upload.any('csv'), async (ctx) => {
+    var p = ctx.params
     let tmp_path = ctx.req.files[0].path;
     console.log(tmp_path)
     let src = fs.createReadStream(tmp_path);
     let people = await json(src)
-    let year = ctx.params.year - 0
-    let month = ctx.params.month - 0
-    let section = "AppService"
-    let currentMonth = await Month.findOne({ 'year': ctx.params.year, 'month': ctx.params.month,'section': 'AppService' })
+    let currentMonth = await Month.findOne({ 'year': p.year, 'month': p.month,'section': p.pod })
     if (currentMonth == null)
-        var payload = insertMonth(year, month, people, section)
-    else
-        var payload = incrementMonth(currentMonth, people)
-    try {
-        await payload.save()
-        ctx.body = "all good"
-    }
-    catch(e) {
-        ctx.status = 400
-        ctx.body = "something went wrong"
-        console.log(e)
-    }
-})
-
-router.post("/DEV/upload/:year/:month", upload.any('csv'), async (ctx) => {
-    let tmp_path = ctx.req.files[0].path;
-    let src = fs.createReadStream(tmp_path);
-    let people = await json(src)
-    console.log(src);
-    let year = ctx.params.year - 0
-    let month = ctx.params.month
-    let section = "DEV"
-    let currentMonth = await Month.findOne({ 'year': ctx.params.year, 'month': ctx.params.month,'section': 'DEV' })
-    if (currentMonth == null)
-        var payload = insertMonth(year, month, people, section)
+        var payload = insertMonth(p.year, p.month, people, p.pod)
     else
         var payload = incrementMonth(currentMonth, people)
     try {
