@@ -1,1 +1,0 @@
-// eg. let d = new Date("2018-8-1").getDate()

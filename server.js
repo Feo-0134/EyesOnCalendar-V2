@@ -271,9 +271,8 @@ function writeNewArrD(strinner) {
 
 router.post("/AppService/:year/:month/init", upload.any('csv'), async (ctx) => {
     let section = "AppService"
-    let year = ctx.params.year
-    let month = ctx.params.month
-    let lastMonth = await Month.findOne({ 'year': year, 'month': (month - 1),'section': section })
+    let p = ctx.params
+    let lastMonth = await Month.findOne({ 'year': p.year, 'month': (p.month - 1),'section': section })
     var data = fs.readFileSync('./uploads/mythA.txt');
     var str1 = data.toString();
     // console.log(str1)
