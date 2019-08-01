@@ -172,9 +172,50 @@ router.post("/:pod/:year/:month/person", upload.any('csv'), bodyParser(),async (
     }
  })
 
+router.post("/:pod/upload/:year/:month", upload.any('csv'), async (ctx) => {
+    var p = ctx.params
+    let tmp_path = ctx.req.files[0].path;
+    console.log(tmp_path)
+    let src = fs.createReadStream(tmp_path);
+    let people = await json(src)
+    let currentMonth = await Month.findOne({ 'year': p.year, 'month': p.month,'section': p.pod })
+    if (currentMonth == null)
+        var payload = insertMonth(p.year, p.month, people, p.pod)
+    else
+        var payload = incrementMonth(currentMonth, people)
+    try {
+        await payload.save()
+        ctx.body = "all good"
+    }
+    catch(e) {
+        ctx.status = 400
+        ctx.body = "something went wrong"
+        console.log(e)
+    }
+})
+
+io.on("connection", socket => {
+    socket.join(socket.handshake.query.path)
+    socket.on('hello', socket => {
+        console.log(socket.rooms)
+    })
+})
+
+app
+    .use(router.routes())
+    .use(router.allowedMethods())
+    .use(serve(path.resolve(__dirname + staticPath)))
+    //catch all for Vue app
+    .use(async ctx => { await send(ctx, "index.html", {root: path.resolve(__dirname + staticPath)})})
+
+server.listen(process.env.PORT || 3030, () => {
+    console.log("Listening on " + (process.env.PORT || 3030))
+});
+
+
+
 /*************************************** Feature 9 Init a new Calendar **************************************/
 function pushArray(j, arrinner, dayNuminner) {
-
     while(j+6 < dayNuminner) {
         for(var k = 0;k<5;k++) {
             arrinner[j] = "W";
@@ -518,43 +559,3 @@ router.post("/DEV/:year/:month/reload", upload.any('csv'), async (ctx) => {
 })
 
 
-
-router.post("/:pod/upload/:year/:month", upload.any('csv'), async (ctx) => {
-    var p = ctx.params
-    let tmp_path = ctx.req.files[0].path;
-    console.log(tmp_path)
-    let src = fs.createReadStream(tmp_path);
-    let people = await json(src)
-    let currentMonth = await Month.findOne({ 'year': p.year, 'month': p.month,'section': p.pod })
-    if (currentMonth == null)
-        var payload = insertMonth(p.year, p.month, people, p.pod)
-    else
-        var payload = incrementMonth(currentMonth, people)
-    try {
-        await payload.save()
-        ctx.body = "all good"
-    }
-    catch(e) {
-        ctx.status = 400
-        ctx.body = "something went wrong"
-        console.log(e)
-    }
-})
-
-io.on("connection", socket => {
-    socket.join(socket.handshake.query.path)
-    socket.on('hello', socket => {
-        console.log(socket.rooms)
-    })
-})
-
-app
-    .use(router.routes())
-    .use(router.allowedMethods())
-    .use(serve(path.resolve(__dirname + staticPath)))
-    //catch all for Vue app
-    .use(async ctx => { await send(ctx, "index.html", {root: path.resolve(__dirname + staticPath)})})
-
-server.listen(process.env.PORT || 3030, () => {
-    console.log("Listening on " + (process.env.PORT || 3030))
-});
