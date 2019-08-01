@@ -2,21 +2,33 @@
 const fs = require('fs')
 
 var data = fs.readFileSync('./cal.txt');
-var str1 = data.toString();
-var arr = str1.split("\r\n");
-console.log(arr);
-arr.forEach(date => {
+var strAll = data.toString();
+var arrAll = strAll.split("\r\n");
+var currentMonth = '8';
+
+arrAll.forEach(date => {
+    var strOne = date.toString();
+    var arrOne = strOne.split("-");
+    if(arrOne[1] != currentMonth) {
+        currentMonth = arrOne[1];
+        fs.writeFile('./output.txt', 'E'+'\n', {flag:'a',encoding:'utf-8',mode:'0666'}, function(err) {
+            if (err) {
+                return console.error(err);
+            }
+            console.log("File opened successfully!");
+        })
+    }
     var dateStr = new Date(date.toString()).getDay()
-    console.log(dateStr)
     var chr = "";
     if(dateStr == 0 || dateStr == 6) {
         chr = "PH";
     }else {
         chr = "W"
     }
-    fs.writeFile('./output.txt', chr + ',', {flag:'a',encoding:'utf-8',mode:'0666'}, function(err) {
+    fs.writeFile('./output.txt', chr+",", {flag:'a',encoding:'utf-8',mode:'0666'}, function(err) {
         if (err) {
             return console.error(err);
         }
+        console.log("File opened successfully!");
     })
 })

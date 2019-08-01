@@ -282,105 +282,25 @@ router.post("/AppService/:year/:month/init", upload.any('csv'), async (ctx) => {
     var arrNew=new Array();
     var i = 0;
     var monthArr = ["JanuaryA", "FebruaryA", "MarchA", "AprilA", "MayA", "JuneA", "JulyA", "AuguestA", "SeptemberA", "OctoberA", "NovemberA", "DecemberA"]
-    var dayNumArr = [31,28,31,30,31,30,31,31,30,31,30,31]
-    var dayNum = dayNumArr[month-1];
-    if(year % 4 == 0 && month == 2) { // leap year + Feb => 29 days
-        dayNum++;
-    }
-    // here goes the BUG
-    while(arr[i] != "PH") {
-        i++;
-        if(i > 4) {
-            break;
-        }
-    }
     setTimeout(function() {
-        if(i == 0 && arr[i+1] != "PH") {
-            arr[0] = "W";
-            arr[1] = "PH";
-            arr[2] = "PH";
-            arr = pushArray(3, arr, dayNum);
-            //console.log(arr)
-        }else if(i == 0 && arr[i+1] == "PH"){
-            arr[0] = "W";
-            arr[1] = "W";
-            arr[2] = "PH";
-            arr[3] = "PH";
-            arr = pushArray(4, arr, dayNum);
-        }else if(i == 1){
-            arr[0] = "W";
-            arr[1] = "W";
-            arr[2] = "W";
-            arr[3] = "PH";
-            arr[4] = "PH";
-            arr = pushArray(5, arr, dayNum);
-        }else if(i == 2){
-            arr[0] = "W";
-            arr[1] = "W";
-            arr[2] = "W";
-            arr[3] = "W";
-            arr[4] = "PH";
-            arr[5] = "PH";
-            arr = pushArray(6, arr, dayNum);
-        }else if(i == 3){
-            arr[0] = "W";
-            arr[1] = "W";
-            arr[2] = "W";
-            arr[3] = "W";
-            arr[4] = "W";
-            arr[5] = "PH";
-            arr[6] = "PH";
-            arr = pushArray(7, arr, dayNum);
-        }else if(i == 4){
-            arr[0] = "PH";
-            arr[1] = "W";
-            arr[2] = "W";
-            arr[3] = "W";
-            arr[4] = "W";
-            arr[5] = "W";
-            arr[6] = "PH";
-            arr[7] = "PH";
-            arr = pushArray(8, arr, dayNum);
-        }else {
-            arr[0] = "PH";
-            arr[1] = "PH";
-            arr = pushArray(2, arr, dayNum);
-        }
-        setTimeout(function() {
-            arrNew[0] = arr[dayNum-5];
-            arrNew[1] = arr[dayNum-4];
-            arrNew[2] = arr[dayNum-3];
-            arrNew[3] = arr[dayNum-2];
-            arrNew[4] = arr[dayNum-1];
-            str2 = arrNew.join(",");
-            console.log(str2)
-            writeNewArrA(str2)
-
-            // fs.open('./uploads/months/'+'March'+'.txt', 'r+', function(err, fd) {
-            //     if (err) {
-            //        return console.error(err);
-            //     }
-            //     console.log("File opened successfully!");
-            // });
-
-            str3 = arr.join(",")
-            str3 = "\n%DefaultName% (1107-MICROSOFT CHINA CO LTD)," + str3
-            console.log(str3)
-            lastMonth.people.forEach(person => {
-                fs.writeFile('./uploads/months/'+ monthArr[month - 1] +'.txt', str3, {flag:'a',encoding:'utf-8',mode:'0666'}, function(err) {
-                    if (err) {
-                        return console.error(err);
-                    }
-                    fs.readFile('./uploads/months/'+ monthArr[month - 1] +'.txt', function (err, data) {
-                    if (err) {
-                        return console.error(err);
-                    }
-                    console.log(data.toString());
-                    });
+        str3 = arr.join(",")
+        str3 = "\n%DefaultName% (1107-MICROSOFT CHINA CO LTD)," + str3
+        console.log(str3)
+        lastMonth.people.forEach(person => {
+            fs.writeFile('./uploads/months/'+ monthArr[month - 1] +'.txt', str3, {flag:'a',encoding:'utf-8',mode:'0666'}, function(err) {
+                if (err) {
+                    return console.error(err);
+                }
+                fs.readFile('./uploads/months/'+ monthArr[month - 1] +'.txt', function (err, data) {
+                if (err) {
+                    return console.error(err);
+                }
+                console.log(data.toString());
                 });
-            })
-        },500)
-    },50)
+            });
+        })
+    },500)
+
 })
 
 router.post("/AppService/:year/:month/reload", upload.any('csv'), async (ctx) => {
