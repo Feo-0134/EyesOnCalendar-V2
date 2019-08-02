@@ -24,7 +24,6 @@ export default {
           e.preventDefault()
       },
       toggleWork(e) {
-          //console.log("Clicked!")
           this.$store.dispatch('toggleWork',{personkey:this.personkey,toggleevent:e,month:this.$store.state.calendar.month})
       }
   }

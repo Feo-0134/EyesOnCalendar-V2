@@ -21,28 +21,25 @@ export default {
       return _.debounce(this.$http.post(this.apiPath,this.apiPayload),500)
     },// 0 - 1, 1 - 0, 2 - 0, 3 - 2
     getBorderColor() {
-      if (this.day.workType == "WE" && this.day.workDay == 0) return "#bbbbbb";
-      else
-        switch (this.day.workDay) {
-          case 0:
-            return "#ED5565";
-            break;
-          case 1:
-            return "#bada55";
-            break;
-          case 2:
-            return "#9742b3";
-            break;
-          case 3:
-            return "#5D9CEC";
-            break;
-          case 4:
-            return "#ffcc80";
-            break;
-        }
+      switch (this.day.workDay) {
+        case 0:
+          return "#ED5565";
+          break;
+        case 1:
+          return "#bada55";
+          break;
+        case 2:
+          return "#9742b3";
+          break;
+        case 3:
+          return "#5D9CEC";
+          break;
+        case 4:
+          return "#ffcc80";
+          break;
+      }
     },
     getColor() {
-      if (this.day.workType == "WE" && this.day.workDay == 0) return "#555555";
       switch (this.day.workDay) {
         case 1:
           return "#557037";
@@ -67,7 +64,7 @@ export default {
     /*************************************** Feature 2 status update menu ***********************************/
       open:false,
     /*************************************** Feature 1 new cell status **************************************/
-      workTypes: ["W", "PH", "DV", "V", "T","MS","NS","PO","PM"]
+      workTypes: ["W", "PH", "DV", "V", "T", "MS", "NS", "PO", "PM"]
     };
   },
   computed: {
@@ -78,17 +75,16 @@ export default {
     displayValue() {
       if(this.testparamII == this.dindex) {
         this.day.workType = this.testparam
-      if (this.day.workType == "V") this.day.workDay = 0;
-      if (this.day.workType == "PH") this.day.workDay = 0;
-      if (this.day.workType == "W") this.day.workDay = 1;
-      if (this.day.workType == "MS") this.day.workDay = 1;
-      if (this.day.workType == "NS") this.day.workDay = 1;
-      if (this.day.workType == "DV") this.day.workDay = 2;
-      if (this.day.workType == "T") this.day.workDay = 3;
-      if (this.day.workType == "PO") this.day.workDay = 4;
-      if (this.day.workType == "PM") this.day.workDay = 4;
-      //console.log(this.day.workType)
-      this.dbFunc()                                     // WHY SYNC TWO TIMES II is here
+        if (this.day.workType == "V") this.day.workDay = 0;
+        if (this.day.workType == "PH") this.day.workDay = 0;
+        if (this.day.workType == "W") this.day.workDay = 1;
+        if (this.day.workType == "MS") this.day.workDay = 1;
+        if (this.day.workType == "NS") this.day.workDay = 1;
+        if (this.day.workType == "DV") this.day.workDay = 2;
+        if (this.day.workType == "T") this.day.workDay = 3;
+        if (this.day.workType == "PO") this.day.workDay = 4;
+        if (this.day.workType == "PM") this.day.workDay = 4;
+        this.dbFunc()                                     // WHY SYNC TWO TIMES II is here
       }
       if (this.day.workType == "W") return " "; // not display "W" in the calendar for there are TOO MANY WORKING DAYS
       else return this.day.workType;

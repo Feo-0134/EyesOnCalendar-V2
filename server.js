@@ -1,9 +1,11 @@
 // Database
 const mongoose = require('mongoose');
 mongoose.set('useCreateIndex', true);
-
 const models = require('./models/Month')
 const Month = models.Month;
+const fs = require('fs')
+const json = require('./convertCsv.js')
+
 
 const Koa = require('koa');
 const Router = require('koa-router');
@@ -19,12 +21,7 @@ const upload = multer({ dest: 'uploads/' });
 const server = require('http').createServer(app.callback())
 const io = require('socket.io')(server)
 
-const fs = require('fs')
-const json = require('./convertCsv.js')
-
 require('dotenv').config();
-
-
 
 if (process.env.NODE_ENV == "production" || process.env.NODE_ENV === undefined) {
     var staticPath = "/dist/"
@@ -37,8 +34,6 @@ else {
 
 }
 
-router.use(bodyParser());
-
 mongoose.connect(connString)
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
@@ -46,6 +41,7 @@ db.once('open', function () {
     console.log("Connected to DB");
 });
 
+router.use(bodyParser());
 /* koa interface demo */
 // router.get('/', ctx => {
 //     ctx.body = "Hello"
@@ -69,6 +65,7 @@ router.get('/:pod/:year/:month', async(ctx) => {
 router.post('/:pod/:year/:month/:person/:day', bodyParser(), async (ctx) => {
     var p = ctx.params
     var b = ctx.request.body
+    console.log(b)
     try {
         var currentMonth = await Month.findOne({ 'year': p.year, 'month': p.month,'section': p.pod})
         if (currentMonth == null)
@@ -121,6 +118,58 @@ function decrementMonth(month, name) {
 }
 
 /*************************************** Feature 7 Add a new member to the calendar **************************************/
+// router.post("/:pod/:year/:month/person", upload.any('csv'), bodyParser(),async (ctx) => {
+//     var p = ctx.params
+//     var b = ctx.request.body
+//     console.log(b) // get the request body
+//     let monthArr = ["January", "February", "March", "April", "May", "June", "July", "Auguest", "September", "October", "November", "December"]
+//     let altStr1 = monthArr[p.month] + (p.year).toString();
+//     let altStr2 = "Employee Name";
+//     let dayNum = new Date(p.year, p.month, 0).getDate();
+//     let cnt = 0;
+//     let arrMonth = new Array();
+//     let str2 = (p.year).toString() + "-" + (p.month).toString() + "-";
+//     while(cnt < dayNum) {
+//         altStr1 += ",";
+//         altStr2 += "," + (cnt+1).toString();
+//         var tmp = str2 + (cnt+1).toString();
+//         var dayPtr = new Date(tmp).getDay().toString();
+//         if(dayPtr == "0" || dayPtr == "6") { // "0" stands Sundays & "6" stands Saturdays
+//             arrMonth[cnt] = "PH";
+//         }else {
+//             arrMonth[cnt] = "W";
+//         }
+//         cnt++;
+//     }
+//     let str3 = arrMonth.join(",")
+//     str3 = altStr1+"\r\n"+altStr2+"\r\n%DefaultName% (1107-MICROSOFT CHINA CO LTD)," + str3
+//     fs.writeFile('./uploads/test.txt', str3, {flag:'w',encoding:'utf-8',mode:'0666'}, function(err) {
+//         if (err) {
+//             return console.error(err);
+//         }
+//     });
+//     let testLock = false;
+//     let src = fs.createReadStream('./uploads/test.txt');
+//     let people = await json(src)
+//     people[0].name = b.name
+//     testLock = true;
+//     console.log(people); //check the replacement application
+//     let currentMonth = await Month.findOne({ 'year': p.year, 'month': p.month,'section': p.pod })
+//     if(testLock)
+//     {
+//         var payload = incrementMonth(currentMonth, people)
+//         try {
+//             await payload.save()
+//             ctx.body = "all good"
+//         }
+//         catch(e) {
+//             ctx.status = 400
+//             ctx.body = "something went wrong"
+//             console.log(e)
+//         }
+//     }
+// })
+
 router.post("/:pod/:year/:month/person", upload.any('csv'), bodyParser(),async (ctx) => {
     const uploadDict = ["january","february","march","april","may","june","july","auguest","september","october","november","december"]
     var testLock = false;
@@ -171,30 +220,18 @@ router.post("/:pod/:year/:month/person", upload.any('csv'), bodyParser(),async (
         }
     }
  })
-
-router.post("/:pod/upload/:year/:month", upload.any('csv'), async (ctx) => {
-    var p = ctx.params
-    let tmp_path = ctx.req.files[0].path;
-    console.log(tmp_path)
-    let src = fs.createReadStream(tmp_path);
-    let people = await json(src)
-    let currentMonth = await Month.findOne({ 'year': p.year, 'month': p.month,'section': p.pod })
-    if (currentMonth == null)
-        var payload = insertMonth(p.year, p.month, people, p.pod)
-    else
-        var payload = incrementMonth(currentMonth, people)
-    try {
-        await payload.save()
-        ctx.body = "all good"
-    }
-    catch(e) {
-        ctx.status = 400
-        ctx.body = "something went wrong"
-        console.log(e)
-    }
-})
-
 /*************************************** Feature 9 Init a new Calendar **************************************/
+function calendarCleaner(filePth) {
+    let data = fs.readFileSync(filePth);
+    let strAll = data.toString();
+    let arrAll = strAll.split("\r\n");
+    fs.writeFile(filePth, arrAll[0] + "\r\n"+ arrAll[1], {flag:'w',encoding:'utf-8',mode:'0666'}, function(err) {
+        if (err) {
+            return console.error(err);
+        }
+        // console.log("File opened successfully!");
+    })
+}
 
 router.post("/:pod/:year/:month/init", upload.any('csv'), async (ctx) => {
     let p = ctx.params
@@ -268,18 +305,6 @@ router.post("/:pod/:year/:month/reload", upload.any('csv'), async (ctx) => {
     },2000)
 })
 
-function calendarCleaner(filePth) {
-    let data = fs.readFileSync(filePth);
-    let strAll = data.toString();
-    let arrAll = strAll.split("\r\n");
-    fs.writeFile(filePth, arrAll[0] + "\r\n"+ arrAll[1], {flag:'w',encoding:'utf-8',mode:'0666'}, function(err) {
-        if (err) {
-            return console.error(err);
-        }
-        // console.log("File opened successfully!");
-    })
-}
-
 io.on("connection", socket => {
     socket.join(socket.handshake.query.path)
     socket.on('hello', socket => {
@@ -297,3 +322,26 @@ app
 server.listen(process.env.PORT || 3030, () => {
     console.log("Listening on " + (process.env.PORT || 3030))
 });
+
+/*************************************** update the new calendar by upload a csv **************************************/
+router.post("/:pod/upload/:year/:month", upload.any('csv'), async (ctx) => {
+    var p = ctx.params
+    let tmp_path = ctx.req.files[0].path;
+    console.log(tmp_path)
+    let src = fs.createReadStream(tmp_path);
+    let people = await json(src)
+    let currentMonth = await Month.findOne({ 'year': p.year, 'month': p.month,'section': p.pod })
+    if (currentMonth == null)
+        var payload = insertMonth(p.year, p.month, people, p.pod)
+    else
+        var payload = incrementMonth(currentMonth, people)
+    try {
+        await payload.save()
+        ctx.body = "all good"
+    }
+    catch(e) {
+        ctx.status = 400
+        ctx.body = "something went wrong"
+        console.log(e)
+    }
+})
