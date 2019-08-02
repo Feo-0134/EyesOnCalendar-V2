@@ -364,7 +364,7 @@ export default {
         this.$http.post(this.apiPath2, this.apiPayload2);
         setTimeout(function(){
           location.reload()
-        },2000)
+        },4000)
       }
     },
     handleClick(tab, event) {

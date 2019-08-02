@@ -194,36 +194,12 @@ router.post("/:pod/upload/:year/:month", upload.any('csv'), async (ctx) => {
     }
 })
 
-io.on("connection", socket => {
-    socket.join(socket.handshake.query.path)
-    socket.on('hello', socket => {
-        console.log(socket.rooms)
-    })
-})
-
-app
-    .use(router.routes())
-    .use(router.allowedMethods())
-    .use(serve(path.resolve(__dirname + staticPath)))
-    //catch all for Vue app
-    .use(async ctx => { await send(ctx, "index.html", {root: path.resolve(__dirname + staticPath)})})
-
-server.listen(process.env.PORT || 3030, () => {
-    console.log("Listening on " + (process.env.PORT || 3030))
-});
-
-
-
 /*************************************** Feature 9 Init a new Calendar **************************************/
 
 router.post("/:pod/:year/:month/init", upload.any('csv'), async (ctx) => {
     let p = ctx.params
     let lastMonth = await Month.findOne({ 'year': p.year, 'month': (p.month - 1),'section': p.pod })
-    if(p.pod == "AppService") {
-        var monthArr = ["JanuaryA", "FebruaryA", "MarchA", "AprilA", "MayA", "JuneA", "JulyA", "AuguestA", "SeptemberA", "OctoberA", "NovemberA", "DecemberA"]
-    }else if(p.pod == "DEV"){
-        var monthArr = ["JanuaryD", "FebruaryD", "MarchD", "AprilD", "MayD", "JuneD", "JulyD", "AuguestD", "SeptemberD", "OctoberD", "NovemberD", "DecemberD"]
-    }
+    var monthArr = ["January", "February", "March", "April", "May", "June", "July", "Auguest", "September", "October", "November", "December"]
     var str2 = (p.year).toString() + "-" + (p.month).toString() + "-";
     console.log("initiate" + str2 + "Calendar")
     
@@ -242,7 +218,7 @@ router.post("/:pod/:year/:month/init", upload.any('csv'), async (ctx) => {
             cnt++;
         }
         var str3 = arrMonth.join(",")
-        str3 = "\n%DefaultName% (1107-MICROSOFT CHINA CO LTD)," + str3
+        str3 = "\r\n%DefaultName% (1107-MICROSOFT CHINA CO LTD)," + str3
         lastMonth.people.forEach(person => {
             fs.writeFile('./uploads/months/'+ monthArr[p.month - 1] +'.txt', str3, {flag:'a',encoding:'utf-8',mode:'0666'}, function(err) {
                 if (err) {
@@ -255,12 +231,9 @@ router.post("/:pod/:year/:month/init", upload.any('csv'), async (ctx) => {
 
 router.post("/:pod/:year/:month/reload", upload.any('csv'), async (ctx) => {
     let p = ctx.params;
-    if(p.pod == "AppService") {
-        var monthArr = ["JanuaryA", "FebruaryA", "MarchA", "AprilA", "MayA", "JuneA", "JulyA", "AuguestA", "SeptemberA", "OctoberA", "NovemberA", "DecemberA"]
-    }else if(p.pod == "DEV"){
-        var monthArr = ["JanuaryD", "FebruaryD", "MarchD", "AprilD", "MayD", "JuneD", "JulyD", "AuguestD", "SeptemberD", "OctoberD", "NovemberD", "DecemberD"]
-    }
-    let src = fs.createReadStream('./uploads/months/'+ monthArr[p.month-1] +'.txt');
+    var monthArr = ["January", "February", "March", "April", "May", "June", "July", "Auguest", "September", "October", "November", "December"]
+    let path = './uploads/months/'+ monthArr[p.month-1] +'.txt';
+    let src = fs.createReadStream(path);
     let people = await json(src);
     let lastMonth = await Month.findOne({ 'year': p.year, 'month': (p.month-1),'section': p.pod });
     let countNum = 0;
@@ -284,247 +257,37 @@ router.post("/:pod/:year/:month/reload", upload.any('csv'), async (ctx) => {
         ctx.body = e
         console.log(e)
     }
+    setTimeout(function() {
+        calendarCleaner(path)
+    },2000)
 })
 
+function calendarCleaner(path) {
+    var data = fs.readFileSync(path);
+    var strAll = data.toString();
+    var arrAll = strAll.split("\r\n");
+    fs.writeFile(path, arrAll[0] + "\r\n"+ arrAll[1], {flag:'w',encoding:'utf-8',mode:'0666'}, function(err) {
+        if (err) {
+            return console.error(err);
+        }
+        // console.log("File opened successfully!");
+    })
+}
 
+io.on("connection", socket => {
+    socket.join(socket.handshake.query.path)
+    socket.on('hello', socket => {
+        console.log(socket.rooms)
+    })
+})
 
+app
+    .use(router.routes())
+    .use(router.allowedMethods())
+    .use(serve(path.resolve(__dirname + staticPath)))
+    //catch all for Vue app
+    .use(async ctx => { await send(ctx, "index.html", {root: path.resolve(__dirname + staticPath)})})
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// function pushArray(j, arrinner, dayNuminner) {
-//     while(j+6 < dayNuminner) {
-//         for(var k = 0;k<5;k++) {
-//             arrinner[j] = "W";
-//             j++;
-//         }
-//         for(var k = 0;k<2;k++) {
-//             arrinner[j] = "PH";
-//             j++;
-//         }
-//     }
-//     var t = 0
-//     while(j < dayNuminner) {
-//         if(t<5) {
-//             arrinner[j] = "W";
-//             j++;
-//             t++;
-//         }else {
-//             arrinner[j] = "PH";
-//             j++;
-//         }
-//     }
-
-//     return arrinner
-// }
-
-// function writeNewArrA(strinner) {
-//     fs.writeFile('./uploads/mythA.txt', strinner,  function(err) {
-//         if (err) {
-//             return console.error(err);
-//         }
-//         fs.readFile('./uploads/mythA.txt', function (err, data) {
-//            if (err) {
-//               return console.error(err);
-//            }
-//            console.log(data.toString());
-//         });
-//      });
-// }
-
-// function writeNewArrD(strinner) {
-//     fs.writeFile('./uploads/mythD.txt', strinner,  function(err) {
-//         if (err) {
-//             return console.error(err);
-//         }
-//         fs.readFile('./uploads/mythD.txt', function (err, data) {
-//            if (err) {
-//               return console.error(err);
-//            }
-//            console.log(data.toString());
-//         });
-//      });
-// }
-
-// router.post("/DEV/:year/:month/init", upload.any('csv'), async (ctx) => {
-//     let section = "DEV"
-//     let year = ctx.params.year
-//     let month = ctx.params.month
-//     let lastMonth = await Month.findOne({ 'year': year, 'month': (month - 1),'section': section })
-//     var data = fs.readFileSync('./uploads/mythD.txt');
-//     var str1 = data.toString();
-//     var str2, str3
-//     var arr = str1.split(",");
-//     var arrNew=new Array();
-//     var i = 0;
-//     var monthArr = ["JanuaryD", "FebruaryD", "MarchD", "AprilD", "MayD", "JuneD", "JulyD", "AuguestD", "SeptemberD", "OctoberD", "NovemberD", "DecemberD"]
-//     var dayNumArr = [31,28,31,30,31,30,31,31,30,31,30,31]
-//     var dayNum = dayNumArr[month-1];
-//     if(year % 4 == 0 && month == 2) { // leap year + Feb => 29 days
-//         dayNum++;
-//     }
-//     while(arr[i] != "PH") {
-//         i++;
-//         if(i > 4) {
-//             break;
-//         }
-//     }
-
-//     setTimeout(function() {
-//         if(i == 0 && arr[i+1] != "PH") {
-//             arr[0] = "W";
-//             arr[1] = "PH";
-//             arr[2] = "PH";
-//             arr = pushArray(3, arr, dayNum);
-//             //console.log(arr)
-//         }else if(i == 0 && arr[i+1] == "PH"){
-//             arr[0] = "W";
-//             arr[1] = "W";
-//             arr[2] = "PH";
-//             arr[3] = "PH";
-//             arr = pushArray(4, arr, dayNum);
-//         }else if(i == 1){
-//             arr[0] = "W";
-//             arr[1] = "W";
-//             arr[2] = "W";
-//             arr[3] = "PH";
-//             arr[4] = "PH";
-//             arr = pushArray(5, arr, dayNum);
-//         }else if(i == 2){
-//             arr[0] = "W";
-//             arr[1] = "W";
-//             arr[2] = "W";
-//             arr[3] = "W";
-//             arr[4] = "PH";
-//             arr[5] = "PH";
-//             arr = pushArray(6, arr, dayNum);
-//         }else if(i == 3){
-//             arr[0] = "W";
-//             arr[1] = "W";
-//             arr[2] = "W";
-//             arr[3] = "W";
-//             arr[4] = "W";
-//             arr[5] = "PH";
-//             arr[6] = "PH";
-//             arr = pushArray(7, arr, dayNum);
-//         }else if(i == 4){
-//             arr[0] = "PH";
-//             arr[1] = "W";
-//             arr[2] = "W";
-//             arr[3] = "W";
-//             arr[4] = "W";
-//             arr[5] = "W";
-//             arr[6] = "PH";
-//             arr[7] = "PH";
-//             arr = pushArray(8, arr, dayNum);
-//         }else {
-//             arr[0] = "PH";
-//             arr[1] = "PH";
-//             arr = pushArray(2, arr, dayNum);
-//         }
-        
-//         setTimeout(function() {
-//             arrNew[0] = arr[dayNum-5];
-//             arrNew[1] = arr[dayNum-4];
-//             arrNew[2] = arr[dayNum-3];
-//             arrNew[3] = arr[dayNum-2];
-//             arrNew[4] = arr[dayNum-1];
-//             str2 = arrNew.join(",");
-//             console.log(str2)
-//             writeNewArrD(str2)
-
-//             // fs.open('./uploads/months/'+'March'+'.txt', 'r+', function(err, fd) {
-//             //     if (err) {
-//             //        return console.error(err);
-//             //     }
-//             //     console.log("File opened successfully!");
-//             // });
-
-//             str3 = arr.join(",")
-//             str3 = "\n%DefaultName% (1107-MICROSOFT CHINA CO LTD)," + str3
-//             console.log(str3)
-//             lastMonth.people.forEach(person => {
-//                 fs.writeFile('./uploads/months/'+ monthArr[month - 1] +'.txt', str3, {flag:'a',encoding:'utf-8',mode:'0666'}, function(err) {
-//                     if (err) {
-//                         return console.error(err);
-//                     }
-//                     fs.readFile('./uploads/months/'+ monthArr[month - 1] +'.txt', function (err, data) {
-//                     if (err) {
-//                         return console.error(err);
-//                     }
-//                     console.log(data.toString());
-//                     });
-//                 });
-//             })
-//         },500)
-//     },50)
-// })
-
-// router.post("/DEV/:year/:month/reload", upload.any('csv'), async (ctx) => {
-
-
-//     let year = ctx.params.year - 0
-//     let month = ctx.params.month - 0
-//     let section = "DEV"
-//     var monthArr = ["JanuaryD", "FebruaryD", "MarchD", "AprilD", "MayD", "JuneD", "JulyD", "AuguestD", "SeptemberD", "OctoberD", "NovemberD", "DecemberD"]
-//     let src = fs.createReadStream('./uploads/months/'+ monthArr[month-1] +'.txt');
-//     let people = await json(src)
-//     let countNum = 0
-//     let lastMonth = await Month.findOne({ 'year': year, 'month': (month - 1),'section': section })
-//     let currentMonth = await Month.findOne({ 'year': year, 'month': month,'section': section })
-//     people.forEach(person => {
-//         person.name = lastMonth.people[countNum].name
-//         countNum ++
-//     })
-//     if (currentMonth == null)
-//         var payload = insertMonth(year, month, people, section)
-//     else
-//         var payload = incrementMonth(currentMonth, people)
-//     try {
-//         await payload.save()
-//         ctx.body = "all good"
-//     }
-//     catch(e) {
-//         ctx.status = 400
-//         ctx.body = "something went wrong"
-//         console.log(e)
-//     }
-// })
-
-
+server.listen(process.env.PORT || 3030, () => {
+    console.log("Listening on " + (process.env.PORT || 3030))
+});
