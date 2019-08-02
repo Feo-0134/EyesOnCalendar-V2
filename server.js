@@ -198,14 +198,18 @@ router.post("/:pod/upload/:year/:month", upload.any('csv'), async (ctx) => {
 
 router.post("/:pod/:year/:month/init", upload.any('csv'), async (ctx) => {
     let p = ctx.params
-    let lastMonth = await Month.findOne({ 'year': p.year, 'month': (p.month - 1),'section': p.pod })
-    var monthArr = ["January", "February", "March", "April", "May", "June", "July", "Auguest", "September", "October", "November", "December"]
-    var str2 = (p.year).toString() + "-" + (p.month).toString() + "-";
-    console.log("initiate" + str2 + "Calendar")
-    
-    var dayNum = new Date(p.year, p.month, 0).getDate();
-    var arrMonth = new Array();
+    var lastMon = (p.month - 1)%12 ? (p.month - 1)%12:12;
+    var lastYear = lastMon == 12 ? p.year-1:p.year;
+    let lastMonth = await Month.findOne({ 'year': lastYear, 'month': lastMon,'section': p.pod })
+    let monthArr = ["January", "February", "March", "April", "May", "June", "July", "Auguest", "September", "October", "November", "December"]
+    let str2 = (p.year).toString() + "-" + (p.month).toString() + "-";
+    console.log("initiate " + str2 + " Calendar")
+    console.log("last calendar:" + lastYear + "-" + lastMon)
+    let dayNum = new Date(p.year, p.month, 0).getDate();
+    let arrMonth = new Array();
     let cnt = 0;
+    let filePath = './uploads/months/'+ monthArr[p.month - 1] +'.txt';
+    calendarCleaner(filePath)
     setTimeout(function() {
         while(cnt < dayNum) {
             var tmp = str2 + (cnt+1).toString();
@@ -220,7 +224,7 @@ router.post("/:pod/:year/:month/init", upload.any('csv'), async (ctx) => {
         var str3 = arrMonth.join(",")
         str3 = "\r\n%DefaultName% (1107-MICROSOFT CHINA CO LTD)," + str3
         lastMonth.people.forEach(person => {
-            fs.writeFile('./uploads/months/'+ monthArr[p.month - 1] +'.txt', str3, {flag:'a',encoding:'utf-8',mode:'0666'}, function(err) {
+            fs.writeFile(filePath, str3, {flag:'a',encoding:'utf-8',mode:'0666'}, function(err) {
                 if (err) {
                     return console.error(err);
                 }
@@ -230,12 +234,14 @@ router.post("/:pod/:year/:month/init", upload.any('csv'), async (ctx) => {
 })
 
 router.post("/:pod/:year/:month/reload", upload.any('csv'), async (ctx) => {
-    let p = ctx.params;
-    var monthArr = ["January", "February", "March", "April", "May", "June", "July", "Auguest", "September", "October", "November", "December"]
-    let path = './uploads/months/'+ monthArr[p.month-1] +'.txt';
-    let src = fs.createReadStream(path);
+    var p = ctx.params;
+    var lastMon = (p.month - 1)%12 ? (p.month - 1)%12:12;
+    var lastYear = lastMon == 12 ? p.year-1:p.year;
+    let monthArr = ["January", "February", "March", "April", "May", "June", "July", "Auguest", "September", "October", "November", "December"]
+    let filePath = './uploads/months/'+ monthArr[p.month - 1] +'.txt';
+    let src = fs.createReadStream(filePath);
     let people = await json(src);
-    let lastMonth = await Month.findOne({ 'year': p.year, 'month': (p.month-1),'section': p.pod });
+    let lastMonth = await Month.findOne({ 'year': lastYear, 'month': lastMon,'section': p.pod });
     let countNum = 0;
     people.forEach(person => {
         person.name = lastMonth.people[countNum].name;
@@ -258,15 +264,15 @@ router.post("/:pod/:year/:month/reload", upload.any('csv'), async (ctx) => {
         console.log(e)
     }
     setTimeout(function() {
-        calendarCleaner(path)
+        calendarCleaner(filePath)
     },2000)
 })
 
-function calendarCleaner(path) {
-    var data = fs.readFileSync(path);
-    var strAll = data.toString();
-    var arrAll = strAll.split("\r\n");
-    fs.writeFile(path, arrAll[0] + "\r\n"+ arrAll[1], {flag:'w',encoding:'utf-8',mode:'0666'}, function(err) {
+function calendarCleaner(filePth) {
+    let data = fs.readFileSync(filePth);
+    let strAll = data.toString();
+    let arrAll = strAll.split("\r\n");
+    fs.writeFile(filePth, arrAll[0] + "\r\n"+ arrAll[1], {flag:'w',encoding:'utf-8',mode:'0666'}, function(err) {
         if (err) {
             return console.error(err);
         }

@@ -346,10 +346,7 @@ export default {
         || this.emailUnderName.match("Sean Wu (AZURE)") == "Sean Wu (AZURE)" */
         var that = this
         var dateNew = new Date();
-        if(true){ 
-          /* this.date.substr(-1)==((dateNew.getMonth()+2).toString().substr(-1))
-          ||(this.date.substr(-1)== "9"&&(dateNew.getMonth()+1).toString().substr(-1)=="0")
-          ||(this.date.substr(-1)== "2"&&(dateNew.getMonth()+1).toString().substr(-1)=="1")) */
+        if(true){
           this.isLoading = true
           this.initUndo = false
           this.$http.post(this.apiPath, this.apiPayload)
