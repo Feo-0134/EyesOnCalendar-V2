@@ -37,6 +37,9 @@ export default {
         case 4:
           return "#ffcc80";
           break;
+        case 5:
+          return "#808F85";
+          break;
       }
     },
     getColor() {
@@ -48,13 +51,16 @@ export default {
           return "#8c2230";
           break;
         case 2:
-          return "#513567";
+          return "#403259";
           break;
         case 3:
           return "#375c8c";
           break;
         case 4:
           return "#b36b00";
+          break;
+        case 5:
+          return "#3B4D50";
           break;
       }
     }
@@ -63,8 +69,6 @@ export default {
     return {
     /*************************************** Feature 2 status update menu ***********************************/
       open:false,
-    /*************************************** Feature 1 new cell status **************************************/
-      workTypes: ["W", "PH", "DV", "V", "T", "MS", "NS", "PO", "PM"]
     };
   },
   computed: {
@@ -79,14 +83,19 @@ export default {
         if (this.day.workType == "PH") this.day.workDay = 0;
         if (this.day.workType == "W") this.day.workDay = 1;
         if (this.day.workType == "MS") this.day.workDay = 1;
-        if (this.day.workType == "NS") this.day.workDay = 1;
-        if (this.day.workType == "DV") this.day.workDay = 2;
+        if (this.day.workType == "NS") this.day.workDay = 5;
+        if (this.day.workType == "SL") this.day.workDay = 2;
+        if (this.day.workType == "AL") this.day.workDay = 2;
+        if (this.day.workType == "H(M)") this.day.workDay = 2;
+        if (this.day.workType == "H(A)") this.day.workDay = 2;
         if (this.day.workType == "T") this.day.workDay = 3;
         if (this.day.workType == "PO") this.day.workDay = 4;
         if (this.day.workType == "PM") this.day.workDay = 4;
+
         this.dbFunc()                                     // WHY SYNC TWO TIMES II is here
       }
       if (this.day.workType == "W") return " "; // not display "W" in the calendar for there are TOO MANY WORKING DAYS
+      // if (this.day.workType == "PH") return " ";
       else return this.day.workType;
     },
 

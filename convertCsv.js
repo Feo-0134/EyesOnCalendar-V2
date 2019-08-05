@@ -20,7 +20,6 @@ module.exports = function (stream) {
 }
 
 var parseCalendar = function (calendar) {
-
     console.log(calendar)
     var keys = calendar
     return calendar
@@ -47,7 +46,10 @@ var parseCalendar = function (calendar) {
                 if (y == "W") q = 1;
                 if (y == "MS") q = 1;
                 if (y == "NS") q = 1;
-                if (y == "DV") q = 2;
+                if (y == "SL") q = 2;
+                if (y == "AL") q = 2;
+                if (y == "H(M)") q = 2;
+                if (y == "H(A)") q = 2;
                 if (y == "T") q = 3;
                 if (y == "PO") q = 4;
                 if (y == "PM") q = 4;

@@ -22,10 +22,6 @@ export default {
   props: ["person"],
   data() {
       return {
-        /**************************************
-         * Feature 1 add two new status "MS"(morning shift),"NS"(night shift)
-        **************************************/
-        workTypes: ["W", "PH", "DV", "V", "T", "MS", "NS","PO","PM"],
         size: window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth,
       } 
   },
@@ -90,8 +86,11 @@ export default {
     workDayCount5() { 
       var wdctotal = 0;
       for(const w of this.person.days) {
-        if(w.workType == "DV"||w.workType == "V") {
+        if(w.workType == "SL"||w.workType == "AL"||w.workType == "V") {
           wdctotal = wdctotal + 1
+        }
+        if(w.workType == "H(M)"||w.workType == "H(A)") {
+          wdctotal = wdctotal + 0.5
         }
         //console.log(wdctotal)
       }
@@ -336,10 +335,7 @@ export default {
   width: 120px;
   margin: 10px;
 }
-.workday {
-  color: white;
-  cursor: pointer;
-}
+
 .workday:hover {
   font-size: 21px;
   margin: 0px;

@@ -5,6 +5,7 @@
       <day @customEvent="handleEvent" v-for="(d,index) in person.days" :large="large" :key="d._id" :day="d" :pindex="pindex" :dindex="index" :testparam="dayType" :testparamII="date"/>
       <!-- /**************************************
        Feature 2  add a dialog for updating the status
+       Feature 1 add two new status "MS"(morning shift),"NS"(night shift)
       **************************************/ -->
       <div v-if="open" @click="open=false">
         <div class="help-dialogII">
@@ -12,22 +13,30 @@
             <div class="legenda-container">
                 <div class="dayTypes">
                     <div class="box-container">
-                        <div v-on:click="cycle($event,0)" class="cellJuncheng box green"></div><div v-on:click="cycle($event,5)" class="cellJuncheng box green">MS</div><div v-on:click="cycle($event,6)" class="cellJuncheng box green">NS</div><h5 class = "blackFont">Work Day</h5>
+                        <div v-on:click="cycle($event,0)" class="cellJuncheng box green"></div>
+                        <div v-on:click="cycle($event,8)" class="cellJuncheng box green">MS</div>
+                        <div v-on:click="cycle($event,9)" class="cellJuncheng box green1">NS</div><h5 class = "blackFont">Work Day</h5>
                     </div>
                     <div class="box-container">
-                        <div v-on:click="cycle($event,3)" class="cellJuncheng box red" v-popover:myname>V</div><h5 class = "blackFont">Vacation</h5>
+                        <div v-on:click="cycle($event,6)" class="cellJuncheng box red" v-popover:myname>V</div><h5 class = "blackFont">Vacation</h5>
                     </div>
                     <div class="box-container">
-                        <div v-on:click="cycle($event,2)" class="cellJuncheng box purple" v-popover:myname>DV</div><h5 class = "blackFont">Desired Vacation</h5>
+                        <div v-on:click="cycle($event,2)" class="cellJuncheng box purple" v-popover:myname>SL</div><h5 class = "blackFont">Sick Leave</h5>
+                        <div v-on:click="cycle($event,3)" class="cellJuncheng box purple" v-popover:myname>AL</div><h5 class = "blackFont">Annual Leave</h5>
+                    </div>
+                    <div class="box-container">
+                        <div v-on:click="cycle($event,4)" class="cellJuncheng box purple" v-popover:myname>H(M)</div>
+                        <div v-on:click="cycle($event,5)" class="cellJuncheng box purple" v-popover:myname>H(A)</div><h5 class = "blackFont">Half-day Leave(Morning/Afternoon)</h5>
                     </div>
                     <div class="box-container">
                         <div v-on:click="cycle($event,1)" class="cellJuncheng box red">PH</div><h5 class = "blackFont">Public Holiday</h5>
                     </div>
                     <div class="box-container">
-                        <div v-on:click="cycle($event,7)" class="cellJuncheng box orange">PO</div><div v-on:click="cycle($event,8)" class="cellJuncheng box orange">PM</div><h5 class = "blackFont">OnDuty/MorningShift(PH)</h5>
+                        <div v-on:click="cycle($event,10)" class="cellJuncheng box orange">PO</div>
+                        <div v-on:click="cycle($event,11)" class="cellJuncheng box orange">PM</div><h5 class = "blackFont">OnDuty/MorningShift(PH)</h5>
                     </div>
                     <div class="box-container">
-                        <div v-on:click="cycle($event,4)" class="cellJuncheng box blue" v-popover:myname>T</div><h5 class = "blackFont">Training</h5>
+                        <div v-on:click="cycle($event,7)" class="cellJuncheng box blue" v-popover:myname>T</div><h5 class = "blackFont">Training</h5>
                     </div>
                 </div>
             </div>
@@ -55,9 +64,10 @@ export default {
       return {
         num: null,
         /**************************************
+        * Feature 1 add two new status "MS"(morning shift),"NS"(night shift)
         * Feature 2  add a dialog for updating the status
         **************************************/
-        workTypes: ["W", "PH", "DV", "V", "T", "MS", "NS", "PO", "PM"],//["W", "PH", "DV", "V", "T", "MS", "NS", "oc", "OC"],
+        workTypes: ["W", "PH", "SL", "AL", "H(M)", "H(A)", "V", "T", "MS", "NS", "PO", "PM"],
         open: false,
         dayType: " ",
         date: null,
@@ -89,20 +99,16 @@ export default {
   methods: {
 
     /**************************************
-     * Feature 1 add two new status "MS"(morning shift),"NS"(night shift)
      * Feature 6 One can only change his own status;TA & Manager have higher permission to all data
     **************************************/
     handleEvent:function(msg) {
       var nameArray = this.person.name.split(" ");
-      if(this.userName.match(nameArray[0] + " " + nameArray[1]) == nameArray[0] + " " + nameArray[1]|| this.userName == "Juncheng Zhu" || this.userName == "Dingsong Zhang" || this.userName == "Sean Wu (AZURE)" || this.userName == "Anik Shen"|| this.userName == "Karen Zheng"||this.userName == "Anita Yang") { // this.userName == this.person.name + "(International Supplier)"||this.userName == this.person.name + "(Wicresoft Co., LTD)"||
+      if(this.userName.match(nameArray[0] + " " + nameArray[1]) == nameArray[0] + " " + nameArray[1]|| this.userName == "Juncheng Zhu" || this.userName == "Dingsong Zhang" || this.userName == "Sean Wu (AZURE)" || this.userName == "Anik Shen"|| this.userName == "Karen Zheng"||this.userName == "Anita Yang") { 
         this.open = msg
         this.date = msg - 1
       }
     },
 
-    /**************************************
-     * Feature 1 add two new status "MS"(morning shift),"NS"(night shift)
-    **************************************/
     cycle(e, arg) {
       this.dayType = this.workTypes[arg];
     },
@@ -157,7 +163,7 @@ day {
   font-family: "Roboto Condensed", sans-serif;
 }
 .workday {
-  color: white;
+  color: #C2C4CE;
   /* cursor: pointer; */
 }
 
@@ -236,12 +242,16 @@ day {
   background-color: #557037;
 }
 
+.green1 {
+  background-color: #3B4D50;
+}
+
 .blue {
   background-color: #375c8c;
 }
 
 .purple {
-  background-color: #513567;
+  background-color: #403259;
 }
 
 .orange {

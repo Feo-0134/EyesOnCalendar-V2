@@ -31,7 +31,6 @@ else {
     // var connString = "mongodb://mayocalendarv2-dev:CiXxW30UqowaAs8CiAVyNiLgJ2UkRmpN6KXBGcJWamGmN2sNYkwcfhRhXQqGfi6jOFH6imOniww5Wn6tX2dIIA%3D%3D@mayocalendarv2-dev.documents.azure.com:10255/?ssl=true&replicaSet=globaldb"
     var staticPath = "/client/dist/"
     var connString = process.env.DB_CONNECTSTRING_DEV
-
 }
 
 mongoose.connect(connString)
@@ -117,59 +116,6 @@ function decrementMonth(month, name) {
     return month
 }
 
-/*************************************** Feature 7 Add a new member to the calendar **************************************/
-// router.post("/:pod/:year/:month/person", upload.any('csv'), bodyParser(),async (ctx) => {
-//     var p = ctx.params
-//     var b = ctx.request.body
-//     console.log(b) // get the request body
-//     let monthArr = ["January", "February", "March", "April", "May", "June", "July", "Auguest", "September", "October", "November", "December"]
-//     let altStr1 = monthArr[p.month] + (p.year).toString();
-//     let altStr2 = "Employee Name";
-//     let dayNum = new Date(p.year, p.month, 0).getDate();
-//     let cnt = 0;
-//     let arrMonth = new Array();
-//     let str2 = (p.year).toString() + "-" + (p.month).toString() + "-";
-//     while(cnt < dayNum) {
-//         altStr1 += ",";
-//         altStr2 += "," + (cnt+1).toString();
-//         var tmp = str2 + (cnt+1).toString();
-//         var dayPtr = new Date(tmp).getDay().toString();
-//         if(dayPtr == "0" || dayPtr == "6") { // "0" stands Sundays & "6" stands Saturdays
-//             arrMonth[cnt] = "PH";
-//         }else {
-//             arrMonth[cnt] = "W";
-//         }
-//         cnt++;
-//     }
-//     let str3 = arrMonth.join(",")
-//     str3 = altStr1+"\r\n"+altStr2+"\r\n%DefaultName% (1107-MICROSOFT CHINA CO LTD)," + str3
-//     fs.writeFile('./uploads/test.txt', str3, {flag:'w',encoding:'utf-8',mode:'0666'}, function(err) {
-//         if (err) {
-//             return console.error(err);
-//         }
-//     });
-//     let testLock = false;
-//     let src = fs.createReadStream('./uploads/test.txt');
-//     let people = await json(src)
-//     people[0].name = b.name
-//     testLock = true;
-//     console.log(people); //check the replacement application
-//     let currentMonth = await Month.findOne({ 'year': p.year, 'month': p.month,'section': p.pod })
-//     if(testLock)
-//     {
-//         var payload = incrementMonth(currentMonth, people)
-//         try {
-//             await payload.save()
-//             ctx.body = "all good"
-//         }
-//         catch(e) {
-//             ctx.status = 400
-//             ctx.body = "something went wrong"
-//             console.log(e)
-//         }
-//     }
-// })
-
 router.post("/:pod/:year/:month/person", upload.any('csv'), bodyParser(),async (ctx) => {
     const uploadDict = ["january","february","march","april","may","june","july","auguest","september","october","november","december"]
     var testLock = false;
@@ -220,6 +166,7 @@ router.post("/:pod/:year/:month/person", upload.any('csv'), bodyParser(),async (
         }
     }
  })
+
 /*************************************** Feature 9 Init a new Calendar **************************************/
 function calendarCleaner(filePth) {
     let data = fs.readFileSync(filePth);
@@ -345,3 +292,56 @@ router.post("/:pod/upload/:year/:month", upload.any('csv'), async (ctx) => {
         console.log(e)
     }
 })
+
+/*************************************** Feature 7 Add a new member to the calendar **************************************/
+// router.post("/:pod/:year/:month/person", upload.any('csv'), bodyParser(),async (ctx) => {
+//     var p = ctx.params
+//     var b = ctx.request.body
+//     console.log(b) // get the request body
+//     let monthArr = ["January", "February", "March", "April", "May", "June", "July", "Auguest", "September", "October", "November", "December"]
+//     let altStr1 = monthArr[p.month] + (p.year).toString();
+//     let altStr2 = "Employee Name";
+//     let dayNum = new Date(p.year, p.month, 0).getDate();
+//     let cnt = 0;
+//     let arrMonth = new Array();
+//     let str2 = (p.year).toString() + "-" + (p.month).toString() + "-";
+//     while(cnt < dayNum) {
+//         altStr1 += ",";
+//         altStr2 += "," + (cnt+1).toString();
+//         var tmp = str2 + (cnt+1).toString();
+//         var dayPtr = new Date(tmp).getDay().toString();
+//         if(dayPtr == "0" || dayPtr == "6") { // "0" stands Sundays & "6" stands Saturdays
+//             arrMonth[cnt] = "PH";
+//         }else {
+//             arrMonth[cnt] = "W";
+//         }
+//         cnt++;
+//     }
+//     let str3 = arrMonth.join(",")
+//     str3 = altStr1+"\r\n"+altStr2+"\r\n%DefaultName% (1107-MICROSOFT CHINA CO LTD)," + str3
+//     fs.writeFile('./uploads/test.txt', str3, {flag:'w',encoding:'utf-8',mode:'0666'}, function(err) {
+//         if (err) {
+//             return console.error(err);
+//         }
+//     });
+//     let testLock = false;
+//     let src = fs.createReadStream('./uploads/test.txt');
+//     let people = await json(src)
+//     people[0].name = b.name
+//     testLock = true;
+//     console.log(people); //check the replacement application
+//     let currentMonth = await Month.findOne({ 'year': p.year, 'month': p.month,'section': p.pod })
+//     if(testLock)
+//     {
+//         var payload = incrementMonth(currentMonth, people)
+//         try {
+//             await payload.save()
+//             ctx.body = "all good"
+//         }
+//         catch(e) {
+//             ctx.status = 400
+//             ctx.body = "something went wrong"
+//             console.log(e)
+//         }
+//     }
+// })
