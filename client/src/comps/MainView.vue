@@ -9,7 +9,7 @@
               <el-dropdown-item command="/DEV">&gt; DEV</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
-          
+
           <a :href="goAddPerson" v-if="admin" class="sectionPointer">&gt; AddPerson</a>
           <a :href="goDeletePerson" v-if="admin" class="sectionPointer">&gt; DeletePerson</a>
           <a :href="goReport" v-if="admin" class="sectionPointer">&gt; Report</a>
@@ -76,7 +76,7 @@ import moment from "moment";
 
 
 export default {
-  components: { Person, HelpScreen, Loading },
+  components: { Person, HelpScreen, Loading},
   data() {
     return {
       message: "Loading month...",
@@ -198,7 +198,7 @@ export default {
       return function(val) {
         var sum = 0;
         for(const b of Object.keys(this.month.people)) {
-          if(this.month.people[b].name.match("FTE")=="FTE" 
+          if(this.month.people[b].name.match("FTE")=="FTE"
           && (this.month.people[b].days[val].workType == "W"
           ||this.month.people[b].days[val].workType == "MS"
           ||this.month.people[b].days[val].workType == "NS"
@@ -215,7 +215,7 @@ export default {
       return function(val) {
         var sum = 0;
         for(const b of Object.keys(this.month.people)) {
-          if(this.month.people[b].name.match("v-")=="v-" 
+          if(this.month.people[b].name.match("v-")=="v-"
           && (this.month.people[b].days[val].workType == "W"
           ||this.month.people[b].days[val].workType == "MS"
           ||this.month.people[b].days[val].workType == "NS"
@@ -327,7 +327,7 @@ export default {
              this.emailUnderName = a.val
            }
          }
-          
+
         }).catch((error) => {
           this.emailUnderName = "Juncheng Zhu"
           reject(error)
@@ -342,7 +342,7 @@ export default {
         ||this.emailUnderName.match("Anik Shen") == "Anik Shen"
         || this.emailUnderName.match("Dingsong Zhang") == "Dingsong Zhang"
         ||this.emailUnderName.match("Anita Yang") == "Anita Yang"
-        ||this.emailUnderName.match("Danielle Zhao") == "Danielle Zhao" 
+        ||this.emailUnderName.match("Danielle Zhao") == "Danielle Zhao"
         || this.emailUnderName.match("Sean Wu (AZURE)") == "Sean Wu (AZURE)" */
         var that = this
         var dateNew = new Date();
@@ -400,7 +400,7 @@ export default {
 }
 
 .sectionPointer {
-  cursor: pointer;  
+  cursor: pointer;
   margin: 0 10px 0 10px;
   text-decoration: none;
   color: gray;
