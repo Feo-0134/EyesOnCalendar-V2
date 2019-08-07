@@ -18,7 +18,9 @@ Feature 5 Monthly report
           </div>
           <Personsum class="marginLeft" v-for="(p,index) in month.people" v-bind:key="p._id" v-bind:pindex="index" v-bind:person="p"/>
       </div>
-      <button class="modal-default-button"><a :href="linkToCalendar" class="linkFontStyle">Back To Calendar</a></button>
+      <button class="modal-default-button linkFontStyle" onclick="history.back(-1)">
+                Back To Calendar
+              </button>
   </div>
 </template>
 

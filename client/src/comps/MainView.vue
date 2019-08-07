@@ -267,7 +267,13 @@ export default {
     this.personinfo();
     //
     setTimeout(()=>{
-    if(this.emailUnderName.match("Juncheng Zhu") == "Juncheng Zhu" || this.emailUnderName.match("Karen Zheng") == "Karen Zheng"||this.emailUnderName.match("Anik Shen") == "Anik Shen"|| this.emailUnderName.match("Dingsong Zhang") == "Dingsong Zhang"||this.emailUnderName.match("Anita Yang") == "Anita Yang"||this.emailUnderName.match("Van Pan") == "Van Pan"||this.emailUnderName.match("Danielle Zhao") == "Danielle Zhao" || this.emailUnderName.match("Sean Wu (AZURE)") == "Sean Wu (AZURE)")
+    if(this.emailUnderName.match("Juncheng Zhu") == "Juncheng Zhu" 
+    || this.emailUnderName.match("Karen Zheng") == "Karen Zheng"
+    ||this.emailUnderName.match("Anik Shen") == "Anik Shen"
+    || this.emailUnderName.match("Dingsong Zhang") == "Dingsong Zhang"
+    ||this.emailUnderName.match("Anita Yang") == "Anita Yang"
+    ||this.emailUnderName.match("Danielle Zhao") == "Danielle Zhao" 
+    || this.emailUnderName.match("Sean Wu (AZURE)") == "Sean Wu (AZURE)")
       this.admin = true;}, 500)
   },
   methods: {
@@ -337,13 +343,14 @@ export default {
     /*************************************** Feature 9 init calendar **************************************/
     init() {
       // console.log(this.emailUnderName)
-      if(this.emailUnderName.match("Juncheng Zhu") == "Juncheng Zhu"){
-        /* this.emailUnderName.match("Karen Zheng") == "Karen Zheng"
-        ||this.emailUnderName.match("Anik Shen") == "Anik Shen"
-        || this.emailUnderName.match("Dingsong Zhang") == "Dingsong Zhang"
-        ||this.emailUnderName.match("Anita Yang") == "Anita Yang"
-        ||this.emailUnderName.match("Danielle Zhao") == "Danielle Zhao"
-        || this.emailUnderName.match("Sean Wu (AZURE)") == "Sean Wu (AZURE)" */
+      if(this.admin == true){
+        // this.emailUnderName.match("Juncheng Zhu") == "Juncheng Zhu"
+        // ||this.emailUnderName.match("Karen Zheng") == "Karen Zheng"
+        // ||this.emailUnderName.match("Anik Shen") == "Anik Shen"
+        // ||this.emailUnderName.match("Dingsong Zhang") == "Dingsong Zhang"
+        // ||this.emailUnderName.match("Anita Yang") == "Anita Yang"
+        // ||this.emailUnderName.match("Danielle Zhao") == "Danielle Zhao"
+        // ||this.emailUnderName.match("Sean Wu (AZURE)") == "Sean Wu (AZURE)"
         var that = this
         var dateNew = new Date();
         if(true){

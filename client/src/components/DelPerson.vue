@@ -26,8 +26,8 @@ Feature 7 Add a new member to the calendar
               <button class="modal-default-button" @click="$emit('close')">
                 Delete One More
               </button>
-              <button class="modal-default-button">
-                <a :href="linkToCalendar" class="linkFontStyle">Back To Calendar</a>
+              <button class="modal-default-button linkFontStyle" onclick="history.back(-1)">
+                Back To Calendar
               </button>
             </slot>
           </div>
@@ -42,7 +42,7 @@ Feature 7 Add a new member to the calendar
     <div class="morespace">
     <div class="newRow">
     <!-- <img src="../../static/img/joinus.png" alt="joinPic" /> -->
-    <input class="elem inputBox adjust" v-model="message" placeholder="Sample Name: Li Lei">
+    <input class="elem inputBox adjust" v-model="message" placeholder="eg. Ray Li FTE (rali)/ David Guo (v-davg)">
     <button class="elem buttonOrg adjust" id="show-modal" v-on:click="upload">Confirm</button>
     </div>
     <p class = "topmargin">HINT：Please type the name in the input-box then click the confirm button to delete a person.</p>
@@ -56,7 +56,9 @@ Feature 7 Add a new member to the calendar
     <h3 slot="header">A Member Deleted</h3>
   </modal>
     </div>
-    <button class="modal-default-button"><a :href="linkToCalendar" class="linkFontStyle">Back To Calendar</a></button>
+    <button class="modal-default-button linkFontStyle" onclick="history.back(-1)">
+                Back To Calendar
+              </button>
     </div>
 </template>
 
@@ -164,6 +166,7 @@ export default {
 .adjust {
     margin-top: 100px;
     height: 60px;
+    width: 280px;
 }
 .topmargin {
     margin-top: 165px;

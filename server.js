@@ -107,7 +107,7 @@ function decrementMonth(month, name) {
     console.log('decrementMonth')
     let count = 0
     month.people.forEach(person => {
-       if(person.name == name){
+       if(person.name.toLowerCase().match(name.toLowerCase()) == name.toLowerCase()){
            position = count
        }
        count++
@@ -125,7 +125,7 @@ router.post("/:pod/:year/:month/person", upload.any('csv'), bodyParser(),async (
     let src = fs.createReadStream('./uploads/'+uploadDict[p.month-1]+'.txt');
     console.log(src); //check the replacement application 
     let people = await json(src)
-    people[0].name = b.name
+    people[0].name = b.name;
     testLock = true;
     console.log(people); //check the replacement application
     let currentMonth = await Month.findOne({ 'year': p.year, 'month': p.month,'section': p.pod })
@@ -181,9 +181,14 @@ function calendarCleaner(filePth) {
 }
 
 router.post("/:pod/:year/:month/init", upload.any('csv'), async (ctx) => {
-    let p = ctx.params
+    var p = ctx.params
     var lastMon = (p.month - 1)%12 ? (p.month - 1)%12:12;
     var lastYear = lastMon == 12 ? p.year-1:p.year;
+    var thisMon = new Date().getMonth() + 1;
+    var flag = false;
+    if(thisMon == lastMon) {
+        flag = true;
+    }
     let lastMonth = await Month.findOne({ 'year': lastYear, 'month': lastMon,'section': p.pod })
     let monthArr = ["January", "February", "March", "April", "May", "June", "July", "Auguest", "September", "October", "November", "December"]
     let str2 = (p.year).toString() + "-" + (p.month).toString() + "-";
@@ -193,28 +198,30 @@ router.post("/:pod/:year/:month/init", upload.any('csv'), async (ctx) => {
     let arrMonth = new Array();
     let cnt = 0;
     let filePath = './uploads/months/'+ monthArr[p.month - 1] +'.txt';
-    calendarCleaner(filePath)
-    setTimeout(function() {
-        while(cnt < dayNum) {
-            var tmp = str2 + (cnt+1).toString();
-            var dayPtr = new Date(tmp).getDay().toString();
-            if(dayPtr == "0" || dayPtr == "6") { // "0" stands Sundays & "6" stands Saturdays
-                arrMonth[cnt] = "PH";
-            }else {
-                arrMonth[cnt] = "W";
-            }
-            cnt++;
-        }
-        var str3 = arrMonth.join(",")
-        str3 = "\r\n%DefaultName% (1107-MICROSOFT CHINA CO LTD)," + str3
-        lastMonth.people.forEach(person => {
-            fs.writeFile(filePath, str3, {flag:'a',encoding:'utf-8',mode:'0666'}, function(err) {
-                if (err) {
-                    return console.error(err);
+    if(flag) {
+        calendarCleaner(filePath)
+        setTimeout(function() {
+            while(cnt < dayNum) {
+                var tmp = str2 + (cnt+1).toString();
+                var dayPtr = new Date(tmp).getDay().toString();
+                if(dayPtr == "0" || dayPtr == "6") { // "0" stands Sundays & "6" stands Saturdays
+                    arrMonth[cnt] = "PH";
+                }else {
+                    arrMonth[cnt] = "W";
                 }
+                cnt++;
+            }
+            var str3 = arrMonth.join(",")
+            str3 = "\r\n%DefaultName% (1107-MICROSOFT CHINA CO LTD)," + str3
+            lastMonth.people.forEach(person => {
+                fs.writeFile(filePath, str3, {flag:'a',encoding:'utf-8',mode:'0666'}, function(err) {
+                    if (err) {
+                        return console.error(err);
+                    }
+                });
             });
-        });
-    },50);
+        },50);
+    }
 })
 
 router.post("/:pod/:year/:month/reload", upload.any('csv'), async (ctx) => {
