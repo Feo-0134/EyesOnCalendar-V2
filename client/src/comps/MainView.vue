@@ -268,12 +268,12 @@ export default {
     //
     setTimeout(()=>{
     if(this.emailUnderName.match("Juncheng Zhu") == "Juncheng Zhu" 
-    || this.emailUnderName.match("Karen Zheng") == "Karen Zheng"
+    ||this.emailUnderName.match("Karen Zheng") == "Karen Zheng"
     ||this.emailUnderName.match("Anik Shen") == "Anik Shen"
-    || this.emailUnderName.match("Dingsong Zhang") == "Dingsong Zhang"
+    ||this.emailUnderName.match("Dingsong Zhang") == "Dingsong Zhang"
     ||this.emailUnderName.match("Anita Yang") == "Anita Yang"
     ||this.emailUnderName.match("Danielle Zhao") == "Danielle Zhao" 
-    || this.emailUnderName.match("Sean Wu (AZURE)") == "Sean Wu (AZURE)")
+    ||this.emailUnderName.match("Sean Wu (AZURE)") == "Sean Wu (AZURE)")
       this.admin = true;}, 500)
   },
   methods: {
@@ -343,17 +343,20 @@ export default {
     /*************************************** Feature 9 init calendar **************************************/
     init() {
       // console.log(this.emailUnderName)
+      if(admin == false) {
+        alert("You can't init this month.");
+      }
       if(this.admin == true){
-        // this.emailUnderName.match("Juncheng Zhu") == "Juncheng Zhu"
-        // ||this.emailUnderName.match("Karen Zheng") == "Karen Zheng"
-        // ||this.emailUnderName.match("Anik Shen") == "Anik Shen"
-        // ||this.emailUnderName.match("Dingsong Zhang") == "Dingsong Zhang"
-        // ||this.emailUnderName.match("Anita Yang") == "Anita Yang"
-        // ||this.emailUnderName.match("Danielle Zhao") == "Danielle Zhao"
-        // ||this.emailUnderName.match("Sean Wu (AZURE)") == "Sean Wu (AZURE)"
         var that = this
-        var dateNew = new Date();
-        if(true){
+        var flag = true
+        var newYear = new Date().getYear();
+        var newMon = new Date().getMonth() + 1;
+        var dateStr = "/" + newYear.toString() + "/" + newMon.toString()
+        if( dateStr != moment(this.date, "/YYYY/M")) {
+          alert("You can't init this month.")
+          flag = false
+        }
+        if(flag){
           this.isLoading = true
           this.initUndo = false
           this.$http.post(this.apiPath, this.apiPayload)
