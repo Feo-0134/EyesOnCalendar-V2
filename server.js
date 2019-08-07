@@ -198,8 +198,8 @@ router.post("/:pod/:year/:month/init", upload.any('csv'), async (ctx) => {
     let arrMonth = new Array();
     let cnt = 0;
     let filePath = './uploads/months/'+ monthArr[p.month - 1] +'.txt';
+    calendarCleaner(filePath)
     if(flag) {
-        calendarCleaner(filePath)
         setTimeout(function() {
             while(cnt < dayNum) {
                 var tmp = str2 + (cnt+1).toString();
@@ -228,35 +228,42 @@ router.post("/:pod/:year/:month/reload", upload.any('csv'), async (ctx) => {
     var p = ctx.params;
     var lastMon = (p.month - 1)%12 ? (p.month - 1)%12:12;
     var lastYear = lastMon == 12 ? p.year-1:p.year;
+    var thisMon = new Date().getMonth() + 1;
+    var flag = false;
+    if(thisMon == lastMon) {
+        flag = true;
+    }
     let monthArr = ["January", "February", "March", "April", "May", "June", "July", "Auguest", "September", "October", "November", "December"]
     let filePath = './uploads/months/'+ monthArr[p.month - 1] +'.txt';
-    let src = fs.createReadStream(filePath);
-    let people = await json(src);
-    let lastMonth = await Month.findOne({ 'year': lastYear, 'month': lastMon,'section': p.pod });
-    let countNum = 0;
-    people.forEach(person => {
-        person.name = lastMonth.people[countNum].name;
-        countNum ++;
-    });
-    let currentMonth = await Month.findOne({ 'year': p.year, 'month': p.month,'section': p.pod })
-    if (currentMonth == null) {
-        var payload = insertMonth(p.year, p.month, people, p.pod)
+    if(flag) {
+        let src = fs.createReadStream(filePath);
+        let people = await json(src);
+        let lastMonth = await Month.findOne({ 'year': lastYear, 'month': lastMon,'section': p.pod });
+        let countNum = 0;
+        people.forEach(person => {
+            person.name = lastMonth.people[countNum].name;
+            countNum ++;
+        });
+        let currentMonth = await Month.findOne({ 'year': p.year, 'month': p.month,'section': p.pod })
+        if (currentMonth == null) {
+            var payload = insertMonth(p.year, p.month, people, p.pod)
+        }
+        else {
+            console.log("Month Already There.")
+        }
+        try {
+            await payload.save()
+            ctx.body = "Record Saved"
+        }
+        catch(e) {
+            ctx.status = 400
+            ctx.body = e
+            console.log(e)
+        }
+        setTimeout(function() {
+            calendarCleaner(filePath)
+        },2000)
     }
-    else {
-        console.log("Month Already There.")
-    }
-    try {
-        await payload.save()
-        ctx.body = "Record Saved"
-    }
-    catch(e) {
-        ctx.status = 400
-        ctx.body = e
-        console.log(e)
-    }
-    setTimeout(function() {
-        calendarCleaner(filePath)
-    },2000)
 })
 
 io.on("connection", socket => {
