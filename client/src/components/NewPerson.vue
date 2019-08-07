@@ -8,19 +8,15 @@ Feature 7 Add a new member to the calendar
     <div class="modal-mask">
       <div class="modal-wrapper">
         <div class="modal-container">
-
           <div class="modal-header">
             <slot name="header">
               default header
             </slot>
           </div>
-
           <div class="modal-body">
             <slot name="body">
-
             </slot>
           </div>
-
           <div class="modal-footer">
             <slot name="footer">
               <button class="modal-default-button" @click="$emit('close')">
@@ -66,9 +62,9 @@ Feature 7 Add a new member to the calendar
 export default {
     data() {
       return {
-          message: "",
-          showModal: false,
-          emailUnderName: null,
+        message: "",
+        showModal: false,
+        emailUnderName: null,
       }
     },
     methods:{
@@ -79,9 +75,19 @@ export default {
         this.emailUnderName.match("Anik Shen") == "Anik Shen"||
         this.emailUnderName.match("Danielle Zhao") == "Danielle Zhao"||
         this.emailUnderName.match("Anita Yang") == "Anita Yang"||
-        this.emailUnderName.match("Sean Wu") == "Sean Wu") { // this.userName.match(this.person.name) == this.person.name
-          this.$http.post(this.apiPath, this.apiPayload);
-          this.showModal = true
+        this.emailUnderName.match("Sean Wu") == "Sean Wu") {
+          new Promise((resolve, reject) => {
+            this.$http.post(this.apiPath, this.apiPayload)
+            .then((response)=> {
+              console.log(response)
+              if(response.data == "all good") {this.showModal = true;}
+              else{alert("Insert Error")}
+            })
+            .catch((error) => {
+              console.log(error.response)
+              alert("System Error")
+            })
+          }) 
         }
       },
       personinfo: function() {

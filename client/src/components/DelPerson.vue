@@ -80,8 +80,12 @@ export default {
         this.emailUnderName.match("Danielle Zhao") == "Danielle Zhao"||
         this.emailUnderName.match("Anita Yang") == "Anita Yang"||
         this.emailUnderName.match("Sean Wu") == "Sean Wu") { // this.userName.match(this.person.name) == this.person.name
-          this.$http.post(this.apiPath, this.apiPayload);
-          this.showModal = true
+          return new Promise((resolve, reject) => {
+            this.$http.post(this.apiPath, this.apiPayload).then((response)=> {
+              if(response.data == "all good")  {this.showModal = true;}
+              else(alert("Record Not Exist"))
+            })
+          })
         }
       },
       personinfo: function() {

@@ -95,6 +95,26 @@ function insertMonth(year, month, people, section) {
     })
 }
 
+function existRecordName(month, name) {
+    let count = 0
+    let position = -1
+    let name2Match = name.split(" ");
+    month.people.forEach(person => {
+        let nameArr = person.name.split(" ");
+        if(name2Match.length >= 2){
+            if(nameArr[0].toLowerCase() == name2Match[0].toLowerCase() 
+            && nameArr[1].toLowerCase() == name2Match[1].toLowerCase()) {
+                position = count
+            }
+        }
+       count++
+    })
+    if(position == -1) {
+        return true;
+    }
+    return false;
+}
+
 function incrementMonth(month, people) {
     console.log('Incremental push')
     people.forEach(person => {
@@ -112,7 +132,7 @@ function decrementMonth(month, name) {
        }
        count++
     })
-    month.people.splice(position,1)
+    if(position) month.people.splice(position,1)
     return month
 }
 
@@ -131,15 +151,22 @@ router.post("/:pod/:year/:month/person", upload.any('csv'), bodyParser(),async (
     let currentMonth = await Month.findOne({ 'year': p.year, 'month': p.month,'section': p.pod })
     if(testLock)
     {
-        var payload = incrementMonth(currentMonth, people)
-        try {
-            await payload.save()
-            ctx.body = "all good"
-        }
-        catch(e) {
-            ctx.status = 400
-            ctx.body = "something went wrong"
-            console.log(e)
+        if(existRecordName(currentMonth, b.name)) {
+            console.log("there")
+            var payload = incrementMonth(currentMonth, people)
+            try {
+                console.log("there")
+                await payload.save()
+                ctx.body = "all good"
+            }
+            catch(e) {
+                console.log(e)
+                ctx.status = 400
+                ctx.body = "something went wrong"
+            }
+        }else {
+            console.log("here")
+            ctx.body = "Record exist"
         }
     }
 })
@@ -154,15 +181,19 @@ router.post("/:pod/:year/:month/person", upload.any('csv'), bodyParser(),async (
     let currentMonth = await Month.findOne({ 'year': p.year, 'month': p.month,'section': p.pod })
     if(testLock)
     {
-        var payload = decrementMonth(currentMonth, b.name)
-        try {
-            await payload.save()
-            ctx.body = "all good"
-        }
-        catch(e) {
-            ctx.status = 400
-            ctx.body = "something went wrong"
-            console.log(e)
+        if(existRecordName(currentMonth, b.name)) {
+            ctx.body = "Record not exist"
+        }else {
+            var payload = decrementMonth(currentMonth, b.name)
+            try {
+                await payload.save()
+                ctx.body = "all good"
+            }
+            catch(e) {
+                ctx.status = 400
+                ctx.body = "something went wrong"
+                console.log(e)
+            }
         }
     }
  })
