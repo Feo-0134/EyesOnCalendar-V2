@@ -1,13 +1,12 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Month from '@/components/Month'
-import Upload from '@/components/Upload'
+import Upload from '@/comps/Upload'
 import LoadCurrentMonth from '@/comps/LoadCurrentMonth'
 import MainView from '@/comps/MainView'
 import Repo from '@/comps/Repo'
-import NewPerson from '@/components/NewPerson'
-import DelPerson from '@/components/DelPerson'
-import NotFound from '@/components/NotFound'
+import NewPerson from '@/comps/NewPerson'
+import DelPerson from '@/comps/DelPerson'
+import NotFound from '@/comps/NotFound'
 Vue.use(Router)
 
 export default new Router({

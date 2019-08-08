@@ -68,8 +68,8 @@
 </template>
 
 <script>
-import Person from "@/comps/PersonRow";
-import HelpScreen from "@/comps/HelpScreen";
+import Person from "@/components/PersonRow";
+import HelpScreen from "@/components/HelpScreen";
 import Loading from "@/components/LoadButton";
 import moment from "moment";
 
@@ -156,27 +156,27 @@ export default {
     },
     nextMonth() {
       return  (
-        (this.date.split("/")[1] == "DEV"?"/DEV":"/AppService" )+
+        ("/" + this.date.split("/")[1].toString() )+
         moment(this.date, "/YYYY/M")
         .add(1, "M")
         .format("/YYYY/M"))
     },
     prevMonth() {
       return  (
-        (this.date.split("/")[1] == "DEV"?"/DEV":"/AppService" )+
+        ("/" + this.date.split("/")[1].toString() )+
         moment(this.date, "/YYYY/M")
         .subtract(1, "M")
         .format("/YYYY/M"));
     },
     /*************************************** Router **************************************/
     goReport() {
-      return ((this.date.split("/")[1] == "DEV"?"/DEV":"/AppService") + moment(this.date, "/YYYY/M").format("/YYYY/M") + "/report");
+      return (("/" + this.date.split("/")[1].toString()) + moment(this.date, "/YYYY/M").format("/YYYY/M") + "/report");
     },
     goAddPerson() {
-      return ((this.date.split("/")[1] == "DEV"?"/DEV":"/AppService") + moment(this.date, "/YYYY/M").format("/YYYY/M") + "/person");
+      return (("/" + this.date.split("/")[1].toString()) + moment(this.date, "/YYYY/M").format("/YYYY/M") + "/person");
     },
     goDeletePerson() {
-      return ((this.date.split("/")[1] == "DEV"?"/DEV":"/AppService") + moment(this.date, "/YYYY/M").format("/YYYY/M") + "/delete");
+      return (("/" + this.date.split("/")[1].toString()) + moment(this.date, "/YYYY/M").format("/YYYY/M") + "/delete");
     },
     /*************************************** Feature 3 on-duty rate **************************************/
     percentage:function() {
@@ -274,7 +274,7 @@ export default {
     ||this.emailUnderName.match("Anita Yang") == "Anita Yang"
     ||this.emailUnderName.match("Danielle Zhao") == "Danielle Zhao" 
     ||this.emailUnderName.match("Sean Wu (AZURE)") == "Sean Wu (AZURE)")
-      this.admin = true;}, 500)
+      this.admin = true;}, 4000)
   },
   methods: {
     handleCommand(command) {
@@ -328,14 +328,17 @@ export default {
     personinfo: function() {
       return new Promise((resolve, reject) => {
         this.$http.get("/.auth/me").then((response)=> {
-         for(const a of response.data[0].user_claims) {
-           if(a.typ == "name"){
-             this.emailUnderName = a.val
-           }
-         }
-
+          if(response.data[0].user_claims) {
+            for(const a of response.data[0].user_claims) {
+              if(a.typ == "name"){
+                this.emailUnderName = a.val
+              }
+            }   
+          }else {
+            this.emailUnderName = "Juncheng Zhu"
+          }
         }).catch((error) => {
-          this.emailUnderName = "Juncheng Zhu"
+          
           reject(error)
         })
       })
@@ -343,18 +346,20 @@ export default {
     /*************************************** Feature 9 init calendar **************************************/
     init() {
       // console.log(this.emailUnderName)
-      if(admin == false) {
-        alert("You can't init this month.");
+      if(this.admin == false) {
+        alert("You have no privilege to init this month.");
       }
       if(this.admin == true){
         var that = this
-        var flag = true
-        var newYear = new Date().getYear();
-        var newMon = new Date().getMonth() + 1;
-        var dateStr = "/" + newYear.toString() + "/" + newMon.toString()
-        if( dateStr != moment(this.date, "/YYYY/M")) {
+        var flag = false
+        var newMon = (new Date().getMonth() + 2)%12 ? (new Date().getMonth() + 2)%12:12;
+        var thisMon = this.date.split("/");
+        console.log(newMon)
+        console.log(thisMon)
+        if( newMon != thisMon[3]) {
           alert("You can't init this month.")
-          flag = false
+        }else {
+          flag = true
         }
         if(flag){
           this.isLoading = true
@@ -380,6 +385,55 @@ export default {
   }
 }
 </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 <style>

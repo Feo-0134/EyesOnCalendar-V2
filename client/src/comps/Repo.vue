@@ -25,7 +25,7 @@ Feature 5 Monthly report
 </template>
 
 <script>
-import Personsum from "@/comps/PersonRowSum"
+import Personsum from "@/components/PersonRowSum"
 export default {
   components: { Personsum },
     data() {

@@ -55,7 +55,7 @@
 </template>
 
 <script>
-import Day from "@/comps/DayCell";
+import Day from "@/components/DayCell";
 export default {
   components: { Day },
   props: ["person", "pindex","userName"],

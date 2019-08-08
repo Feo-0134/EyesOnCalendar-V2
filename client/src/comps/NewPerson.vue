@@ -38,10 +38,10 @@ Feature 7 Add a new member to the calendar
     <div class="morespace">
     <div class="newRow">
     <img src="../../static/img/joinus.png" alt="joinPic" />
-    <input class="elem inputBox adjust" v-model="message" placeholder="eg. Ray Li FTE (rali)/ David Guo (v-davg)">
+    <input class="elem inputBox adjust" v-model="message" placeholder="eg. Ray Li FTE (rali) / David Guo (v-davg)">
     <button class="elem buttonOrg adjust" id="show-modal" v-on:click="upload">Confirm</button>
     </div>
-    <p class = "topmargin">HINT：Please type the name in the input-box then click the confirm button to add a person.</p>
+    <p class = "topmargin">Input Format: Ray Li FTE (rali) / David Guo (v-davg)</p>
     </div>
      <!-- use the modal component, pass in the prop -->
   <modal v-if="showModal" @close="showModal = false">
@@ -70,7 +70,18 @@ export default {
     methods:{
       //only TA and Manager have access to add a person
       upload() {
-        if(this.emailUnderName.match("Juncheng Zhu") == "Juncheng Zhu"||
+        var msgArr = this.message.toString().split(" ");
+        var flag = false;
+        if(msgArr.length < 3 ) {
+          alert("Format Error: Length Unmatch")
+        }else {
+          if(msgArr[msgArr.length - 1].match("v-") == "v-" || msgArr[msgArr.length - 2] == "FTE") {
+            flag = true
+          }else {
+            alert("Format Error: no role keyword")
+          }
+        }
+        if(flag && this.emailUnderName.match("Juncheng Zhu") == "Juncheng Zhu"||
         this.emailUnderName.match("Karen Zheng") == "Karen Zheng"||
         this.emailUnderName.match("Anik Shen") == "Anik Shen"||
         this.emailUnderName.match("Danielle Zhao") == "Danielle Zhao"||
@@ -81,7 +92,7 @@ export default {
             .then((response)=> {
               console.log(response)
               if(response.data == "all good") {this.showModal = true;}
-              else{alert("Insert Error")}
+              else{alert("Insert Error: Person Exist")}
             })
             .catch((error) => {
               console.log(error.response)
