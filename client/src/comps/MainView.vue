@@ -265,16 +265,6 @@ export default {
       this.callUndo(ev);
     });
     this.personinfo();
-    //
-    setTimeout(()=>{
-    if(this.emailUnderName.match("Juncheng Zhu") == "Juncheng Zhu" 
-    ||this.emailUnderName.match("Karen Zheng") == "Karen Zheng"
-    ||this.emailUnderName.match("Anik Shen") == "Anik Shen"
-    ||this.emailUnderName.match("Dingsong Zhang") == "Dingsong Zhang"
-    ||this.emailUnderName.match("Anita Yang") == "Anita Yang"
-    ||this.emailUnderName.match("Danielle Zhao") == "Danielle Zhao" 
-    ||this.emailUnderName.match("Sean Wu (AZURE)") == "Sean Wu (AZURE)")
-      this.admin = true;}, 4000)
   },
   methods: {
     handleCommand(command) {
@@ -337,8 +327,15 @@ export default {
           }else {
             this.emailUnderName = "Juncheng Zhu"
           }
+          if(this.emailUnderName.match("Juncheng Zhu") == "Juncheng Zhu" 
+          ||this.emailUnderName.match("Karen Zheng") == "Karen Zheng"
+          ||this.emailUnderName.match("Anik Shen") == "Anik Shen"
+          ||this.emailUnderName.match("Dingsong Zhang") == "Dingsong Zhang"
+          ||this.emailUnderName.match("Anita Yang") == "Anita Yang"
+          ||this.emailUnderName.match("Danielle Zhao") == "Danielle Zhao" 
+          ||this.emailUnderName.match("Sean Wu (AZURE)") == "Sean Wu (AZURE)")
+            this.admin = true;
         }).catch((error) => {
-          
           reject(error)
         })
       })

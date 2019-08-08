@@ -69,17 +69,13 @@ export default {
           message: "",
           showModal: false,
           emailUnderName: null,
+          admin:false
       }
     },
     methods:{
       //only TA and Manager have access to add a person
       upload() {
-        if(this.emailUnderName.match("Juncheng Zhu") == "Juncheng Zhu"||
-        this.emailUnderName.match("Karen Zheng") == "Karen Zheng"||
-        this.emailUnderName.match("Anik Shen") == "Anik Shen"||
-        this.emailUnderName.match("Danielle Zhao") == "Danielle Zhao"||
-        this.emailUnderName.match("Anita Yang") == "Anita Yang"||
-        this.emailUnderName.match("Sean Wu") == "Sean Wu") { // this.userName.match(this.person.name) == this.person.name
+        if(this.admin) { // this.userName.match(this.person.name) == this.person.name
           return new Promise((resolve, reject) => {
             this.$http.post(this.apiPath, this.apiPayload).then((response)=> {
               if(response.data == "all good")  {this.showModal = true;}
@@ -91,13 +87,24 @@ export default {
       personinfo: function() {
         return new Promise((resolve, reject) => {
           this.$http.get("/.auth/me").then((response)=> {
-            for(const a of response.data[0].user_claims) {
-              if(a.typ == "name"){
-                this.emailUnderName = a.val;
-              }
+            if(response.data[0].user_claims) {
+              for(const a of response.data[0].user_claims) {
+                if(a.typ == "name"){
+                  this.emailUnderName = a.val
+                }
+              }   
+            }else {
+              this.emailUnderName = "Juncheng Zhu"
             }
+            if(this.emailUnderName.match("Juncheng Zhu") == "Juncheng Zhu" 
+            ||this.emailUnderName.match("Karen Zheng") == "Karen Zheng"
+            ||this.emailUnderName.match("Anik Shen") == "Anik Shen"
+            ||this.emailUnderName.match("Dingsong Zhang") == "Dingsong Zhang"
+            ||this.emailUnderName.match("Anita Yang") == "Anita Yang"
+            ||this.emailUnderName.match("Danielle Zhao") == "Danielle Zhao" 
+            ||this.emailUnderName.match("Sean Wu (AZURE)") == "Sean Wu (AZURE)")
+              this.admin = true;
           }).catch((error) => {
-            this.emailUnderName = "Juncheng Zhu";
             reject(error)
           })
         })

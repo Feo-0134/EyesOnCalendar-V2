@@ -22,8 +22,8 @@ Feature 7 Add a new member to the calendar
               <button class="modal-default-button" @click="$emit('close')">
                 Add One More
               </button>
-              <button class="modal-default-button linkFontStyle" onclick="history.back(-1)">
-                Back To Calendar
+              <button class="modal-default-button">
+                <a :href="linkToCalendar" class="linkFontStyle">Back To Calendar</a>
               </button>
             </slot>
           </div>
@@ -65,6 +65,7 @@ export default {
         message: "",
         showModal: false,
         emailUnderName: null,
+        admin:false,
       }
     },
     methods:{
@@ -74,6 +75,7 @@ export default {
         var flag = false;
         if(msgArr.length < 3 ) {
           alert("Format Error: Length Unmatch")
+          return;
         }else {
           if(msgArr[msgArr.length - 1].match("v-") == "v-" || msgArr[msgArr.length - 2] == "FTE") {
             flag = true
@@ -81,12 +83,7 @@ export default {
             alert("Format Error: no role keyword")
           }
         }
-        if(flag && this.emailUnderName.match("Juncheng Zhu") == "Juncheng Zhu"||
-        this.emailUnderName.match("Karen Zheng") == "Karen Zheng"||
-        this.emailUnderName.match("Anik Shen") == "Anik Shen"||
-        this.emailUnderName.match("Danielle Zhao") == "Danielle Zhao"||
-        this.emailUnderName.match("Anita Yang") == "Anita Yang"||
-        this.emailUnderName.match("Sean Wu") == "Sean Wu") {
+        if(flag && this.admin) {
           new Promise((resolve, reject) => {
             this.$http.post(this.apiPath, this.apiPayload)
             .then((response)=> {
@@ -104,13 +101,24 @@ export default {
       personinfo: function() {
         return new Promise((resolve, reject) => {
           this.$http.get("/.auth/me").then((response)=> {
-            for(const a of response.data[0].user_claims) {
-              if(a.typ == "name"){
-                this.emailUnderName = a.val;
-              }
+            if(response.data[0].user_claims) {
+              for(const a of response.data[0].user_claims) {
+                if(a.typ == "name"){
+                  this.emailUnderName = a.val
+                }
+              }   
+            }else {
+              this.emailUnderName = "Juncheng Zhu"
             }
+            if(this.emailUnderName.match("Juncheng Zhu") == "Juncheng Zhu" 
+            ||this.emailUnderName.match("Karen Zheng") == "Karen Zheng"
+            ||this.emailUnderName.match("Anik Shen") == "Anik Shen"
+            ||this.emailUnderName.match("Dingsong Zhang") == "Dingsong Zhang"
+            ||this.emailUnderName.match("Anita Yang") == "Anita Yang"
+            ||this.emailUnderName.match("Danielle Zhao") == "Danielle Zhao" 
+            ||this.emailUnderName.match("Sean Wu (AZURE)") == "Sean Wu (AZURE)")
+              this.admin = true;
           }).catch((error) => {
-            this.emailUnderName = "Anik Shen";
             reject(error)
           })
         })
@@ -133,6 +141,8 @@ export default {
             };
         },
         linkToCalendar() {
+          var pathArr = this.$router.currentRoute.path.toString().split("/")
+          console.log(pathArr)
           return "/";
         },
     }
