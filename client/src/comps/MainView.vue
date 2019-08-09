@@ -342,9 +342,8 @@ export default {
     },
     /*************************************** Feature 9 init calendar **************************************/
     init() {
-      // console.log(this.emailUnderName)
       if(this.admin == false) {
-        alert("You have no privilege to init this month.");
+        alert("You have no permission to init this month.");
       }
       if(this.admin == true){
         var that = this

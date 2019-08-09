@@ -103,7 +103,14 @@ export default {
     **************************************/
     handleEvent:function(msg) {
       var nameArray = this.person.name.split(" ");
-      if(this.userName.match(nameArray[0] + " " + nameArray[1]) == nameArray[0] + " " + nameArray[1]|| this.userName == "Juncheng Zhu" || this.userName == "Dingsong Zhang" || this.userName == "Sean Wu (AZURE)" || this.userName == "Anik Shen"|| this.userName == "Karen Zheng"||this.userName == "Anita Yang") { 
+      if(this.userName.match(nameArray[0] + " " + nameArray[1]) == nameArray[0] + " " + nameArray[1]
+      || this.userName == "Juncheng Zhu" // su
+      || this.userName == "Karen Zheng"  // TM
+      || this.userName == "Anita Yang"    
+      || this.userName == "Danielle Zhao" // TA
+      || this.userName == "Dingsong Zhang" 
+      || this.userName == "Sean Wu (AZURE)" 
+      || this.userName == "Anik Shen") { 
         this.open = msg
         this.date = msg - 1
       }

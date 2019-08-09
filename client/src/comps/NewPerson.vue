@@ -52,8 +52,8 @@ Feature 7 Add a new member to the calendar
     <h3 slot="header">A New Member Added</h3>
   </modal>
     </div>
-    <button class="modal-default-button linkFontStyle" onclick="history.back(-1)">
-                Back To Calendar
+    <button class="modal-default-button">
+                <a :href="linkToCalendar" class="linkFontStyle">Back To Calendar</a>
               </button>
     </div>
 </template>
@@ -141,9 +141,7 @@ export default {
             };
         },
         linkToCalendar() {
-          var pathArr = this.$router.currentRoute.path.toString().split("/")
-          console.log(pathArr)
-          return "/";
+          return (this.$router.currentRoute.path).replace('/person','');
         },
     }
 }

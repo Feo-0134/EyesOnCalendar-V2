@@ -26,8 +26,8 @@ Feature 7 Add a new member to the calendar
               <button class="modal-default-button" @click="$emit('close')">
                 Delete One More
               </button>
-              <button class="modal-default-button linkFontStyle" onclick="history.back(-1)">
-                Back To Calendar
+              <button class="modal-default-button">
+                <a :href="linkToCalendar" class="linkFontStyle">Back To Calendar</a>
               </button>
             </slot>
           </div>
@@ -56,8 +56,8 @@ Feature 7 Add a new member to the calendar
     <h3 slot="header">A Member Deleted</h3>
   </modal>
     </div>
-    <button class="modal-default-button linkFontStyle" onclick="history.back(-1)">
-                Back To Calendar
+    <button class="modal-default-button">
+                <a :href="linkToCalendar" class="linkFontStyle">Back To Calendar</a>
               </button>
     </div>
 </template>
@@ -128,7 +128,7 @@ export default {
             };
         },
         linkToCalendar() {
-          return "/";
+          return (this.$router.currentRoute.path).replace('/delete','');
         },
     }
 }
