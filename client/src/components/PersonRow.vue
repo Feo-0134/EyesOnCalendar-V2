@@ -7,8 +7,20 @@
        Feature 2  add a dialog for updating the status
        Feature 1 add two new status "MS"(morning shift),"NS"(night shift)
       **************************************/ -->
-      <div v-if="open" @click="open=false">
-        <div class="help-dialogII">
+      <!-- <div v-if="open" @click="open=false"> -->
+       
+      <Moveable v-if="open"
+          class="moveable"
+          v-bind="moveable"
+          @drag="handleDrag"
+          @resize="handleResize"
+          @scale="handleScale"
+          @rotate="handleRotate"
+          @warp="handleWarp"
+        >
+          <span>Vue Moveable</span>
+      </Moveable>
+        <!-- <div class="help-dialogII">
           <img class="exitIcon" src="../../static/img/exit.png" alt="joinPic" />
             <div class="legenda-container">
                 <div class="dayTypes">
@@ -40,8 +52,8 @@
                     </div>
                 </div>
             </div>
-            </div>
-      </div>
+            </div> -->
+      <!-- </div> -->
       <!-- /**************************************
       Feature 8 Hint one to mail team about the absence
       **************************************/ -->
@@ -56,12 +68,24 @@
 
 <script>
 import Day from "@/components/DayCell";
+import Moveable from 'vue-moveable';
 export default {
-  components: { Day },
+  components: { Day, Moveable },
   props: ["person", "pindex","userName"],
 
   data() {
       return {
+        moveable: {
+          draggable: true,
+          throttleDrag: 0,
+          resizable: false,
+          throttleResize: 1,
+          keepRatio: true,
+          scalable: true,
+          throttleScale: 0,
+          rotatable: true,
+          throttleRotate: 0
+        },
         num: null,
         /**************************************
         * Feature 1 add two new status "MS"(morning shift),"NS"(night shift)
@@ -97,7 +121,31 @@ export default {
       })
   },
   methods: {
-
+    // moveable method
+    handleDrag({ target, left, top }) {
+      console.log('onDrag left, top', left, top);
+      target.style.left = `${left}px`;
+      target.style.top = `${top}px`;
+    },
+    handleResize({
+      target, width, height, delta,
+    }) {
+      console.log('onResize', width, height);
+      delta[0] && (target.style.width = `${width}px`);
+      delta[1] && (target.style.height = `${height}px`);
+    },
+    handleScale({ target, transform, scale }) {
+      console.log('onScale scale', scale);
+      target.style.transform = transform;
+    },
+    handleRotate({ target, dist, transform }) {
+      console.log('onRotate', dist);
+      target.style.transform = transform;
+    },
+    handleWarp({ target, transform }) {
+      console.log('onWarp', target);
+      target.style.transform = transform;
+    },
     /**************************************
      * Feature 6 One can only change his own status;TA & Manager have higher permission to all data
     **************************************/

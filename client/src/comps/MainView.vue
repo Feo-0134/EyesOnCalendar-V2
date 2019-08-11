@@ -179,6 +179,7 @@ export default {
       return (("/" + this.date.split("/")[1].toString()) + moment(this.date, "/YYYY/M").format("/YYYY/M") + "/delete");
     },
     /*************************************** Feature 3 on-duty rate **************************************/
+    
     percentage:function() {
       return function(val) {
         var sum = 0;

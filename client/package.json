@@ -25,6 +25,7 @@
     "vue-async-computed": "^3.3.1",
     "vue-breakpoints": "^1.1.0",
     "vue-js-popover": "^1.1.8",
+    "vue-moveable": "^0.3.0",
     "vue-responsive": "^1.0.1",
     "vue-router": "^3.0.1",
     "vuejs-datepicker": "^1.1.4",

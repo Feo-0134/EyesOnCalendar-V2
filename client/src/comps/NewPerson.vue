@@ -2,93 +2,83 @@
 Feature 7 Add a new member to the calendar
 **************************************/ -->
 <template>
-    <div>
-<script type="text/x-template" id="modal-template">
-  <transition name="modal">
-    <div class="modal-mask">
-      <div class="modal-wrapper">
-        <div class="modal-container">
-          <div class="modal-header">
-            <slot name="header">
-              default header
-            </slot>
-          </div>
-          <div class="modal-body">
-            <slot name="body">
-            </slot>
-          </div>
-          <div class="modal-footer">
-            <slot name="footer">
-              <button class="modal-default-button" @click="$emit('close')">
-                Add One More
-              </button>
-              <button class="modal-default-button">
-                <a :href="linkToCalendar" class="linkFontStyle">Back To Calendar</a>
-              </button>
-            </slot>
-          </div>
-        </div>
+  <el-container>
+  <el-header>Adding Member</el-header>
+  <p>Welcome, {{emailUnderName}}</p>
+    <el-main>
+      <img src="../../static/img/joinus.png" alt="joinPic" />
+      <div class="inputBox">
+       Name:
+      <el-input v-model="inputName" placeholder="eg. Danielle Zhao"></el-input>
+       FTE/Vendor:
+      <el-input v-model="inputRole" placeholder="eg. FTE / Vendor"></el-input>
+       Alias:
+      <el-input v-model="inputAlias" placeholder="eg. danzha"></el-input>
+      
       </div>
-    </div>
-  </transition>
-</script>
-    <h1>Adding Member</h1>
-    <div>
-    <div class="testClassII"><p>Welcome, {{emailUnderName}}</p></div>
-    <div class="morespace">
-    <div class="newRow">
-    <img src="../../static/img/joinus.png" alt="joinPic" />
-    <input class="elem inputBox adjust" v-model="message" placeholder="eg. Ray Li FTE (rali) / David Guo (v-davg)">
-    <button class="elem buttonOrg adjust" id="show-modal" v-on:click="upload">Confirm</button>
-    </div>
-    <p class = "topmargin">Input Format: Ray Li FTE (rali) / David Guo (v-davg)</p>
-    </div>
-     <!-- use the modal component, pass in the prop -->
-  <modal v-if="showModal" @close="showModal = false">
-    <!--
-      you can use custom content here to overwrite
-      default content
-    -->
-    <h3 slot="header">A New Member Added</h3>
-  </modal>
-    </div>
-    <button class="modal-default-button">
-                <a :href="linkToCalendar" class="linkFontStyle">Back To Calendar</a>
-              </button>
-    </div>
+      <el-button type="primary" v-on:click="upload">Confirm</el-button>
+      <el-button type="info" v-on:click="linkToCalendar">Back to Calendar</el-button>
+    </el-main>
+  </el-container>
 </template>
 
 <script>
 export default {
     data() {
       return {
-        message: "",
+        inputName: "",
+        inputRole: "",
+        inputAlias:"",
+        message:"",
         showModal: false,
         emailUnderName: null,
         admin:false,
+        back2homepage:false,
       }
     },
     methods:{
       //only TA and Manager have access to add a person
       upload() {
-        var msgArr = this.message.toString().split(" ");
-        var flag = false;
-        if(msgArr.length < 3 ) {
-          alert("Format Error: Length Unmatch")
+        if(this.inputName == "" || this.inputRole == "" || this.inputAlias == "") {
+          alert("please fill the blanks")
           return;
-        }else {
-          if(msgArr[msgArr.length - 1].match("v-") == "v-" || msgArr[msgArr.length - 2] == "FTE") {
-            flag = true
-          }else {
-            alert("Format Error: no role keyword")
-          }
         }
-        if(flag && this.admin) {
+        // name
+        var nameStr
+        var nameArr = this.inputName.toString().split(" ");
+        if(nameArr.length > 1) {
+          nameArr[0][0].toUpperCase();
+          nameArr[nameArr.length - 1][0].toUpperCase();
+          nameStr = nameArr[0] + nameArr[1];
+        }else {
+          alert("Name Format Unmatch. eg. Meimei Han")
+          return;
+        }
+        // role
+        var roleStr
+        if(this.inputRole == "FTE" || this.inputRole == "fte") {
+          roleStr = "FTE";
+        }else if(this.inputRole == "Vendor" || this.inputRole == "vendor" || this.inputRole == "v") {
+          roleStr = ""
+        }else {
+          alert("Role Keyword Error. eg. FTE or Vendor")
+          return;
+        }
+        // alias
+        var aliasStr
+        if(this.inputAlias[0] == "(" && this.inputAlias[(this.inputAlias).length-1] == ")") {
+          aliasStr = this.inputAlias
+        }else {
+          aliasStr = "(" + this.inputAlias + ")";
+        }
+        this.message = nameStr + " " + roleStr +  " " + aliasStr
+        
+        if(this.admin) {
           new Promise((resolve, reject) => {
             this.$http.post(this.apiPath, this.apiPayload)
             .then((response)=> {
               console.log(response)
-              if(response.data == "all good") {this.showModal = true;}
+              if(response.data == "all good") {this.openSuccess()}
               else{alert("Insert Error: Person Exist")}
             })
             .catch((error) => {
@@ -97,6 +87,13 @@ export default {
             })
           }) 
         }
+      },
+      openSuccess() {
+        const h = this.$createElement;
+        this.$notify({
+          title: 'Notification',
+          message: h('i', { style: 'color: teal'}, 'Person Added to Team')
+        });
       },
       personinfo: function() {
         return new Promise((resolve, reject) => {
@@ -122,7 +119,10 @@ export default {
             reject(error)
           })
         })
-      }
+      },
+      linkToCalendar() {
+          this.$router.push((this.$router.currentRoute.path).replace('/person',''));
+      },
     },
     mounted() {
         this.personinfo();
@@ -140,146 +140,45 @@ export default {
                 randomNumber: this.$randomNumber
             };
         },
-        linkToCalendar() {
-          return (this.$router.currentRoute.path).replace('/person','');
-        },
+        
     }
 }
 </script>
 
 <style>
-.newRow {
-  display: flex;
-  margin-top: 200px;
-  justify-content: center;
+ .el-header {
+    background: rgb(37, 37, 37);
+    color: #fff;
+    text-align: center;
+    line-height: 60px;
+    font-family: Roboto Condensed,sans-serif;
+    font-size: 40px;
+  }
+  
+  .el-main {
+    background: rgb(37, 37, 37);
+    color: #fff;
+    text-align: center;
+    line-height: 150px;
+  }
+  
+  body > .el-container {
+    margin-bottom: 40px;
+  }
 
-}
-.elem {
-    margin-left: 20px;
-    margin-right: 20px;
-}
-.textElem {
-    margin: 15px;
-    margin-left: 60px;
+  .el-input {
+    width: 200px;
+    margin: 20px;
+  }
+  
+  .inputBox {
+    width:100%;
+    position:relative;
+  }
 
-}
-.buttonOrg {
-  background-color: #4CAF50; /* Green */
-  border: none;
-  color: rgb(255, 255, 255);
-  padding: 15px 32px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-
-}
-.inpuBox {
-  background-color: #4CAF50; /* Green */
-  border: none;
-  color: white;
-  /* padding: 15px 32px; */
-  text-decoration: none;
-  display: inline-block;
-  height:20px;
-}
-.morespace {
-    height: 450px;
-}
-
-.adjust {
-    margin-top: 100px;
-    height: 60px;
-    width: 280px;
-}
-.topmargin {
-    margin-top: 165px;
-
-}
-.modal-mask {
-  position: fixed;
-  z-index: 9998;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, .5);
-  display: table;
-  transition: opacity .3s ease;
-}
-
-.modal-wrapper {
-  display: table-cell;
-  vertical-align: middle;
-}
-
-.modal-container {
-  width: 500px;
-  height: 200px;
-  margin: 0px auto;
-  padding: 20px 30px;
-  background-color: #222;
-  border-radius: 20px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, .33);
-  transition: all .3s ease;
-  font-family: Helvetica, Arial, sans-serif;
-}
-
-.modal-header h3 {
-  margin-top: 0;
-  color: #42b983;
-  font-size: 25px;
-}
-
-.modal-body {
-  margin: 20px 0;
-  margin-bottom: 70px;
-}
-
-.modal-default-button {
-  background-color: #4CAF50; /* Green */
-  border: none;
-  color: rgb(255, 255, 255);
-  padding: 15px 32px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-  margin: 20px;
-}
-
-
-
-/*
- * The following styles are auto-applied to elements with
- * transition="modal" when their visibility is toggled
- * by Vue.js.
- *
- * You can easily play with the modal transition by editing
- * these styles.
- */
-
-.modal-enter {
-  opacity: 0;
-}
-
-.modal-leave-active {
-  opacity: 0;
-}
-
-.modal-enter .modal-container,
-.modal-leave-active .modal-container {
-  -webkit-transform: scale(1.1);
-  transform: scale(1.1);
-}
-.linkFontStyle {
-    font-size: 16px;
-    color: #FFF;
-    text-decoration: none;
-}
-.testClassII {
-    text-align: right;
-}
-
+  .toolCase {
+    margin:10px;
+    height: 50px;
+  }
 
 </style>
