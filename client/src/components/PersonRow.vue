@@ -2,7 +2,7 @@
   <div class="row">
         <div v-if="large" class="cellxII name">{{displayName}}</div>
         <div v-if="!large" class="cellxII name">{{shortName}}</div>
-      <day @customEvent="handleEvent" v-for="(d,index) in person.days" :large="large" :key="d._id" :day="d" :pindex="pindex" :dindex="index" :testparam="dayType" :testparamII="date"/>
+      <day class = "dayCell" @customEvent="handleEvent" v-for="(d,index) in person.days" :large="large" :key="d._id" :day="d" :pindex="pindex" :dindex="index" :testparam="dayType" :testparamII="date"/>
       <!-- /**************************************
        Feature 2  add a dialog for updating the status
        Feature 1 add two new status "MS"(morning shift),"NS"(night shift)
@@ -10,6 +10,7 @@
       <!-- <div v-if="open" @click="open=false"> -->
        
       <Moveable v-if="open"
+          @click="open=false"
           class="moveable"
           v-bind="moveable"
           @drag="handleDrag"
@@ -18,9 +19,7 @@
           @rotate="handleRotate"
           @warp="handleWarp"
         >
-          <span>Vue Moveable</span>
-      </Moveable>
-        <!-- <div class="help-dialogII">
+          <div class="help-dialogII">
           <img class="exitIcon" src="../../static/img/exit.png" alt="joinPic" />
             <div class="legenda-container">
                 <div class="dayTypes">
@@ -52,7 +51,9 @@
                     </div>
                 </div>
             </div>
-            </div> -->
+            </div> 
+      </Moveable>
+        
       <!-- </div> -->
       <!-- /**************************************
       Feature 8 Hint one to mail team about the absence
@@ -81,9 +82,9 @@ export default {
           resizable: false,
           throttleResize: 1,
           keepRatio: true,
-          scalable: true,
+          scalable: false,
           throttleScale: 0,
-          rotatable: true,
+          rotatable: false,
           throttleRotate: 0
         },
         num: null,
@@ -190,7 +191,6 @@ day {
 .row {
   display: flex;
   height: 40px;
-  justify-content: center;
 }
 
 .row:hover:not(:first-child) {
@@ -347,7 +347,7 @@ day {
 }
 .help-dialogII {
   background-color: #2E3532;
-  position: fixed;
+  position: absolute;
   top: 25%;
   left: 50%;
   margin-left: -150px;
@@ -403,4 +403,14 @@ day {
   margin-left: 5px;
   margin-bottom: 5px;
 }
+.moveable {
+  position: relative;
+  text-align: center;
+  font-size: 10px;
+  margin: 0 auto;
+  font-weight: 100;
+  letter-spacing: 1px;
+}
+
+
 </style>

@@ -34,7 +34,6 @@ export default {
     .row {
         display: flex;
         height: 40px;
-        justify-content: center;
     }
     .cell {
         display: flex;
