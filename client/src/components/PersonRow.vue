@@ -7,8 +7,6 @@
        Feature 2  add a dialog for updating the status
        Feature 1 add two new status "MS"(morning shift),"NS"(night shift)
       **************************************/ -->
-      <!-- <div v-if="open" @click="open=false"> -->
-       
       <Moveable v-if= "open"
         @click="open=false"
         class="moveable"
@@ -49,14 +47,12 @@
                         <div v-on:click="cycle($event,1)" class="box red">PH</div><h5 class = "blackFont">Public Holiday</h5>
                     </div>
                     <span slot="footer" class="dialog-footer">
-                        <el-button @click="handleOpen">Cancel</el-button>
+                        <!-- <el-button @click="handleOpen">Cancel</el-button> -->
                         <el-button type="primary" @click="handleOpen">Comfirm</el-button>
                     </span>
                 </div>
             </div> 
       </Moveable>
-        
-      <!-- </div> -->
       <!-- /**************************************
       Feature 8 Hint one to mail team about the absence
       **************************************/ -->
@@ -167,9 +163,9 @@ export default {
       || this.userName == "Sean Wu (AZURE)" 
       || this.userName == "Anik Shen") {
          console.log("test1")
-        if(this.openflag == false) {
+        if(this.openflag == false || this.open == true) {
           console.log("test2")
-          this.open = msg
+          this.open = true
           this.$emit('opensync',true)
           this.date = msg - 1
         }
