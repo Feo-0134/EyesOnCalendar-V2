@@ -2,8 +2,41 @@
   <div class="main">
         <el-button type="text" @click="dialogVisible = true">点击打开 Dialog</el-button>
         <div class = "dialog-container">
+        <div class="dialog-content" title="Statuses Option" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">        
+            <div class="box-container">
+                <div v-on:click="cycle()" class="box green"></div>
+                <div v-on:click="cycle()" class="box green">MS</div>
+                <div v-on:click="cycle()" class="box green1">NS</div><h5 class = "blackFont">Work Day</h5>
+            </div>
+            <div class="box-container">
+                <div v-on:click="cycle()" class="box purple" v-popover:myname>SL</div><h5 class = "blackFont">Sick Leave</h5>
+                <div v-on:click="cycle()" class="box purple" v-popover:myname>AL</div><h5 class = "blackFont">Annual Leave</h5>
+            </div>
+            <div class="box-container">
+                <div v-on:click="open1 = true; cycle();" class="box purple" v-popover:myname>HSL</div><h5 class = "blackFont">Half-day Sick Leave(Morning/Afternoon)</h5>
+            </div>
+                <el-switch v-if = "open1" v-model="value1" active-text="Afternoon" inactive-text="Morning"> </el-switch>
+            <div class="box-container">
+                <div v-on:click="open2 = true; cycle();" class="box purple" v-popover:myname>HAL</div><h5 class = "blackFont">Half-day Sick Leave(Morning/Afternoon)</h5>
+            </div>
+                <el-switch v-if = "open2" v-model="value2" active-text="Afternoon" inactive-text="Morning">
+                </el-switch>
+            <div class="box-container">
+                <div v-on:click="cycle()" class="box orange">PO</div>
+                <div v-on:click="cycle()" class="box orange">PM</div><h5 class = "blackFont">OnDuty/MorningShift(PH)</h5>
+            </div>
+            <div class="box-container">
+                <div v-on:click="cycle()" class="box blue" v-popover:myname>T</div><h5 class = "blackFont">Training</h5>
+            </div>
+            <div class="box-container">
+                <div v-on:click="cycle()" class="box red">PH</div><h5 class = "blackFont">Public Holiday</h5>
+            </div>
+        <span slot="footer" class="dialog-footer">
+            <el-button @click="dialogVisible = false">Cancel</el-button>
+            <el-button type="primary" @click="dialogVisible = false">Comfirm</el-button>
+        </span>
+        </div>
         <Moveable v-if="dialogVisible"
-          @click="dialogVisible=false"
           class="moveable"
           v-bind="moveable"
           @drag="handleDrag"
@@ -100,41 +133,32 @@ export default {
       console.log('onWarp', target);
       target.style.transform = transform;
     },
-      done() {
-          alert('yeahhhh');
-      },
-      handleClose(done) {
-        this.$confirm('Confirm to close?')
-          .then(() => {
-            done();
-          })
-          .catch(() => {});
-      },
-      cycle() {
-      },
+    done() {
+        alert('yeahhhh');
+    },
+    handleClose(done) {
+    this.$confirm('Confirm to close?')
+        .then(() => {
+        done();
+        })
+        .catch(() => {});
+    },
+    cycle() {
+    },
     }
 }
 </script>
 
 
 <style>
-.help-dialogII {
-  background-color: #2E3532;
-  position: absolute;
-  top: 25%;
-  left: 50%;
-  margin-left: -150px;
-  width: 300px;
-  padding: 30px;
-  color: black;
-}
+
 .dialog-container {
-    display:flex;
+    position: relative;
     height: 900px;
     
 }
 .dialog-content {
-    width: 500px;
+    width: 400px;
     margin:20px;
 }
 .box-container {
@@ -181,5 +205,7 @@ export default {
   margin: 0 auto;
   font-weight: 100;
   letter-spacing: 1px;
+  width: 400px;
+  height: 550px;
 }
 </style>

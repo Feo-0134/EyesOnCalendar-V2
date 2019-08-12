@@ -18,12 +18,12 @@
       <div class="testClassII"><p>Welcome, {{emailUnderName}}</p></div>
       <h1><a :href="prevMonth" class="pointer">&lt;</a>{{prettyDate}}<a :href="nextMonth" class="pointer">&gt;</a></h1>
       <h2 v-if="!month">{{message}}</h2>
-      <button v-if="!month" class = "button" v-bind:class="{buttonBackground: initUndo}" v-on:click="init">Init Table</button>
-      <button v-if="!month" v-bind:class="{buttonBackground: !initUndo}" class = "button" v-on:click="reload">Reload Table</button>
+      <button v-if="!month" class = "button" :class="{buttonBackground: initUndo}" v-on:click="init">Init Table</button>
+      <button v-if="!month" :class="{buttonBackground: !initUndo}" class = "button" v-on:click="reload">Reload Table</button>
       <div v-if="month">
           <el-tabs id="tabsJuncheng" v-model="activeName" @tab-click="handleClick">
             <el-tab-pane label="All Members" name="first">
-               <div id="tablehead" v-bind:class="{sticky: scrolled}" class="row tablehead">
+               <div id="tablehead" :class="{sticky: scrolled}" class="row tablehead">
                 <div class="name"></div>
                 <div v-for="(p,index) in month.people[0].days" :key="index" class="cellx">{{index+1}}</div>
               </div>
@@ -32,10 +32,10 @@
                 <div class="name attendance">On Duty</div>
                 <div v-for="(p,index) in month.people[0].days" :key="index" class="cellx">{{percentage(index)}}%</div>
               </div>
-              <person  v-for="(p,index) in month.people" v-bind:key="p._id" v-bind:pindex="index" v-bind:person="p" :userName="emailUnderName"/>
+              <person  v-for="(p,index) in month.people" :key="p._id" :pindex="index" :person="p" :userName="emailUnderName" :openflag = "openflag" @opensync = "handleOpenPanel"/>
             </el-tab-pane>
             <el-tab-pane label="FTE Members" name="second">
-              <div id="tablehead" v-bind:class="{sticky: scrolled}" class="row tablehead">
+              <div id="tablehead" :class="{sticky: scrolled}" class="row tablehead">
                 <div class="name"></div>
                 <div v-for="(p,index) in month.people[0].days" :key="index" class="cellx">{{index+1}}</div>
               </div>
@@ -44,10 +44,10 @@
                 <div class="name attendance">On Duty</div>
                 <div v-for="(p,index) in month.people[0].days" :key="index" class="cellx">{{percentageFTE(index)}}%</div>
               </div>
-              <person  v-for="(p,index) in month.people" v-show="p.name.match('FTE')=='FTE'" v-bind:key="p._id" v-bind:pindex="index" v-bind:person="p" :userName="emailUnderName"/>
+              <person  v-for="(p,index) in month.people" v-show="p.name.match('FTE')=='FTE'" :key="p._id" :pindex="index" :person="p" :userName="emailUnderName"/>
             </el-tab-pane>
             <el-tab-pane label="Vendor Members" name="third">
-               <div id="tablehead" v-bind:class="{sticky: scrolled}" class="row tablehead">
+               <div id="tablehead" :class="{sticky: scrolled}" class="row tablehead">
                 <div class="name"></div>
                 <div v-for="(p,index) in month.people[0].days" :key="index" class="cellx">{{index+1}}</div>
               </div>
@@ -56,7 +56,7 @@
                 <div class="name attendance">On Duty</div>
                 <div v-for="(p,index) in month.people[0].days" :key="index" class="cellx">{{percentageVendor(index)}}%</div>
               </div>
-              <person  v-for="(p,index) in month.people" v-show="p.name.match('v-')=='v-'" v-bind:key="p._id" v-bind:pindex="index" v-bind:person="p" :userName="emailUnderName"/>
+              <person  v-for="(p,index) in month.people" v-show="p.name.match('v-')=='v-'" :key="p._id" :pindex="index" :person="p" :userName="emailUnderName"/>
             </el-tab-pane>
           </el-tabs>
       </div>
@@ -86,7 +86,8 @@ export default {
       initUndo:true,
       admin:false,
       isLoading: false,
-      activeName: 'first'
+      activeName: 'first',
+      openflag:false,
     };
   },
   asyncComputed: {
@@ -286,7 +287,10 @@ export default {
         .format("/YYYY/M");
       this.$router.push({ path: path });
     },
-
+    handleOpenPanel:function(msg) {
+      this.openflag = msg;
+      console.log("test")
+    },
     // callUndo(ev) {
     //   if (ev.code !== "KeyZ" || ev.ctrlKey !== true) return;
     //   else if (this.$history.length == 0) return;
@@ -382,43 +386,6 @@ export default {
   }
 }
 </script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

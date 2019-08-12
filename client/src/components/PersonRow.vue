@@ -9,19 +9,16 @@
       **************************************/ -->
       <!-- <div v-if="open" @click="open=false"> -->
        
-      <Moveable v-if="open"
-          @click="open=false"
-          class="moveable"
-          v-bind="moveable"
-          @drag="handleDrag"
-          @resize="handleResize"
-          @scale="handleScale"
-          @rotate="handleRotate"
-          @warp="handleWarp"
-        >
+      <Moveable v-if= "open"
+        @click="open=false"
+        class="moveable"
+        v-bind="moveable"
+        @drag="handleDrag"
+        @resize="handleResize"
+        @scale="handleScale"
+        @rotate="handleRotate"
+        @warp="handleWarp">
           <div class="help-dialogII">
-          <img class="exitIcon" src="../../static/img/exit.png" alt="joinPic" />
-            <div class="legenda-container">
                 <div class="dayTypes">
                     <div class="box-container">
                         <div v-on:click="cycle($event,0)" class="box green"></div>
@@ -29,19 +26,18 @@
                         <div v-on:click="cycle($event,9)" class="box green1">NS</div><h5 class = "blackFont">Work Day</h5>
                     </div>
                     <div class="box-container">
-                        <div v-on:click="cycle($event,6)" class="box red" v-popover:myname>V</div><h5 class = "blackFont">Vacation</h5>
+                    <div v-on:click="cycle($event,2)" class="box purple" v-popover:myname>SL</div><h5 class = "blackFont">Sick Leave</h5>
+                    <div v-on:click="cycle($event,3)" class="box purple" v-popover:myname>AL</div><h5 class = "blackFont">Annual Leave</h5>
                     </div>
                     <div class="box-container">
-                        <div v-on:click="cycle($event,2)" class="box purple" v-popover:myname>SL</div><h5 class = "blackFont">Sick Leave</h5>
-                        <div v-on:click="cycle($event,3)" class="box purple" v-popover:myname>AL</div><h5 class = "blackFont">Annual Leave</h5>
+                    <div v-on:click="open1 = true; cycle($event,4);" class="box purple" v-popover:myname>HSL</div><h5 class = "blackFont">Half-day Sick Leave(Morning/Afternoon)</h5>
                     </div>
+                    <el-switch v-if = "open1" v-model="value1" active-text="Afternoon" inactive-text="Morning"> </el-switch>
                     <div class="box-container">
-                        <div v-on:click="cycle($event,4)" class="box purple" v-popover:myname>H(M)</div>
-                        <div v-on:click="cycle($event,5)" class="box purple" v-popover:myname>H(A)</div><h5 class = "blackFont">Half-day Leave(Morning/Afternoon)</h5>
+                    <div v-on:click="open2 = true; cycle($event,5);" class="box purple" v-popover:myname>HAL</div><h5 class = "blackFont">Half-day Sick Leave(Morning/Afternoon)</h5>
                     </div>
-                    <div class="box-container">
-                        <div v-on:click="cycle($event,1)" class="box red">PH</div><h5 class = "blackFont">Public Holiday</h5>
-                    </div>
+                    <el-switch v-if = "open2" v-model="value2" active-text="Afternoon" inactive-text="Morning">
+                    </el-switch>
                     <div class="box-container">
                         <div v-on:click="cycle($event,10)" class="box orange">PO</div>
                         <div v-on:click="cycle($event,11)" class="box orange">PM</div><h5 class = "blackFont">OnDuty/MorningShift(PH)</h5>
@@ -49,8 +45,14 @@
                     <div class="box-container">
                         <div v-on:click="cycle($event,7)" class="box blue" v-popover:myname>T</div><h5 class = "blackFont">Training</h5>
                     </div>
+                    <div class="box-container">
+                        <div v-on:click="cycle($event,1)" class="box red">PH</div><h5 class = "blackFont">Public Holiday</h5>
+                    </div>
+                    <span slot="footer" class="dialog-footer">
+                        <el-button @click="handleOpen">Cancel</el-button>
+                        <el-button type="primary" @click="handleOpen">Comfirm</el-button>
+                    </span>
                 </div>
-            </div>
             </div> 
       </Moveable>
         
@@ -72,7 +74,7 @@ import Day from "@/components/DayCell";
 import Moveable from 'vue-moveable';
 export default {
   components: { Day, Moveable },
-  props: ["person", "pindex","userName"],
+  props: ["person", "pindex","userName","openflag"],
 
   data() {
       return {
@@ -96,6 +98,10 @@ export default {
         open: false,
         dayType: " ",
         date: null,
+        open1: false,
+        open2: false,
+        value1: true,
+        value2: true,
         size: window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth,
       }
   },
@@ -159,12 +165,20 @@ export default {
       || this.userName == "Danielle Zhao" // TA
       || this.userName == "Dingsong Zhang" 
       || this.userName == "Sean Wu (AZURE)" 
-      || this.userName == "Anik Shen") { 
-        this.open = msg
-        this.date = msg - 1
+      || this.userName == "Anik Shen") {
+         console.log("test1")
+        if(this.openflag == false) {
+          console.log("test2")
+          this.open = msg
+          this.$emit('opensync',true)
+          this.date = msg - 1
+        }
       }
     },
-
+    handleOpen: function() {
+    this.open=false;
+    this.$emit('opensync',false)
+    },
     cycle(e, arg) {
       this.dayType = this.workTypes[arg];
     },
@@ -178,7 +192,6 @@ export default {
 
 
 <style>
-
 day {
   color: black !important;
 }
@@ -187,22 +200,18 @@ day {
   height: 40px;
   justify-content: center;
 }
-
 .row {
-  display: flex;
+  display: inline-flex;
   height: 40px;
   justify-content: center;
 }
-
 .row:hover:not(:first-child) {
     background: #444;
 }
-
-.row:hover>.name {
+.row:hover>.cellxII {
     color: white !important;
     font-weight: 500;
 }
-
 .cellx {
   display: flex;
   flex-direction: column;
@@ -214,64 +223,50 @@ day {
 .name {
   width: 180px;
   font-size: 18px;
-  color: #eaeaea;
-  text-align: right;
-  font-family: "Roboto Condensed", sans-serif;
+  
+  
+  
 }
 .workday {
   color: #C2C4CE;
   /* cursor: pointer; */
 }
-
 .cellxII {
+  color: #eaeaea;
+  text-align: right;
   border-radius: 2px;
-  /*text-transform: uppercase;*/
   margin: 4px;
   user-select: none;
   border: 0px solid;
   font-size: 16px;
+  font-family: "Roboto Condensed", sans-serif;
 }
-
-
 .workday:hover {
   font-size: 21px;
   margin: 0px;
   padding: 1px;
   border: 3px solid;
 }
-
 @media only screen and (max-width: 1600px) {
   .cellx {
     margin: 3px;
     font-size: 14px;
   }
-
   .workday:hover {
     font-size: 18px;
     padding: 1px;
     border: 2px solid;
   }
-
   .name {
     width: 100px;
   }
 }
-.colorCodes {
-  text-align: left;
-}
 .dayTypes {
   width: 267px;
-}
-.separator {
-  height: 20px;
-  margin: 20px auto 0 auto;
-  border-top: 1px gray solid;
-  width: 80%;
 }
 .box-container {
   display: flex;
 }
-
 .box {
   cursor: pointer;
   margin: 5px;
@@ -284,6 +279,74 @@ day {
   vertical-align: middle;
   flex-direction: column;
 }
+.large {
+  flex-direction: column;
+  width: 90px;
+  font-weight: 700;
+}
+.help-dialogII {
+  background-color: #2E3532;
+  position: absolute;
+  top: 25%;
+  left: 50%;
+  margin-left: -150px;
+  width: 300px;
+  padding: 30px;
+  color: black;
+  display: flex;
+  justify-content: left;
+}
+.blackFont {
+  color: white;
+}
+.fab {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
+  border-radius: 30px;
+  border: none;
+  background-color: #600;
+  color: white;
+  font-weight: 700;
+  font-size: 30px;
+  /* cursor: pointer; */
+  transition: all 0.1s ease-in-out;
+}
+.fab:hover {
+  box-shadow: 0 6px 14px 0 #000;
+  transform: scale(1.05);
+}
+.colorCell {
+  background-color: #0A122A;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  vertical-align: middle;
+  width: 40px;
+  color: white;
+}
+.colorFont {
+  color: cornflowerblue;
+}
+
+.outlookLogo {
+  width: 70px;
+  height: 40px;
+  margin-left: 5px;
+  margin-bottom: 5px;
+}
+.moveable {
+  position: relative;
+  text-align: center;
+  font-size: 10px;
+  margin: 0 auto;
+  font-weight: 100;
+  letter-spacing: 1px;
+}
+
 
 .grey {
   background-color: #555555;
@@ -311,105 +374,4 @@ day {
 .orange {
   background-color: #b36b00;
 }
-.hr {
-  text-align: left;
-}
-.legenda-container {
-  display: flex;
-  justify-content: left;
-}
-.icon-container {
-  display: flex;
-  justify-content: left;
-}
-
-.iconPreview {
-  width: 50px;
-  height: 50px;
-  background-size: cover;
-  display: flex;
-  justify-content: center;
-  vertical-align: middle;
-}
-.large {
-  flex-direction: column;
-  width: 90px;
-  font-weight: 700;
-}
-
-.overlay {
-  position: fixed;
-  top: 0;
-  width: 100vw;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.8);
-}
-.help-dialogII {
-  background-color: #2E3532;
-  position: absolute;
-  top: 25%;
-  left: 50%;
-  margin-left: -150px;
-  width: 300px;
-  padding: 30px;
-  color: black;
-}
-.blackFont {
-  color: white;
-}
-.fab {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  width: 40px;
-  height: 40px;
-  border-radius: 30px;
-  border: none;
-  background-color: #600;
-  color: white;
-  font-weight: 700;
-  font-size: 30px;
-  /* cursor: pointer; */
-  transition: all 0.1s ease-in-out;
-}
-
-.fab:hover {
-  box-shadow: 0 6px 14px 0 #000;
-  transform: scale(1.05);
-}
-.colorCell {
-  background-color: #0A122A;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  text-align: center;
-  vertical-align: middle;
-  width: 40px;
-  color: white;
-}
-.colorFont {
-  color: cornflowerblue;
-}
-.exitIcon {
-  width: 40px;
-  height: 40px;
-  margin-left: 240px;
-  margin-bottom: 20px;
-}
-.outlookLogo {
-  width: 70px;
-  height: 40px;
-  margin-left: 5px;
-  margin-bottom: 5px;
-}
-.moveable {
-  position: relative;
-  text-align: center;
-  font-size: 10px;
-  margin: 0 auto;
-  font-weight: 100;
-  letter-spacing: 1px;
-}
-
-
 </style>
