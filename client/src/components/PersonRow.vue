@@ -24,30 +24,30 @@
             <div class="legenda-container">
                 <div class="dayTypes">
                     <div class="box-container">
-                        <div v-on:click="cycle($event,0)" class="cellJuncheng box green"></div>
-                        <div v-on:click="cycle($event,8)" class="cellJuncheng box green">MS</div>
-                        <div v-on:click="cycle($event,9)" class="cellJuncheng box green1">NS</div><h5 class = "blackFont">Work Day</h5>
+                        <div v-on:click="cycle($event,0)" class="box green"></div>
+                        <div v-on:click="cycle($event,8)" class="box green">MS</div>
+                        <div v-on:click="cycle($event,9)" class="box green1">NS</div><h5 class = "blackFont">Work Day</h5>
                     </div>
                     <div class="box-container">
-                        <div v-on:click="cycle($event,6)" class="cellJuncheng box red" v-popover:myname>V</div><h5 class = "blackFont">Vacation</h5>
+                        <div v-on:click="cycle($event,6)" class="box red" v-popover:myname>V</div><h5 class = "blackFont">Vacation</h5>
                     </div>
                     <div class="box-container">
-                        <div v-on:click="cycle($event,2)" class="cellJuncheng box purple" v-popover:myname>SL</div><h5 class = "blackFont">Sick Leave</h5>
-                        <div v-on:click="cycle($event,3)" class="cellJuncheng box purple" v-popover:myname>AL</div><h5 class = "blackFont">Annual Leave</h5>
+                        <div v-on:click="cycle($event,2)" class="box purple" v-popover:myname>SL</div><h5 class = "blackFont">Sick Leave</h5>
+                        <div v-on:click="cycle($event,3)" class="box purple" v-popover:myname>AL</div><h5 class = "blackFont">Annual Leave</h5>
                     </div>
                     <div class="box-container">
-                        <div v-on:click="cycle($event,4)" class="cellJuncheng box purple" v-popover:myname>H(M)</div>
-                        <div v-on:click="cycle($event,5)" class="cellJuncheng box purple" v-popover:myname>H(A)</div><h5 class = "blackFont">Half-day Leave(Morning/Afternoon)</h5>
+                        <div v-on:click="cycle($event,4)" class="box purple" v-popover:myname>H(M)</div>
+                        <div v-on:click="cycle($event,5)" class="box purple" v-popover:myname>H(A)</div><h5 class = "blackFont">Half-day Leave(Morning/Afternoon)</h5>
                     </div>
                     <div class="box-container">
-                        <div v-on:click="cycle($event,1)" class="cellJuncheng box red">PH</div><h5 class = "blackFont">Public Holiday</h5>
+                        <div v-on:click="cycle($event,1)" class="box red">PH</div><h5 class = "blackFont">Public Holiday</h5>
                     </div>
                     <div class="box-container">
-                        <div v-on:click="cycle($event,10)" class="cellJuncheng box orange">PO</div>
-                        <div v-on:click="cycle($event,11)" class="cellJuncheng box orange">PM</div><h5 class = "blackFont">OnDuty/MorningShift(PH)</h5>
+                        <div v-on:click="cycle($event,10)" class="box orange">PO</div>
+                        <div v-on:click="cycle($event,11)" class="box orange">PM</div><h5 class = "blackFont">OnDuty/MorningShift(PH)</h5>
                     </div>
                     <div class="box-container">
-                        <div v-on:click="cycle($event,7)" class="cellJuncheng box blue" v-popover:myname>T</div><h5 class = "blackFont">Training</h5>
+                        <div v-on:click="cycle($event,7)" class="box blue" v-popover:myname>T</div><h5 class = "blackFont">Training</h5>
                     </div>
                 </div>
             </div>
@@ -191,6 +191,7 @@ day {
 .row {
   display: flex;
   height: 40px;
+  justify-content: center;
 }
 
 .row:hover:not(:first-child) {
@@ -231,9 +232,6 @@ day {
   font-size: 16px;
 }
 
-.cellJuncheng {
-  cursor: pointer;
-}
 
 .workday:hover {
   font-size: 21px;
@@ -275,6 +273,7 @@ day {
 }
 
 .box {
+  cursor: pointer;
   margin: 5px;
   width: 40px;
   height: 40px;
