@@ -79,9 +79,20 @@ export default {
           return new Promise((resolve, reject) => {
             this.$http.post(this.apiPath, this.apiPayload).then((response)=> {
               if(response.data == "all good")  {this.showModal = true;}
-              else(alert("Record Not Exist"))
+              else(this.delError('notify', 'Person Not Exist'))
             })
           })
+        }
+      },
+      delError(type, msg) {
+        if(type == 'notify') {
+          this.$notify({
+            title: 'Notification',
+            message: msg,
+            position:'top-left',
+            duration: 0,
+            type: 'warning'
+          });
         }
       },
       personinfo: function() {

@@ -350,7 +350,7 @@ export default {
     /*************************************** Feature 9 init calendar **************************************/
     init() {
       if(this.admin == false) {
-        alert("You have no permission to init this month.");
+        this.initDeny('noPermission', 'You have no permission to init this month.');
       }
       if(this.admin == true){
         var that = this
@@ -360,7 +360,7 @@ export default {
         console.log(newMon)
         console.log(thisMon)
         if( newMon != thisMon[3]) {
-          alert("You can't init this month.")
+          this.initDeny('forbid', 'Only the month after current month can be initiated. Current month is ')
         }else {
           flag = true
         }
@@ -374,6 +374,28 @@ export default {
         }
       }
     },
+    initDeny(type, msg) {
+        const h = this.$createElement;
+        var mon = ["January", "February", "March", "April", "May", "June", "July", "Auguest", "September", "October", "November", "December"];
+        if(type == 'noPermission') {
+          this.$notify({
+            title: 'Notification',
+            message: msg,
+            position:'top-left',
+            type: 'warning',
+            duration: 0
+          })
+        }
+        else if(type == 'forbid') {
+          this.$notify({
+            title: 'Notification',
+            message: msg + mon[new Date().getMonth()],
+            position:'top-left',
+            type: 'warning',
+            duration: 0
+          });
+        }
+      },
     reload() {
       if(this.initUndo == false) {
         this.$http.post(this.apiPath2, this.apiPayload2);

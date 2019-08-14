@@ -102,8 +102,7 @@ function existRecordName(month, name) {
     month.people.forEach(person => {
         let nameArr = person.name.split(" ");
         if(name2Match.length >= 2){
-            if(nameArr[0].toLowerCase() == name2Match[0].toLowerCase() 
-            && nameArr[1].toLowerCase() == name2Match[1].toLowerCase()) {
+            if(nameArr[nameArr.length - 1] == name2Match[name2Match.length - 1]) { // use alias to test duplication
                 position = count
             }
         }

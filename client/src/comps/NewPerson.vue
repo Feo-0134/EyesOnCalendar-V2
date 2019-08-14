@@ -17,7 +17,7 @@ Feature 7 Add a new member to the calendar
       
       </div>
       <el-button type="primary" v-on:click="upload">Confirm</el-button>
-      <el-button type="info" v-on:click="linkToCalendar">Back to Calendar</el-button>
+      <el-button type="primary" v-on:click="linkToCalendar">Back to Calendar</el-button>
     </el-main>
   </el-container>
 </template>
@@ -40,18 +40,18 @@ export default {
       //only TA and Manager have access to add a person
       upload() {
         if(this.inputName == "" || this.inputRole == "" || this.inputAlias == "") {
-          alert("please fill the blanks")
+          this.addFeedback('notify', 'Please fill the blanks.')
           return;
         }
         // name
         var nameStr
-        var nameArr = this.inputName.toString().split(" ");
+        var nameArr = this.inputName.toString().toLowerCase().split(" ");
         if(nameArr.length > 1) {
           nameArr[0][0].toUpperCase();
           nameArr[nameArr.length - 1][0].toUpperCase();
           nameStr = nameArr[0] + " " + nameArr[1];
         }else {
-          alert("Name Format Unmatch. eg. Meimei Han")
+          this.addFeedback('notify', 'Name invalid. eg. Danielle Zhao')
           return;
         }
         // role
@@ -61,7 +61,7 @@ export default {
         }else if(this.inputRole == "Vendor" || this.inputRole == "vendor" || this.inputRole == "v") {
           roleStr = ""
         }else {
-          alert("Role Keyword Error. eg. FTE or Vendor")
+          this.addFeedback('notify', 'Role invalid. eg. FTE or Vendor')
           return;
         }
         // alias
@@ -78,21 +78,44 @@ export default {
             this.$http.post(this.apiPath, this.apiPayload)
             .then((response)=> {
               console.log(response)
-              if(response.data == "all good") {this.openSuccess()}
-              else{alert("Insert Error: Person Exist")}
+              if(response.data == "all good") {this.addSuccess()}
+              else{this.addFeedback('notify', 'This employee is already in the system.')}
             })
             .catch((error) => {
               console.log(error.response)
-              alert("System Error")
+              this.addFeedback('error', 'System Error. Please turn to the developer.');
             })
           }) 
         }
       },
-      openSuccess() {
+      addFeedback(type, msg) {
+        const h = this.$createElement;
+        if(type == 'error') {
+          this.$notify.error({
+            title:'Request Denied',
+            message: msg,
+            position:'top-left',
+            duration: 0
+          });
+        }
+        if(type == 'notify') {
+          this.$notify({
+            title:'Notification',
+            message: msg,
+            position:'top-left',
+            duration: 0,
+            type:'warning'
+          });
+        }
+      },
+      addSuccess() {
         const h = this.$createElement;
         this.$notify({
-          title: 'Notification',
-          message: h('i', { style: 'color: teal'}, 'Person Added to Team')
+          title: 'Success',
+          message: h('i', { style: 'color: teal'}, 'Person Added to Team'),
+          position:'top-left',
+          type: 'success',
+          duration: 0
         });
       },
       personinfo: function() {
