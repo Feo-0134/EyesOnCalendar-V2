@@ -32,7 +32,7 @@
                     </div>
                     <el-switch v-if = "open1" v-model="value1" active-text="Afternoon" inactive-text="Morning"> </el-switch>
                     <div class="box-container">
-                    <div v-on:click="open2 = true; cycle($event,5);" class="box purple" v-popover:myname>HAL</div><h5 class = "blackFont">Half-day Sick Leave(Morning/Afternoon)</h5>
+                    <div v-on:click="open2 = true; cycle($event,5);" class="box purple" v-popover:myname>HAL</div><h5 class = "blackFont">Half-day Annual Leave(Morning/Afternoon)</h5>
                     </div>
                     <el-switch v-if = "open2" v-model="value2" active-text="Afternoon" inactive-text="Morning">
                     </el-switch>
@@ -172,8 +172,9 @@ export default {
       }
     },
     handleOpen: function() {
-    this.open=false;
-    this.$emit('opensync',false)
+      this.open=false;
+      this.$emit('opensync',false)
+      location.reload();
     },
     cycle(e, arg) {
       this.dayType = this.workTypes[arg];

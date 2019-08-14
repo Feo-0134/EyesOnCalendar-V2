@@ -4,7 +4,7 @@ Feature 7 Add a new member to the calendar
 <template>
     <div>
 <script type="text/x-template" id="modal-template">
-  <transition name="modal">
+  <transition class="dialog" name="modal">
     <div class="modal-mask">
       <div class="modal-wrapper">
         <div class="modal-container">
@@ -37,24 +37,24 @@ Feature 7 Add a new member to the calendar
   </transition>
 </script>
     <h1>Delete Member</h1>
-    <div>
-    <div class="testClassII"><p>Welcome, {{emailUnderName}}</p></div>
-    <div class="morespace">
-    <div class="newRow">
-    <!-- <img src="../../static/img/joinus.png" alt="joinPic" /> -->
-    <input class="elem inputBox adjust" v-model="message" placeholder="eg. Ray Li FTE (rali)/ David Guo (v-davg)">
-    <button class="elem buttonOrg adjust" id="show-modal" v-on:click="upload">Confirm</button>
-    </div>
-    <p class = "topmargin">HINT：Please type the name in the input-box then click the confirm button to delete a person.</p>
-    </div>
-     <!-- use the modal component, pass in the prop -->
-  <modal v-if="showModal" @close="showModal = false">
-    <!--
-      you can use custom content here to overwrite
-      default content
-    -->
-    <h3 slot="header">A Member Deleted</h3>
-  </modal>
+    <div class="namw/alias-input" >
+      <div class="testClassII"><p>Welcome, {{emailUnderName}}</p></div>
+      <div class="morespace">
+      <div class="newRow">
+      <!-- <img src="../../static/img/joinus.png" alt="joinPic" /> -->
+      <input class="elem inputBox adjust" v-model="message" placeholder="eg. Ray Li">
+      <button class="elem buttonOrg adjust" id="show-modal" v-on:click="upload">Confirm</button>
+      </div>
+      <p class = "topmargin">HINT：Please type the name in the input-box then click the confirm button to delete a person.</p>
+      </div>
+      <!-- use the modal component, pass in the prop -->
+      <modal v-if="showModal" @close="showModal = false">
+        <!--
+          you can use custom content here to overwrite
+          default content
+        -->
+        <h3 slot="header">A Member Deleted</h3>
+      </modal>
     </div>
     <button class="modal-default-button">
                 <a :href="linkToCalendar" class="linkFontStyle">Back To Calendar</a>

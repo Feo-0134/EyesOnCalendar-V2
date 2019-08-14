@@ -49,7 +49,7 @@ export default {
         if(nameArr.length > 1) {
           nameArr[0][0].toUpperCase();
           nameArr[nameArr.length - 1][0].toUpperCase();
-          nameStr = nameArr[0] + nameArr[1];
+          nameStr = nameArr[0] + " " + nameArr[1];
         }else {
           alert("Name Format Unmatch. eg. Meimei Han")
           return;

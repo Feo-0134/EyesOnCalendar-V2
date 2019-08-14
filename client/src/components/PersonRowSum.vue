@@ -5,13 +5,13 @@ Feature 5 Monthly report
   <div class="row">
       <div v-if="large" class="cellx name">{{displayName}}</div>
       <div v-if="!large" class="cellx name">{{shortName}}</div>
-      <div class = "celly ">{{workDayCount1}}</div>
-      <div class = "celly ">{{workDayCount2}}</div>
-      <div class = "celly ">{{workDayCount3}}</div>
-      <div class = "celly ">{{workDayCount4}}</div>
-      <div class = "celly ">{{workDayCount5}}</div>
-      <div class = "celly ">{{workDayCount6}}</div>
-      <div class = "celly ">{{workDayCount7}}</div>
+      <div class = "celly workdayCnt">{{workDayCount1}}</div>
+      <div class = "celly workdayCnt">{{workDayCount2}}</div>
+      <div class = "celly workdayCnt">{{workDayCount3}}</div>
+      <div class = "celly workdayCnt">{{workDayCount4}}</div>
+      <div class = "celly workdayCnt">{{workDayCount5}}</div>
+      <div class = "celly workdayCnt">{{workDayCount6}}</div>
+      <div class = "celly workdayCnt">{{workDayCount7}}</div>
   </div>
 </template>
 
@@ -29,11 +29,11 @@ export default {
   computed: {
     displayName() {
       var nameArray = this.person.name.split(" ");
-      return nameArray[0] + " " + nameArray[nameArray.length - 1];
+      return nameArray[0] + " " + nameArray[1] + " " + nameArray[nameArray.length - 1];
     },
     shortName() {
       var nameArray = this.person.name.split(" ");
-      return nameArray[0] + " " + nameArray[nameArray.length - 1][0];
+      return nameArray[0] + " " + nameArray[1];
     },
     large() {
       if (this.size > 1600) return true;

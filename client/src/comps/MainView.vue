@@ -1,6 +1,6 @@
 <template>
   <div>
-      <div>
+      <div class = "head">
         <div class="testClass">
           <el-dropdown @command="handleCommand">
             <span class="el-dropdown-link"><i class="el-icon-arrow-down el-icon--right"></i> SELECT POD</span>
@@ -15,8 +15,12 @@
           <a :href="goReport" v-if="admin" class="sectionPointer">&gt; Report</a>
         </div>
       </div>
-      <div class="testClassII"><p>Welcome, {{emailUnderName}}</p></div>
+      <div class="testClassII welcome">
+        <p>Welcome, {{emailUnderName}}</p>
+      </div>
+      <!-- <div class = "MonthSwitch"> -->
       <h1><a :href="prevMonth" class="pointer">&lt;</a>{{prettyDate}}<a :href="nextMonth" class="pointer">&gt;</a></h1>
+      <!-- <div class = "Init-button"> -->      
       <h2 v-if="!month">{{message}}</h2>
       <button v-if="!month" class = "button" :class="{buttonBackground: initUndo}" v-on:click="init">Init Table</button>
       <button v-if="!month" :class="{buttonBackground: !initUndo}" class = "button" v-on:click="reload">Reload Table</button>
@@ -61,6 +65,7 @@
           </el-tabs>
       </div>
       <help-screen />
+      <!-- <div class = "Init-button"> --> 
       <transition name="fade">
         <loading v-if="isLoading"></loading>
       </transition>
@@ -72,8 +77,6 @@ import Person from "@/components/PersonRow";
 import HelpScreen from "@/components/HelpScreen";
 import Loading from "@/components/LoadButton";
 import moment from "moment";
-
-
 
 export default {
   components: { Person, HelpScreen, Loading},
@@ -180,7 +183,6 @@ export default {
       return (("/" + this.date.split("/")[1].toString()) + moment(this.date, "/YYYY/M").format("/YYYY/M") + "/delete");
     },
     /*************************************** Feature 3 on-duty rate **************************************/
-    
     percentage:function() {
       return function(val) {
         var sum = 0;
@@ -386,19 +388,6 @@ export default {
   }
 }
 </script>
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 <style>
 .attendance {
