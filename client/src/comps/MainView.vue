@@ -3,7 +3,10 @@
       <div class = "head">
         <div class="testClass">
           <el-dropdown @command="handleCommand">
-            <span class="el-dropdown-link"><i class="el-icon-arrow-down el-icon--right"></i> SELECT POD</span>
+            <span class="el-dropdown-link">
+              <i class="el-icon-arrow-down el-icon--right"></i>
+              SELECT POD
+            </span>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item command="/AppService">&gt; AppService</el-dropdown-item>
               <el-dropdown-item command="/DEV">&gt; DEV</el-dropdown-item>
@@ -19,53 +22,79 @@
         <p>Welcome, {{emailUnderName}}</p>
       </div>
       <!-- <div class = "MonthSwitch"> -->
-      <h1><a :href="prevMonth" class="pointer">&lt;</a>{{prettyDate}}<a :href="nextMonth" class="pointer">&gt;</a></h1>
-      <!-- <div class = "Init-button"> -->      
+      <h1>
+        <a :href="prevMonth" class="pointer">&lt;</a>
+        {{prettyDate}}
+        <a :href="nextMonth" class="pointer">&gt;</a>
+      </h1>
+      <!-- <div class = "Init-button"> -->
       <h2 v-if="!month">{{message}}</h2>
-      <button v-if="!month" class = "button" :class="{buttonBackground: initUndo}" v-on:click="init">Init Table</button>
-      <button v-if="!month" :class="{buttonBackground: !initUndo}" class = "button" v-on:click="reload">Reload Table</button>
+      <button v-if="!month" class = "button"
+      :class="{buttonBackground: initUndo}" v-on:click="init">
+        Init Table
+      </button>
+      <button v-if="!month" class = "button"
+      :class="{buttonBackground: !initUndo}" v-on:click="reload">
+        Reload Table
+      </button>
       <div v-if="month">
           <el-tabs id="tabsJuncheng" v-model="activeName" @tab-click="handleClick">
             <el-tab-pane label="All Members" name="first">
                <div id="tablehead" :class="{sticky: scrolled}" class="row tablehead">
-                <div class="name"></div>
-                <div v-for="(p,index) in month.people[0].days" :key="index" class="cellx">{{index+1}}</div>
-              </div>
-              <!-- /************************************** Feature 3 on-duty rate **************************************/ -->
+               <div class="name"></div>
+               <div v-for="(p,index) in month.people[0].days"
+               :key="index" class="cellx">{{index+1}}</div>
+               </div>
+              <!-- /**************************************
+              Feature 3 on-duty rate
+              **************************************/ -->
               <div id="tablehead" class="row tablehead">
                 <div class="name attendance">On Duty</div>
-                <div v-for="(p,index) in month.people[0].days" :key="index" class="cellx">{{percentage(index)}}%</div>
+                <div v-for="(p,index) in month.people[0].days"
+                :key="index" class="cellx">{{percentage(index)}}%</div>
               </div>
-              <person  v-for="(p,index) in month.people" :key="p._id" :pindex="index" :person="p" :userName="emailUnderName" :openflag = "openflag" @opensync = "handleOpenPanel"/>
+              <person  v-for="(p,index) in month.people" :key="p._id"
+              :pindex="index" :person="p" :userName="emailUnderName"
+              :openflag = "openflag" @opensync = "handleOpenPanel"/>
             </el-tab-pane>
             <el-tab-pane label="FTE Members" name="second">
               <div id="tablehead" :class="{sticky: scrolled}" class="row tablehead">
                 <div class="name"></div>
-                <div v-for="(p,index) in month.people[0].days" :key="index" class="cellx">{{index+1}}</div>
+                <div v-for="(p,index) in month.people[0].days"
+                :key="index" class="cellx">{{index+1}}</div>
               </div>
-              <!-- /************************************** Feature 3 on-duty rate **************************************/ -->
+              <!-- /**************************************
+              Feature 3 on-duty rate
+              **************************************/ -->
               <div id="tablehead" class="row tablehead">
                 <div class="name attendance">On Duty</div>
-                <div v-for="(p,index) in month.people[0].days" :key="index" class="cellx">{{percentageFTE(index)}}%</div>
+                <div v-for="(p,index) in month.people[0].days"
+                :key="index" class="cellx">{{percentageFTE(index)}}%</div>
               </div>
-              <person  v-for="(p,index) in month.people" v-show="p.name.match('FTE')=='FTE'" :key="p._id" :pindex="index" :person="p" :userName="emailUnderName"/>
+              <person  v-for="(p,index) in month.people" v-show="p.name.match('FTE')=='FTE'"
+              :key="p._id" :pindex="index" :person="p" :userName="emailUnderName"/>
             </el-tab-pane>
             <el-tab-pane label="Vendor Members" name="third">
                <div id="tablehead" :class="{sticky: scrolled}" class="row tablehead">
                 <div class="name"></div>
-                <div v-for="(p,index) in month.people[0].days" :key="index" class="cellx">{{index+1}}</div>
+                <div v-for="(p,index) in month.people[0].days"
+                :key="index" class="cellx">{{index+1}}</div>
               </div>
-              <!-- /************************************** Feature 3 on-duty rate **************************************/ -->
+              <!-- /**************************************
+              Feature 3 on-duty rate
+              **************************************/ -->
               <div id="tablehead" class="row tablehead">
                 <div class="name attendance">On Duty</div>
-                <div v-for="(p,index) in month.people[0].days" :key="index" class="cellx">{{percentageVendor(index)}}%</div>
+                <div v-for="(p,index) in month.people[0].days"
+                :key="index" class="cellx">{{percentageVendor(index)}}%</div>
               </div>
-              <person  v-for="(p,index) in month.people" v-show="p.name.match('v-')=='v-'" :key="p._id" :pindex="index" :person="p" :userName="emailUnderName"/>
+              <person  v-for="(p,index) in month.people" v-show="p.name.match('v-')=='v-'"
+              :key="p._id" :pindex="index" :person="p" :userName="emailUnderName"/>
             </el-tab-pane>
           </el-tabs>
       </div>
       <help-screen />
-      <!-- <div class = "Init-button"> --> 
+      <!-- <div class = "Init-button"> -->
       <transition name="fade">
         <loading v-if="isLoading"></loading>
       </transition>
@@ -73,225 +102,225 @@
 </template>
 
 <script>
-import Person from "@/components/PersonRow";
-import HelpScreen from "@/components/HelpScreen";
-import Loading from "@/components/LoadButton";
-import moment from "moment";
+import moment from 'moment';
+import Person from '@/components/PersonRow';
+import HelpScreen from '@/components/HelpScreen';
+import Loading from '@/components/LoadButton';
 
 export default {
-  components: { Person, HelpScreen, Loading},
+  components: { Person, HelpScreen, Loading },
   data() {
     return {
-      message: "Loading month...",
+      message: 'Loading month...',
       scrolled: false,
       changed: false,
       emailUnderName: null,
-      initUndo:true,
-      admin:false,
+      initUndo: true,
+      admin: false,
       isLoading: false,
       activeName: 'first',
-      openflag:false,
+      openflag: false,
     };
   },
   asyncComputed: {
     month: {
       async get() {
         try {
-          var res = await this.$http.get("/api" + this.date);
+          const res = await this.$http.get(`/api${this.date}`);
           this.socket = io({
             query: {
-              path: this.date
-            }
+              path: this.date,
+            },
           });
-          this.socket.on("update", data => {
-            if (data.randomNumber == this.$randomNumber) return;
-            this.month.people[data.indexes.p].days[data.indexes.d].workDay =
-              data.workDay;
-            this.month.people[data.indexes.p].days[data.indexes.d].workType =
-              data.workType;
+          this.socket.on('update', (data) => {
+            if (data.randomNumber === this.$randomNumber) return;
+            this.month.people[data.indexes.p].days[data.indexes.d].workDay = data.workDay;
+            this.month.people[data.indexes.p].days[data.indexes.d].workType = data.workType;
           });
-          res.data.people = res.data.people.sort((x,y)=>{
-            return x.name.localeCompare(y.name)
-          })
+          res.data.people = res.data.people.sort((x, y) => x.name.localeCompare(y.name));
           return res.data;
         } catch (e) {
-          console.log(e)
+          console.log(e);
           this.socket = null;
-          this.message = "Month not found";
+          this.message = 'Month not found';
           return null;
         }
       },
       watch() {
-        this.changed
-      }
-    }
+        this.changed;
+      },
+    },
   },
   computed: {
     totalamount() {
-      return (this.month.people).length
+      return (this.month.people).length;
     },
     totalamountFTE() {
-      var sum = 0
-      for(const b of Object.keys(this.month.people)) {
-          if(this.month.people[b].name.match("FTE")=="FTE") {
-            sum++
-          }
+      let sum = 0;
+      for (const b of Object.keys(this.month.people)) {
+        if (this.month.people[b].name.match('FTE') === 'FTE') {
+          sum += 1;
         }
+      }
       return sum;
     },
     totalamountVendor() {
-      var sum = 0
-      for(const b of Object.keys(this.month.people)) {
-          if(this.month.people[b].name.match("v-")=="v-") {
-            sum++
-          }
+      let sum = 0;
+      for (const b of Object.keys(this.month.people)) {
+        if (this.month.people[b].name.match('v-') === 'v-') {
+          sum += 1;
         }
+      }
       return sum;
     },
     date() {
-      this.changed=!this.changed
+      this.changed = !this.changed;
       return this.$router.currentRoute.path;
     },
     dateSplit() {
-      return this.date.split("/");
+      return this.date.split('/');
     },
     prettyDate() {
-      return moment(this.date, "/YYYY/M").format("MMMM YYYY");
+      return moment(this.date, '/YYYY/M').format('MMMM YYYY');
     },
     nextMonth() {
-      return  (
-        ("/" + this.date.split("/")[1].toString() )+
-        moment(this.date, "/YYYY/M")
-        .add(1, "M")
-        .format("/YYYY/M"))
+      return (
+        `/${this.date.split('/')[1].toString()
+        }${moment(this.date, '/YYYY/M')
+          .add(1, 'M')
+          .format('/YYYY/M')}`);
     },
     prevMonth() {
-      return  (
-        ("/" + this.date.split("/")[1].toString() )+
-        moment(this.date, "/YYYY/M")
-        .subtract(1, "M")
-        .format("/YYYY/M"));
+      return (
+        `/${this.date.split('/')[1].toString()
+        }${moment(this.date, '/YYYY/M')
+          .subtract(1, 'M')
+          .format('/YYYY/M')}`);
     },
-    /*************************************** Router **************************************/
+    /** ************************************* Router ************************************* */
     goReport() {
-      return (("/" + this.date.split("/")[1].toString()) + moment(this.date, "/YYYY/M").format("/YYYY/M") + "/report");
+      return (`/${this.date.split('/')[1].toString()}${moment(this.date, '/YYYY/M').format('/YYYY/M')}/report`);
     },
     goAddPerson() {
-      return (("/" + this.date.split("/")[1].toString()) + moment(this.date, "/YYYY/M").format("/YYYY/M") + "/person");
+      return (`/${this.date.split('/')[1].toString()}${moment(this.date, '/YYYY/M').format('/YYYY/M')}/person`);
     },
     goDeletePerson() {
-      return (("/" + this.date.split("/")[1].toString()) + moment(this.date, "/YYYY/M").format("/YYYY/M") + "/delete");
+      return (`/${this.date.split('/')[1].toString()}${moment(this.date, '/YYYY/M').format('/YYYY/M')}/delete`);
     },
-    /*************************************** Feature 3 on-duty rate **************************************/
-    percentage:function() {
-      return function(val) {
-        var sum = 0;
-        for(const b of Object.keys(this.month.people)) {
-          if(this.month.people[b].days[val].workType == "W"
-          ||this.month.people[b].days[val].workType == "MS"
-          ||this.month.people[b].days[val].workType == "NS"
-          ||this.month.people[b].days[val].workType == "PO"
-          ||this.month.people[b].days[val].workType == "PM") {
-            sum++
+    /** ************************************* 
+     * Feature 3 on-duty rate 
+     * ************************************* */
+    percentage() {
+      return function (val) {
+        let sum = 0;
+        for (const b of Object.keys(this.month.people)) {
+          if (this.month.people[b].days[val].workType === 'W'
+          || this.month.people[b].days[val].workType === 'MS'
+          || this.month.people[b].days[val].workType === 'NS'
+          || this.month.people[b].days[val].workType === 'PO'
+          || this.month.people[b].days[val].workType === 'PM') {
+            sum += 1;
           }
         }
-        return ((sum/this.totalamount)*100).toFixed(0)
-      }
+        return ((sum / this.totalamount) * 100).toFixed(0);
+      };
     },
-    percentageFTE:function() {
-      return function(val) {
-        var sum = 0;
-        for(const b of Object.keys(this.month.people)) {
-          if(this.month.people[b].name.match("FTE")=="FTE"
-          && (this.month.people[b].days[val].workType == "W"
-          ||this.month.people[b].days[val].workType == "MS"
-          ||this.month.people[b].days[val].workType == "NS"
-          ||this.month.people[b].days[val].workType == "PO"
-          ||this.month.people[b].days[val].workType == "PM")) {
-            sum++
+    percentageFTE() {
+      return function (val) {
+        let sum = 0;
+        for (const b of Object.keys(this.month.people)) {
+          if (this.month.people[b].name.match('FTE') === 'FTE'
+          && (this.month.people[b].days[val].workType === 'W'
+          || this.month.people[b].days[val].workType === 'MS'
+          || this.month.people[b].days[val].workType === 'NS'
+          || this.month.people[b].days[val].workType === 'PO'
+          || this.month.people[b].days[val].workType === 'PM')) {
+            sum += 1;
           }
         }
-        if(this.totalamountFTE == 0) return 0;
-        return ((sum/this.totalamountFTE)*100).toFixed(0)
-      }
+        if (this.totalamountFTE === 0) return 0;
+        return ((sum / this.totalamountFTE) * 100).toFixed(0);
+      };
     },
-    percentageVendor:function() {
-      return function(val) {
-        var sum = 0;
-        for(const b of Object.keys(this.month.people)) {
-          if(this.month.people[b].name.match("v-")=="v-"
-          && (this.month.people[b].days[val].workType == "W"
-          ||this.month.people[b].days[val].workType == "MS"
-          ||this.month.people[b].days[val].workType == "NS"
-          ||this.month.people[b].days[val].workType == "PO"
-          ||this.month.people[b].days[val].workType == "PM")) {
-            sum++
+    percentageVendor() {
+      return function (val) {
+        let sum = 0;
+        for (const b of Object.keys(this.month.people)) {
+          if (this.month.people[b].name.match('v-') === 'v-'
+          && (this.month.people[b].days[val].workType === 'W'
+          || this.month.people[b].days[val].workType === 'MS'
+          || this.month.people[b].days[val].workType === 'NS'
+          || this.month.people[b].days[val].workType === 'PO'
+          || this.month.people[b].days[val].workType === 'PM')) {
+            sum += 1;
           }
         }
-        if(this.totalamountVendor == 0) return 0;
-        return ((sum/this.totalamountVendor)*100).toFixed(0)
-      }
+        if (this.totalamountVendor === 0) return 0;
+        return ((sum / this.totalamountVendor) * 100).toFixed(0);
+      };
     },
-    /*************************************** Feature 9 init calendar **************************************/
+    /** *************************************
+     * Feature 9 init calendar
+     * ************************************* */
     apiPath() {
       return (
-          "/api" +
-          this.$router.currentRoute.path +
-          "/init"
+        `/api${
+          this.$router.currentRoute.path
+        }/init`
       );
     },
     apiPayload() {
       return {
-          year: "2019",
+        year: '2019',
       };
     },
     apiPath2() {
       return (
-          "/api" +
-          this.$router.currentRoute.path +
-          "/reload"
+        `/api${
+          this.$router.currentRoute.path
+        }/reload`
       );
     },
     apiPayload2() {
       return {
-          year: "2019",
+        year: '2019',
       };
-    }
+    },
   },
   created() {
-    window.addEventListener("scroll", this.handleScroll);
+    window.addEventListener('scroll', this.handleScroll);
   },
   destroyed() {
-    window.removeEventListener("scroll", this.handleScroll);
+    window.removeEventListener('scroll', this.handleScroll);
   },
   mounted() {
-    window.addEventListener("keyup", ev => {
+    window.addEventListener('keyup', (ev) => {
       this.callUndo(ev);
     });
     this.personinfo();
   },
   methods: {
     handleCommand(command) {
-          var path = (command + moment(this.date, "/YYYY/M").format("/YYYY/M"));
-          this.$router.push({ path: path });
-          location.reload()
-          // this.$message('click on item ' + command);
+      const path = (command + moment(this.date, '/YYYY/M').format('/YYYY/M'));
+      this.$router.push({ path });
+      Location.reload();
+      // this.$message('click on item ' + command);
     },
     addMonth() {
-      var path = moment(this.date, "/YYYY/M")
-        .add(1, "M")
-        .format("/YYYY/M");
-      this.$router.push({ path: path });
+      const path = moment(this.date, '/YYYY/M')
+        .add(1, 'M')
+        .format('/YYYY/M');
+      this.$router.push({ path });
     },
     subMonth() {
-      var path = moment(this.date, "/YYYY/M")
-        .subtract(1, "M")
-        .format("/YYYY/M");
-      this.$router.push({ path: path });
+      const path = moment(this.date, '/YYYY/M')
+        .subtract(1, 'M')
+        .format('/YYYY/M');
+      this.$router.push({ path });
     },
-    handleOpenPanel:function(msg) {
+    handleOpenPanel(msg) {
       this.openflag = msg;
-      console.log("test")
+      console.log('test');
     },
     // callUndo(ev) {
     //   if (ev.code !== "KeyZ" || ev.ctrlKey !== true) return;
@@ -305,12 +334,12 @@ export default {
     //       data.workType;
     //     this.$http.post(x.path, x.payload);
     //   }
-    //},
+    // },
 
     handleScroll() {
-      var header = document.getElementById("tablehead");
-      var sticky = header.offsetTop;
-      //console.log(window.pageYOffset);
+      const header = document.getElementById('tablehead');
+      const sticky = header.offsetTop;
+      // console.log(window.pageYOffset);
       if (window.pageYOffset <= 115) {
         this.scrolled = false;
         return;
@@ -321,94 +350,97 @@ export default {
         this.scrolled = false;
       }
     },
-    /*************************************** Feature 4 Easy Authentication * Feature 6 Permission control **************************************/
-    personinfo: function() {
+    /** *************************************
+     * Feature 4 Easy Authentication
+     * Feature 6 Permission control
+     * ************************************* */
+    personinfo() {
       return new Promise((resolve, reject) => {
-        this.$http.get("/.auth/me").then((response)=> {
-          if(response.data[0].user_claims) {
-            for(const a of response.data[0].user_claims) {
-              if(a.typ == "name"){
-                this.emailUnderName = a.val
+        this.$http.get('/.auth/me').then((response) => {
+          if (response.data[0].user_claims) {
+            for (const a of response.data[0].user_claims) {
+              if (a.typ === 'name') {
+                this.emailUnderName = a.val;
               }
-            }   
-          }else {
-            this.emailUnderName = "Juncheng Zhu"
+            }
+          } else {
+            this.emailUnderName = 'Juncheng Zhu';
           }
-          if(this.emailUnderName.match("Juncheng Zhu") == "Juncheng Zhu" 
-          ||this.emailUnderName.match("Karen Zheng") == "Karen Zheng"
-          ||this.emailUnderName.match("Anik Shen") == "Anik Shen"
-          ||this.emailUnderName.match("Dingsong Zhang") == "Dingsong Zhang"
-          ||this.emailUnderName.match("Anita Yang") == "Anita Yang"
-          ||this.emailUnderName.match("Danielle Zhao") == "Danielle Zhao" 
-          ||this.emailUnderName.match("Sean Wu (AZURE)") == "Sean Wu (AZURE)")
-            this.admin = true;
+          if (this.emailUnderName.match('Juncheng Zhu') === 'Juncheng Zhu'
+          || this.emailUnderName.match('Karen Zheng') === 'Karen Zheng'
+          || this.emailUnderName.match('Anik Shen') === 'Anik Shen'
+          || this.emailUnderName.match('Dingsong Zhang') === 'Dingsong Zhang'
+          || this.emailUnderName.match('Anita Yang') === 'Anita Yang'
+          || this.emailUnderName.match('Danielle Zhao') === 'Danielle Zhao'
+          || this.emailUnderName.match('Sean Wu (AZURE)') === 'Sean Wu (AZURE)') { this.admin = true; }
         }).catch((error) => {
-          reject(error)
-        })
-      })
+          if(error.toString().match('404') == '404') {this.emailUnderName = 'Juncheng Zhu'; this.admin = true; }
+          reject(error);
+        });
+      });
     },
-    /*************************************** Feature 9 init calendar **************************************/
+    /** *************************************
+     * Feature 9 init calendar
+     * ************************************* */
     init() {
-      if(this.admin == false) {
+      if (this.admin === false) {
         this.initDeny('noPermission', 'You have no permission to init this month.');
       }
-      if(this.admin == true){
-        var that = this
-        var flag = false
-        var newMon = (new Date().getMonth() + 2)%12 ? (new Date().getMonth() + 2)%12:12;
-        var thisMon = this.date.split("/");
-        console.log(newMon)
-        console.log(thisMon)
-        if( newMon != thisMon[3]) {
-          this.initDeny('forbid', 'Only the month after current month can be initiated. Current month is ')
-        }else {
-          flag = true
+      if (this.admin === true) {
+        const that = this;
+        let flag = false;
+        const newMon = (new Date().getMonth() + 2) % 12 ? (new Date().getMonth() + 2) % 12 : 12;
+        const thisMon = this.date.split('/');
+        console.log(newMon);
+        console.log(thisMon);
+        if (newMon !== thisMon[3]) {
+          this.initDeny('forbid', 'Only the month after current month can be initiated. Current month is ');
+        } else {
+          flag = true;
         }
-        if(flag){
-          this.isLoading = true
-          this.initUndo = false
-          this.$http.post(this.apiPath, this.apiPayload)
-          setTimeout(()=>{
-            that.isLoading = false
-          },5000)
+        if (flag) {
+          this.isLoading = true;
+          this.initUndo = false;
+          this.$http.post(this.apiPath, this.apiPayload);
+          setTimeout(() => {
+            that.isLoading = false;
+          }, 5000);
         }
       }
     },
     initDeny(type, msg) {
-        const h = this.$createElement;
-        var mon = ["January", "February", "March", "April", "May", "June", "July", "Auguest", "September", "October", "November", "December"];
-        if(type == 'noPermission') {
-          this.$notify({
-            title: 'Notification',
-            message: msg,
-            position:'top-left',
-            type: 'warning',
-            duration: 0
-          })
-        }
-        else if(type == 'forbid') {
-          this.$notify({
-            title: 'Notification',
-            message: msg + mon[new Date().getMonth()],
-            position:'top-left',
-            type: 'warning',
-            duration: 0
-          });
-        }
-      },
+      const mon = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'Auguest', 'September', 'October', 'November', 'December'];
+      if (type === 'noPermission') {
+        this.$notify({
+          title: 'Notification',
+          message: msg,
+          position: 'top-left',
+          type: 'warning',
+          duration: 0,
+        });
+      } else if (type === 'forbid') {
+        this.$notify({
+          title: 'Notification',
+          message: msg + mon[new Date().getMonth()],
+          position: 'top-left',
+          type: 'warning',
+          duration: 0,
+        });
+      }
+    },
     reload() {
-      if(this.initUndo == false) {
+      if (this.initUndo === false) {
         this.$http.post(this.apiPath2, this.apiPayload2);
-        setTimeout(function(){
-          location.reload()
-        },4000)
+        setTimeout(() => {
+          Location.reload();
+        }, 4000);
       }
     },
     handleClick(tab, event) {
-        console.log(tab, event);
-    }
-  }
-}
+      console.log(tab, event);
+    },
+  },
+};
 </script>
 
 <style>

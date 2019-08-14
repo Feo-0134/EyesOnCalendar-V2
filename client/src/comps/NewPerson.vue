@@ -41,16 +41,19 @@ export default {
       upload() {
         if(this.inputName == "" || this.inputRole == "" || this.inputAlias == "") {
           this.addFeedback('notify', 'Please fill the blanks.')
+          console.log('err0')
           return;
         }
         // name
         var nameStr
         var nameArr = this.inputName.toString().toLowerCase().split(" ");
         if(nameArr.length > 1) {
-          nameArr[0][0].toUpperCase();
-          nameArr[nameArr.length - 1][0].toUpperCase();
-          nameStr = nameArr[0] + " " + nameArr[1];
+          nameArr[0] = (nameArr[0].toString())[0].toUpperCase() + (nameArr[0].toString()).substr(1);
+          nameArr[nameArr.length - 1] = nameArr[nameArr.length - 1][0].toUpperCase() + nameArr[nameArr.length - 1].substr(1);
+          nameStr = nameArr[0] + " " + nameArr[nameArr.length - 1];
+          console.log(nameStr)
         }else {
+          console.log('err1')
           this.addFeedback('notify', 'Name invalid. eg. Danielle Zhao')
           return;
         }
@@ -61,6 +64,7 @@ export default {
         }else if(this.inputRole == "Vendor" || this.inputRole == "vendor" || this.inputRole == "v") {
           roleStr = ""
         }else {
+          console.log('err2')
           this.addFeedback('notify', 'Role invalid. eg. FTE or Vendor')
           return;
         }
@@ -72,14 +76,14 @@ export default {
           aliasStr = "(" + this.inputAlias + ")";
         }
         this.message = nameStr + " " + roleStr +  " " + aliasStr
-        
+        console.log(this.apiPayload)
         if(this.admin) {
           new Promise((resolve, reject) => {
             this.$http.post(this.apiPath, this.apiPayload)
             .then((response)=> {
               console.log(response)
-              if(response.data == "all good") {this.addSuccess()}
-              else{this.addFeedback('notify', 'This employee is already in the system.')}
+              if(response.data == "all good") {;console.log('err3');this.addSuccess()}
+              else{console.log('err4');this.addFeedback('notify', 'This employee is already in the system.');}
             })
             .catch((error) => {
               console.log(error.response)
