@@ -46,6 +46,11 @@ export default {
         }
         // name
         var nameStr
+        if(this.inputName.toString() === ' ') {
+          console.log('err1')
+          this.addFeedback('notify', 'Name invalid. eg. Danielle Zhao')
+          return;
+        }
         var nameArr = this.inputName.toString().toLowerCase().split(" ");
         if(nameArr.length > 1) {
           nameArr[0] = (nameArr[0].toString())[0].toUpperCase() + (nameArr[0].toString()).substr(1);
@@ -70,6 +75,11 @@ export default {
         }
         // alias
         var aliasStr
+        if(this.inputAlias.toString() === ' ') {
+          console.log('err5')
+          this.addFeedback('notify', 'alias invalid. eg. danzha')
+          return;
+        }
         if(this.inputAlias[0] == "(" && this.inputAlias[(this.inputAlias).length-1] == ")") {
           aliasStr = this.inputAlias
         }else {

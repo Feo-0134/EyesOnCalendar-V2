@@ -28,27 +28,25 @@
                     <div v-on:click="cycle($event,3)" class="box purple" v-popover:myname>AL</div><h5 class = "blackFont">Annual Leave</h5>
                     </div>
                     <div class="box-container">
-                    <div v-on:click="open1 = true; cycle($event,4);" class="box purple" v-popover:myname>HSL</div><h5 class = "blackFont">Half-day Sick Leave(Morning/Afternoon)</h5>
-                    </div>
-                    <el-switch v-if = "open1" v-model="value1" active-text="Afternoon" inactive-text="Morning"> </el-switch>
-                    <div class="box-container">
-                    <div v-on:click="open2 = true; cycle($event,5);" class="box purple" v-popover:myname>HAL</div><h5 class = "blackFont">Half-day Annual Leave(Morning/Afternoon)</h5>
-                    </div>
-                    <el-switch v-if = "open2" v-model="value2" active-text="Afternoon" inactive-text="Morning">
-                    </el-switch>
-                    <div class="box-container">
-                        <div v-on:click="cycle($event,10)" class="box orange">PO</div>
-                        <div v-on:click="cycle($event,11)" class="box orange">PM</div><h5 class = "blackFont">OnDuty/MorningShift(PH)</h5>
+                    <el-switch v-if = "open1" v-model="value1" active-text="AL" inactive-text="SL"> </el-switch>
+                    <div v-on:click="open1 = true; cycle($event,12);" class="box purple" v-popover:myname>H(M)</div>
+                    <div v-on:click="open2 = true; cycle($event,14);" class="box purple" v-popover:myname>H(A)</div>
+                    </div><div>
+                    <h5 class = "blackFont">(SL/AL) +  Half-day Leave Morning / Afternoon</h5>
                     </div>
                     <div class="box-container">
-                        <div v-on:click="cycle($event,7)" class="box blue" v-popover:myname>T</div><h5 class = "blackFont">Training</h5>
+                        <div v-on:click="cycle($event,value)" class="box orange">PO</div>
+                        <div v-on:click="cycle($event,value)" class="box orange">PM</div><h5 class = "blackFont">OnDuty/MorningShift(PH)</h5>
                     </div>
                     <div class="box-container">
-                        <div v-on:click="cycle($event,1)" class="box red">PH</div><h5 class = "blackFont">Public Holiday</h5>
+                        <div v-on:click="cycle($event,value)" class="box blue" v-popover:myname>T</div><h5 class = "blackFont">Training</h5>
+                    </div>
+                    <div class="box-container">
+                        <div v-on:click="cycle($event,value)" class="box red">PH</div><h5 class = "blackFont">Public Holiday</h5>
                     </div>
                     <span slot="footer" class="dialog-footer">
                         <!-- <el-button @click="handleOpen">Cancel</el-button> -->
-                        <el-button type="primary" @click="handleOpen">Comfirm</el-button>
+                        <el-button type="primary" @click="handleOpen()">Comfirm</el-button>
                     </span>
                 </div>
             </div> 
@@ -90,14 +88,13 @@ export default {
         * Feature 1 add two new status "MS"(morning shift),"NS"(night shift)
         * Feature 2  add a dialog for updating the status
         **************************************/
-        workTypes: ["W", "PH", "SL", "AL", "H(M)", "H(A)", "V", "T", "MS", "NS", "PO", "PM"],
+        workTypes: ["W", "PH", "SL", "AL", "H(M)", "H(A)", "V", "T", "MS", "NS", "PO", "PM","HMSL","HMAL","HASL","HAAL"],
         open: false,
         dayType: " ",
         date: null,
-        open1: false,
-        open2: false,
-        value1: true,
-        value2: true,
+        open1: true,
+        value: -1,
+        value1: false,
         size: window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth,
       }
   },
@@ -176,8 +173,15 @@ export default {
       this.$emit('opensync',false)
       location.reload();
     },
+    cycleII(arg) {
+      this.value = arg;
+    },
     cycle(e, arg) {
+      // if(arg === -1) return;
+      if(this.value1) arg = arg + 1;
       this.dayType = this.workTypes[arg];
+      // setTimeout(()=>{this.handleOpen()},2000);
+      
     },
 
     getWindowWidth() {
@@ -344,6 +348,9 @@ day {
   letter-spacing: 1px;
 }
 
+.el-switch {
+  margin:auto;
+}
 
 .grey {
   background-color: #555555;
@@ -366,6 +373,12 @@ day {
 
 .purple {
   background-color: #403259;
+}
+.purple1 {
+  background-color: #360036;
+}
+.purple2 {
+  background-color: #63474D;
 }
 
 .orange {

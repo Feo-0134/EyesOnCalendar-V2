@@ -89,7 +89,7 @@ export default {
         if(w.workType == "SL"||w.workType == "AL"||w.workType == "V") {
           wdctotal = wdctotal + 1
         }
-        if(w.workType == "H(M)"||w.workType == "H(A)") {
+        if(w.workType == "H(M)"||w.workType == "H(A)"||w.workType == "HMSL"||w.workType == "HASL"||w.workType == "HMAL"||w.workType == "HAAL") { //"HMSL","HASL","HMAL","HASL"
           wdctotal = wdctotal + 0.5
         }
         //console.log(wdctotal)
@@ -251,6 +251,12 @@ export default {
 
 .purple {
   background-color: #513567;
+}
+.purple1 {
+  background-color: #360036;
+}
+.purple2 {
+  background-color: #63474D;
 }
 
 .orange {

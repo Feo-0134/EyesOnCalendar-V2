@@ -62,6 +62,12 @@ export default {
         case 5:
           return "#3B4D50";
           break;
+        case 6:
+          return "#63474D";
+          break;
+        case 7:
+          return "#360036";
+          break;
       }
     }
   },
@@ -86,8 +92,12 @@ export default {
         if (this.day.workType == "NS") this.day.workDay = 5;
         if (this.day.workType == "SL") this.day.workDay = 2;
         if (this.day.workType == "AL") this.day.workDay = 2;
-        if (this.day.workType == "H(M)") this.day.workDay = 2;
+        if (this.day.workType == "H(M)") this.day.workDay = 2;// //"HMSL","HASL","HMAL","HAAL"
         if (this.day.workType == "H(A)") this.day.workDay = 2;
+        if (this.day.workType == "HMSL") this.day.workDay = 7;
+        if (this.day.workType == "HMAL") this.day.workDay = 6;
+        if (this.day.workType == "HASL") this.day.workDay = 7;
+        if (this.day.workType == "HAAL") this.day.workDay = 6;
         if (this.day.workType == "T") this.day.workDay = 3;
         if (this.day.workType == "PO") this.day.workDay = 4;
         if (this.day.workType == "PM") this.day.workDay = 4;
@@ -95,6 +105,9 @@ export default {
         this.dbFunc()                                     // WHY SYNC TWO TIMES II is here
       }
       if (this.day.workType == "W") return " "; // not display "W" in the calendar for there are TOO MANY WORKING DAYS
+      if (this.day.workType == "HMSL" ||this.day.workType == "HMAL") return " H(M)"; // not display "W" in the calendar for there are TOO MANY WORKING DAYS
+      if (this.day.workType == "HASL" ||this.day.workType == "HAAL") return " H(A)"; // not display "W" in the calendar for there are TOO MANY WORKING DAYS
+      
       // if (this.day.workType == "PH") return " ";
       else return this.day.workType;
     },
