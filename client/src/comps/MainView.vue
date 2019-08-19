@@ -72,7 +72,8 @@
                 :key="index" class="cellx">{{percentageFTE(index)}}%</div>
               </div>
               <person  v-for="(p,index) in month.people" v-show="p.name.match('FTE')=='FTE'"
-              :key="p._id" :pindex="index" :person="p" :userName="emailUnderName"/>
+              :key="p._id" :pindex="index" :person="p" :userName="emailUnderName"
+              :openflag = "openflag" @opensync = "handleOpenPanel"/>
             </el-tab-pane>
             <el-tab-pane label="Vendor Members" name="third">
                <div id="tablehead" :class="{sticky: scrolled}" class="row tablehead">
@@ -89,7 +90,8 @@
                 :key="index" class="cellx">{{percentageVendor(index)}}%</div>
               </div>
               <person  v-for="(p,index) in month.people" v-show="p.name.match('v-')=='v-'"
-              :key="p._id" :pindex="index" :person="p" :userName="emailUnderName"/>
+              :key="p._id" :pindex="index" :person="p" :userName="emailUnderName"
+              :openflag = "openflag" @opensync = "handleOpenPanel"/>
             </el-tab-pane>
           </el-tabs>
       </div>
