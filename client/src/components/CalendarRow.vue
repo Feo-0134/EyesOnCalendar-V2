@@ -32,7 +32,7 @@ export default {
 
 <style>
     .row {
-        display: flex;
+        display: inline-flex;
         height: 40px;
     }
     .cell {

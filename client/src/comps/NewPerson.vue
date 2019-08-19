@@ -92,7 +92,7 @@ export default {
             this.$http.post(this.apiPath, this.apiPayload)
             .then((response)=> {
               console.log(response)
-              if(response.data == "all good") {;console.log('err3');this.addSuccess()}
+              if(response.data == "all good") {;console.log('err3');this. addFeedback('success', 'Person Added to Team')}
               else{console.log('err4');this.addFeedback('notify', 'This employee is already in the system.');}
             })
             .catch((error) => {
@@ -121,16 +121,15 @@ export default {
             type:'warning'
           });
         }
-      },
-      addSuccess() {
-        const h = this.$createElement;
-        this.$notify({
-          title: 'Success',
-          message: h('i', { style: 'color: teal'}, 'Person Added to Team'),
-          position:'top-left',
-          type: 'success',
-          duration: 0
-        });
+        if(type == 'success') {
+          this.$notify({
+            title: 'Success',
+            message: h('i', { style: 'color: teal'}, msg),
+            position:'top-left',
+            type: 'success',
+            duration: 0
+          });
+        }
       },
       personinfo: function() {
         return new Promise((resolve, reject) => {
@@ -203,9 +202,9 @@ export default {
     margin-bottom: 40px;
   }
 
-  .el-input {
-    width: 200px;
-    margin: 20px;
+  .inputBox .el-input {
+    width: 20%;
+    margin: 5px;
   }
   
   .inputBox {

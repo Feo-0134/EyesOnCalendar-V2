@@ -140,7 +140,7 @@ export default {
 }
 
 .row {
-  display: flex;
+  display: inline-flex;
   height: 40px;
   justify-content: center;
 }

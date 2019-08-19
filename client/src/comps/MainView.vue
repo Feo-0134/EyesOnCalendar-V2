@@ -303,7 +303,7 @@ export default {
     handleCommand(command) {
       const path = (command + moment(this.date, '/YYYY/M').format('/YYYY/M'));
       this.$router.push({ path });
-      Location.reload();
+      location.reload();
       // this.$message('click on item ' + command);
     },
     addMonth() {
@@ -433,7 +433,7 @@ export default {
       if (this.initUndo === false) {
         this.$http.post(this.apiPath2, this.apiPayload2);
         setTimeout(() => {
-          Location.reload();
+          location.reload();
         }, 4000);
       }
     },

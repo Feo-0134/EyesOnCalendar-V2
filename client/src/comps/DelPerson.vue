@@ -77,21 +77,43 @@ export default {
       upload() {
         if(this.admin) { // this.userName.match(this.person.name) == this.person.name
           return new Promise((resolve, reject) => {
-            this.$http.post(this.apiPath, this.apiPayload).then((response)=> {
-              if(response.data == "all good")  {this.showModal = true;}
-              else(this.delError('notify', 'Person Not Exist'))
+            this.$http.post(this.apiPath, this.apiPayload)
+            .then((response)=> {
+              if(response.data == "all good")  {this.delFeedback('success', 'Person Deleted from Team')}
+              else(this.delFeedback('notify', 'Person Not Exist'))
+            })
+            .catch((error)=> {
+              this.delFeedback('error', 'System Error')
             })
           })
         }
       },
-      delError(type, msg) {
+      delFeedback(type, msg) {
+        const h = this.$createElement;
+        if(type == 'error') {
+          this.$notify.error({
+            title:'Request Denied',
+            message: msg,
+            position:'top-left',
+            duration: 0
+          });
+        }
         if(type == 'notify') {
           this.$notify({
-            title: 'Notification',
+            title:'Notification',
             message: msg,
             position:'top-left',
             duration: 0,
-            type: 'warning'
+            type:'warning'
+          });
+        }
+        if(type == 'success') {
+          this.$notify({
+            title: 'Success',
+            message: h('i', { style: 'color: teal'}, msg),
+            position:'top-left',
+            type: 'success',
+            duration: 0
           });
         }
       },

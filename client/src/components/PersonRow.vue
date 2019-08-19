@@ -18,35 +18,54 @@
         @warp="handleWarp">
           <div class="help-dialogII">
                 <div class="dayTypes">
+                    <div class="typeTitle">
+                    <h5 class = "blackFont">Work Day Type</h5>
+                    </div>
                     <div class="box-container">
                         <div v-on:click="cycle($event,0)" class="box green"></div>
                         <div v-on:click="cycle($event,8)" class="box green">MS</div>
-                        <div v-on:click="cycle($event,9)" class="box green1">NS</div><h5 class = "blackFont">Work Day</h5>
+                        <div v-on:click="cycle($event,9)" class="box green1">NS</div>
+                        <!-- <h5 class = "blackFont">Work Day</h5> -->
+                    </div>
+                    <div class="typeTitle">
+                    <h5 class = "blackFont">Leave Type (Sick Leave / Annual Leave)</h5>
                     </div>
                     <div class="box-container">
-                    <div v-on:click="cycle($event,2)" class="box purple" v-popover:myname>SL</div><h5 class = "blackFont">Sick Leave</h5>
-                    <div v-on:click="cycle($event,3)" class="box purple" v-popover:myname>AL</div><h5 class = "blackFont">Annual Leave</h5>
+                    <div v-on:click="cycle($event,2)" class="box purple" v-popover:myname>SL</div>
+                    <!-- <h5 class = "blackFont">Sick Leave</h5> -->
+                    <div v-on:click="cycle($event,3)" class="box purple" v-popover:myname>AL</div>
+                    <!-- <h5 class = "blackFont">Annual Leave</h5> -->
+                    </div>
+                    <div class="typeTitle">
+                    <h5 class = "blackFont">Half-day Leave Type </h5>
+                    <h5 class = "blackFont">(SL/AL + Morning / Afternoon)</h5>
                     </div>
                     <div class="box-container">
                     <el-switch v-if = "open1" v-model="value1" active-text="AL" inactive-text="SL"> </el-switch>
-                    <div v-on:click="open1 = true; cycle($event,12);" class="box purple" v-popover:myname>H(M)</div>
-                    <div v-on:click="open2 = true; cycle($event,14);" class="box purple" v-popover:myname>H(A)</div>
+                    <div v-on:click="open1 = true; cycle($event,12);" class= "box" :class="value1?'purple2':'purple1'" v-popover:myname>H(M)</div>
+                    <div v-on:click="open2 = true; cycle($event,14);" class= "box" :class="value1?'purple2':'purple1'" v-popover:myname>H(A)</div>
                     </div><div>
-                    <h5 class = "blackFont">(SL/AL) +  Half-day Leave Morning / Afternoon</h5>
+                    <!-- <h5 class = "blackFont">(SL/AL) +  Half-day Leave Morning / Afternoon</h5> -->
+                    </div>
+                    <div class="typeTitle">
+                    <h5 class = "blackFont">Public Holiday On-duty type </h5>
+                    <h5 class = "blackFont">(OnDuty / MorningShift)</h5>
                     </div>
                     <div class="box-container">
                         <div v-on:click="cycle($event,value)" class="box orange">PO</div>
-                        <div v-on:click="cycle($event,value)" class="box orange">PM</div><h5 class = "blackFont">OnDuty/MorningShift(PH)</h5>
+                        <div v-on:click="cycle($event,value)" class="box orange">PM</div>
+                        <!-- <h5 class = "blackFont">OnDuty / MorningShift(PH)</h5> -->
+                    </div>
+                    <div class="typeTitle">
+                    <h5 class = "blackFont">Other Type</h5>
                     </div>
                     <div class="box-container">
                         <div v-on:click="cycle($event,value)" class="box blue" v-popover:myname>T</div><h5 class = "blackFont">Training</h5>
-                    </div>
-                    <div class="box-container">
                         <div v-on:click="cycle($event,value)" class="box red">PH</div><h5 class = "blackFont">Public Holiday</h5>
                     </div>
                     <span slot="footer" class="dialog-footer">
                         <!-- <el-button @click="handleOpen">Cancel</el-button> -->
-                        <el-button type="primary" @click="handleOpen()">Comfirm</el-button>
+                        <el-button class="confirmBtn" type="primary" @click="handleOpen()">Comfirm</el-button>
                     </span>
                 </div>
             </div> 
@@ -291,7 +310,7 @@ day {
   top: 25%;
   left: 50%;
   margin-left: -150px;
-  width: 300px;
+  width: 280px;
   padding: 30px;
   color: black;
   display: flex;
@@ -349,7 +368,7 @@ day {
 }
 
 .el-switch {
-  margin:auto;
+  margin:15px;
 }
 
 .grey {
@@ -381,7 +400,14 @@ day {
   background-color: #63474D;
 }
 
+
 .orange {
   background-color: #b36b00;
+}
+.typeTitle {
+  text-align: left;
+}
+.confirmBtn{
+  margin-top:15px;
 }
 </style>
