@@ -372,9 +372,9 @@ export default {
           if (this.emailUnderName.match('Juncheng Zhu') === 'Juncheng Zhu'
           || this.emailUnderName.match('Karen Zheng') === 'Karen Zheng'
           || this.emailUnderName.match('Anik Shen') === 'Anik Shen'
+          || this.emailUnderName.match('Danielle Zhao') === 'Danielle Zhao'
           || this.emailUnderName.match('Dingsong Zhang') === 'Dingsong Zhang'
           || this.emailUnderName.match('Anita Yang') === 'Anita Yang'
-          || this.emailUnderName.match('Danielle Zhao') === 'Danielle Zhao'
           || this.emailUnderName.match('Sean Wu (AZURE)') === 'Sean Wu (AZURE)') { this.admin = true; }
         }).catch((error) => {
           // if(error.toString().match('404') == '404') {this.emailUnderName = 'Juncheng Doooo'; this.admin = true; }
@@ -396,7 +396,7 @@ export default {
         const thisMon = this.date.split('/');
         console.log(newMon);
         console.log(thisMon);
-        if (newMon !== thisMon[3]) {
+        if (newMon != thisMon[3]) {
           this.initDeny('forbid', 'Only the month after current month can be initiated. Current month is ');
         } else {
           flag = true;
@@ -412,7 +412,7 @@ export default {
       }
     },
     initDeny(type, msg) {
-      const mon = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'Auguest', 'September', 'October', 'November', 'December'];
+      const mon = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
       if (type === 'noPermission') {
         this.$notify({
           title: 'Notification',

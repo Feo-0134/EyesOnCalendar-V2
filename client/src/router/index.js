@@ -1,3 +1,4 @@
+/* eslint-disable */
 import Vue from 'vue'
 import Router from 'vue-router'
 import Upload from '@/comps/Upload'
@@ -7,12 +8,19 @@ import Repo from '@/comps/Repo'
 import NewPerson from '@/comps/NewPerson'
 import DelPerson from '@/comps/DelPerson'
 import NotFound from '@/comps/NotFound'
+import AccessCell from '@/components/AccessCell'
+
 Vue.use(Router)
 
 export default new Router({
   mode: 'history',
 //  base: '/dist/',
   routes: [
+    {
+      path: '/test',
+      name: 'AccessCell',
+      component: AccessCell
+    },
     {
       path: '/',
       name: 'LoadCurrentMonth',
