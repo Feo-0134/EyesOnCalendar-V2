@@ -396,10 +396,10 @@ export default {
         const thisMon = this.date.split('/');
         console.log(newMon);
         console.log(thisMon);
-        if (newMon != thisMon[3]) {
-          this.initDeny('forbid', 'Only the month after current month can be initiated. Current month is ');
-        } else {
+        if (newMon == thisMon[3]) {
           flag = true;
+        } else {
+          this.initDeny('forbid', 'Only the month after current month can be initiated. Current month is ');          
         }
         if (flag) {
           this.isLoading = true;
@@ -530,6 +530,9 @@ export default {
 }
 
 .el-tabs__nav-wrap::after {
+  visibility: hidden;
+}
+.moveable-line {
   visibility: hidden;
 }
 
