@@ -109,7 +109,7 @@ export default {
         **************************************/
         workTypes: ["W", "PH", "SL", "AL", "H(M)", "H(A)", "V", "T", "MS", "NS", "PO", "PM","HMSL","HMAL","HASL","HAAL"],
         open: false,
-        dayType: " ",
+        dayType: "W",
         date: null,
         open1: true,
         value: -1,
@@ -189,7 +189,7 @@ export default {
     handleOpen: function() {
       this.open=false;
       this.$emit('opensync',false)
-      location.reload();
+      // location.reload();
     },
     cycleII(arg) {
       this.value = arg;
@@ -197,9 +197,7 @@ export default {
     cycle(e, arg) {
       // if(arg === -1) return;
       if(this.value1) arg = arg + 1;
-      this.dayType = this.workTypes[arg];
-      // setTimeout(()=>{this.handleOpen()},2000);
-      
+      this.dayType = this.workTypes[arg];      
     },
 
     getWindowWidth() {
