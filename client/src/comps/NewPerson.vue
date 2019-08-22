@@ -41,13 +41,13 @@ export default {
       upload() {
         if(this.inputName == "" || this.inputRole == "" || this.inputAlias == "") {
           this.addFeedback('notify', 'Please fill the blanks.')
-          console.log('err0')
+          // console.log('err0')
           return;
         }
         // name
         var nameStr
         if(this.inputName.toString() === ' ') {
-          console.log('err1')
+          // console.log('err1')
           this.addFeedback('notify', 'Name invalid. eg. Danielle Zhao')
           return;
         }
@@ -56,9 +56,9 @@ export default {
           nameArr[0] = (nameArr[0].toString())[0].toUpperCase() + (nameArr[0].toString()).substr(1);
           nameArr[nameArr.length - 1] = nameArr[nameArr.length - 1][0].toUpperCase() + nameArr[nameArr.length - 1].substr(1);
           nameStr = nameArr[0] + " " + nameArr[nameArr.length - 1];
-          console.log(nameStr)
+          // console.log(nameStr)
         }else {
-          console.log('err1')
+          // console.log('err1')
           this.addFeedback('notify', 'Name invalid. eg. Danielle Zhao')
           return;
         }
@@ -69,16 +69,23 @@ export default {
         }else if(this.inputRole == "Vendor" || this.inputRole == "vendor" || this.inputRole == "v") {
           roleStr = ""
         }else {
-          console.log('err2')
+          // console.log('err2')
           this.addFeedback('notify', 'Role invalid. eg. FTE or Vendor')
           return;
         }
         // alias
         var aliasStr
         if(this.inputAlias.toString() === ' ') {
-          console.log('err5')
+          // console.log('err5')
           this.addFeedback('notify', 'alias invalid. eg. danzha')
           return;
+        }
+        if(this.inputRole == "Vendor" || this.inputRole == "vendor" || this.inputRole == "v") {
+          if(this.inputAlias.toString().match('v-') != 'v-') {
+            // console.log('err5')
+            this.addFeedback('notify', 'vendor alias with no \'v-\' is invalid.')
+            return;
+          }
         }
         if(this.inputAlias[0] == "(" && this.inputAlias[(this.inputAlias).length-1] == ")") {
           aliasStr = this.inputAlias
@@ -86,17 +93,21 @@ export default {
           aliasStr = "(" + this.inputAlias + ")";
         }
         this.message = nameStr + " " + roleStr +  " " + aliasStr
-        console.log(this.apiPayload)
+        // console.log(this.apiPayload)
         if(this.admin) {
           new Promise((resolve, reject) => {
             this.$http.post(this.apiPath, this.apiPayload)
             .then((response)=> {
-              console.log(response)
-              if(response.data == "all good") {;console.log('err3');this. addFeedback('success', 'Person Added to Team')}
-              else{console.log('err4');this.addFeedback('notify', 'This employee is already in the system.');}
+              // console.log(response)
+              if(response.data == "all good") {
+              // console.log('err3');
+              this. addFeedback('success', 'Person Added to Team')}
+              else{
+                // console.log('err4');
+              this.addFeedback('notify', 'This employee is already in the system.');}
             })
             .catch((error) => {
-              console.log(error.response)
+              // console.log(error.response)
               this.addFeedback('error', 'System Error. Please turn to the developer.');
             })
           }) 
@@ -141,7 +152,7 @@ export default {
                 }
               }   
             }else {
-              this.emailUnderName = "Juncheng Zhu"
+              this.emailUnderName = "Danielle Zhao"
             }
             if(this.emailUnderName.match("Juncheng Zhu") == "Juncheng Zhu" 
             ||this.emailUnderName.match("Karen Zheng") == "Karen Zheng"

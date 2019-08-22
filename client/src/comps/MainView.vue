@@ -37,9 +37,9 @@
       :class="{buttonBackground: !initUndo}" v-on:click="reload">
         Reload Table
       </button>
-      <div v-if="month">
+      <div  v-if="month">
           <el-tabs id="tabsJuncheng" v-model="activeName" @tab-click="handleClick">
-            <el-tab-pane label="All Members" name="first">
+            <el-tab-pane class="mainPanel" label="All Members" name="first">
                <div id="tablehead" :class="{sticky: scrolled}" class="row tablehead">
                <div class="name"></div>
                <div v-for="(p,index) in month.people[0].days"
@@ -57,7 +57,7 @@
               :pindex="index" :person="p" :userName="emailUnderName"
               :openflag = "openflag" @opensync = "handleOpenPanel"/>
             </el-tab-pane>
-            <el-tab-pane label="FTE Members" name="second">
+            <el-tab-pane class="mainPanel" label="FTE Members" name="second">
               <div id="tablehead" :class="{sticky: scrolled}" class="row tablehead">
                 <div class="name"></div>
                 <div v-for="(p,index) in month.people[0].days"
@@ -75,7 +75,7 @@
               :key="p._id" :pindex="index" :person="p" :userName="emailUnderName"
               :openflag = "openflag" @opensync = "handleOpenPanel"/>
             </el-tab-pane>
-            <el-tab-pane label="Vendor Members" name="third">
+            <el-tab-pane class="mainPanel" label="Vendor Members" name="third">
                <div id="tablehead" :class="{sticky: scrolled}" class="row tablehead">
                 <div class="name"></div>
                 <div v-for="(p,index) in month.people[0].days"
@@ -160,7 +160,7 @@ export default {
     totalamountFTE() {
       let sum = 0;
       for (const b of Object.keys(this.month.people)) {
-        if (this.month.people[b].name.match('FTE') === 'FTE') {
+        if (this.month.people[b].name.match('FTE') == 'FTE') {
           sum += 1;
         }
       }
@@ -169,7 +169,7 @@ export default {
     totalamountVendor() {
       let sum = 0;
       for (const b of Object.keys(this.month.people)) {
-        if (this.month.people[b].name.match('v-') === 'v-') {
+        if (this.month.people[b].name.match('v-') == 'v-') {
           sum += 1;
         }
       }
@@ -231,7 +231,7 @@ export default {
       return function (val) {
         let sum = 0;
         for (const b of Object.keys(this.month.people)) {
-          if (this.month.people[b].name.match('FTE') === 'FTE'
+          if (this.month.people[b].name.match('FTE') == 'FTE'
           && (this.month.people[b].days[val].workType === 'W'
           || this.month.people[b].days[val].workType === 'MS'
           || this.month.people[b].days[val].workType === 'NS'
@@ -240,7 +240,7 @@ export default {
             sum += 1;
           }
         }
-        if (this.totalamountFTE === 0) return 0;
+        if (this.totalamountFTE == 0) return 0;
         return ((sum / this.totalamountFTE) * 100).toFixed(0);
       };
     },
@@ -248,7 +248,7 @@ export default {
       return function (val) {
         let sum = 0;
         for (const b of Object.keys(this.month.people)) {
-          if (this.month.people[b].name.match('v-') === 'v-'
+          if (this.month.people[b].name.match('v-') == 'v-'
           && (this.month.people[b].days[val].workType === 'W'
           || this.month.people[b].days[val].workType === 'MS'
           || this.month.people[b].days[val].workType === 'NS'
@@ -257,7 +257,7 @@ export default {
             sum += 1;
           }
         }
-        if (this.totalamountVendor === 0) return 0;
+        if (this.totalamountVendor == 0) return 0;
         return ((sum / this.totalamountVendor) * 100).toFixed(0);
       };
     },
@@ -322,7 +322,6 @@ export default {
     },
     handleOpenPanel(msg) {
       this.openflag = msg;
-      console.log('test');
     },
     // callUndo(ev) {
     //   if (ev.code !== "KeyZ" || ev.ctrlKey !== true) return;
@@ -366,16 +365,15 @@ export default {
               }
             }
           } else {
-            this.emailUnderName = 'Juncheng Zhu';
-            this.admin = true;
+            this.emailUnderName = 'Danielle Zhao';
           }
-          if (this.emailUnderName.match('Juncheng Zhu') === 'Juncheng Zhu'
-          || this.emailUnderName.match('Karen Zheng') === 'Karen Zheng'
-          || this.emailUnderName.match('Anik Shen') === 'Anik Shen'
-          || this.emailUnderName.match('Danielle Zhao') === 'Danielle Zhao'
-          || this.emailUnderName.match('Dingsong Zhang') === 'Dingsong Zhang'
-          || this.emailUnderName.match('Anita Yang') === 'Anita Yang'
-          || this.emailUnderName.match('Sean Wu (AZURE)') === 'Sean Wu (AZURE)') { this.admin = true; }
+          if (this.emailUnderName.match('Juncheng Zhu') == 'Juncheng Zhu'
+          || this.emailUnderName.match('Karen Zheng') == 'Karen Zheng'
+          || this.emailUnderName.match('Anik Shen') == 'Anik Shen'
+          || this.emailUnderName.match('Danielle Zhao') == 'Danielle Zhao'
+          || this.emailUnderName.match('Dingsong Zhang') == 'Dingsong Zhang'
+          || this.emailUnderName.match('Anita Yang') == 'Anita Yang'
+          || this.emailUnderName.match('Sean Wu (AZURE)') == 'Sean Wu (AZURE)') { this.admin = true; }
         }).catch((error) => {
           // if(error.toString().match('404') == '404') {this.emailUnderName = 'Juncheng Doooo'; this.admin = true; }
           reject(error);
@@ -394,9 +392,7 @@ export default {
         let flag = false;
         const newMon = (new Date().getMonth() + 2) % 12 ? (new Date().getMonth() + 2) % 12 : 12;
         const thisMon = this.date.split('/');
-        console.log(newMon);
-        console.log(thisMon);
-        if (newMon == thisMon[3]) {
+        if (newMon == thisMon[3]) { // 弱类型相等；
           flag = true;
         } else {
           this.initDeny('forbid', 'Only the month after current month can be initiated. Current month is ');          
@@ -535,5 +531,7 @@ export default {
 .moveable-line {
   visibility: hidden;
 }
-
+.mainPanel {
+  min-height: 1000px;
+}
 </style>

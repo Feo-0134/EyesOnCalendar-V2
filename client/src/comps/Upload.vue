@@ -54,7 +54,7 @@ export default {
       _this.status = 3;
       let formData = new FormData();
       formData.append("recfile", this.file);
-      //console.log(this.$router.app._route.fullPath)
+      // console.log(this.$router.app._route.fullPath)
       if((this.$router.app._route.fullPath).match("AppService")) {
         this.$http
         .post("/api/AppService/upload/" + this.year + "/" + this.month, formData, { 

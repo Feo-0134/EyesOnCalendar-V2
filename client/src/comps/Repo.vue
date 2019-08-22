@@ -56,7 +56,7 @@ export default {
             return x.name.localeCompare(y.name)
           })
           
-          //console.log(res.data)
+          // console.log(res.data)
           return res.data;
         } catch (e) {
           this.socket = null;

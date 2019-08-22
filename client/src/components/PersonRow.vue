@@ -52,16 +52,16 @@
                     <h5 class = "blackFont">(OnDuty / MorningShift)</h5>
                     </div>
                     <div class="box-container">
-                        <div v-on:click="cycle($event,value)" class="box orange">PO</div>
-                        <div v-on:click="cycle($event,value)" class="box orange">PM</div>
+                        <div v-on:click="cycle($event,10)" class="box orange">PO</div>
+                        <div v-on:click="cycle($event,11)" class="box orange">PM</div>
                         <!-- <h5 class = "blackFont">OnDuty / MorningShift(PH)</h5> -->
                     </div>
                     <div class="typeTitle">
                     <h5 class = "blackFont">Other Type</h5>
                     </div>
                     <div class="box-container">
-                        <div v-on:click="cycle($event,value)" class="box blue" v-popover:myname>T</div><h5 class = "blackFont">Training</h5>
-                        <div v-on:click="cycle($event,value)" class="box red">PH</div><h5 class = "blackFont">Public Holiday</h5>
+                        <div v-on:click="cycle($event,7)" class="box blue" v-popover:myname>T</div><h5 class = "blackFont">Training</h5>
+                        <div v-on:click="cycle($event,1)" class="box red">PH</div><h5 class = "blackFont">Public Holiday</h5>
                     </div>
                     <span slot="footer" class="dialog-footer">
                         <!-- <el-button @click="handleOpen">Cancel</el-button> -->
@@ -142,32 +142,33 @@ export default {
   methods: {
     // moveable method
     handleDrag({ target, left, top }) {
-      console.log('onDrag left, top', left, top);
+      // console.log('onDrag left, top', left, top);
       target.style.left = `${left}px`;
       target.style.top = `${top}px`;
     },
     handleResize({
       target, width, height, delta,
     }) {
-      console.log('onResize', width, height);
+      // console.log('onResize', width, height);
       delta[0] && (target.style.width = `${width}px`);
       delta[1] && (target.style.height = `${height}px`);
     },
     handleScale({ target, transform, scale }) {
-      console.log('onScale scale', scale);
+      // console.log('onScale scale', scale);
       target.style.transform = transform;
     },
     handleRotate({ target, dist, transform }) {
-      console.log('onRotate', dist);
+      // console.log('onRotate', dist);
       target.style.transform = transform;
     },
     handleWarp({ target, transform }) {
-      console.log('onWarp', target);
+      // console.log('onWarp', target);
       target.style.transform = transform;
     },
     /**************************************
-     * Feature 6 One can only change his own status;TA & Manager have higher permission to all data
+     * Feature 6 TA & Manager permission
     **************************************/
+   // One can only change his own status
     handleEvent:function(msg) {
       var nameArray = this.person.name.split(" ");
       if(this.userName.match(nameArray[0] + " " + nameArray[1]) == nameArray[0] + " " + nameArray[1]
@@ -178,9 +179,7 @@ export default {
       || this.userName == "Danielle Zhao" // TA
       || this.userName == "Dingsong Zhang" 
       || this.userName == "Sean Wu (AZURE)" ) {
-         console.log("test1")
         if(this.openflag == false || this.open == true) {
-          console.log("test2")
           this.open = true
           this.$emit('opensync',true)
           this.date = msg - 1
@@ -305,8 +304,9 @@ day {
   font-weight: 700;
 }
 .help-dialogII {
-  background-color: #2E3532;
+  background-color: #3D5B5E;
   position: absolute;
+  border-radius: 20px;
   top: 25%;
   left: 50%;
   margin-left: -150px;

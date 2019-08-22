@@ -42,10 +42,10 @@ Feature 7 Add a new member to the calendar
       <div class="morespace">
       <div class="newRow">
       <!-- <img src="../../static/img/joinus.png" alt="joinPic" /> -->
-      <input class="elem inputBox adjust" v-model="message" placeholder="eg. Ray Li">
+      <input class="elem inputBox adjust" v-model="message" placeholder="eg. (danzha) / Danielle Zhao">
       <button class="elem buttonOrg adjust" id="show-modal" v-on:click="upload">Confirm</button>
       </div>
-      <p class = "topmargin">HINT：Please type the name in the input-box then click the confirm button to delete a person.</p>
+      <p class = "topmargin">HINT：You can delete a person with either alias [eg. (danzha) ] or his/her first name and last name[eg. Danielle Zhao ].</p>
       </div>
       <!-- use the modal component, pass in the prop -->
       <modal v-if="showModal" @close="showModal = false">
@@ -127,7 +127,7 @@ export default {
                 }
               }   
             }else {
-              this.emailUnderName = "Juncheng Zhu"
+              this.emailUnderName = "Danielle Zhao"
             }
             if(this.emailUnderName.match("Juncheng Zhu") == "Juncheng Zhu" 
             ||this.emailUnderName.match("Karen Zheng") == "Karen Zheng"
@@ -145,7 +145,6 @@ export default {
     },
     mounted() {
         this.personinfo();
-        //console.log(this.$router.currentRoute.path)
     },
     computed:{
         apiPath() {
