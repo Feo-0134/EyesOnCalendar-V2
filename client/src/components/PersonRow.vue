@@ -196,7 +196,7 @@ export default {
     },
     cycle(e, arg) {
       // if(arg === -1) return;
-      if(this.value1) arg = arg + 1;
+      if(this.value1 && (arg == 12 || arg == 14)) arg = arg + 1;
       this.dayType = this.workTypes[arg];      
     },
 
