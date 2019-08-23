@@ -30,10 +30,9 @@ if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === undefined)
   staticPath = '/dist/'
   connString = process.env.DB_CONNECTSTRING_PRODUCTION
 } else {
-  var DB_CONNECTSTRING_DEV = 'mongodb://jerytest:IZ8nYAVROPoQL8kSalbtMwsAhBK8oKft7IdNMm6NFXHrPwinNVmxrGsmURfSD8N5yxFemsMRtIxX5DWG6epJ1A==@jerytest.documents.azure.com:10255/React?ssl=true&replicaSet=globaldb'
   // var connString = "mongodb://mayocalendarv2-dev:CiXxW30UqowaAs8CiAVyNiLgJ2UkRmpN6KXBGcJWamGmN2sNYkwcfhRhXQqGfi6jOFH6imOniww5Wn6tX2dIIA%3D%3D@mayocalendarv2-dev.documents.azure.com:10255/?ssl=true&replicaSet=globaldb"
   staticPath = './client/dist/'
-  connString = DB_CONNECTSTRING_DEV
+  connString = process.env.DB_CONNECTSTRING_DEV
 }
 
 mongoose.connect(connString)
