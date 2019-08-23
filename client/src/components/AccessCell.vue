@@ -1,5 +1,5 @@
 <template>
-    <div class="PersonalInfo"> hello {{accessmsg}} </div>
+    <div class="PersonalInfo"> {{accessmsg}} </div>
 </template>
 
 <script>
