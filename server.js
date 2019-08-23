@@ -32,7 +32,7 @@ if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === undefined)
 } else {
   // var connString = "mongodb://mayocalendarv2-dev:CiXxW30UqowaAs8CiAVyNiLgJ2UkRmpN6KXBGcJWamGmN2sNYkwcfhRhXQqGfi6jOFH6imOniww5Wn6tX2dIIA%3D%3D@mayocalendarv2-dev.documents.azure.com:10255/?ssl=true&replicaSet=globaldb"
   staticPath = './client/dist/'
-  connString = process.env.DB_CONNECTSTRING_DEV
+  connString = process.env.DB_CONNECTSTRING_LOCAL
 }
 
 mongoose.connect(connString)
