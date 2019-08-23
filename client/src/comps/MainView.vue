@@ -395,7 +395,7 @@ export default {
         if (newMon == thisMon[3]) { // 弱类型相等；
           flag = true;
         } else {
-          this.initDeny('forbid', 'Only the month after current month can be initiated. Current month is ');          
+          this.initDeny('forbid', 'Only the month after the current month can be initiated. Current month is ');          
         }
         if (flag) {
           this.isLoading = true;
