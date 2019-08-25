@@ -37,9 +37,9 @@ var personSchema = new Schema({
 var monthSchema = new Schema({
   year: Number,
   month: Number,
+  pod: String,
   lockdate: [],
-  people: [personSchema],
-  pod: String
+  people: [personSchema]
 })
 
 monthSchema.index({ year: 1, month: 1 }, { unique: true })
