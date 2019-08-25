@@ -1,6 +1,3 @@
-// Database
-const mongoose = require('mongoose')
-mongoose.set('useCreateIndex', true)
 const models = require('./models/NewMonth')
 const Month = models.Month
 const fs = require('fs')
@@ -23,20 +20,14 @@ const io = require('socket.io')(server)
 require('dotenv').config()
 
 var staticPath = ''
-var connString = ''
 const errorMsg = 'Record not found'
 
 if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === undefined) {
   staticPath = '/dist/'
-  // connString = process.env.DB_CONNECTSTRING_PRODUCTION
 } else {
-  // var connString = "mongodb://mayocalendarv2-dev:CiXxW30UqowaAs8CiAVyNiLgJ2UkRmpN6KXBGcJWamGmN2sNYkwcfhRhXQqGfi6jOFH6imOniww5Wn6tX2dIIA%3D%3D@mayocalendarv2-dev.documents.azure.com:10255/?ssl=true&replicaSet=globaldb"
   staticPath = './client/dist/'
-  connString = process.env.DB_CONNECTSTRING_LOCAL
 }
 
-mongoose.connect(connString)
-// const db = mongoose.connection
 const db = require('./mongodb')
 db.on('error', console.error.bind(console, 'connection error:'))
 db.once('open', function () {
