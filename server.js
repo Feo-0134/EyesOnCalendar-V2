@@ -35,6 +35,7 @@ db.once('open', function () {
 })
 
 router.use(bodyParser())
+
 /* koa interface demo */
 // router.get('/', ctx => {
 //     ctx.body = "Hello"
@@ -52,6 +53,9 @@ router.get('/:pod/:year/:month', async (ctx) => {
   }
 })
 
+/* API for update employee dayType
+ * Once update one dayType of one person
+ */
 router.post('/:pod/:year/:month/:person/:day', bodyParser(), async (ctx) => {
   var p = ctx.params
   var b = ctx.request.body
@@ -73,7 +77,10 @@ router.post('/:pod/:year/:month/:person/:day', bodyParser(), async (ctx) => {
   }
 })
 
-function insertMonthNew (year, month, pod, daylock, people) {
+/* Function to generate a new month
+ *
+ */
+function newMonth (year, month, pod, daylock, people) {
   console.log('Inserting Full Month')
   return new Month({
     year: year,
@@ -84,36 +91,22 @@ function insertMonthNew (year, month, pod, daylock, people) {
   })
 }
 
-function insertMonth (year, month, people, section) {
-  console.log('Inserting Full Month')
-  return new Month({
-    year: year,
-    month: month,
-    people: people,
-    section: section
-  })
-}
-
-function existRecordName (month, name) {
-  console.log('eeeeeee')
-  let count = 0
-  let position = -1
-  const name2Match = name.split(' ')
+/* Function to search
+ * a record with a given alias
+ * in a given month
+ */
+function findRecord (month, alias) {
   month.people.forEach(person => {
-    const nameArr = person.name.split(' ')
-    if (name2Match.length >= 2) {
-      if (nameArr[nameArr.length - 1] === name2Match[name2Match.length - 1]) { // use alias to test duplication
-        position = count
-      }
+    if (person.alias.toString() === alias.toString()) {
+      return true
     }
-    count++
   })
-  if (position === -1) {
-    return true
-  }
   return false
 }
 
+/* Function to insert
+ * records to a given month
+ */
 function incrementMonth (month, people) {
   console.log('Incremental push')
   people.forEach(person => {
@@ -122,26 +115,29 @@ function incrementMonth (month, people) {
   return month
 }
 
-function decrementMonth (month, name) {
+/* Function to delete
+ * records from a given month
+ * with a given alias
+ */
+function decrementMonth (month, alias) {
   console.log('decrementMonth')
-  let count = 0
-  let position = -1
-  const name2Match = name.split(' ')
+  let position = 0
   month.people.forEach(person => {
-    const nameArr = person.name.split(' ')
-    if (nameArr[nameArr.length - 1] === name2Match[name2Match.length - 1] ||
-      nameArr[nameArr.length - 1] === ('(' + name2Match[name2Match.length - 1] + ')')) { // use alias to test duplication
-      position = count
+    // use alias to delete a record
+    if (person.alias === alias) {
+      month.people.splice(position, 1)
+      return month
     }
-    if (nameArr[0].toLowerCase() === name2Match[0].toLowerCase() && nameArr[1].toLowerCase() === name2Match[1].toLowerCase()) { // use alias to test duplication
-      position = count
-    }
-    count++
+    position = position + 1
   })
-  if (position !== -1) { month.people.splice(position, 1) } else { return -1 }
-  return month
+  return -1
 }
 
+/* API to insert
+ * records to a given month
+ * with given alias
+ * and a default dayType
+ */
 router.post('/:pod/:year/:month/person', upload.any('csv'), bodyParser(), async (ctx) => {
   const uploadDict = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december']
   var testLock = false
@@ -156,7 +152,7 @@ router.post('/:pod/:year/:month/person', upload.any('csv'), bodyParser(), async 
   console.log(people) // check the replacement application
   const currentMonth = await Month.findOne({ year: p.year, month: p.month, section: p.pod })
   if (testLock) {
-    if (existRecordName(currentMonth, b.name)) {
+    if (findRecord(currentMonth, b.name)) {
       console.log('there')
       var payload = incrementMonth(currentMonth, people)
       try {
@@ -323,7 +319,7 @@ router.post('/:pod/newupload/:year/:month', upload.any('csv'), async (ctx) => {
   const people = await json(src)
   // eslint-disable-next-line no-array-constructor
   const daylock = new Array()
-  var payload = insertMonthNew(p.year, p.month, p.pod, daylock, people)
+  var payload = newMonth(p.year, p.month, p.pod, daylock, people)
   try {
     await payload.save()
     ctx.body = 'all good'
