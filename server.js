@@ -57,7 +57,7 @@ router.post('/:pod/:year/:month/:person/:day', bodyParser(), async (ctx) => {
   var b = ctx.request.body
   console.log(b)
   try {
-    var currentMonth = await Month.findOne({ year: p.year, month: p.month, section: p.pod })
+    var currentMonth = await Month.findOne({ year: p.year, month: p.month, pod: p.pod })
     if (currentMonth == null) { throw (errorMsg) }
     var day = currentMonth.people.id(p.person).days.id(p.day)
     day.workType = b.workType
