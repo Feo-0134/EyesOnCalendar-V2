@@ -28,7 +28,7 @@ const errorMsg = 'Record not found'
 
 if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === undefined) {
   staticPath = '/dist/'
-  connString = process.env.DB_CONNECTSTRING_PRODUCTION
+  // connString = process.env.DB_CONNECTSTRING_PRODUCTION
 } else {
   // var connString = "mongodb://mayocalendarv2-dev:CiXxW30UqowaAs8CiAVyNiLgJ2UkRmpN6KXBGcJWamGmN2sNYkwcfhRhXQqGfi6jOFH6imOniww5Wn6tX2dIIA%3D%3D@mayocalendarv2-dev.documents.azure.com:10255/?ssl=true&replicaSet=globaldb"
   staticPath = './client/dist/'
@@ -36,7 +36,8 @@ if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === undefined)
 }
 
 mongoose.connect(connString)
-const db = mongoose.connection
+// const db = mongoose.connection
+const db = require('./mongodb')
 db.on('error', console.error.bind(console, 'connection error:'))
 db.once('open', function () {
   console.log('Connected to DB')
