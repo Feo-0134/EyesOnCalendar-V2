@@ -139,99 +139,98 @@ function decrementMonth (month, alias) {
  * and a default dayType
  */
 router.post('/:pod/:year/:month/person', upload.any('csv'), bodyParser(), async (ctx) => {
-  const uploadDict = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december']
-  var testLock = false
+  const uploadDict = ['january', 'february', 'march', 'april', 'may',
+    'june', 'july', 'august', 'september', 'october', 'november', 'december']
   var p = ctx.params
   var b = ctx.request.body
-  console.log(b) // get the request body
-  const src = fs.createReadStream('./uploads/' + uploadDict[p.month - 1] + '.txt')
-  console.log(src) // check the replacement application
+  const currentMonth = await Month.findOne({ year: p.year, month: p.month, pod: p.pod })
+  const src = await fs.createReadStream('./uploads/' + uploadDict[p.month - 1] + '.txt')
   const people = await json(src)
+  // replace person's default info
+  // by data from request body
+  people[0].alias = b.alias
   people[0].name = b.name
-  testLock = true
-  console.log(people) // check the replacement application
-  const currentMonth = await Month.findOne({ year: p.year, month: p.month, section: p.pod })
-  if (testLock) {
-    if (findRecord(currentMonth, b.name)) {
-      console.log('there')
-      var payload = incrementMonth(currentMonth, people)
-      try {
-        console.log('there')
-        await payload.save()
-        ctx.body = 'all good'
-      } catch (e) {
-        console.log(e)
-        ctx.status = 400
-        ctx.body = 'something went wrong'
-      }
-    } else {
-      console.log('here')
-      ctx.body = 'Record exist'
-    }
+  people[0].role = b.role
+  people[0].principle = b.principle
+  if (findRecord(currentMonth, b.alias)) { ctx.body = 'Record exist'; return }
+  var payload = incrementMonth(currentMonth, people)
+  try {
+    await payload.save()
+    ctx.body = 'success'
+  } catch (e) {
+    console.log('System Error: crash at insert record' + e)
+    ctx.status = 400
+    ctx.body = 'error'
   }
 })
 
-/** ************************************* Feature 10 Delete a member from the calendar **************************************/
+/* API to delete
+ * records from a given month
+ * with given alias
+ */
 router.post('/:pod/:year/:month/delete', bodyParser(), async (ctx) => {
-  var testLock = false
   var p = ctx.params
   var b = ctx.request.body
-  console.log(b) // get the request body DONE
-  testLock = true // check the replacement application
-  const currentMonth = await Month.findOne({ year: p.year, month: p.month, section: p.pod })
-  if (testLock) {
-    var payload = decrementMonth(currentMonth, b.name)
-    if (payload === -1) { ctx.body = 'Record not exist'; return }
-    try {
-      await payload.save()
-      ctx.body = 'all good'
-    } catch (e) {
-      ctx.status = 400
-      ctx.body = 'something went wrong'
-      console.log(e)
-    }
+  const currentMonth = await Month.findOne({ year: p.year, month: p.month, pod: p.pod })
+  const payload = decrementMonth(currentMonth, b.alias)
+  if (payload === -1) { ctx.body = 'Record not exist'; return }
+  try {
+    await payload.save()
+    ctx.body = 'success'
+  } catch (e) {
+    ctx.status = 400
+    ctx.body = 'error'
+    console.log('System Error: crash at delete record' + e)
   }
 })
 
-/** ************************************* Feature 9 Init a new Calendar **************************************/
-function calendarCleaner (filePth) {
+/* Function to restore
+ * calendar data, back to empty,
+ * for calendar initiate
+ */
+function cleanCalendar (filePth) {
   const data = fs.readFileSync(filePth)
-  const strAll = data.toString()
-  const arrAll = strAll.split('\r\n')
-  fs.writeFile(filePth, arrAll[0] + '\r\n' + arrAll[1], { flag: 'w', encoding: 'utf-8', mode: '0666' }, function (err) {
+  const strData = data.toString()
+  const arrData = strData.split('\r\n')
+  fs.writeFile(filePth, arrData[0] + '\r\n' + arrData[1], { flag: 'w', encoding: 'utf-8', mode: '0666' }, function (err) {
     if (err) {
-      return console.error(err)
+      return console.error('System Error: crash at clean calendar' + err)
     }
-    // console.log("File opened successfully!");
   })
 }
 
+/* API to initiate
+ * records for a given month,
+ * (1/2) build the default template
+ */
 router.post('/:pod/:year/:month/init', upload.any('csv'), async (ctx) => {
+  const monthArr = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+  // compare current month and target month
+  // if target month == current month + 1
+  // the initiate process goes on, else it stop
   var p = ctx.params
   var lastMon = (p.month - 1) % 12 ? (p.month - 1) % 12 : 12
   var lastYear = lastMon === 12 ? p.year - 1 : p.year
   var thisMon = new Date().getMonth() + 1
   var flag = false
-  if (thisMon === lastMon) {
-    flag = true
-  }
-  const lastMonth = await Month.findOne({ year: lastYear, month: lastMon, section: p.pod })
-  const monthArr = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-  const str2 = (p.year).toString() + '-' + (p.month).toString() + '-'
+  var str2 = (p.year).toString() + '-' + (p.month).toString() + '-'
   console.log('initiate ' + str2 + ' Calendar')
   console.log('last calendar:' + lastYear + '-' + lastMon)
-  const dayNum = new Date(p.year, p.month, 0).getDate()
+  if (thisMon === lastMon) { flag = true }
   // eslint-disable-next-line no-array-constructor
   const arrMonth = new Array()
-  let cnt = 0
+  const lastMonth = await Month.findOne({ year: lastYear, month: lastMon, pod: p.pod })
   const filePath = './uploads/months/' + monthArr[p.month - 1] + '.txt'
-  calendarCleaner(filePath)
+  const dayNum = new Date(p.year, p.month, 0).getDate()
+  var cnt = 0
+  cleanCalendar(filePath)
   if (flag) {
     setTimeout(function () {
       while (cnt < dayNum) {
         var tmp = str2 + (cnt + 1).toString()
         var dayPtr = new Date(tmp).getDay().toString()
-        if (dayPtr === '0' || dayPtr === '6') { // "0" stands Sundays & "6" stands Saturdays
+        if (dayPtr === '0' || dayPtr === '6') {
+          // "0" stands Sundays & "6" stands Saturdays
           arrMonth[cnt] = 'PH'
         } else {
           arrMonth[cnt] = 'W'
@@ -239,41 +238,50 @@ router.post('/:pod/:year/:month/init', upload.any('csv'), async (ctx) => {
         cnt++
       }
       var str3 = arrMonth.join(',')
-      str3 = '\r\n%DefaultName% (1107-MICROSOFT CHINA CO LTD),' + str3
+      str3 = '\r\n%DefaultName% (DefaultAlias-DefaultRole-DefaultPrinciple),' + str3
       lastMonth.people.forEach(person => {
-        fs.writeFile(filePath, str3, { flag: 'a', encoding: 'utf-8', mode: '0666' }, function (err) {
-          if (err) {
-            return console.error(err)
-          }
-        })
+        fs.writeFile(filePath, str3, { flag: 'a', encoding: 'utf-8', mode: '0666' },
+          function (err) {
+            if (err) { return console.error(err) }
+          })
       })
     }, 50)
   }
 })
 
+/* API to initiate
+ * records for a given month,
+ * (2/2) filling with the given data
+ */
 router.post('/:pod/:year/:month/reload', upload.any('csv'), async (ctx) => {
+  const monthArr = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+  // compare current month and target month
+  // if target month == current month + 1
+  // the initiate process goes on, else it stop
   var p = ctx.params
   var lastMon = (p.month - 1) % 12 ? (p.month - 1) % 12 : 12
   var lastYear = lastMon === 12 ? p.year - 1 : p.year
   var thisMon = new Date().getMonth() + 1
   var flag = false
-  if (thisMon === lastMon) {
-    flag = true
-  }
-  const monthArr = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+  if (thisMon === lastMon) { flag = true }
   const filePath = './uploads/months/' + monthArr[p.month - 1] + '.txt'
+  // if target month == current month + 1
+  // replace the default data (alias, name, role, principle)
+  // with data from last month
   if (flag) {
-    const src = fs.createReadStream(filePath)
+    const src = await fs.createReadStream(filePath)
     const people = await json(src)
-    const lastMonth = await Month.findOne({ year: lastYear, month: lastMon, section: p.pod })
-    let countNum = 0
+    const lastMonth = await Month.findOne({ year: lastYear, month: lastMon, pod: p.pod })
+    var countNum = 0
     people.forEach(person => {
       person.name = lastMonth.people[countNum].name
       countNum++
     })
-    const currentMonth = await Month.findOne({ year: p.year, month: p.month, section: p.pod })
+    const currentMonth = await Month.findOne({ year: p.year, month: p.month, pod: p.pod })
     if (currentMonth == null) {
-      var payload = insertMonth(p.year, p.month, people, p.pod)
+      // eslint-disable-next-line no-array-constructor
+      var daylock = new Array()
+      var payload = newMonth(p.year, p.month, p.pod, daylock, people)
     } else {
       console.log('Month Already There.')
     }
@@ -285,9 +293,34 @@ router.post('/:pod/:year/:month/reload', upload.any('csv'), async (ctx) => {
       ctx.body = e
       console.log(e)
     }
+    // restore calendar generator data
+    // help it back to empty
     setTimeout(function () {
-      calendarCleaner(filePath)
+      cleanCalendar(filePath)
     }, 2000)
+  }
+})
+
+/* Very First Calendar Generator
+ * for a new team to join the tool
+ * initiate their data about members
+ */
+router.post('/:pod/newupload/:year/:month', upload.any('csv'), async (ctx) => {
+  var p = ctx.params
+  const tmpPath = ctx.req.files[0].path
+  console.log(tmpPath)
+  const src = fs.createReadStream(tmpPath)
+  const people = await json(src)
+  // eslint-disable-next-line no-array-constructor
+  const daylock = new Array()
+  var payload = newMonth(p.year, p.month, p.pod, daylock, people)
+  try {
+    await payload.save()
+    ctx.body = 'success'
+  } catch (e) {
+    ctx.status = 400
+    ctx.body = 'error'
+    console.log(e)
   }
 })
 
@@ -309,28 +342,10 @@ server.listen(process.env.PORT || 3030, () => {
   console.log('Listening on ' + (process.env.PORT || 3030))
 })
 
-/* new upload */
-router.post('/:pod/newupload/:year/:month', upload.any('csv'), async (ctx) => {
-  var p = ctx.params
-  const tmpPath = ctx.req.files[0].path
-  console.log('NEW UPLOAD')
-  console.log(tmpPath)
-  const src = fs.createReadStream(tmpPath)
-  const people = await json(src)
-  // eslint-disable-next-line no-array-constructor
-  const daylock = new Array()
-  var payload = newMonth(p.year, p.month, p.pod, daylock, people)
-  try {
-    await payload.save()
-    ctx.body = 'all good'
-  } catch (e) {
-    ctx.status = 400
-    ctx.body = 'something went wrong'
-    console.log(e)
-  }
-})
-
-/** ************************************* update the new calendar by upload a csv **************************************/
+/* update the new calendar by upload a csv
+ * which is no longer used in the project
+ * only for back up
+ */
 router.post('/:pod/upload/:year/:month', upload.any('csv'), async (ctx) => {
   var p = ctx.params
   const tmpPath = ctx.req.files[0].path
@@ -339,13 +354,15 @@ router.post('/:pod/upload/:year/:month', upload.any('csv'), async (ctx) => {
   const people = await json(src)
   const currentMonth = await Month.findOne({ year: p.year, month: p.month, section: p.pod })
   var payload
-  if (currentMonth == null) { payload = insertMonth(p.year, p.month, people, p.pod) } else { payload = incrementMonth(currentMonth, people) }
+  // eslint-disable-next-line no-array-constructor
+  var daylock = new Array()
+  if (currentMonth == null) { payload = newMonth(p.year, p.month, p.pod, daylock, people) } else { payload = incrementMonth(currentMonth, people) }
   try {
     await payload.save()
-    ctx.body = 'all good'
+    ctx.body = 'success'
   } catch (e) {
     ctx.status = 400
-    ctx.body = 'something went wrong'
+    ctx.body = 'error'
     console.log(e)
   }
 })
