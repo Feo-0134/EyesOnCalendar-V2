@@ -57,7 +57,7 @@ export default {
       // console.log(this.$router.app._route.fullPath)
       if((this.$router.app._route.fullPath).match("AppService")) {
         this.$http
-        .post("/api/AppService/newupload/" + this.year + "/" + this.month, formData, { 
+        .post("/api/AppService/upload/" + this.year + "/" + this.month, formData, { 
           headers: {
             "Content-Type": "multipart/form-data"
           }

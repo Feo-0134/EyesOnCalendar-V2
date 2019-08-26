@@ -79,7 +79,7 @@ export default {
           return new Promise((resolve, reject) => {
             this.$http.post(this.apiPath, this.apiPayload)
             .then((response)=> {
-              if(response.data == "success")  {this.delFeedback('success', 'Person Deleted from Team')}
+              if(response.data == "all good")  {this.delFeedback('success', 'Person Deleted from Team')}
               else(this.delFeedback('notify', 'Person Not Exist'))
             })
             .catch((error)=> {

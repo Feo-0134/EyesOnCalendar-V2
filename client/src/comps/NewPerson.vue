@@ -99,7 +99,7 @@ export default {
             this.$http.post(this.apiPath, this.apiPayload)
             .then((response)=> {
               // console.log(response)
-              if(response.data == "success") {
+              if(response.data == "all good") {
               // console.log('err3');
               this. addFeedback('success', 'Person Added to Team')}
               else{
