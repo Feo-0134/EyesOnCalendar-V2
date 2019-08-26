@@ -97,7 +97,7 @@ function newMonth (year, month, pod, daylock, people) {
  */
 function findRecord (month, alias) {
   month.people.forEach(person => {
-    if (person.alias.toString() === alias.toString()) {
+    if (person.alias === alias) {
       return true
     }
   })
@@ -122,21 +122,61 @@ function incrementMonth (month, people) {
 function decrementMonth (month, alias) {
   console.log('decrementMonth')
   let position = 0
+  var flag = 0
   month.people.forEach(person => {
-    // use alias to delete a record
     if (person.alias === alias) {
+      flag = 1
       month.people.splice(position, 1)
-      return month
     }
     position = position + 1
   })
-  return -1
+  if (flag === 0) { return -1 } else { return month }
 }
+
+/* Very First Calendar Generator
+ * for a new team to join the tool
+ * initiate their data about members
+ */
+router.post('/:pod/newupload2/:year/:month', upload.any('csv'), bodyParser(), async (ctx) => {
+  const uploadDict = ['january', 'february', 'march', 'april', 'may',
+    'june', 'july', 'august', 'september', 'october', 'november', 'december']
+  var p = ctx.params
+  var b = ctx.request.body
+  const src = await fs.createReadStream('./uploads/' + uploadDict[p.month - 1] + '.txt')
+  const people = await json(src)
+  people[0].alias = b.people[0].alias
+  people[0].name = b.people[0].name
+  people[0].role = b.people[0].role
+  people[0].principle = b.people[0].principle
+  for (var cnt = 1; cnt < (b.people).length; cnt++) {
+    people[cnt] = Object.assign({}, people[0])
+    people[cnt].alias = b.people[cnt].alias
+    people[cnt].name = b.people[cnt].name
+    people[cnt].role = b.people[cnt].role
+    people[cnt].principle = b.people[cnt].principle
+  }
+  // eslint-disable-next-line no-array-constructor
+  var daylock = new Array()
+  var payload = newMonth(p.year, p.month, p.pod, daylock, people)
+  try {
+    await payload.save()
+    ctx.body = 'success'
+  } catch (e) {
+    console.log('System Error: crash at insert record' + e)
+    ctx.status = 400
+    ctx.body = 'error'
+  }
+})
 
 /* API to insert
  * records to a given month
  * with given alias
  * and a default dayType
+ * demo raw request.body (for postman):
+ * {"principle":"None",
+ * "role":"Vendor",
+ * "alias":"lilpump",
+ * "name":"Lil Pump"}
  */
 router.post('/:pod/:year/:month/person', upload.any('csv'), bodyParser(), async (ctx) => {
   const uploadDict = ['january', 'february', 'march', 'april', 'may',
@@ -172,7 +212,7 @@ router.post('/:pod/:year/:month/delete', bodyParser(), async (ctx) => {
   var p = ctx.params
   var b = ctx.request.body
   const currentMonth = await Month.findOne({ year: p.year, month: p.month, pod: p.pod })
-  const payload = decrementMonth(currentMonth, b.alias)
+  const payload = await decrementMonth(currentMonth, b.alias)
   if (payload === -1) { ctx.body = 'Record not exist'; return }
   try {
     await payload.save()
@@ -254,7 +294,8 @@ router.post('/:pod/:year/:month/init', upload.any('csv'), async (ctx) => {
  * (2/2) filling with the given data
  */
 router.post('/:pod/:year/:month/reload', upload.any('csv'), async (ctx) => {
-  const monthArr = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+  const monthArr = ['January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December']
   // compare current month and target month
   // if target month == current month + 1
   // the initiate process goes on, else it stop
@@ -274,17 +315,15 @@ router.post('/:pod/:year/:month/reload', upload.any('csv'), async (ctx) => {
     const lastMonth = await Month.findOne({ year: lastYear, month: lastMon, pod: p.pod })
     var countNum = 0
     people.forEach(person => {
+      person.alias = lastMonth.people[countNum].alias
       person.name = lastMonth.people[countNum].name
+      person.role = lastMonth.people[countNum].role
+      person.principle = lastMonth.people[countNum].principle
       countNum++
     })
-    const currentMonth = await Month.findOne({ year: p.year, month: p.month, pod: p.pod })
-    if (currentMonth == null) {
-      // eslint-disable-next-line no-array-constructor
-      var daylock = new Array()
-      var payload = newMonth(p.year, p.month, p.pod, daylock, people)
-    } else {
-      console.log('Month Already There.')
-    }
+    // eslint-disable-next-line no-array-constructor
+    var daylock = new Array()
+    var payload = newMonth(p.year, p.month, p.pod, daylock, people)
     try {
       await payload.save()
       ctx.body = 'Record Saved'
@@ -304,6 +343,7 @@ router.post('/:pod/:year/:month/reload', upload.any('csv'), async (ctx) => {
 /* Very First Calendar Generator
  * for a new team to join the tool
  * initiate their data about members
+ * test-version
  */
 router.post('/:pod/newupload/:year/:month', upload.any('csv'), async (ctx) => {
   var p = ctx.params

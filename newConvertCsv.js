@@ -32,10 +32,10 @@ var parseCalendar = function (calendar) {
     })
     .map(row => {
       var z = {}
-      z.alias = row[0].split('(')[1].split('-')[0]
-      z.name = row[0].split('(')[0].trim()
-      z.role = row[0].split('(')[1].split('-')[1]
-      z.principle = row[0].split('(')[1].split('-')[2].split(')')[0]
+      z.alias = ((row[0].split('('))[1].split('-'))[0]
+      z.name = (row[0].split('('))[0].trim()
+      z.role = ((row[0].split('('))[1].split('-'))[1]
+      z.principle = (((row[0].split('('))[1].split('-'))[2].split(')'))[0]
       row.shift()
       z.days = row.map((y, index) => {
         var q = 0
