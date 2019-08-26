@@ -9,6 +9,7 @@ import NewPerson from '@/comps/NewPerson'
 import DelPerson from '@/comps/DelPerson'
 import NotFound from '@/comps/NotFound'
 import AccessCell from '@/components/AccessCell'
+import Portal from '@/comps/Portal'
 
 Vue.use(Router)
 
@@ -17,62 +18,42 @@ export default new Router({
 //  base: '/dist/',
   routes: [
     {
-      path: '/test',
-      name: 'AccessCell',
-      component: AccessCell
-    },
-    {
       path: '/',
       name: 'LoadCurrentMonth',
       component: LoadCurrentMonth
     },
     {
-      path: '/AppService/:year/:month',
+      path: '/portal',
+      name: 'Portal',
+      component: Portal
+    },
+    {
+      path: '/test',
+      name: 'AccessCell',
+      component: AccessCell
+    },
+    {
+      path: '/:pod/:year/:month',
       name: 'MainView',
       component: MainView
     },
     {
-      path: '/AppService/:year/:month/report',
+      path: '/:pod/:year/:month/report',
       name: 'Repo',
       component: Repo
     },
     {
-      path: '/AppService/:year/:month/person',
+      path: '/:pod/:year/:month/person',
       name: 'NewPerson',
       component: NewPerson
     },
     {
-      path: '/AppService/:year/:month/delete',
+      path: '/:pod/:year/:month/delete',
       name: 'DelPerson',
       component: DelPerson
     },
     {
-      path: '/AppService/upload',
-      name: 'Upload',
-      component: Upload
-    },
-    {
-      path: '/DEV/:year/:month',
-      name: 'MainView',
-      component: MainView
-    },
-    {
-      path: '/DEV/:year/:month/report',
-      name: 'Repo',
-      component: Repo
-    },
-    {
-      path: '/DEV/:year/:month/person',
-      name: 'NewPerson',
-      component: NewPerson
-    },
-    {
-      path: '/DEV/:year/:month/delete',
-      name: 'DelPerson',
-      component: DelPerson
-    },
-    {
-      path: '/DEV/upload',
+      path: '/:pod/upload',
       name: 'Upload',
       component: Upload
     },
