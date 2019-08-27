@@ -3,7 +3,7 @@
     <main>
       <router-view></router-view>
     </main>
-    <footer>
+    <footer class="footer">
       <p>hope you enjoy using this app</p>
     </footer>
   </div>
@@ -65,5 +65,11 @@ header span {
   font-weight: 400;
   box-sizing: border-box;
   padding-top: 16px;
+}
+.footer {
+  margin-top: 100px; 
+  position: relative;
+  bottom:0;
+  font-size: 15px;
 }
 </style>
