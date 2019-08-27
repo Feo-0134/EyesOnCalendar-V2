@@ -8,44 +8,44 @@
                     <template slot="title"><i class="el-icon-menu"></i>Navigator</template>
                     <el-menu-item-group>
                     <template slot="title">Group 1</template>
-                    <el-menu-item index="2-1" v-on:click="showTeamForm">Team Management</el-menu-item>
-                    <el-menu-item index="2-2" v-on:click="showShiftForm">Shift Management</el-menu-item>
+                    <el-menu-item index="2-1" v-on:click="showTeamView">Team Management</el-menu-item>
+                    <el-menu-item index="2-2" v-on:click="showShiftView">Shift Management</el-menu-item>
                     </el-menu-item-group>
                     <el-menu-item-group title="Group 2">
-                    <el-menu-item index="2-3" v-on:click="showInitForm">Initiate Calendar</el-menu-item>
+                    <el-menu-item index="2-3" v-on:click="showInitView">Initiate Calendar</el-menu-item>
                     </el-menu-item-group>
                 </el-submenu>
             </el-menu>
         </el-aside>
         <el-main>
-            <el-form v-if="initForm" ref="form" :model="form" label-width="140px">
+            <el-form v-if="initView" :model="initForm" label-width="140px">
                 <el-form-item label="Team Name">
-                    <el-input v-model="form.TeamName"></el-input>
+                    <el-input v-model="initForm.TeamName"></el-input>
                 </el-form-item>
                 <el-form-item label="Month">
-                    <el-input v-model="form.Month" ></el-input>
+                    <el-input v-model="initForm.Month" placeholder="example: 2019/8"></el-input>
                 </el-form-item>
                 <el-form-item label="Team Manager">
-                    <el-input v-model="form.TeamManage" ></el-input>
+                    <el-input v-model="initForm.TeamManager" ></el-input>
                 </el-form-item>
                 <el-form-item label="Technic Advisor">
-                    <el-input v-model="form.TeamAdvisor" placeholder="example: danzha;anikshen;"></el-input> 
+                    <el-input v-model="initForm.TeamAdvisor" placeholder="example: danzha;anikshen;"></el-input> 
                 </el-form-item>
                 <el-form-item label="FTE">
-                    <el-input v-model="form.FTE"></el-input>
+                    <el-input v-model="initForm.FTE"></el-input>
                 </el-form-item>
                 <el-form-item label="Vendor">
-                    <el-input v-model="form.Vendor"></el-input>
+                    <el-input v-model="initForm.Vendor"></el-input>
                 </el-form-item>
                 <!-- <el-form-item label="Others">
                     <el-input v-model="form.name"></el-input>
                 </el-form-item> -->
                 <span>
                     <el-button @click=";">Cancel</el-button>
-                    <el-button type="primary" @click=";">Confirm</el-button>
+                    <el-button type="primary" @click="initiateCalendar">Confirm</el-button>
                 </span>
             </el-form>
-            <el-form v-if="shiftForm" ref="form" :model="form" label-width="140px">
+            <el-form v-if="shiftView" ref="form" :model="form" label-width="140px">
                 <el-form-item label="Team Name">
                     <el-input v-model="form.TeamName" :disabled="true"></el-input>
                 </el-form-item>
@@ -74,7 +74,7 @@
                     <el-button type="primary" @click=";">Confirm</el-button>
                 </span>
             </el-form>
-            <el-form v-if="teamForm" ref="form" :model="form" label-width="140px">
+            <el-form v-if="teamView" ref="form" :model="form" label-width="140px">
                 <el-form-item label="Team Name">
                     <el-input v-model="form.TeamName" :disabled="true"></el-input>
                 </el-form-item>
@@ -119,12 +119,20 @@
 </template>
 
 <script>
-module.exports = {
+export default {
     data: function () {
         return {
-            teamForm: false,
-            shiftForm: false,
-            initForm: true,
+            teamView: false,
+            shiftView: false,
+            initView: true,
+            initForm: {
+                TeamName: '',
+                Month: '',
+                TeamManage: '',
+                TeamAdvisor: '',
+                FTE: '',
+                Vendor: '',
+            },
             form: {
                 TeamName: '',
                 Month: '',
@@ -133,24 +141,100 @@ module.exports = {
                 FTE: '',
                 Vendor: '',
             },
+            people: 
+                    [{
+                        principle:"None",
+                        role:"default",
+                        alias:"default",
+                        name:"default"
+                    }],
         }
     },
     methods: {
-        showTeamForm: function () {
-            this.teamForm = true
-            this.shiftForm = false
-            this.initForm = false
+        showTeamView: function () {
+            this.teamView = true
+            this.shiftView = false
+            this.initView = false
         },
-        showShiftForm: function () {
-            this.teamForm = false
-            this.shiftForm = true
-            this.initForm = false
+        showShiftView: function () {
+            this.teamView = false
+            this.shiftView = true
+            this.initView = false
         },
-        showInitForm: function () {
-            this.teamForm = false
-            this.shiftForm = false
-            this.initForm = true
+        showInitView: function () {
+            this.teamView = false
+            this.shiftView = false
+            this.initView = true
         },
+        initiateCalendar: function () {
+            // if the last letter is not ';' then insert ';'
+            if((this.initForm.Vendor)[(this.initForm.Vendor).length - 1] != ';') {
+                this.initForm.Vendor = this.initForm.Vendor + ";"
+            }
+            if((this.initForm.FTE)[(this.initForm.FTE).length - 1] != ';') {
+                this.initForm.FTE = this.initForm.FTE + ";"
+            }
+            var peopleArr = (this.initForm.Vendor + this.initForm.FTE).split(";");
+            for(var cnt = 1; cnt<peopleArr.length-1; cnt++) {
+                this.people[cnt] = Object.assign({}, this.people[0])
+            }
+            var vendorArr = (this.initForm.Vendor).split(";");
+            for(var cnt = 0; cnt<vendorArr.length-1; cnt++) {
+                this.people[cnt].alias = peopleArr[cnt].split("-")[1]
+                this.people[cnt].name = peopleArr[cnt].split("-")[0]
+                this.people[cnt].role = "Vendor"
+            }
+            var fteArr = (this.initForm.FTE).split(";");
+            for(var cnt = vendorArr.length-1; cnt<peopleArr.length-1; cnt++) {
+                this.people[cnt].alias = peopleArr[cnt].split("-")[1]
+                this.people[cnt].name = peopleArr[cnt].split("-")[0]
+                this.people[cnt].role = "FTE"
+            }
+            console.log("2")
+            var teamManager = (this.initForm.TeamManager).split(";");
+            var teamAdvisor = (this.initForm.TeamAdvisor).split(";");
+            this.people.forEach(person => {
+                teamManager.forEach(tm => {
+                    if(person.alias == tm){person.principle = "TM";}
+                })
+                teamAdvisor.forEach(ta => {
+                    if(person.alias == ta){person.principle = "TA";}
+                })
+            });
+            console.log(this.initForm.Vendor + this.initForm.FTE)
+            console.log(peopleArr)
+            console.log(vendorArr)
+            console.log(fteArr)
+            console.log(teamManager)
+            console.log(teamAdvisor)
+            console.log("3")
+            console.log(this.people)
+            new Promise((resolve, reject)=>{
+                this.$http.post(this.apiPath, this.apiPayload)
+                .then((response)=> {
+                    console.log(response)
+                })
+                .catch((error)=>{
+                    console.log(error)
+                })
+            })
+        }
+    },
+    computed:{
+        apiPath() {
+            return (
+                "/api/" + // AppService/newupload2/2019/8
+                this.initForm.TeamName +
+                '/newupload2/' +
+                this.initForm.Month
+            );
+        },
+        apiPayload() {
+            return {
+                    people: this.people,
+            };
+        },
+        
     }
 }
 </script>
@@ -249,6 +333,7 @@ module.exports = {
       float: left;
   }
   .el-input__inner{
+      color: #fff;
       background-color: #373737;
       width: 70%;
       float: left;
