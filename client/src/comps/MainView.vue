@@ -2,20 +2,16 @@
   <div>
       <div class = "head">
         <div class="testClass">
-          <el-dropdown @command="handleCommand">
-            <span class="el-dropdown-link">
-              <i class="el-icon-arrow-down el-icon--right"></i>
-              SELECT POD
-            </span>
-            <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item command="/AppService">&gt; AppService</el-dropdown-item>
-              <el-dropdown-item command="/DEV">&gt; DEV</el-dropdown-item>
-            </el-dropdown-menu>
-          </el-dropdown>
-
           <a :href="goAddPerson" v-if="admin" class="sectionPointer">&gt; AddPerson</a>
           <a :href="goDeletePerson" v-if="admin" class="sectionPointer">&gt; DeletePerson</a>
           <a :href="goReport" v-if="admin" class="sectionPointer">&gt; Report</a>
+          <el-dropdown @command="handleCommand">
+            <span class="el-dropdown-link">
+                <el-input placeholder="POD NAME HERE" v-model="teamName">
+                  <el-button slot="append" icon="el-icon-search" v-on:click="goPod"></el-button>
+                </el-input>
+            </span>
+          </el-dropdown>
         </div>
       </div>
       <div class="testClassII welcome">
@@ -38,23 +34,20 @@
         Reload Table
       </button>
       <div  v-if="month">
-          <el-tabs id="tabsJuncheng" v-model="activeName" @tab-click="handleClick">
+          <el-tabs id="rolesTabview" v-model="activeName" @tab-click="handleClick">
             <el-tab-pane class="mainPanel" label="All Members" name="first">
                <div id="tablehead" :class="{sticky: scrolled}" class="row tablehead">
                <div class="name"></div>
                <div v-for="(p,index) in month.people[0].days"
                :key="index" class="cellx">{{index+1}}</div>
                </div>
-              <!-- /**************************************
-              Feature 3 on-duty rate
-              **************************************/ -->
               <div id="tablehead" class="row tablehead">
                 <div class="name attendance">On Duty</div>
                 <div v-for="(p,index) in month.people[0].days"
                 :key="index" class="cellx">{{percentage(index)}}%</div>
               </div>
               <person  v-for="(p,index) in month.people" :key="p._id"
-              :pindex="index" :person="p" :userName="emailUnderName"
+              :pindex="index" :person="p"  v-show="p.principle != 'TM' " :userName="emailUnderName"
               :openflag = "openflag" @opensync = "handleOpenPanel"/>
             </el-tab-pane>
             <el-tab-pane class="mainPanel" label="FTE Members" name="second">
@@ -71,7 +64,7 @@
                 <div v-for="(p,index) in month.people[0].days"
                 :key="index" class="cellx">{{percentageFTE(index)}}%</div>
               </div>
-              <person  v-for="(p,index) in month.people" v-show="p.name.match('FTE')=='FTE'"
+              <person  v-for="(p,index) in month.people" v-show="p.role == 'FTE' && p.principle != 'TM' "
               :key="p._id" :pindex="index" :person="p" :userName="emailUnderName"
               :openflag = "openflag" @opensync = "handleOpenPanel"/>
             </el-tab-pane>
@@ -89,7 +82,7 @@
                 <div v-for="(p,index) in month.people[0].days"
                 :key="index" class="cellx">{{percentageVendor(index)}}%</div>
               </div>
-              <person  v-for="(p,index) in month.people" v-show="p.name.match('v-')=='v-'"
+              <person  v-for="(p,index) in month.people" v-show="p.role =='Vendor'"
               :key="p._id" :pindex="index" :person="p" :userName="emailUnderName"
               :openflag = "openflag" @opensync = "handleOpenPanel"/>
             </el-tab-pane>
@@ -113,6 +106,7 @@ export default {
   components: { Person, HelpScreen, Loading },
   data() {
     return {
+      teamName: "",
       message: 'Loading month...',
       scrolled: false,
       changed: false,
@@ -302,11 +296,13 @@ export default {
     this.personinfo();
   },
   methods: {
-    handleCommand(command) {
-      const path = (command + moment(this.date, '/YYYY/M').format('/YYYY/M'));
+    goPod() {
+      var customPath = "/" + this.teamName;
+      const path = (customPath + moment(this.date, '/YYYY/M').format('/YYYY/M'));
       this.$router.push({ path });
       location.reload();
-      // this.$message('click on item ' + command);
+    },
+    handleCommand(command) {
     },
     addMonth() {
       const path = moment(this.date, '/YYYY/M')
@@ -518,10 +514,10 @@ export default {
 .el-icon-arrow-down {
   font-size: 12px;
 }
-#tabsJuncheng .el-tabs__item{
+#rolesTabview .el-tabs__item{
   color:#808080;
 }
-#tabsJuncheng .el-tabs__nav-scroll {
+#rolesTabview .el-tabs__nav-scroll {
   margin-left:50px;
 }
 
