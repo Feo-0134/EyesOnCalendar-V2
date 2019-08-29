@@ -8,13 +8,16 @@ Feature 7 Add a new member to the calendar
     <el-main>
       <img src="../../static/img/joinus.png" alt="joinPic" />
       <div class="inputBox">
-       Name:
-      <el-input v-model="inputName" placeholder="eg. Danielle Zhao"></el-input>
-       FTE/Vendor:
-      <el-input v-model="inputRole" placeholder="eg. FTE / Vendor"></el-input>
        Alias:
       <el-input v-model="inputAlias" placeholder="eg. danzha"></el-input>
-      
+       Name:
+      <el-input v-model="inputName" placeholder="eg. Danielle Zhao"></el-input>
+      </div>
+      <div class="inputBox">
+       Role:
+      <el-input v-model="inputRole" placeholder="eg. FTE / Vendor"></el-input>
+       Principle:
+      <el-input v-model="inputPrinciple" placeholder="eg. TM / TA / None"></el-input>
       </div>
       <el-button type="primary" v-on:click="upload">Confirm</el-button>
       <el-button type="primary" v-on:click="linkToCalendar">Back to Calendar</el-button>
@@ -29,17 +32,24 @@ export default {
         inputName: "",
         inputRole: "",
         inputAlias:"",
+        inputPrinciple:"",
         message:"",
         showModal: false,
         emailUnderName: null,
         admin:false,
         back2homepage:false,
+        person: {
+          alias:"",
+          name:"",
+          role:"",
+          principle:""
+        },
       }
     },
     methods:{
       //only TA and Manager have access to add a person
       upload() {
-        if(this.inputName == "" || this.inputRole == "" || this.inputAlias == "") {
+        if(this.inputName == "" || this.inputRole == "" || this.inputAlias == ""|| this.inputPrinciple == "") {
           this.addFeedback('notify', 'Please fill the blanks.')
           // console.log('err0')
           return;

@@ -18,6 +18,39 @@
             </el-menu>
         </el-aside>
         <el-main>
+<el-dialog title="Add Person" :visible.sync="addFormVisible">
+  <el-form :model="form">
+    <el-form-item label="Alias" :label-width="formLabelWidth">
+      <el-input v-model="form.name" autocomplete="off"></el-input>
+    </el-form-item>
+    <el-form-item label="Name" :label-width="formLabelWidth">
+      <el-input v-model="form.name" autocomplete="off"></el-input>
+    </el-form-item>
+    <el-form-item label="Role" :label-width="formLabelWidth">
+      <el-input v-model="form.name" autocomplete="off"></el-input>
+    </el-form-item>
+    <el-form-item label="Principle" :label-width="formLabelWidth">
+      <el-input v-model="form.name" autocomplete="off"></el-input>
+    </el-form-item>
+  </el-form>
+  <div slot="footer" class="dialog-footer">
+    <el-button @click="addFormVisible = false">Cancel</el-button>
+    <el-button type="primary" @click="addFormVisible = false">Confirm</el-button>
+  </div>
+</el-dialog>
+
+<el-dialog title="Delete Person" :visible.sync="delFormVisible">
+  <el-form :model="form">
+    <el-form-item label="Alias" :label-width="formLabelWidth">
+      <el-input v-model="form.name" autocomplete="off"></el-input>
+    </el-form-item>
+  </el-form>
+  <div slot="footer" class="dialog-footer">
+    <el-button @click="delFormVisible = false">Cancel</el-button>
+    <el-button type="primary" @click="delFormVisible = false">Confirm</el-button>
+  </div>
+</el-dialog>
+
             <el-form v-if="initView"  :model="initForm" label-width="140px">
                 <el-form-item label="Team Name">
                     <el-input v-model="initForm.TeamName" placeholder="example: AppService"></el-input>
@@ -78,21 +111,11 @@
                 <el-form-item label="Month">
                     <el-input v-model="teamForm.Month" ></el-input>
                 </el-form-item>
-                <span>
-                    <el-button type="primary" class="searchButton" @click=";">Search</el-button>
-                </span>
-                <el-form-item label="FTE">
-                    <el-input v-model="teamForm.FTE" :disabled="true"></el-input>
+                <el-form-item label="Member">
+                    <el-input v-model="teamForm. MemberName" :disabled="true"></el-input>
                     <div class="functionalButton">
-                    <el-button type="primary" icon="el-icon-plus" circle></el-button>
-                    <el-button type="primary" icon="el-icon-minus" circle></el-button>
-                    </div>
-                </el-form-item>
-                <el-form-item label="Vendor">
-                    <el-input v-model="teamForm.Vendor" :disabled="true"></el-input>
-                    <div class="functionalButton">
-                    <el-button type="primary" icon="el-icon-plus" circle></el-button>
-                    <el-button type="primary" icon="el-icon-minus" circle></el-button>
+                    <el-button type="primary" icon="el-icon-plus" circle v-on:click="addFormVisible = true"></el-button>
+                    <el-button type="primary" icon="el-icon-minus" circle v-on:click="delFormVisible = true"></el-button>
                     </div>
                 </el-form-item>
                 <!-- <el-form-item label="Others">
@@ -108,6 +131,19 @@
 export default {
     data: function () {
         return {
+            addFormVisible:false,
+            delFormVisible:false,
+            form: {
+                    name: '',
+                    region: '',
+                    date1: '',
+                    date2: '',
+                    delivery: false,
+                    type: [],
+                    resource: '',
+                    desc: ''
+            },
+            formLabelWidth: '100px',
             teamView: true,
             shiftView: false,
             initView: false,
@@ -120,12 +156,9 @@ export default {
                 Vendor: '',
             },
             teamForm: {
-                TeamName: '',
-                Month: '',
-                TeamManager: '',
-                TeamAdvisor: '',
-                FTE: '',
-                Vendor: '',
+                TeamName: 'AppService',
+                Month: '2019/8',
+                MemberName: '',
             },
             shiftForm: {
                 TeamName: '',
@@ -148,18 +181,21 @@ export default {
         month: {
         async get() {
             try {
-            const res = await this.$http.get(`/api${this.teamForm.Month}`);
+            const res = await this.$http.get(`/api/${this.teamForm.TeamName}/${this.teamForm.Month}`);
             this.socket = io({
                 query: {
-                path: this.date,
+                path: this.teamForm.Month,
                 },
             });
             this.socket.on('update', (data) => {
                 if (data.randomNumber === this.$randomNumber) return;
-                this.month.people[data.indexes.p].days[data.indexes.d].workDay = data.workDay;
-                this.month.people[data.indexes.p].days[data.indexes.d].workType = data.workType;
+                this.month.people = data.people;
             });
             res.data.people = res.data.people.sort((x, y) => x.name.localeCompare(y.name));
+            this.teamForm.MemberName = ""
+            res.data.people.forEach(person=> {
+                this.teamForm.MemberName += person.name + ';'
+            })
             return res.data;
             } catch (e) {
             console.log(e);
@@ -174,6 +210,10 @@ export default {
         },
     },
     methods: {
+        addPerson: function() {
+        },
+        delPerson: function() {
+        },
         cleanInitForm: function () {
             this.initForm.TeamName = ""
             this.initForm.Month = ""
