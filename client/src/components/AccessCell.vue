@@ -70,18 +70,18 @@ export default {
         },
         // 获得传回数据后向前端页面数据
         graphAPICallback(data) {
-            // console.log('graphAPICallback');
-            // let result = JSON.stringify(data, null, 4);
-            // let jsonresult = JSON.parse(result);
+            console.log('graphAPICallback');
+            let result = JSON.stringify(data, null, 4);
+            let jsonresult = JSON.parse(result);
 
-            // if( jsonresult.jobTitle === 'TECHNICAL ADVISOR ASIA' || jsonresult.userPrincipalName === 'v-jelu@microsoft.com' || jsonresult.userPrincipalName === 't-junzhu@microsoft.com') {
-            //     this.accessmsg = result;
-            //     // document.getElementById("json").innerHTML = result;
-            // } else {
-            //     this.accessmsg = 'sorry, this portal is for managers only';
-            //     // document.getElementById("json").innerHTML = 'sorry, this portal is for managers only';
-            // }
-            // document.getElementById("showteam").click();
+            if( jsonresult.jobTitle === 'TECHNICAL ADVISOR ASIA' || jsonresult.userPrincipalName === 'v-jelu@microsoft.com' || jsonresult.userPrincipalName === 't-junzhu@microsoft.com') {
+                this.accessmsg = result;
+                // document.getElementById("json").innerHTML = result;
+            } else {
+                this.accessmsg = 'sorry, this portal is for managers only';
+                // document.getElementById("json").innerHTML = 'sorry, this portal is for managers only';
+            }
+            document.getElementById("showteam").click();
 
         },
         // 此函数是完成一个 http request

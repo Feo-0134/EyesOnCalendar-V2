@@ -18,92 +18,78 @@
             </el-menu>
         </el-aside>
         <el-main>
-            <el-form v-if="initView" :model="initForm" label-width="140px">
+            <el-form v-if="initView"  :model="initForm" label-width="140px">
                 <el-form-item label="Team Name">
-                    <el-input v-model="initForm.TeamName"></el-input>
+                    <el-input v-model="initForm.TeamName" placeholder="example: AppService"></el-input>
                 </el-form-item>
                 <el-form-item label="Month">
                     <el-input v-model="initForm.Month" placeholder="example: 2019/8"></el-input>
                 </el-form-item>
                 <el-form-item label="Team Manager">
-                    <el-input v-model="initForm.TeamManager" ></el-input>
+                    <el-input v-model="initForm.TeamManager" placeholder="example: karenzhe"></el-input>
                 </el-form-item>
                 <el-form-item label="Technic Advisor">
                     <el-input v-model="initForm.TeamAdvisor" placeholder="example: danzha;anikshen;"></el-input> 
                 </el-form-item>
                 <el-form-item label="FTE">
-                    <el-input v-model="initForm.FTE"></el-input>
+                    <el-input v-model="initForm.FTE" placeholder="example: ftealias00;ftealias01;"></el-input>
                 </el-form-item>
                 <el-form-item label="Vendor">
-                    <el-input v-model="initForm.Vendor"></el-input>
+                    <el-input v-model="initForm.Vendor" placeholder="example: vendoralias;"></el-input>
                 </el-form-item>
                 <!-- <el-form-item label="Others">
                     <el-input v-model="form.name"></el-input>
                 </el-form-item> -->
                 <span>
-                    <el-button @click=";">Cancel</el-button>
+                    <el-button @click="cleanInitForm">Cancel</el-button>
                     <el-button type="primary" @click="initiateCalendar">Confirm</el-button>
                 </span>
             </el-form>
-            <el-form v-if="shiftView" ref="form" :model="form" label-width="140px">
+            <el-form v-if="shiftView" :model="shiftForm" label-width="140px">
                 <el-form-item label="Team Name">
-                    <el-input v-model="form.TeamName" :disabled="true"></el-input>
+                    <el-input v-model="shiftForm.TeamName" :disabled="true"></el-input>
                 </el-form-item>
                 <el-form-item label="Month">
-                    <el-input v-model="form.Month" ></el-input>
+                    <el-input v-model="shiftForm.Month" ></el-input>
                 </el-form-item>
                 <el-form-item label="Morning Shift">
-                    <el-input v-model="form.TeamManage" ></el-input>
+                    <el-input v-model="shiftForm.TeamManager" ></el-input>
                     <div class="functionalButton">
                     <el-button type="primary" icon="el-icon-plus" circle></el-button>
                     <el-button type="primary" icon="el-icon-minus" circle></el-button>
                     </div>
                 </el-form-item>
                 <el-form-item label="Night Shift">
-                    <el-input v-model="form.TeamManage" ></el-input>
+                    <el-input v-model="shiftForm.TeamManager" ></el-input>
                     <div class="functionalButton">
                     <el-button type="primary" icon="el-icon-plus" circle></el-button>
                     <el-button type="primary" icon="el-icon-minus" circle></el-button>
                     </div>
                 </el-form-item>
-                <!-- <el-form-item label="Others">
-                    <el-input v-model="form.name"></el-input>
-                </el-form-item> -->
                 <span>
                     <el-button @click=";">Cancel</el-button>
                     <el-button type="primary" @click=";">Confirm</el-button>
                 </span>
             </el-form>
-            <el-form v-if="teamView" ref="form" :model="form" label-width="140px">
+            <el-form v-if="teamView"  :model="teamForm" label-width="140px">
                 <el-form-item label="Team Name">
-                    <el-input v-model="form.TeamName" :disabled="true"></el-input>
+                    <el-input v-model="teamForm.TeamName" ></el-input>
                 </el-form-item>
                 <el-form-item label="Month">
-                    <el-input v-model="form.Month" ></el-input>
+                    <el-input v-model="teamForm.Month" ></el-input>
                 </el-form-item>
-                <el-form-item label="Team Manager">
-                    <el-input v-model="form.TeamManage" ></el-input>
-                    <div class="functionalButton">
-                    <el-button type="primary" icon="el-icon-plus" circle></el-button>
-                    <el-button type="primary" icon="el-icon-minus" circle></el-button>
-                    </div>
-                </el-form-item>
-                <el-form-item label="Technic Advisor">
-                    <el-input v-model="form.TeamAdvisor" placeholder="example: danzha;anikshen;"></el-input>
-                    <div class="functionalButton">
-                    <el-button type="primary" icon="el-icon-plus" circle></el-button>
-                    <el-button type="primary" icon="el-icon-minus" circle></el-button>
-                    </div>
-                </el-form-item>
+                <span>
+                    <el-button type="primary" class="searchButton" @click=";">Search</el-button>
+                </span>
                 <el-form-item label="FTE">
-                    <el-input v-model="form.FTE"></el-input>
+                    <el-input v-model="teamForm.FTE" :disabled="true"></el-input>
                     <div class="functionalButton">
                     <el-button type="primary" icon="el-icon-plus" circle></el-button>
                     <el-button type="primary" icon="el-icon-minus" circle></el-button>
                     </div>
                 </el-form-item>
                 <el-form-item label="Vendor">
-                    <el-input v-model="form.Vendor"></el-input>
+                    <el-input v-model="teamForm.Vendor" :disabled="true"></el-input>
                     <div class="functionalButton">
                     <el-button type="primary" icon="el-icon-plus" circle></el-button>
                     <el-button type="primary" icon="el-icon-minus" circle></el-button>
@@ -122,21 +108,29 @@
 export default {
     data: function () {
         return {
-            teamView: false,
+            teamView: true,
             shiftView: false,
-            initView: true,
+            initView: false,
             initForm: {
                 TeamName: '',
                 Month: '',
-                TeamManage: '',
+                TeamManager: '',
                 TeamAdvisor: '',
                 FTE: '',
                 Vendor: '',
             },
-            form: {
+            teamForm: {
                 TeamName: '',
                 Month: '',
-                TeamManage: '',
+                TeamManager: '',
+                TeamAdvisor: '',
+                FTE: '',
+                Vendor: '',
+            },
+            shiftForm: {
+                TeamName: '',
+                Month: '',
+                TeamManager: '',
                 TeamAdvisor: '',
                 FTE: '',
                 Vendor: '',
@@ -151,6 +145,14 @@ export default {
         }
     },
     methods: {
+        cleanInitForm: function () {
+            this.initForm.TeamName = ""
+            this.initForm.Month = ""
+            this.initForm.TeamManager = ""
+            this.initForm.TeamAdvisor = ""
+            this.initForm.FTE = ""
+            this.initForm.Vendor = ""
+        },
         showTeamView: function () {
             this.teamView = true
             this.shiftView = false
@@ -166,13 +168,23 @@ export default {
             this.shiftView = false
             this.initView = true
         },
-        initiateCalendar: function () {
+        inputFormatCheck: function () {
+            var MontArr = (this.initForm.Month).split("/");
+            if(MontArr.length != 2 || MontArr[1] < 1 || MontArr[1] > 12) {
+                return -1;
+            }
             // if the last letter is not ';' then insert ';'
             if((this.initForm.Vendor)[(this.initForm.Vendor).length - 1] != ';') {
                 this.initForm.Vendor = this.initForm.Vendor + ";"
             }
             if((this.initForm.FTE)[(this.initForm.FTE).length - 1] != ';') {
                 this.initForm.FTE = this.initForm.FTE + ";"
+            }
+        },
+        initiateCalendar: function () {
+            if(this.inputFormatCheck() == -1) {
+                this.addFeedback('notify', 'Month is invalid. example: 2019/8')
+                return;
             }
             var peopleArr = (this.initForm.Vendor + this.initForm.FTE).split(";");
             for(var cnt = 1; cnt<peopleArr.length-1; cnt++) {
@@ -190,7 +202,6 @@ export default {
                 this.people[cnt].name = peopleArr[cnt].split("-")[0]
                 this.people[cnt].role = "FTE"
             }
-            console.log("2")
             var teamManager = (this.initForm.TeamManager).split(";");
             var teamAdvisor = (this.initForm.TeamAdvisor).split(";");
             this.people.forEach(person => {
@@ -201,29 +212,53 @@ export default {
                     if(person.alias == ta){person.principle = "TA";}
                 })
             });
-            console.log(this.initForm.Vendor + this.initForm.FTE)
-            console.log(peopleArr)
-            console.log(vendorArr)
-            console.log(fteArr)
-            console.log(teamManager)
-            console.log(teamAdvisor)
-            console.log("3")
-            console.log(this.people)
             new Promise((resolve, reject)=>{
                 this.$http.post(this.apiPath, this.apiPayload)
                 .then((response)=> {
+                    if(response.data == "success") {
+                    this. addFeedback('success', 'Team Added to Calendar')}
                     console.log(response)
                 })
                 .catch((error)=>{
+                    this.addFeedback('error', 'System Error. Please turn to the developer.');
                     console.log(error)
                 })
             })
-        }
+        },
+        addFeedback(type, msg) {
+            const h = this.$createElement;
+            if(type == 'error') {
+            this.$notify.error({
+                title:'Request Denied',
+                message: msg,
+                position:'top-left',
+                duration: 0
+            });
+            }
+            if(type == 'notify') {
+            this.$notify({
+                title:'Notification',
+                message: msg,
+                position:'top-left',
+                duration: 0,
+                type:'warning'
+            });
+            }
+            if(type == 'success') {
+            this.$notify({
+                title: 'Success',
+                message: h('i', { style: 'color: teal'}, msg),
+                position:'top-left',
+                type: 'success',
+                duration: 0
+            });
+            }
+        },
     },
     computed:{
         apiPath() {
             return (
-                "/api/" + // AppService/newupload2/2019/8
+                "/api/" +
                 this.initForm.TeamName +
                 '/newupload2/' +
                 this.initForm.Month
@@ -347,12 +382,16 @@ export default {
   }
   .functionalButton {
       display: inline-block;
-      margin-top: -10px;
   }
   .el-form-item .el-input {
       width: 80%;
   }
   .el-form-item__content {
       display:flex;
+  }
+  .searchButton {
+      margin-bottom: 120px;
+      margin-left:140px;
+
   }
 </style>
