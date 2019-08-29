@@ -144,6 +144,35 @@ export default {
                     }],
         }
     },
+    asyncComputed: {
+        month: {
+        async get() {
+            try {
+            const res = await this.$http.get(`/api${this.teamForm.Month}`);
+            this.socket = io({
+                query: {
+                path: this.date,
+                },
+            });
+            this.socket.on('update', (data) => {
+                if (data.randomNumber === this.$randomNumber) return;
+                this.month.people[data.indexes.p].days[data.indexes.d].workDay = data.workDay;
+                this.month.people[data.indexes.p].days[data.indexes.d].workType = data.workType;
+            });
+            res.data.people = res.data.people.sort((x, y) => x.name.localeCompare(y.name));
+            return res.data;
+            } catch (e) {
+            console.log(e);
+            this.socket = null;
+            this.message = 'Month not found';
+            return null;
+            }
+        },
+        watch() {
+            this.changed;
+        },
+        },
+    },
     methods: {
         cleanInitForm: function () {
             this.initForm.TeamName = ""
