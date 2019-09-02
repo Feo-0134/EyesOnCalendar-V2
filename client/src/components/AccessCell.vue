@@ -7,6 +7,8 @@ export default {
     name: 'AccessCell',
     data() {
         return {
+            displayName: '',
+            admin: false,
             accessmsg: '',
             msalConfig: 
                 {
@@ -36,12 +38,13 @@ export default {
     methods: {
         // AAD函数调用入口
         acquireTokenPopupAndCallMSGraph() {
+            var that = this
             //Always start with acquireTokenSilent to obtain a token in the signed in user from cache
             var myMSALObj = new Msal.UserAgentApplication(this.msalConfig);
             // myMSALObj.handleRedirectCallback(this.authRedirectCallBack);
             myMSALObj.acquireTokenSilent(this.requestObj)
             .then(function (tokenResponse) {
-                this.callMSGraph(this.graphConfig.graphMeEndpoint, tokenResponse.accessToken, this.graphAPICallback);
+                that.callMSGraph(that.graphConfig.graphMeEndpoint, tokenResponse.accessToken, that.graphAPICallback);
             })
             .catch(function (error) {
                 console.log(error);
@@ -49,7 +52,7 @@ export default {
                 // Call acquireTokenPopup(popup window)
                 if (this.requiresInteraction(error.errorCode)) {
                     myMSALObj.acquireTokenPopup(this.requestObj).then(function (tokenResponse) {
-                        this.callMSGraph(this.graphConfig.graphMeEndpoint, tokenResponse.accessToken, this.graphAPICallback);
+                        that.callMSGraph(that.graphConfig.graphMeEndpoint, tokenResponse.accessToken, that.graphAPICallback);
                     }).catch(function (error) {
                         console.log(error);
                     });
@@ -73,7 +76,11 @@ export default {
             console.log('graphAPICallback');
             let result = JSON.stringify(data, null, 4);
             let jsonresult = JSON.parse(result);
-
+            this.displayName = jsonresult.displayName;
+            ;
+            if(jsonresult.jobTitle.match('TECHNICAL ADVISOR') == 'TECHNICAL ADVISOR'|| jsonresult.jobTitle.match('MANAGER') == 'MANAGER'||jsonresult.userPrincipalName === 'v-jelu@microsoft.com' || jsonresult.userPrincipalName === 't-junzhu@microsoft.com')
+            { this.admin = true }
+            this.$store.commit('setUserInfo',{displayName:this.displayName, admin: this.admin})
             if( jsonresult.jobTitle === 'TECHNICAL ADVISOR ASIA' || jsonresult.userPrincipalName === 'v-jelu@microsoft.com' || jsonresult.userPrincipalName === 't-junzhu@microsoft.com') {
                 this.accessmsg = result;
                 // document.getElementById("json").innerHTML = result;

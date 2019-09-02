@@ -11,6 +11,7 @@
                     <el-menu-item index="2-3" v-on:click="showInitView">Initiate Calendar</el-menu-item>
                     <el-menu-item index="2-1" v-on:click="showTeamView">Team Management</el-menu-item>
                     <el-menu-item index="2-2" v-on:click="showShiftView">Shift Management</el-menu-item>
+                    <el-menu-item index="2-2" v-on:click=";">Back to Calendar</el-menu-item>
                     </el-menu-item-group>
                 </el-submenu>
             </el-menu>
@@ -378,6 +379,9 @@ export default {
 </script>
 
 <style>
+.el-input.is-disabled .el-input__inner {
+    border-color: #373737;
+}
  .el-main {
      min-height: 1200px;
  }

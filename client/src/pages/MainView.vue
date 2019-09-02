@@ -2,9 +2,17 @@
   <div>
       <div class = "head">
         <div class="testClass">
-          <a :href="goAddPerson" v-if="admin" class="sectionPointer">&gt; AddPerson</a>
-          <a :href="goDeletePerson" v-if="admin" class="sectionPointer">&gt; DeletePerson</a>
-          <a :href="goReport" v-if="admin" class="sectionPointer">&gt; Report</a>
+          <el-dropdown>
+            <el-button class="mainViewDropDown" type="primary" v-show="state.admin" >
+              Dropdown List<i class="el-icon-arrow-down el-icon--right"></i>
+            </el-button>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item> <a :href="goAddPerson" class="sectionPointer">&gt; AddPerson</a></el-dropdown-item>
+              <el-dropdown-item><a :href="goDeletePerson" class="sectionPointer">&gt; DeletePerson</a></el-dropdown-item>
+              <el-dropdown-item><a :href="goReport" class="sectionPointer">&gt; Report</a></el-dropdown-item>
+              <el-dropdown-item><a :href="goPortal" class="sectionPointer">&gt; Portal</a></el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
           <el-dropdown @command="handleCommand">
             <span class="el-dropdown-link">
                 <el-input placeholder="POD NAME HERE" v-model="teamName">
@@ -15,7 +23,7 @@
         </div>
       </div>
       <div class="testClassII welcome">
-        <p>Welcome, {{emailUnderName}}</p>
+        <p>Welcome, {{state.displayName}}</p>
       </div>
       <!-- <div class = "MonthSwitch"> -->
       <h1>
@@ -47,7 +55,7 @@
                 :key="index" class="cellx">{{percentage(index)}}%</div>
               </div>
               <person  v-for="(p,index) in month.people" :key="p._id"
-              :pindex="index" :person="p"  v-show="p.principle != 'TM' " :userName="emailUnderName"
+              :pindex="index" :person="p"  v-show="p.principle != 'TM' " :userName="state.displayName"
               :openflag = "openflag" @opensync = "handleOpenPanel"/>
             </el-tab-pane>
             <el-tab-pane class="mainPanel" label="FTE Members" name="second">
@@ -65,7 +73,7 @@
                 :key="index" class="cellx">{{percentageFTE(index)}}%</div>
               </div>
               <person  v-for="(p,index) in month.people" v-show="p.role == 'FTE' && p.principle != 'TM' "
-              :key="p._id" :pindex="index" :person="p" :userName="emailUnderName"
+              :key="p._id" :pindex="index" :person="p" :userName="state.displayName"
               :openflag = "openflag" @opensync = "handleOpenPanel"/>
             </el-tab-pane>
             <el-tab-pane class="mainPanel" label="Vendor Members" name="third">
@@ -83,7 +91,7 @@
                 :key="index" class="cellx">{{percentageVendor(index)}}%</div>
               </div>
               <person  v-for="(p,index) in month.people" v-show="p.role =='Vendor'"
-              :key="p._id" :pindex="index" :person="p" :userName="emailUnderName"
+              :key="p._id" :pindex="index" :person="p" :userName="state.displayName"
               :openflag = "openflag" @opensync = "handleOpenPanel"/>
             </el-tab-pane>
           </el-tabs>
@@ -110,12 +118,11 @@ export default {
       message: 'Loading month...',
       scrolled: false,
       changed: false,
-      emailUnderName: null,
       initUndo: true,
-      admin: false,
       isLoading: false,
       activeName: 'first',
       openflag: false,
+      state: null,
     };
   },
   asyncComputed: {
@@ -194,6 +201,9 @@ export default {
           .format('/YYYY/M')}`);
     },
     /** ************************************* Router ************************************* */
+    goPortal() {
+      return (`/portal`);
+    },
     goReport() {
       return (`/${this.date.split('/')[1].toString()}${moment(this.date, '/YYYY/M').format('/YYYY/M')}/report`);
     },
@@ -290,6 +300,7 @@ export default {
     window.removeEventListener('scroll', this.handleScroll);
   },
   mounted() {
+    this.state = this.$store.state
     window.addEventListener('keyup', (ev) => {
       this.callUndo(ev);
     });
@@ -352,38 +363,15 @@ export default {
      * Feature 6 Permission control
      * ************************************* */
     personinfo() {
-      return new Promise((resolve, reject) => {
-        this.$http.get('/.auth/me').then((response) => {
-          if (response.data[0].user_claims) {
-            for (const a of response.data[0].user_claims) {
-              if (a.typ === 'name') {
-                this.emailUnderName = a.val;
-              }
-            }
-          } else {
-            this.emailUnderName = 'Danielle Zhao';
-          }
-          if (this.emailUnderName.match('Juncheng Zhu') == 'Juncheng Zhu'
-          || this.emailUnderName.match('Karen Zheng') == 'Karen Zheng'
-          || this.emailUnderName.match('Anik Shen') == 'Anik Shen'
-          || this.emailUnderName.match('Danielle Zhao') == 'Danielle Zhao'
-          || this.emailUnderName.match('Dingsong Zhang') == 'Dingsong Zhang'
-          || this.emailUnderName.match('Anita Yang') == 'Anita Yang'
-          || this.emailUnderName.match('Sean Wu (AZURE)') == 'Sean Wu (AZURE)') { this.admin = true; }
-        }).catch((error) => {
-          // if(error.toString().match('404') == '404') {this.emailUnderName = 'Juncheng Doooo'; this.admin = true; }
-          reject(error);
-        });
-      });
     },
     /** *************************************
      * Feature 9 init calendar
      * ************************************* */
     init() {
-      if (this.admin === false) {
+      if (this.state.admin === false) {
         this.initDeny('noPermission', 'You have no permission to init this month.');
       }
-      if (this.admin === true) {
+      if (this.state.admin === true) {
         const that = this;
         let flag = false;
         const newMon = (new Date().getMonth() + 2) % 12 ? (new Date().getMonth() + 2) % 12 : 12;
@@ -533,5 +521,9 @@ export default {
 .el-input-group--append .el-input__inner, .el-input-group__prepend {
   background-color: #373737;
   color:#fff;
+}
+.mainViewDropDown {
+  background-color: #373737;
+  border-color: #808080;
 }
 </style>
