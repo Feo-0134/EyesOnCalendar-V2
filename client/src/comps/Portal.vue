@@ -111,7 +111,28 @@
                 <el-form-item label="Month">
                     <el-input v-model="teamForm.Month" ></el-input>
                 </el-form-item>
-                <el-form-item label="Member">
+                <el-form-item label="Team Manager">
+                    <el-input v-model="teamForm. MemberName" :disabled="true"></el-input>
+                    <div class="functionalButton">
+                    <el-button type="primary" icon="el-icon-plus" circle v-on:click="addFormVisible = true"></el-button>
+                    <el-button type="primary" icon="el-icon-minus" circle v-on:click="delFormVisible = true"></el-button>
+                    </div>
+                </el-form-item>
+                <el-form-item label="Technical Advisor">
+                    <el-input v-model="teamForm. MemberName" :disabled="true"></el-input>
+                    <div class="functionalButton">
+                    <el-button type="primary" icon="el-icon-plus" circle v-on:click="addFormVisible = true"></el-button>
+                    <el-button type="primary" icon="el-icon-minus" circle v-on:click="delFormVisible = true"></el-button>
+                    </div>
+                </el-form-item>
+                               <el-form-item label="FTE Member">
+                    <el-input v-model="teamForm. MemberName" :disabled="true"></el-input>
+                    <div class="functionalButton">
+                    <el-button type="primary" icon="el-icon-plus" circle v-on:click="addFormVisible = true"></el-button>
+                    <el-button type="primary" icon="el-icon-minus" circle v-on:click="delFormVisible = true"></el-button>
+                    </div>
+                </el-form-item>
+                               <el-form-item label="Vendor member">
                     <el-input v-model="teamForm. MemberName" :disabled="true"></el-input>
                     <div class="functionalButton">
                     <el-button type="primary" icon="el-icon-plus" circle v-on:click="addFormVisible = true"></el-button>
@@ -158,6 +179,10 @@ export default {
             teamForm: {
                 TeamName: 'AppService',
                 Month: '2019/8',
+                TeamManager:'',
+                TeamAdvisor:'',
+                FTEMember:'',
+                VendorMember:'',
                 MemberName: '',
             },
             shiftForm: {
