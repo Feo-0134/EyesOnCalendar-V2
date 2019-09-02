@@ -7,30 +7,28 @@
                 <el-submenu index="2">
                     <template slot="title"><i class="el-icon-menu"></i>Navigator</template>
                     <el-menu-item-group>
-                    <template slot="title">Group 1</template>
+                    <template slot="title"></template>
+                    <el-menu-item index="2-3" v-on:click="showInitView">Initiate Calendar</el-menu-item>
                     <el-menu-item index="2-1" v-on:click="showTeamView">Team Management</el-menu-item>
                     <el-menu-item index="2-2" v-on:click="showShiftView">Shift Management</el-menu-item>
-                    </el-menu-item-group>
-                    <el-menu-item-group title="Group 2">
-                    <el-menu-item index="2-3" v-on:click="showInitView">Initiate Calendar</el-menu-item>
                     </el-menu-item-group>
                 </el-submenu>
             </el-menu>
         </el-aside>
         <el-main>
 <el-dialog title="Add Person" :visible.sync="addFormVisible">
-  <el-form :model="form">
+  <el-form :model="addForm">
     <el-form-item label="Alias" :label-width="formLabelWidth">
-      <el-input v-model="form.name" autocomplete="off"></el-input>
+      <el-input v-model="addForm.alias" autocomplete="off"></el-input>
     </el-form-item>
     <el-form-item label="Name" :label-width="formLabelWidth">
-      <el-input v-model="form.name" autocomplete="off"></el-input>
+      <el-input v-model="addForm.name" autocomplete="off"></el-input>
     </el-form-item>
     <el-form-item label="Role" :label-width="formLabelWidth">
-      <el-input v-model="form.name" autocomplete="off"></el-input>
+      <el-input v-model="addForm.role" autocomplete="off"></el-input>
     </el-form-item>
     <el-form-item label="Principle" :label-width="formLabelWidth">
-      <el-input v-model="form.name" autocomplete="off"></el-input>
+      <el-input v-model="addForm.principle" autocomplete="off" :disabled="true"></el-input>
     </el-form-item>
   </el-form>
   <div slot="footer" class="dialog-footer">
@@ -38,7 +36,6 @@
     <el-button type="primary" @click="addFormVisible = false">Confirm</el-button>
   </div>
 </el-dialog>
-
 <el-dialog title="Delete Person" :visible.sync="delFormVisible">
   <el-form :model="form">
     <el-form-item label="Alias" :label-width="formLabelWidth">
@@ -112,30 +109,30 @@
                     <el-input v-model="teamForm.Month" ></el-input>
                 </el-form-item>
                 <el-form-item label="Team Manager">
-                    <el-input v-model="teamForm. MemberName" :disabled="true"></el-input>
+                    <el-input v-model="teamForm.TeamManager" :disabled="true"></el-input>
                     <div class="functionalButton">
-                    <el-button type="primary" icon="el-icon-plus" circle v-on:click="addFormVisible = true"></el-button>
+                    <el-button type="primary" icon="el-icon-plus" circle v-on:click="addPerson('FTE', 'TM')"></el-button>
                     <el-button type="primary" icon="el-icon-minus" circle v-on:click="delFormVisible = true"></el-button>
                     </div>
                 </el-form-item>
                 <el-form-item label="Technical Advisor">
-                    <el-input v-model="teamForm. MemberName" :disabled="true"></el-input>
+                    <el-input v-model="teamForm.TeamAdvisor" :disabled="true"></el-input>
                     <div class="functionalButton">
-                    <el-button type="primary" icon="el-icon-plus" circle v-on:click="addFormVisible = true"></el-button>
+                    <el-button type="primary" icon="el-icon-plus" circle v-on:click="addPerson('', 'TA')"></el-button>
                     <el-button type="primary" icon="el-icon-minus" circle v-on:click="delFormVisible = true"></el-button>
                     </div>
                 </el-form-item>
                                <el-form-item label="FTE Member">
-                    <el-input v-model="teamForm. MemberName" :disabled="true"></el-input>
+                    <el-input v-model="teamForm.FTE" :disabled="true"></el-input>
                     <div class="functionalButton">
-                    <el-button type="primary" icon="el-icon-plus" circle v-on:click="addFormVisible = true"></el-button>
+                    <el-button type="primary" icon="el-icon-plus" circle v-on:click="addPerson('FTE', 'None')"></el-button>
                     <el-button type="primary" icon="el-icon-minus" circle v-on:click="delFormVisible = true"></el-button>
                     </div>
                 </el-form-item>
                                <el-form-item label="Vendor member">
-                    <el-input v-model="teamForm. MemberName" :disabled="true"></el-input>
+                    <el-input v-model="teamForm.Vendor" :disabled="true"></el-input>
                     <div class="functionalButton">
-                    <el-button type="primary" icon="el-icon-plus" circle v-on:click="addFormVisible = true"></el-button>
+                    <el-button type="primary" icon="el-icon-plus" circle v-on:click="addPerson('FTE', 'None')"></el-button>
                     <el-button type="primary" icon="el-icon-minus" circle v-on:click="delFormVisible = true"></el-button>
                     </div>
                 </el-form-item>
@@ -164,6 +161,12 @@ export default {
                     resource: '',
                     desc: ''
             },
+            addForm: {
+                alias: '',
+                name: '',
+                role: '',
+                principle: ''
+            },
             formLabelWidth: '100px',
             teamView: true,
             shiftView: false,
@@ -181,8 +184,8 @@ export default {
                 Month: '2019/8',
                 TeamManager:'',
                 TeamAdvisor:'',
-                FTEMember:'',
-                VendorMember:'',
+                FTE:'',
+                Vendor:'',
                 MemberName: '',
             },
             shiftForm: {
@@ -219,7 +222,10 @@ export default {
             res.data.people = res.data.people.sort((x, y) => x.name.localeCompare(y.name));
             this.teamForm.MemberName = ""
             res.data.people.forEach(person=> {
-                this.teamForm.MemberName += person.name + ';'
+                if(person.principle == 'TM') { this.teamForm.TeamManager += person.name + ';'}
+                else if(person.principle == 'TA') { this.teamForm.TeamAdvisor += person.name + ';'}
+                else if(person.role == 'FTE') { this.teamForm.FTE += person.name + ';'}
+                else if(person.role == 'Vendor') { this.teamForm.Vendor += person.name + ';'}
             })
             return res.data;
             } catch (e) {
@@ -235,7 +241,10 @@ export default {
         },
     },
     methods: {
-        addPerson: function() {
+        addPerson(role, principle) {
+            this.addForm.role = role
+            this.addForm.principle = principle
+            this.addFormVisible = true
         },
         delPerson: function() {
         },
