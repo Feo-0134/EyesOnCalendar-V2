@@ -26,6 +26,7 @@ Feature 7 Add a new member to the calendar
 </template>
 
 <script>
+var store = require('store')
 export default {
     data() {
       return {
@@ -36,7 +37,6 @@ export default {
         message:"",
         showModal: false,
         emailUnderName: null,
-        admin:false,
         back2homepage:false,
         person: {
           alias:"",
@@ -44,6 +44,7 @@ export default {
           role:"",
           principle:""
         },
+        state: null,
       }
     },
     methods:{
@@ -152,39 +153,42 @@ export default {
           });
         }
       },
-      personinfo: function() {
-        return new Promise((resolve, reject) => {
-          this.$http.get("/.auth/me").then((response)=> {
-            if(response.data[0].user_claims) {
-              for(const a of response.data[0].user_claims) {
-                if(a.typ == "name"){
-                  this.emailUnderName = a.val
-                }
-              }   
-            }else {
-              this.emailUnderName = "Danielle Zhao"
-            }
-            if(this.emailUnderName.match("Juncheng Zhu") == "Juncheng Zhu" 
-            ||this.emailUnderName.match("Karen Zheng") == "Karen Zheng"
-            ||this.emailUnderName.match("Anik Shen") == "Anik Shen"
-            ||this.emailUnderName.match("Danielle Zhao") == "Danielle Zhao" 
-            ||this.emailUnderName.match("Dingsong Zhang") == "Dingsong Zhang"
-            ||this.emailUnderName.match("Anita Yang") == "Anita Yang"
-            ||this.emailUnderName.match("Sean Wu (AZURE)") == "Sean Wu (AZURE)")
-              this.admin = true;
-          }).catch((error) => {
-            reject(error)
-          })
-        })
-      },
+      // personinfo: function() {
+      //   return new Promise((resolve, reject) => {
+      //     this.$http.get("/.auth/me").then((response)=> {
+      //       if(response.data[0].user_claims) {
+      //         for(const a of response.data[0].user_claims) {
+      //           if(a.typ == "name"){
+      //             this.emailUnderName = a.val
+      //           }
+      //         }   
+      //       }else {
+      //         this.emailUnderName = "Danielle Zhao"
+      //       }
+      //       if(this.emailUnderName.match("Juncheng Zhu") == "Juncheng Zhu" 
+      //       ||this.emailUnderName.match("Karen Zheng") == "Karen Zheng"
+      //       ||this.emailUnderName.match("Anik Shen") == "Anik Shen"
+      //       ||this.emailUnderName.match("Danielle Zhao") == "Danielle Zhao" 
+      //       ||this.emailUnderName.match("Dingsong Zhang") == "Dingsong Zhang"
+      //       ||this.emailUnderName.match("Anita Yang") == "Anita Yang"
+      //       ||this.emailUnderName.match("Sean Wu (AZURE)") == "Sean Wu (AZURE)")
+      //         this.admin = true;
+      //     }).catch((error) => {
+      //       reject(error)
+      //     })
+      //   })
+      // },
       linkToCalendar() {
           this.$router.push((this.$router.currentRoute.path).replace('/person',''));
       },
     },
     mounted() {
-        this.personinfo();
+        this.state = this.$store.state
     },
     computed:{
+        admin() {
+          return store.get('user').admin;
+        },
         apiPath() {
             return (
                 "/api/" +
@@ -193,7 +197,10 @@ export default {
         },
         apiPayload() {
             return {
-                name: this.message,
+                name: this.inputName,
+                role:this.inputRole,
+                principle:this.inputPrinciple,
+                alias:this.inputAlias,
                 randomNumber: this.$randomNumber
             };
         },

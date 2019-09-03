@@ -3,6 +3,7 @@
 </template>
 
 <script>
+var store = require('store')
 export default {
     name: 'AccessCell',
     data() {
@@ -80,7 +81,8 @@ export default {
             ;
             if(jsonresult.jobTitle.match('TECHNICAL ADVISOR') == 'TECHNICAL ADVISOR'|| jsonresult.jobTitle.match('MANAGER') == 'MANAGER'||jsonresult.userPrincipalName === 'v-jelu@microsoft.com' || jsonresult.userPrincipalName === 't-junzhu@microsoft.com')
             { this.admin = true }
-            this.$store.commit('setUserInfo',{displayName:this.displayName, admin: this.admin})
+            // use store.js to store hope that works
+            store.set('user', {displayName:this.displayName, admin: this.admin})
             if( jsonresult.jobTitle === 'TECHNICAL ADVISOR ASIA' || jsonresult.userPrincipalName === 'v-jelu@microsoft.com' || jsonresult.userPrincipalName === 't-junzhu@microsoft.com') {
                 this.accessmsg = result;
                 // document.getElementById("json").innerHTML = result;
@@ -88,8 +90,6 @@ export default {
                 this.accessmsg = 'sorry, this portal is for managers only';
                 // document.getElementById("json").innerHTML = 'sorry, this portal is for managers only';
             }
-            document.getElementById("showteam").click();
-
         },
         // 此函数是完成一个 http request
         callMSGraph(theUrl, accessToken, callback) {

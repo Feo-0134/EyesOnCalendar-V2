@@ -3,7 +3,7 @@
       <div class = "head">
         <div class="testClass">
           <el-dropdown>
-            <el-button class="mainViewDropDown" type="primary" v-show="state.admin" >
+            <el-button class="mainViewDropDown" type="primary" v-show="admin" >
               Dropdown List<i class="el-icon-arrow-down el-icon--right"></i>
             </el-button>
             <el-dropdown-menu slot="dropdown">
@@ -13,7 +13,7 @@
               <el-dropdown-item><a :href="goPortal" class="sectionPointer">&gt; Portal</a></el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
-          <el-dropdown @command="handleCommand">
+          <el-dropdown>
             <span class="el-dropdown-link">
                 <el-input placeholder="POD NAME HERE" v-model="teamName">
                   <el-button slot="append" icon="el-icon-search" v-on:click="goPod"></el-button>
@@ -23,7 +23,7 @@
         </div>
       </div>
       <div class="testClassII welcome">
-        <p>Welcome, {{state.displayName}}</p>
+        <p>Welcome, {{displayName}}</p>
       </div>
       <!-- <div class = "MonthSwitch"> -->
       <h1>
@@ -55,7 +55,7 @@
                 :key="index" class="cellx">{{percentage(index)}}%</div>
               </div>
               <person  v-for="(p,index) in month.people" :key="p._id"
-              :pindex="index" :person="p"  v-show="p.principle != 'TM' " :userName="state.displayName"
+              :pindex="index" :person="p"  v-show="p.principle != 'TM' " :userName="displayName"
               :openflag = "openflag" @opensync = "handleOpenPanel"/>
             </el-tab-pane>
             <el-tab-pane class="mainPanel" label="FTE Members" name="second">
@@ -73,7 +73,7 @@
                 :key="index" class="cellx">{{percentageFTE(index)}}%</div>
               </div>
               <person  v-for="(p,index) in month.people" v-show="p.role == 'FTE' && p.principle != 'TM' "
-              :key="p._id" :pindex="index" :person="p" :userName="state.displayName"
+              :key="p._id" :pindex="index" :person="p" :userName="displayName"
               :openflag = "openflag" @opensync = "handleOpenPanel"/>
             </el-tab-pane>
             <el-tab-pane class="mainPanel" label="Vendor Members" name="third">
@@ -91,7 +91,7 @@
                 :key="index" class="cellx">{{percentageVendor(index)}}%</div>
               </div>
               <person  v-for="(p,index) in month.people" v-show="p.role =='Vendor'"
-              :key="p._id" :pindex="index" :person="p" :userName="state.displayName"
+              :key="p._id" :pindex="index" :person="p" :userName="displayName"
               :openflag = "openflag" @opensync = "handleOpenPanel"/>
             </el-tab-pane>
           </el-tabs>
@@ -109,7 +109,7 @@ import moment from 'moment';
 import Person from '@/components/PersonRow';
 import HelpScreen from '@/components/HelpScreen';
 import Loading from '@/components/LoadButton';
-
+var store = require('store')
 export default {
   components: { Person, HelpScreen, Loading },
   data() {
@@ -155,13 +155,19 @@ export default {
     },
   },
   computed: {
+    displayName() {
+      return store.get('user').displayName;
+    },
+    admin() {
+      return store.get('user').admin;
+    },
     totalamount() {
       return (this.month.people).length;
     },
     totalamountFTE() {
       let sum = 0;
       for (const b of Object.keys(this.month.people)) {
-        if (this.month.people[b].name.match('FTE') == 'FTE') {
+        if ((this.month.people[b].role).match('FTE') == 'FTE') {
           sum += 1;
         }
       }
@@ -170,7 +176,7 @@ export default {
     totalamountVendor() {
       let sum = 0;
       for (const b of Object.keys(this.month.people)) {
-        if (this.month.people[b].name.match('v-') == 'v-') {
+        if ((this.month.people[b].role).match('Vendor') == 'Vendor') {
           sum += 1;
         }
       }
@@ -200,7 +206,6 @@ export default {
           .subtract(1, 'M')
           .format('/YYYY/M')}`);
     },
-    /** ************************************* Router ************************************* */
     goPortal() {
       return (`/portal`);
     },
@@ -213,9 +218,6 @@ export default {
     goDeletePerson() {
       return (`/${this.date.split('/')[1].toString()}${moment(this.date, '/YYYY/M').format('/YYYY/M')}/delete`);
     },
-    /** ************************************* 
-     * Feature 3 on-duty rate 
-     * ************************************* */
     percentage() {
       return function (val) {
         let sum = 0;
@@ -235,7 +237,7 @@ export default {
       return function (val) {
         let sum = 0;
         for (const b of Object.keys(this.month.people)) {
-          if (this.month.people[b].name.match('FTE') == 'FTE'
+          if ((this.month.people[b].role).match('FTE') == 'FTE'
           && (this.month.people[b].days[val].workType === 'W'
           || this.month.people[b].days[val].workType === 'MS'
           || this.month.people[b].days[val].workType === 'NS'
@@ -252,7 +254,7 @@ export default {
       return function (val) {
         let sum = 0;
         for (const b of Object.keys(this.month.people)) {
-          if (this.month.people[b].name.match('v-') == 'v-'
+          if ((this.month.people[b].role).match('Vendor') == 'Vendor'
           && (this.month.people[b].days[val].workType === 'W'
           || this.month.people[b].days[val].workType === 'MS'
           || this.month.people[b].days[val].workType === 'NS'
@@ -265,9 +267,6 @@ export default {
         return ((sum / this.totalamountVendor) * 100).toFixed(0);
       };
     },
-    /** *************************************
-     * Feature 9 init calendar
-     * ************************************* */
     apiPath() {
       return (
         `/api${
@@ -304,7 +303,6 @@ export default {
     window.addEventListener('keyup', (ev) => {
       this.callUndo(ev);
     });
-    this.personinfo();
   },
   methods: {
     goPod() {
@@ -312,8 +310,6 @@ export default {
       const path = (customPath + moment(this.date, '/YYYY/M').format('/YYYY/M'));
       this.$router.push({ path });
       location.reload();
-    },
-    handleCommand(command) {
     },
     addMonth() {
       const path = moment(this.date, '/YYYY/M')
@@ -327,51 +323,11 @@ export default {
         .format('/YYYY/M');
       this.$router.push({ path });
     },
-    handleOpenPanel(msg) {
-      this.openflag = msg;
-    },
-    // callUndo(ev) {
-    //   if (ev.code !== "KeyZ" || ev.ctrlKey !== true) return;
-    //   else if (this.$history.length == 0) return;
-    //   {
-    //     var x = this.$history.pop();
-    //     var data = x.payload;
-    //     this.month.people[data.indexes.p].days[data.indexes.d].workDay =
-    //       data.workDay;
-    //     this.month.people[data.indexes.p].days[data.indexes.d].workType =
-    //       data.workType;
-    //     this.$http.post(x.path, x.payload);
-    //   }
-    // },
-
-    handleScroll() {
-      const header = document.getElementById('tablehead');
-      const sticky = header.offsetTop;
-      // console.log(window.pageYOffset);
-      if (window.pageYOffset <= 115) {
-        this.scrolled = false;
-        return;
-      }
-      if (window.pageYOffset >= sticky) {
-        this.scrolled = true;
-      } else {
-        this.scrolled = false;
-      }
-    },
-    /** *************************************
-     * Feature 4 Easy Authentication
-     * Feature 6 Permission control
-     * ************************************* */
-    personinfo() {
-    },
-    /** *************************************
-     * Feature 9 init calendar
-     * ************************************* */
     init() {
-      if (this.state.admin === false) {
+      if (this.admin === false) {
         this.initDeny('noPermission', 'You have no permission to init this month.');
       }
-      if (this.state.admin === true) {
+      if (this.admin === true) {
         const that = this;
         let flag = false;
         const newMon = (new Date().getMonth() + 2) % 12 ? (new Date().getMonth() + 2) % 12 : 12;
@@ -419,9 +375,39 @@ export default {
         }, 4000);
       }
     },
-    handleClick(tab, event) {
-      console.log(tab, event);
+    handleOpenPanel(msg) {
+      this.openflag = msg;
     },
+    handleScroll() {
+      const header = document.getElementById('tablehead');
+      const sticky = header.offsetTop;
+      // console.log(window.pageYOffset);
+      if (window.pageYOffset <= 130) {
+        this.scrolled = false;
+        return;
+      }
+      if (window.pageYOffset >= sticky) {
+        this.scrolled = true;
+      } else {
+        this.scrolled = false;
+      }
+    },
+    handleClick(tab, event) {
+      // console.log(tab, event);
+    },
+    // callUndo(ev) {
+    //   if (ev.code !== "KeyZ" || ev.ctrlKey !== true) return;
+    //   else if (this.$history.length == 0) return;
+    //   {
+    //     var x = this.$history.pop();
+    //     var data = x.payload;
+    //     this.month.people[data.indexes.p].days[data.indexes.d].workDay =
+    //       data.workDay;
+    //     this.month.people[data.indexes.p].days[data.indexes.d].workType =
+    //       data.workType;
+    //     this.$http.post(x.path, x.payload);
+    //   }
+    // },
   },
 };
 </script>

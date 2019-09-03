@@ -63,13 +63,14 @@ Feature 7 Add a new member to the calendar
 </template>
 
 <script>
+var store = require('store')
 export default {
     data() {
       return {
           message: "",
           showModal: false,
           emailUnderName: null,
-          admin:false
+          state: null,
       }
     },
     methods:{
@@ -117,36 +118,39 @@ export default {
           });
         }
       },
-      personinfo: function() {
-        return new Promise((resolve, reject) => {
-          this.$http.get("/.auth/me").then((response)=> {
-            if(response.data[0].user_claims) {
-              for(const a of response.data[0].user_claims) {
-                if(a.typ == "name"){
-                  this.emailUnderName = a.val
-                }
-              }   
-            }else {
-              this.emailUnderName = "Danielle Zhao"
-            }
-            if(this.emailUnderName.match("Juncheng Zhu") == "Juncheng Zhu" 
-            ||this.emailUnderName.match("Karen Zheng") == "Karen Zheng"
-            ||this.emailUnderName.match("Anik Shen") == "Anik Shen"
-            ||this.emailUnderName.match("Dingsong Zhang") == "Dingsong Zhang"
-            ||this.emailUnderName.match("Anita Yang") == "Anita Yang"
-            ||this.emailUnderName.match("Danielle Zhao") == "Danielle Zhao" 
-            ||this.emailUnderName.match("Sean Wu (AZURE)") == "Sean Wu (AZURE)")
-              this.admin = true;
-          }).catch((error) => {
-            reject(error)
-          })
-        })
-      }
+      // personinfo: function() {
+      //   return new Promise((resolve, reject) => {
+      //     this.$http.get("/.auth/me").then((response)=> {
+      //       if(response.data[0].user_claims) {
+      //         for(const a of response.data[0].user_claims) {
+      //           if(a.typ == "name"){
+      //             this.emailUnderName = a.val
+      //           }
+      //         }   
+      //       }else {
+      //         this.emailUnderName = "Danielle Zhao"
+      //       }
+      //       if(this.emailUnderName.match("Juncheng Zhu") == "Juncheng Zhu" 
+      //       ||this.emailUnderName.match("Karen Zheng") == "Karen Zheng"
+      //       ||this.emailUnderName.match("Anik Shen") == "Anik Shen"
+      //       ||this.emailUnderName.match("Dingsong Zhang") == "Dingsong Zhang"
+      //       ||this.emailUnderName.match("Anita Yang") == "Anita Yang"
+      //       ||this.emailUnderName.match("Danielle Zhao") == "Danielle Zhao" 
+      //       ||this.emailUnderName.match("Sean Wu (AZURE)") == "Sean Wu (AZURE)")
+      //         this.admin = true;
+      //     }).catch((error) => {
+      //       reject(error)
+      //     })
+      //   })
+      // }
     },
     mounted() {
-        this.personinfo();
+        this.state = this.$store.state
     },
     computed:{
+        admin() {
+          return store.get('user').admin;
+        },
         apiPath() {
             return (
                 "/api/" +

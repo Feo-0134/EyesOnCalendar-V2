@@ -28,11 +28,6 @@ export default new Router({
       component: Portal
     },
     {
-      path: '/test',
-      name: 'AccessCell',
-      component: AccessCell
-    },
-    {
       path: '/:pod/:year/:month',
       name: 'MainView',
       component: MainView

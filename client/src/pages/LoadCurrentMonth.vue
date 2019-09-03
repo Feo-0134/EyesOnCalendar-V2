@@ -13,8 +13,7 @@ export default {
     }
   },
   created() {
-    // console.log(this.$store.state)
-    this.$router.push("AppService"+moment().format('/YYYY/M'))
+    // this.$router.push("AppService"+moment().format('/YYYY/M'))
   },
 }
 </script>
