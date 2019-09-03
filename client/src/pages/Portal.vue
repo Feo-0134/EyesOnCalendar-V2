@@ -1,17 +1,21 @@
 <template> 
     <el-container>
-    <el-header>Portal</el-header>
+    <el-header class="navigationBar">EyesonCalendar Administration
+            <el-button class="navigationButton" type="primary" v-show="true" >
+              <a :href="goCalendar" class="navigationLink">Calendar</a>
+            </el-button>
+    </el-header>
     <el-container>
         <el-aside width="300px">
             <el-menu>
                 <el-submenu index="2">
-                    <template slot="title"><i class="el-icon-menu"></i>Navigator</template>
+                    <template slot="title"><i class="el-icon-menu"></i>EyesonCalendar</template>
                     <el-menu-item-group>
                     <template slot="title"></template>
                     <el-menu-item index="2-3" v-on:click="showInitView">Initiate Calendar</el-menu-item>
                     <el-menu-item index="2-1" v-on:click="showTeamView">Team Management</el-menu-item>
                     <el-menu-item index="2-2" v-on:click="showShiftView">Shift Management</el-menu-item>
-                    <el-menu-item index="2-2" v-on:click=";">Back to Calendar</el-menu-item>
+                    <el-menu-item index="2-4" v-on:click="showReportView">EyesonCalendar Report</el-menu-item>
                     </el-menu-item-group>
                 </el-submenu>
             </el-menu>
@@ -141,6 +145,17 @@
                     <el-input v-model="form.name"></el-input>
                 </el-form-item> -->
             </el-form>
+            <el-form v-if="reportView"  :model="teamForm" label-width="140px">
+                <el-form-item label="Team Name">
+                    <el-input v-model="teamForm.TeamName" ></el-input>
+                </el-form-item>
+                <el-form-item label="Month">
+                    <el-input v-model="teamForm.Month" ></el-input>
+                </el-form-item>
+                <!-- <el-form-item label="Others">
+                    <el-input v-model="form.name"></el-input>
+                </el-form-item> -->
+            </el-form>
         </el-main>
     </el-container>
     </el-container>
@@ -171,6 +186,7 @@ export default {
             formLabelWidth: '100px',
             teamView: true,
             shiftView: false,
+            reportView: false,
             initView: false,
             initForm: {
                 TeamName: '',
@@ -261,16 +277,25 @@ export default {
             this.teamView = true
             this.shiftView = false
             this.initView = false
+            this.reportView = false
         },
         showShiftView: function () {
             this.teamView = false
             this.shiftView = true
             this.initView = false
+            this.reportView = false
         },
         showInitView: function () {
             this.teamView = false
             this.shiftView = false
             this.initView = true
+            this.reportView = false
+        },
+        showReportView: function () {
+            this.teamView = false
+            this.shiftView = false
+            this.initView = false
+            this.reportView = true
         },
         inputFormatCheck: function () {
             var MontArr = (this.initForm.Month).split("/");
@@ -360,6 +385,9 @@ export default {
         },
     },
     computed:{
+        goCalendar() {
+        return ('/');
+        },
         apiPath() {
             return (
                 "/api/" +
@@ -370,7 +398,7 @@ export default {
         },
         apiPayload() {
             return {
-                    people: this.people,
+                people: this.people,
             };
         },
         
@@ -499,6 +527,22 @@ export default {
   .searchButton {
       margin-bottom: 120px;
       margin-left:140px;
-
+  }
+  .navigationBar {
+      display: inline-flexbox;
+      margin-bottom: 20px;
+  }
+  .navigationButton {
+      height: 46px;
+      float: right;
+      background-color:#373737;
+      border-color: gray;
+  }
+  .navigationLink {
+      font-size: 15px;
+      color:gray;
+  }
+  header span {
+      padding-top: 0px; 
   }
 </style>

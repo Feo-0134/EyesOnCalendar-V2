@@ -256,7 +256,7 @@ day {
   user-select: none;
   border: 0px solid;
   font-size: 16px;
-  font-family: "Roboto Condensed", sans-serif;
+  font-family: "Roboto", Corbel, Avenir, "Lucida Grande", "Lucida Sans", sans-serif;
 }
 .workday:hover {
   font-size: 21px;

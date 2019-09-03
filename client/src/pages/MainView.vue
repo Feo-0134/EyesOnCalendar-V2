@@ -3,22 +3,16 @@
       <div class = "head">
         <div class="testClass">
           <el-dropdown>
-            <el-button class="mainViewDropDown" type="primary" v-show="admin" >
-              Dropdown List<i class="el-icon-arrow-down el-icon--right"></i>
-            </el-button>
-            <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item> <a :href="goAddPerson" class="sectionPointer">&gt; AddPerson</a></el-dropdown-item>
-              <el-dropdown-item><a :href="goDeletePerson" class="sectionPointer">&gt; DeletePerson</a></el-dropdown-item>
-              <el-dropdown-item><a :href="goReport" class="sectionPointer">&gt; Report</a></el-dropdown-item>
-              <el-dropdown-item><a :href="goPortal" class="sectionPointer">&gt; Portal</a></el-dropdown-item>
-            </el-dropdown-menu>
-          </el-dropdown>
-          <el-dropdown>
             <span class="el-dropdown-link">
                 <el-input placeholder="POD NAME HERE" v-model="teamName">
                   <el-button slot="append" icon="el-icon-search" v-on:click="goPod"></el-button>
                 </el-input>
             </span>
+          </el-dropdown>
+          <el-dropdown>
+            <el-button class="mainViewDropDown" type="primary" v-show="admin" >
+              <a :href="goPortal" class="sectionPointer">Portal</a>
+            </el-button>
           </el-dropdown>
         </div>
       </div>
