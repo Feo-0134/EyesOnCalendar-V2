@@ -4,20 +4,20 @@ Feature 7 Add a new member to the calendar
 <template>
   <el-container>
   <el-header>Adding Member</el-header>
-  <p>Welcome, {{emailUnderName}}</p>
+  <p>Welcome, {{displayName}}</p>
     <el-main>
       <img src="../../static/img/joinus.png" alt="joinPic" />
       <div class="inputBox">
        Alias:
-      <el-input v-model="inputAlias" placeholder="eg. danzha"></el-input>
+      <el-input v-model="person.alias" placeholder="eg. danzha"></el-input>
        Name:
-      <el-input v-model="inputName" placeholder="eg. Danielle Zhao"></el-input>
+      <el-input v-model="person.name" placeholder="eg. Danielle Zhao"></el-input>
       </div>
       <div class="inputBox">
        Role:
-      <el-input v-model="inputRole" placeholder="eg. FTE / Vendor"></el-input>
+      <el-input v-model="person.role" placeholder="eg. FTE / Vendor"></el-input>
        Principle:
-      <el-input v-model="inputPrinciple" placeholder="eg. TM / TA / None"></el-input>
+      <el-input v-model="person.principle" placeholder="eg. TM / TA / None"></el-input>
       </div>
       <el-button type="primary" v-on:click="upload">Confirm</el-button>
       <el-button type="primary" v-on:click="linkToCalendar">Back to Calendar</el-button>
@@ -30,14 +30,6 @@ var store = require('store')
 export default {
     data() {
       return {
-        inputName: "",
-        inputRole: "",
-        inputAlias:"",
-        inputPrinciple:"",
-        message:"",
-        showModal: false,
-        emailUnderName: null,
-        back2homepage:false,
         person: {
           alias:"",
           name:"",
@@ -50,19 +42,19 @@ export default {
     methods:{
       //only TA and Manager have access to add a person
       upload() {
-        if(this.inputName == "" || this.inputRole == "" || this.inputAlias == ""|| this.inputPrinciple == "") {
+        if(this.person.name == "" || this.person.role == "" || this.person.alias == ""|| this.person.principle == "") {
           this.addFeedback('notify', 'Please fill the blanks.')
           // console.log('err0')
           return;
         }
         // name
         var nameStr
-        if(this.inputName.toString() === ' ') {
+        if(this.person.name.toString() === ' ') {
           // console.log('err1')
           this.addFeedback('notify', 'Name invalid. eg. Danielle Zhao')
           return;
         }
-        var nameArr = this.inputName.toString().toLowerCase().split(" ");
+        var nameArr = this.person.name.toString().toLowerCase().split(" ");
         if(nameArr.length > 1) {
           nameArr[0] = (nameArr[0].toString())[0].toUpperCase() + (nameArr[0].toString()).substr(1);
           nameArr[nameArr.length - 1] = nameArr[nameArr.length - 1][0].toUpperCase() + nameArr[nameArr.length - 1].substr(1);
@@ -75,9 +67,9 @@ export default {
         }
         // role
         var roleStr
-        if(this.inputRole == "FTE" || this.inputRole == "fte") {
+        if(this.person.role == "FTE" || this.person.role == "fte") {
           roleStr = "FTE";
-        }else if(this.inputRole == "Vendor" || this.inputRole == "vendor" || this.inputRole == "v") {
+        }else if(this.person.role == "Vendor" || this.person.role == "vendor" || this.person.role == "v") {
           roleStr = ""
         }else {
           // console.log('err2')
@@ -86,24 +78,23 @@ export default {
         }
         // alias
         var aliasStr
-        if(this.inputAlias.toString() === ' ') {
+        if(this.person.alias.toString() === ' ') {
           // console.log('err5')
           this.addFeedback('notify', 'alias invalid. eg. danzha')
           return;
         }
-        if(this.inputRole == "Vendor" || this.inputRole == "vendor" || this.inputRole == "v") {
-          if(this.inputAlias.toString().match('v-') != 'v-') {
+        if(this.person.role == "Vendor" || this.person.role == "vendor" || this.person.role == "v") {
+          if(this.person.alias.toString().match('v-') != 'v-') {
             // console.log('err5')
             this.addFeedback('notify', 'vendor alias with no \'v-\' is invalid.')
             return;
           }
         }
-        if(this.inputAlias[0] == "(" && this.inputAlias[(this.inputAlias).length-1] == ")") {
-          aliasStr = this.inputAlias
+        if(this.person.alias[0] == "(" && this.person.alias[(this.person.alias).length-1] == ")") {
+          aliasStr = this.person.alias
         }else {
-          aliasStr = "(" + this.inputAlias + ")";
+          aliasStr = "(" + this.person.alias + ")";
         }
-        this.message = nameStr + " " + roleStr +  " " + aliasStr
         // console.log(this.apiPayload)
         if(this.admin) {
           new Promise((resolve, reject) => {
@@ -153,31 +144,6 @@ export default {
           });
         }
       },
-      // personinfo: function() {
-      //   return new Promise((resolve, reject) => {
-      //     this.$http.get("/.auth/me").then((response)=> {
-      //       if(response.data[0].user_claims) {
-      //         for(const a of response.data[0].user_claims) {
-      //           if(a.typ == "name"){
-      //             this.emailUnderName = a.val
-      //           }
-      //         }   
-      //       }else {
-      //         this.emailUnderName = "Danielle Zhao"
-      //       }
-      //       if(this.emailUnderName.match("Juncheng Zhu") == "Juncheng Zhu" 
-      //       ||this.emailUnderName.match("Karen Zheng") == "Karen Zheng"
-      //       ||this.emailUnderName.match("Anik Shen") == "Anik Shen"
-      //       ||this.emailUnderName.match("Danielle Zhao") == "Danielle Zhao" 
-      //       ||this.emailUnderName.match("Dingsong Zhang") == "Dingsong Zhang"
-      //       ||this.emailUnderName.match("Anita Yang") == "Anita Yang"
-      //       ||this.emailUnderName.match("Sean Wu (AZURE)") == "Sean Wu (AZURE)")
-      //         this.admin = true;
-      //     }).catch((error) => {
-      //       reject(error)
-      //     })
-      //   })
-      // },
       linkToCalendar() {
           this.$router.push((this.$router.currentRoute.path).replace('/person',''));
       },
@@ -189,6 +155,9 @@ export default {
         admin() {
           return store.get('user').admin;
         },
+        displayName() {
+          return store.get('user').displayName;
+        },
         apiPath() {
             return (
                 "/api/" +
@@ -197,10 +166,10 @@ export default {
         },
         apiPayload() {
             return {
-                name: this.inputName,
-                role:this.inputRole,
-                principle:this.inputPrinciple,
-                alias:this.inputAlias,
+                name: this.person.name,
+                role:this.person.role,
+                principle:this.person.principle,
+                alias:this.person.alias,
                 randomNumber: this.$randomNumber
             };
         },
