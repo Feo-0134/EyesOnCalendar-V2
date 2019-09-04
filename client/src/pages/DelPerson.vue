@@ -42,10 +42,10 @@ Feature 7 Add a new member to the calendar
       <div class="morespace">
       <div class="newRow">
       <!-- <img src="../../static/img/joinus.png" alt="joinPic" /> -->
-      <input class="elem inputBox adjust" v-model="message" placeholder="eg. (danzha) / Danielle Zhao">
+      <input class="elem inputBox adjust" v-model="message" placeholder="eg. (danzha)">
       <button class="elem buttonOrg adjust" id="show-modal" v-on:click="upload">Confirm</button>
       </div>
-      <p class = "topmargin">HINT：You can delete a person with either alias [eg. (danzha) ] or his/her first name and last name[eg. Danielle Zhao ].</p>
+      <p class = "topmargin">HINT：You can delete a person with alias [eg. (danzha) ].</p>
       </div>
       <!-- use the modal component, pass in the prop -->
       <modal v-if="showModal" @close="showModal = false">
@@ -67,7 +67,7 @@ var store = require('store')
 export default {
     data() {
       return {
-          message: "",
+          message: '',
           showModal: false,
           emailUnderName: null,
           state: null,
@@ -80,8 +80,8 @@ export default {
           return new Promise((resolve, reject) => {
             this.$http.post(this.apiPath, this.apiPayload)
             .then((response)=> {
-              if(response.data == "all good")  {this.delFeedback('success', 'Person Deleted from Team')}
-              else(this.delFeedback('notify', 'Person Not Exist'))
+              if(response.data == "success")  {this.delFeedback('success', 'Person Deleted from Team')}
+              else{this.delFeedback('notify', 'Person Not Exist');console.log(response)}
             })
             .catch((error)=> {
               this.delFeedback('error', 'System Error')
@@ -159,8 +159,7 @@ export default {
         },
         apiPayload() {
             return {
-                name: this.message,
-                randomNumber: this.$randomNumber
+                alias: this.message,
             };
         },
         linkToCalendar() {

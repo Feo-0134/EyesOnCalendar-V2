@@ -39,14 +39,14 @@
                 </div>
             </el-dialog>
             <el-dialog title="Delete Person" :visible.sync="delFormVisible">
-                <el-form :model="form">
+                <el-form :model="delForm">
                     <el-form-item label="Alias" :label-width="formLabelWidth">
-                    <el-input v-model="form.name" autocomplete="off"></el-input>
+                    <el-input v-model="delForm.alias" autocomplete="off"></el-input>
                     </el-form-item>
                 </el-form>
                 <div slot="footer" class="dialog-footer">
                     <el-button @click="delFormVisible = false">Cancel</el-button>
-                    <el-button type="primary" @click="delFormVisible = false">Confirm</el-button>
+                    <el-button type="primary" @click="delPerson();delFormVisible = false">Confirm</el-button>
                 </div>
             </el-dialog>
             <el-form v-if="initView"   :model="initForm" label-width="140px">
@@ -203,7 +203,6 @@ export default {
                 TeamAdvisor:'',
                 FTE:'',
                 Vendor:'',
-                MemberName: '',
             },
             shiftForm: {
                 TeamName: '',
@@ -233,12 +232,12 @@ export default {
                 path: this.teamForm.Month,
                 },
             });
-            this.socket.on('update', (data) => {
+            this.socket.on('updateMember', (data) => {
                 if (data.randomNumber === this.$randomNumber) return;
-                this.month.people = data.people;
+                // const newres = this.$http.get(`/api/${this.teamForm.TeamName}/${this.teamForm.Month}`);
             });
             res.data.people = res.data.people.sort((x, y) => x.name.localeCompare(y.name));
-            this.teamForm.MemberName = ""
+            this.cleanTeamForm()
             res.data.people.forEach(person=> {
                 if(person.principle == 'TM') { this.teamForm.TeamManager += person.name + ';'}
                 else if(person.principle == 'TA') { this.teamForm.TeamAdvisor += person.name + ';'}
@@ -266,6 +265,12 @@ export default {
             this.initForm.TeamAdvisor = ""
             this.initForm.FTE = ""
             this.initForm.Vendor = ""
+        },
+        cleanTeamForm: function () {
+            this.teamForm.TeamManager = ""
+            this.teamForm.TeamAdvisor = ""
+            this.teamForm.FTE = ""
+            this.teamForm.Vendor = ""
         },
         cleanAddForm: function () {
             this.addForm.name = ""
@@ -416,16 +421,45 @@ export default {
             }
             if(store.get('user').admin) {
                 new Promise((resolve, reject) => {
-                    this.$http.post(this.apiPath, this.apiPayload)
+                    this.$http.post(this.apiPathAddPerson, this.apiPayloadAddPerson)
                     .then((response)=> {
-                        if(response.data == "success") { this. addFeedback('success', 'Person Added to Team') }
-                        else{ this.addFeedback('notify', 'This employee is already in the system.');}
+                        if(response.data == "success") { 
+                            // the below lines is a stupid way to sync the display memeber which should be replaced by stocket.io later QwQ
+                            this.teamForm.Month = this.teamForm.Month.split('/')[0] + '/' + (this.teamForm.Month.split('/')[1]-1).toString()
+                            this.teamForm.Month = this.teamForm.Month.split('/')[0] + '/' + (this.teamForm.Month.split('/')[1]-(-1)).toString()                            
+                            this. addFeedback('success', 'Person Added to Team') }
+                        else{
+                            console.log(response)
+                            this.addFeedback('notify', 'This employee is already in the system.');   
+                        }
                     })
                     .catch((error) => {
                     this.addFeedback('error', 'System Error.' + error + 'Please report to the developer team.');
                     })
                 }) 
             }
+        },
+        delPerson() {
+            if(this.delForm.alias[0] == "(" && this.delForm.alias[(this.delForm.alias).length-1] == ")") {
+                ;
+            }else {
+                this.delForm.alias = "(" + this.delForm.alias + ")";
+            }
+            return new Promise((resolve, reject) => {
+                this.$http.post(this.apiPathDelPerson, this.apiPayloadDelPerson)
+                .then((response)=> {
+                if(response.data == "success")  {
+                    // the below lines is a stupid way to sync the display memeber which should be replaced by stocket.io later QwQ
+                    this.teamForm.Month = this.teamForm.Month.split('/')[0] + '/' + (this.teamForm.Month.split('/')[1]-1).toString()
+                    this.teamForm.Month = this.teamForm.Month.split('/')[0] + '/' + (this.teamForm.Month.split('/')[1]-(-1)).toString()                           
+                    this.addFeedback('success', 'Person Deleted from Team')}
+                else{this.addFeedback('notify', 'Person Not Exist');
+                console.log(response)}
+                })
+                .catch((error)=> {
+                this.addFeedback('error', 'System Error')
+                })
+            })
         },
         addFeedback(type, msg) {
             const h = this.$createElement;
@@ -472,6 +506,38 @@ export default {
         apiPayload() {
             return {
                 people: this.people,
+            };
+        },
+        apiPathAddPerson() {
+            return (
+                '/api/' +
+                this.teamForm.TeamName +
+                '/' +
+                this.teamForm.Month + 
+                '/person'
+            );
+        },
+        apiPayloadAddPerson() {
+            return {
+                name: this.addForm.name,
+                role:this.addForm.role,
+                principle:this.addForm.principle,
+                alias:this.addForm.alias,
+                randomNumber: this.$randomNumber
+            };
+        },
+        apiPathDelPerson() {
+            return (
+                '/api/' +
+                this.teamForm.TeamName +
+                '/' +
+                this.teamForm.Month + 
+                '/delete'
+            );
+        },
+        apiPayloadDelPerson() {
+            return {
+                alias: this.delForm.alias,
             };
         },
         
