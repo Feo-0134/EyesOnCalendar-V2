@@ -21,39 +21,35 @@
             </el-menu>
         </el-aside>
         <el-main>
-<el-dialog title="Add Person" :visible.sync="addFormVisible">
-  <el-form :model="addForm">
-    <el-form-item label="Alias" :label-width="formLabelWidth">
-      <el-input v-model="addForm.alias" autocomplete="off"></el-input>
-    </el-form-item>
-    <el-form-item label="Name" :label-width="formLabelWidth">
-      <el-input v-model="addForm.name" autocomplete="off"></el-input>
-    </el-form-item>
-    <el-form-item label="Role" :label-width="formLabelWidth">
-      <el-input v-model="addForm.role" autocomplete="off"></el-input>
-    </el-form-item>
-    <el-form-item label="Principle" :label-width="formLabelWidth">
-      <el-input v-model="addForm.principle" autocomplete="off" :disabled="true"></el-input>
-    </el-form-item>
-  </el-form>
-  <div slot="footer" class="dialog-footer">
-    <el-button @click="addFormVisible = false">Cancel</el-button>
-    <el-button type="primary" @click="addFormVisible = false">Confirm</el-button>
-  </div>
-</el-dialog>
-<el-dialog title="Delete Person" :visible.sync="delFormVisible">
-  <el-form :model="form">
-    <el-form-item label="Alias" :label-width="formLabelWidth">
-      <el-input v-model="form.name" autocomplete="off"></el-input>
-    </el-form-item>
-  </el-form>
-  <div slot="footer" class="dialog-footer">
-    <el-button @click="delFormVisible = false">Cancel</el-button>
-    <el-button type="primary" @click="delFormVisible = false">Confirm</el-button>
-  </div>
-</el-dialog>
-
-            <el-form v-if="initView"  :model="initForm" label-width="140px">
+            <el-dialog title="Add Person" :visible.sync="addFormVisible">
+                <el-form :model="addForm">
+                    <el-form-item label="Alias" :label-width="formLabelWidth">
+                    <el-input v-model="addForm.alias" autocomplete="off"></el-input>
+                    </el-form-item>
+                    <el-form-item label="Name" :label-width="formLabelWidth">
+                    <el-input v-model="addForm.name" autocomplete="off"></el-input>
+                    </el-form-item>
+                    <el-form-item label="Role" :label-width="formLabelWidth" v-show="inputRole">
+                    <el-input v-model="addForm.role" autocomplete="off"></el-input>
+                    </el-form-item>
+                </el-form>
+                <div slot="footer" class="dialog-footer">
+                    <el-button @click="addFormVisible = false">Cancel</el-button>
+                    <el-button type="primary" @click="addPerson();addFormVisible = false">Confirm</el-button>
+                </div>
+            </el-dialog>
+            <el-dialog title="Delete Person" :visible.sync="delFormVisible">
+                <el-form :model="form">
+                    <el-form-item label="Alias" :label-width="formLabelWidth">
+                    <el-input v-model="form.name" autocomplete="off"></el-input>
+                    </el-form-item>
+                </el-form>
+                <div slot="footer" class="dialog-footer">
+                    <el-button @click="delFormVisible = false">Cancel</el-button>
+                    <el-button type="primary" @click="delFormVisible = false">Confirm</el-button>
+                </div>
+            </el-dialog>
+            <el-form v-if="initView"   :model="initForm" label-width="140px">
                 <el-form-item label="Team Name">
                     <el-input v-model="initForm.TeamName" placeholder="example: AppService"></el-input>
                 </el-form-item>
@@ -80,7 +76,7 @@
                     <el-button type="primary" @click="initiateCalendar">Confirm</el-button>
                 </span>
             </el-form>
-            <el-form v-if="shiftView" :model="shiftForm" label-width="140px">
+            <el-form v-if="shiftView"  :model="shiftForm" label-width="140px">
                 <el-form-item label="Team Name">
                     <el-input v-model="shiftForm.TeamName" :disabled="true"></el-input>
                 </el-form-item>
@@ -106,7 +102,7 @@
                     <el-button type="primary" @click=";">Confirm</el-button>
                 </span>
             </el-form>
-            <el-form v-if="teamView"  :model="teamForm" label-width="140px">
+            <el-form v-if="teamView"   :model="teamForm" label-width="140px">
                 <el-form-item label="Team Name">
                     <el-input v-model="teamForm.TeamName" ></el-input>
                 </el-form-item>
@@ -116,36 +112,36 @@
                 <el-form-item label="Team Manager">
                     <el-input v-model="teamForm.TeamManager" :disabled="true"></el-input>
                     <div class="functionalButton">
-                    <el-button type="primary" icon="el-icon-plus" circle v-on:click="addPerson('FTE', 'TM')"></el-button>
-                    <el-button type="primary" icon="el-icon-minus" circle v-on:click="delFormVisible = true"></el-button>
+                    <el-button type="primary" icon="el-icon-plus" circle v-on:click="addPersonView('FTE', 'TM')"></el-button>
+                    <el-button type="primary" icon="el-icon-minus" circle v-on:click="delPersonView()"></el-button>
                     </div>
                 </el-form-item>
                 <el-form-item label="Technical Advisor">
                     <el-input v-model="teamForm.TeamAdvisor" :disabled="true"></el-input>
                     <div class="functionalButton">
-                    <el-button type="primary" icon="el-icon-plus" circle v-on:click="addPerson('', 'TA')"></el-button>
-                    <el-button type="primary" icon="el-icon-minus" circle v-on:click="delFormVisible = true"></el-button>
+                    <el-button type="primary" icon="el-icon-plus" circle v-on:click="addPersonView('', 'TA')"></el-button>
+                    <el-button type="primary" icon="el-icon-minus" circle v-on:click="delPersonView()"></el-button>
                     </div>
                 </el-form-item>
                                <el-form-item label="FTE Member">
                     <el-input v-model="teamForm.FTE" :disabled="true"></el-input>
                     <div class="functionalButton">
-                    <el-button type="primary" icon="el-icon-plus" circle v-on:click="addPerson('FTE', 'None')"></el-button>
-                    <el-button type="primary" icon="el-icon-minus" circle v-on:click="delFormVisible = true"></el-button>
+                    <el-button type="primary" icon="el-icon-plus" circle v-on:click="addPersonView('FTE', 'None')"></el-button>
+                    <el-button type="primary" icon="el-icon-minus" circle v-on:click="delPersonView()"></el-button>
                     </div>
                 </el-form-item>
                                <el-form-item label="Vendor member">
                     <el-input v-model="teamForm.Vendor" :disabled="true"></el-input>
                     <div class="functionalButton">
-                    <el-button type="primary" icon="el-icon-plus" circle v-on:click="addPerson('FTE', 'None')"></el-button>
-                    <el-button type="primary" icon="el-icon-minus" circle v-on:click="delFormVisible = true"></el-button>
+                    <el-button type="primary" icon="el-icon-plus" circle v-on:click="addPersonView('Vendor', 'None')"></el-button>
+                    <el-button type="primary" icon="el-icon-minus" circle v-on:click="delPersonView()"></el-button>
                     </div>
                 </el-form-item>
                 <!-- <el-form-item label="Others">
                     <el-input v-model="form.name"></el-input>
                 </el-form-item> -->
             </el-form>
-            <el-form v-if="reportView"  :model="teamForm" label-width="140px">
+            <el-form v-if="reportView" :model="teamForm" label-width="140px">
                 <el-form-item label="Team Name">
                     <el-input v-model="teamForm.TeamName" ></el-input>
                 </el-form-item>
@@ -162,10 +158,16 @@
 </template>
 
 <script>
+var store = require('store')
 export default {
     data: function () {
         return {
+            teamView: true,
+            shiftView: false,
+            reportView: false,
+            initView: false,
             addFormVisible:false,
+            inputRole:false,
             delFormVisible:false,
             form: {
                     name: '',
@@ -183,11 +185,9 @@ export default {
                 role: '',
                 principle: ''
             },
-            formLabelWidth: '100px',
-            teamView: true,
-            shiftView: false,
-            reportView: false,
-            initView: false,
+            delForm: {
+                alias: '',
+            },
             initForm: {
                 TeamName: '',
                 Month: '',
@@ -213,6 +213,7 @@ export default {
                 FTE: '',
                 Vendor: '',
             },
+            formLabelWidth: '100px',
             people: 
                     [{
                         principle:"None",
@@ -258,13 +259,6 @@ export default {
         },
     },
     methods: {
-        addPerson(role, principle) {
-            this.addForm.role = role
-            this.addForm.principle = principle
-            this.addFormVisible = true
-        },
-        delPerson: function() {
-        },
         cleanInitForm: function () {
             this.initForm.TeamName = ""
             this.initForm.Month = ""
@@ -272,6 +266,16 @@ export default {
             this.initForm.TeamAdvisor = ""
             this.initForm.FTE = ""
             this.initForm.Vendor = ""
+        },
+        addPersonView(role, principle) {
+            this.inputRole = false
+            if(principle == 'TA') { this.inputRole = true }
+            this.addForm.role = role
+            this.addForm.principle = principle
+            this.addFormVisible = true
+        },
+        delPersonView: function() {
+            this.delFormVisible = true
         },
         showTeamView: function () {
             this.teamView = true
@@ -353,6 +357,66 @@ export default {
                     console.log(error)
                 })
             })
+        },
+        addPerson() {
+            if(this.addForm.name == "" || this.addForm.alias == "") {
+            this.addFeedback('notify', 'Please fill the blanks.')
+            return;
+            }
+            // name
+            if(this.addForm.name.toString() === ' ') {
+                this.addFeedback('notify', 'Name invalid. eg. Danielle Zhao')
+                return;
+            }
+            var nameArr = this.addForm.name.toString().toLowerCase().trim().split(" ");
+            if(nameArr.length > 1) { 
+                // apply name to default format: First Name + Last Name and Capital the first letter
+                nameArr[0] = (nameArr[0].toString())[0].toUpperCase() + (nameArr[0].toString()).substr(1);
+                nameArr[nameArr.length - 1] = nameArr[nameArr.length - 1][0].toUpperCase() + nameArr[nameArr.length - 1].substr(1);
+                this.addForm.name = nameArr[0] + " " + nameArr[nameArr.length - 1];
+            }else {
+                this.addFeedback('notify', 'Name invalid. eg. Danielle Zhao')
+                return;
+            }
+            // role
+            if(this.addForm.role == "FTE" || this.addForm.role == "fte"|| this.addForm.role == "Fte" || this.addForm.role == "FTe"){
+            this.addForm.role = "FTE";
+            }else if(this.addForm.role == "Vendor" || this.addForm.role == "vendor" || this.addForm.role == "v") {
+            this.addForm.role = "Vendor"
+            }else {
+            this.addFeedback('notify', 'Role invalid. eg. FTE or Vendor')
+            return;
+            }
+            // alias
+            if(this.addForm.alias.toString() === ' ') {
+            this.addFeedback('notify', 'alias invalid. eg. danzha')
+            return;
+            } else {
+                this.addForm.alias = this.addForm.alias.trim()
+            }
+            if(this.addForm.role == "Vendor") {
+                if(this.addForm.alias.toString().match('v-') != 'v-') {
+                    this.addFeedback('notify', 'vendor alias with no \'v-\' is invalid.')
+                    return;
+                }
+            }
+            if(this.addForm.alias[0] == "(" && this.addForm.alias[(this.addForm.alias).length-1] == ")") {
+                ;
+            }else {
+                this.addForm.alias = "(" + this.addForm.alias + ")";
+            }
+            if(store.get('user').admin) {
+                new Promise((resolve, reject) => {
+                    this.$http.post(this.apiPath, this.apiPayload)
+                    .then((response)=> {
+                        if(response.data == "success") { this. addFeedback('success', 'Person Added to Team') }
+                        else{ this.addFeedback('notify', 'This employee is already in the system.');}
+                    })
+                    .catch((error) => {
+                    this.addFeedback('error', 'System Error.' + error + 'Please report to the developer team.');
+                    })
+                }) 
+            }
         },
         addFeedback(type, msg) {
             const h = this.$createElement;

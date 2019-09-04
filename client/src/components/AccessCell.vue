@@ -79,11 +79,11 @@ export default {
             let jsonresult = JSON.parse(result);
             this.displayName = jsonresult.displayName;
             ;
-            if(jsonresult.jobTitle.match('TECHNICAL ADVISOR') == 'TECHNICAL ADVISOR'|| jsonresult.jobTitle.match('MANAGER') == 'MANAGER'||jsonresult.userPrincipalName === 'v-jelu@microsoft.com' || jsonresult.userPrincipalName === 't-junzhu@microsoft.com')
+            if(jsonresult.jobTitle.match('TECHNICAL ADVISOR') == 'TECHNICAL ADVISOR'|| jsonresult.jobTitle.match('MANAGER') == 'MANAGER'||jsonresult.userPrincipalName == 'Jianan.Lu@microsoft.com' || jsonresult.userPrincipalName == 't-junzhu@microsoft.com')
             { this.admin = true }
             // use store.js to store hope that works
             store.set('user', {displayName:this.displayName, admin: this.admin})
-            if( jsonresult.jobTitle === 'TECHNICAL ADVISOR ASIA' || jsonresult.userPrincipalName === 'v-jelu@microsoft.com' || jsonresult.userPrincipalName === 't-junzhu@microsoft.com') {
+            if( jsonresult.jobTitle === 'TECHNICAL ADVISOR ASIA' || jsonresult.userPrincipalName == 'Jianan.Lu@microsoft.com' || jsonresult.userPrincipalName == 't-junzhu@microsoft.com') {
                 this.accessmsg = result;
                 // document.getElementById("json").innerHTML = result;
             } else {
