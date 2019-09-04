@@ -267,7 +267,15 @@ export default {
             this.initForm.FTE = ""
             this.initForm.Vendor = ""
         },
+        cleanAddForm: function () {
+            this.addForm.name = ""
+            this.addForm.alias = ""
+        },
+        cleanDelForm: function () {
+            this.delForm.alias = ""
+        },
         addPersonView(role, principle) {
+            this.cleanAddForm()
             this.inputRole = false
             if(principle == 'TA') { this.inputRole = true }
             this.addForm.role = role
@@ -275,6 +283,7 @@ export default {
             this.addFormVisible = true
         },
         delPersonView: function() {
+            this.cleanDelForm()
             this.delFormVisible = true
         },
         showTeamView: function () {
@@ -301,7 +310,7 @@ export default {
             this.initView = false
             this.reportView = true
         },
-        inputFormatCheck: function () {
+        initFormatCheck: function () {
             var MontArr = (this.initForm.Month).split("/");
             if(MontArr.length != 2 || MontArr[1] < 1 || MontArr[1] > 12) {
                 return -1;
@@ -315,7 +324,7 @@ export default {
             }
         },
         initiateCalendar: function () {
-            if(this.inputFormatCheck() == -1) {
+            if(this.initFormatCheck() == -1) {
                 this.addFeedback('notify', 'Month is invalid. example: 2019/8')
                 return;
             }
@@ -450,7 +459,7 @@ export default {
     },
     computed:{
         goCalendar() {
-        return ('/');
+            return ('/');
         },
         apiPath() {
             return (
