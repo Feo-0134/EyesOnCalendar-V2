@@ -151,6 +151,22 @@
                 <!-- <el-form-item label="Others">
                     <el-input v-model="form.name"></el-input>
                 </el-form-item> -->
+                <div>
+                    <h2 v-if="!month">{{message}}</h2>
+                    <div v-if="month">
+                        <div id="tablehead" v-bind:class="{sticky: scrolled}" class="row tablehead">
+                            <div class="name"> </div>
+                            <div class="celly">Work-Day</div>
+                            <div class="celly">Morning-Shift</div>
+                            <div class="celly">Night-Shift</div>
+                            <div class="celly">Training</div>
+                            <div class="celly">Vacation</div>
+                            <div class="celly">Public-Holiday</div>
+                            <div class="celly">Public-Holiday_OnDuty</div>
+                        </div>
+                        <Personsum v-for="(p,index) in month.people" v-bind:key="p._id" v-bind:pindex="index" v-bind:person="p"/>
+                    </div>
+                </div>
             </el-form>
         </el-main>
     </el-container>
@@ -159,7 +175,9 @@
 
 <script>
 var store = require('store')
+import Personsum from "@/components/PersonRowSum"
 export default {
+    components: { Personsum },
     data: function () {
         return {
             teamView: true,
@@ -212,7 +230,6 @@ export default {
                 FTE: '',
                 Vendor: '',
             },
-            formLabelWidth: '100px',
             people: 
                     [{
                         principle:"None",
@@ -220,6 +237,9 @@ export default {
                         alias:"default",
                         name:"default"
                     }],
+            formLabelWidth: '100px',
+            scrolled: false,
+            changed: false,
         }
     },
     asyncComputed: {
@@ -231,6 +251,13 @@ export default {
                 query: {
                 path: this.teamForm.Month,
                 },
+            });
+            this.socket.on("update", data => {
+                if (data.randomNumber == this.$randomNumber) return;
+                this.month.people[data.indexes.p].days[data.indexes.d].workDay =
+                data.workDay;
+                this.month.people[data.indexes.p].days[data.indexes.d].workType =
+                data.workType;
             });
             this.socket.on('updateMember', (data) => {
                 if (data.randomNumber === this.$randomNumber) return;
@@ -684,4 +711,51 @@ export default {
   header span {
       padding-top: 0px; 
   }
+  .attendance {
+  margin: 9px 0 0 0;
+}
+
+
+.tablehead {
+  width: 100%;
+}
+
+.sticky {
+  position: fixed;
+  top: 0;
+  background: rgb(37, 37, 37);
+}
+
+.sticky + .tablehead {
+  padding-top: 102px;
+}
+
+.pointer {
+  cursor: pointer;
+  margin: 0 5px 0 5px;
+  padding: 0 10px 0 10px;
+  text-decoration: none;
+  color: white;
+}
+
+.sectionPointer:hover {
+  background-color: #555;
+}
+
+.pointer:hover {
+  background-color: #555;
+}
+/* .marginLeft {
+   margin-left: 30px
+} */
+
+.celly {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  vertical-align: middle;
+  width: 120px;
+  margin: 10px;
+}
 </style>
