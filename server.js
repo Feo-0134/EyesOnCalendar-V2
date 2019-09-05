@@ -366,6 +366,30 @@ router.post('/:pod/newupload2/:year/:month', upload.any('csv'), bodyParser(), as
   }
 })
 
+/* API to return team of the usr login
+ * if return team 'default' then
+ * lead usr to the inititate team page
+ {
+  "year":2019,
+  "month":8,
+  "alias":"danzha"
+ }
+ */
+router.get('/getpod/:year/:month/:alias', async (ctx) => {
+  var p = ctx.params
+  console.log(p)
+  var podName = 'default'
+  var flag = 0
+  var monthRecord = await Month.find({ year: p.year, month: p.month })
+  monthRecord.forEach((month) => {
+    month.people.forEach((person) => {
+      if (person.alias === p.alias) { flag = 1 }
+    })
+    if (flag === 1) { podName = month.pod; flag = 0 }
+  })
+  ctx.body = podName
+})
+
 io.on('connection', socket => {
   socket.join(socket.handshake.query.path)
   socket.on('hello', socket => {
