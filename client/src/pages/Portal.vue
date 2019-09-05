@@ -215,8 +215,8 @@ export default {
                 Vendor: '',
             },
             teamForm: {
-                TeamName: 'AppService',
-                Month: '2019/8',
+                TeamName: store.get('user').team,
+                Month: new Date().getFullYear() + '/' + (new Date().getMonth() + 1),
                 TeamManager:'',
                 TeamAdvisor:'',
                 FTE:'',
@@ -366,14 +366,15 @@ export default {
             }
             var vendorArr = (this.initForm.Vendor).split(";");
             for(var cnt = 0; cnt<vendorArr.length-1; cnt++) {
-                this.people[cnt].alias = peopleArr[cnt].split("-")[1]
-                this.people[cnt].name = peopleArr[cnt].split("-")[0]
+                this.people[cnt].alias = '(' + peopleArr[cnt].split("(")[1]
+                if(this.people[cnt].alias.match('v-') != 'v-') { this.addFeedback('notify', 'vendor alias with no \'v-\' is invalid.'); return }
+                this.people[cnt].name = peopleArr[cnt].split("(")[0]
                 this.people[cnt].role = "Vendor"
             }
             var fteArr = (this.initForm.FTE).split(";");
             for(var cnt = vendorArr.length-1; cnt<peopleArr.length-1; cnt++) {
-                this.people[cnt].alias = peopleArr[cnt].split("-")[1]
-                this.people[cnt].name = peopleArr[cnt].split("-")[0]
+                this.people[cnt].alias = '(' + peopleArr[cnt].split("(")[1]
+                this.people[cnt].name = peopleArr[cnt].split("(")[0]
                 this.people[cnt].role = "FTE"
             }
             var teamManager = (this.initForm.TeamManager).split(";");
@@ -447,6 +448,7 @@ export default {
                 this.addForm.alias = "(" + this.addForm.alias + ")";
             }
             if(store.get('user').admin) {
+                console.log('admin')
                 new Promise((resolve, reject) => {
                     this.$http.post(this.apiPathAddPerson, this.apiPayloadAddPerson)
                     .then((response)=> {

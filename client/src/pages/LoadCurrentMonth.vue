@@ -14,7 +14,11 @@ export default {
     }
   },
   created() {
-    // this.$router.push("AppService"+moment().format('/YYYY/M'))
+    // if(store.get('user').team === 'default') {
+    //   this.$router.push('/portal')
+    // } else {
+    //   this.$router.push(store.get('user').team + moment().format('/YYYY/M'))
+    // }
   },
 }
 </script>

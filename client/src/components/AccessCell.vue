@@ -79,12 +79,9 @@ export default {
             let result = JSON.stringify(data, null, 4);
             let jsonresult = JSON.parse(result);
             this.displayName = jsonresult.displayName;
-            this.alias = 'danzha'// (jsonresult.userPrincipalName.split('@'))[0]
+            this.alias = '(' + (jsonresult.userPrincipalName.split('@'))[0] + ')'
             if(jsonresult.jobTitle.match('TECHNICAL ADVISOR') == 'TECHNICAL ADVISOR'|| jsonresult.jobTitle.match('MANAGER') == 'MANAGER'||jsonresult.userPrincipalName == 'Jianan.Lu@microsoft.com' || jsonresult.userPrincipalName == 't-junzhu@microsoft.com')
-            { this.admin = true }
-
-            // use store.js to store hope that works
-            store.set('user', {displayName:this.displayName, admin: this.admin})
+            { this.admin = true; console.log('admin')}
 
             if( jsonresult.jobTitle === 'TECHNICAL ADVISOR ASIA' || jsonresult.userPrincipalName == 'Jianan.Lu@microsoft.com' || jsonresult.userPrincipalName == 't-junzhu@microsoft.com') {
                 this.accessmsg = result;
@@ -98,16 +95,16 @@ export default {
 
         getTeamName() {
             var apipath = '/api/getpod/' + new Date().getFullYear() + '/' + (new Date().getMonth() + 1) + '/' + this.alias
-            console.log(apipath)
             return new Promise((resolve, reject) => {
                 this.$http.get(apipath)
                 .then((response)=> {
-                    console.log(response)
-                    // if(response.data == "default") {                            
-                    //     console.log('Your team hasn\'t joined the tool yet') }
-                    // else{
-                    //     console.log(response)   
-                    // }
+                    console.log(response.data)
+                    if(response.data == "default") {                            
+                        // console.log('Your team hasn\'t joined the tool yet')
+                        store.set('user', {displayName:this.displayName, admin: this.admin, team: 'default'})
+                    } else {
+                        store.set('user', {displayName:this.displayName, admin: this.admin, team: response.data})
+                    }
                 })
                 .catch((error) => {
                     console.log(error);
