@@ -94,12 +94,16 @@ function newMonth (year, month, pod, daylock, people) {
  * in a given month
  */
 function findRecord (month, alias) {
+  // console.log('enterFind')
+  let flag = 0
   month.people.forEach(person => {
     if (person.alias === alias) {
-      return true
+      // console.log('Found')
+      flag = 1
     }
   })
-  return false
+  // console.log('notFound')
+  if (flag === 1) { return true } else { return false }
 }
 
 /* Function to insert
