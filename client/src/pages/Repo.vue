@@ -14,7 +14,7 @@ Feature 5 Monthly report
             <div class="celly">Training</div>
             <div class="celly">Vacation</div>
             <div class="celly">Public-Holiday</div>
-            <div class="celly">Public-Holiday_OnDuty</div>
+            <div class="celly">Holiday OnDuty</div>
           </div>
           <Personsum class="marginLeft" v-for="(p,index) in month.people" v-bind:key="p._id" v-bind:pindex="index" v-bind:person="p"/>
       </div>

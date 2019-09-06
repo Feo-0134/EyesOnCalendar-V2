@@ -29,11 +29,11 @@ export default {
   computed: {
     displayName() {
       var nameArray = this.person.name.split(" ");
-      return nameArray[0] + " " + nameArray[1] + " " + nameArray[nameArray.length - 1];
+      return nameArray[0] + " " + nameArray[1] // + " " + this.person.alias;
     },
     shortName() {
       var nameArray = this.person.name.split(" ");
-      return nameArray[0] + " " + nameArray[1];
+      return this.person.alias;
     },
     large() {
       if (this.size > 1600) return true;
