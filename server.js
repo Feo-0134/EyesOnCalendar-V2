@@ -195,10 +195,6 @@ router.post('/:pod/:year/:month/person', upload.any('csv'), bodyParser(), async 
   try {
     await payload.save()
     ctx.body = 'success'
-    io.on('connection', socket => {
-      // eslint-disable-next-line key-spacing
-      io.emit('updateMember', { randomNumber:  parseInt(Math.random() * 1000000) })
-    })
   } catch (e) {
     console.log('System Error: crash at insert record' + e)
     ctx.status = 400

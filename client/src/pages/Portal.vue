@@ -300,10 +300,6 @@ export default {
                 this.month.people[data.indexes.p].days[data.indexes.d].workType =
                 data.workType;
             });
-            this.socket.on('updateMember', (data) => {
-                if (data.randomNumber === this.$randomNumber) return;
-                // const newres = this.$http.get(`/api/${this.teamForm.TeamName}/${this.teamForm.Month}`);
-            });
             res.data.people = res.data.people.sort((x, y) => x.name.localeCompare(y.name));
             this.cleanTeamForm()
             res.data.people.forEach(person=> {
@@ -312,6 +308,14 @@ export default {
                 
                 if(person.role == 'FTE') { this.teamForm.FTE += person.name + ';'}
                 else if(person.role == 'Vendor') { this.teamForm.Vendor += person.name + ';'}
+                var cntM = 0, cntN = 0, cntW = 0 
+                person.days.forEach(day => {
+                    if(day.workType === 'W') {cntW += 1}
+                    else if(day.workType === 'MS') {cntM += 1}
+                    else if(day.workType === 'NS') {cntN += 1}
+                })
+                if(cntM > cntW && cntM > cntN) {this.teamForm.MorningShift += person.name + ';'}
+                if(cntN > cntW && cntN > cntM) {this.teamForm.NightShift += person.name + ';'}
             })
             return res.data;
             } catch (e) {
