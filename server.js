@@ -92,7 +92,7 @@ router.post('/:pod/:year/:month/batch/:person/:workType', async (ctx) => {
             day.workType = p.workType
             if (p.workType === 'NS') {
               day.workDay = 5
-            } else if (p.workType === 'MS') { day.workDay = 1 }
+            } else if (p.workType === 'MS' || p.workType === 'W' ) { day.workDay = 1 }
           }
         })
       }
