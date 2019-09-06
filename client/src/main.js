@@ -10,13 +10,14 @@ import Popover from 'vue-js-popover'
 import ElementUI from 'element-ui';
 import App from './App'
 import 'element-ui/lib/theme-chalk/index.css';
+import locale from 'element-ui/lib/locale/lang/en'
 
 Vue.use(require('@websanova/vue-upload'));
 
 Vue.use(Vuex);
 Vue.use(AsyncComputed);
 Vue.use(Popover);
-Vue.use(ElementUI);
+Vue.use(ElementUI, { locale });
 
 Vue.config.devtools = true;
 

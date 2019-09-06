@@ -50,12 +50,20 @@
                 </div>
             </el-dialog>
             <el-form v-if="initView"   :model="initForm" label-width="140px">
+                <el-form-item label="Month">
+                    <el-date-picker
+                    v-model="globalMonth"
+                    format="yyyy/M" value-format="yyyy/M"
+                    type="month"
+                    placeholder="Pick a month">
+                    </el-date-picker>
+                </el-form-item>
                 <el-form-item label="Team Name">
                     <el-input v-model="initForm.TeamName" placeholder="example: AppService"></el-input>
                 </el-form-item>
-                <el-form-item label="Month">
+                <!-- <el-form-item label="Month">
                     <el-input v-model="initForm.Month" placeholder="example: 2019/8"></el-input>
-                </el-form-item>
+                </el-form-item> -->
                 <el-form-item label="Team Manager">
                     <el-input v-model="initForm.TeamManager" placeholder="example: karenzhe"></el-input>
                 </el-form-item>
@@ -77,21 +85,29 @@
                 </span>
             </el-form>
             <el-form v-if="shiftView"  :model="shiftForm" label-width="140px">
+                <el-form-item label="Month">
+                    <el-date-picker
+                    v-model="globalMonth"
+                    type="month"
+                    format="yyyy/M" value-format="yyyy/M"
+                    placeholder="Pick a month">
+                    </el-date-picker>
+                </el-form-item>
                 <el-form-item label="Team Name">
                     <el-input v-model="shiftForm.TeamName" :disabled="true"></el-input>
                 </el-form-item>
-                <el-form-item label="Month">
+                <!-- <el-form-item label="Month">
                     <el-input v-model="shiftForm.Month" ></el-input>
-                </el-form-item>
+                </el-form-item> -->
                 <el-form-item label="Morning Shift">
-                    <el-input v-model="shiftForm.TeamManager" ></el-input>
+                    <el-input v-model="shiftForm.MorningShift" ></el-input>
                     <div class="functionalButton">
                     <el-button type="primary" icon="el-icon-plus" circle></el-button>
                     <el-button type="primary" icon="el-icon-minus" circle></el-button>
                     </div>
                 </el-form-item>
                 <el-form-item label="Night Shift">
-                    <el-input v-model="shiftForm.TeamManager" ></el-input>
+                    <el-input v-model="shiftForm.NightShift" ></el-input>
                     <div class="functionalButton">
                     <el-button type="primary" icon="el-icon-plus" circle></el-button>
                     <el-button type="primary" icon="el-icon-minus" circle></el-button>
@@ -103,12 +119,20 @@
                 </span>
             </el-form>
             <el-form v-if="teamView"   :model="teamForm" label-width="140px">
+                <el-form-item label="Month">
+                    <el-date-picker
+                    v-model="globalMonth"
+                    type="month"
+                    format="yyyy/M" value-format="yyyy/M"
+                    placeholder="Pick a month">
+                    </el-date-picker>
+                </el-form-item>
                 <el-form-item label="Team Name">
                     <el-input v-model="teamForm.TeamName" ></el-input>
                 </el-form-item>
-                <el-form-item label="Month">
+                <!-- <el-form-item label="Month">
                     <el-input v-model="teamForm.Month" ></el-input>
-                </el-form-item>
+                </el-form-item> -->
                 <el-form-item label="Team Manager">
                     <el-input v-model="teamForm.TeamManager" :disabled="true"></el-input>
                     <div class="functionalButton">
@@ -142,12 +166,20 @@
                 </el-form-item> -->
             </el-form>
             <el-form v-if="reportView" :model="teamForm" label-width="140px">
+                <el-form-item label="Month">
+                    <el-date-picker
+                    v-model="globalMonth"
+                    type="month"
+                    format="yyyy/M" value-format="yyyy/M"
+                    placeholder="Pick a month">
+                    </el-date-picker>
+                </el-form-item>
                 <el-form-item label="Team Name">
                     <el-input v-model="teamForm.TeamName" ></el-input>
                 </el-form-item>
-                <el-form-item label="Month">
+                <!-- <el-form-item label="Month">
                     <el-input v-model="teamForm.Month" ></el-input>
-                </el-form-item>
+                </el-form-item> -->
                 <!-- <el-form-item label="Others">
                     <el-input v-model="form.name"></el-input>
                 </el-form-item> -->
@@ -180,6 +212,7 @@ export default {
     components: { Personsum },
     data: function () {
         return {
+            globalMonth: new Date().getFullYear() + '/' + (new Date().getMonth() + 1),
             teamView: true,
             shiftView: false,
             reportView: false,
@@ -208,7 +241,7 @@ export default {
             },
             initForm: {
                 TeamName: '',
-                Month: '',
+                Month: null,
                 TeamManager: '',
                 TeamAdvisor: '',
                 FTE: '',
@@ -216,7 +249,7 @@ export default {
             },
             teamForm: {
                 TeamName: store.get('user').team,
-                Month: new Date().getFullYear() + '/' + (new Date().getMonth() + 1),
+                Month: null,
                 TeamManager:'',
                 TeamAdvisor:'',
                 FTE:'',
@@ -224,9 +257,9 @@ export default {
             },
             shiftForm: {
                 TeamName: '',
-                Month: '',
-                TeamManager: '',
-                TeamAdvisor: '',
+                Month: null,
+                MorningShift: null,
+                NightShift: null,
                 FTE: '',
                 Vendor: '',
             },
@@ -245,6 +278,9 @@ export default {
     asyncComputed: {
         month: {
         async get() {
+            this.teamForm.Month = this.globalMonth
+            this.shiftForm.Month = this.globalMonth
+            this.initForm.Month = this.globalMonth
             try {
             const res = await this.$http.get(`/api/${this.teamForm.TeamName}/${this.teamForm.Month}`);
             this.socket = io({
@@ -522,7 +558,12 @@ export default {
     },
     computed:{
         goCalendar() {
-            return ('/');
+            return (
+                '/' + 
+                this.teamForm.TeamName +
+                '/' +
+                this.globalMonth
+            );
         },
         apiPath() {
             return (
