@@ -76,6 +76,36 @@ router.post('/:pod/:year/:month/:person/:day', bodyParser(), async (ctx) => {
   }
 })
 
+/* API for batch update employee dayType
+ * to Morning Shift or Night Shift
+ * Once update one dayType of one person
+ */
+router.post('/:pod/:year/:month/batch/:person/:workType', async (ctx) => {
+  var p = ctx.params
+  try {
+    var currentMonth = await Month.findOne({ year: p.year, month: p.month, pod: p.pod })
+    if (currentMonth == null) { throw (errorMsg) }
+    currentMonth.people.forEach(record => {
+      if (record.alias === p.person) {
+        record.days.forEach(day => {
+          if (day.workType === 'W' || day.workType === 'MS' || day.workType === 'NS') {
+            day.workType = p.workType
+            if (p.workType === 'NS') { day.workDay = 5 }
+          }
+        })
+      }
+    })
+    var result = await currentMonth.save()
+    // if indexes are set, emit update
+    // if (p.workType !== undefined) { io.to('/' + p.year + '/' + p.month).emit('update', p) }
+    ctx.body = result
+  } catch (e) {
+    ctx.status = 400
+    ctx.body = e
+    console.log(e)
+  }
+})
+
 /* Function to constructor a new month
 */
 function newMonth (year, month, pod, daylock, people) {

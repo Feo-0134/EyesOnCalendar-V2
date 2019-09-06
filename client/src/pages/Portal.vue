@@ -21,6 +21,17 @@
             </el-menu>
         </el-aside>
         <el-main>
+            <el-dialog title="Shift Arrangement" :visible.sync="sftFormVisible">
+                <el-form :model="sftForm">
+                    <el-form-item label="Alias" :label-width="formLabelWidth">
+                    <el-input v-model="sftForm.alias" autocomplete="off"></el-input>
+                    </el-form-item>
+                </el-form>
+                <div slot="footer" class="dialog-footer">
+                    <el-button @click="sftFormVisible = false">Cancel</el-button>
+                    <el-button type="primary" @click="sftPerson();sftFormVisible = false">Confirm</el-button>
+                </div>
+            </el-dialog>
             <el-dialog title="Add Person" :visible.sync="addFormVisible">
                 <el-form :model="addForm">
                     <el-form-item label="Alias" :label-width="formLabelWidth">
@@ -84,7 +95,7 @@
                     <el-button type="primary" @click="initiateCalendar">Confirm</el-button>
                 </span>
             </el-form>
-            <el-form v-if="shiftView"  :model="shiftForm" label-width="140px">
+            <el-form v-if="shiftView"  :model="teamForm" label-width="140px">
                 <el-form-item label="Month">
                     <el-date-picker
                     v-model="globalMonth"
@@ -94,29 +105,25 @@
                     </el-date-picker>
                 </el-form-item>
                 <el-form-item label="Team Name">
-                    <el-input v-model="shiftForm.TeamName" :disabled="true"></el-input>
+                    <el-input v-model="teamForm.TeamName" :disabled="true"></el-input>
                 </el-form-item>
                 <!-- <el-form-item label="Month">
-                    <el-input v-model="shiftForm.Month" ></el-input>
+                    <el-input v-model="teamForm.Month" ></el-input>
                 </el-form-item> -->
                 <el-form-item label="Morning Shift">
-                    <el-input v-model="shiftForm.MorningShift" ></el-input>
+                    <el-input v-model="teamForm.MorningShift" ></el-input>
                     <div class="functionalButton">
-                    <el-button type="primary" icon="el-icon-plus" circle></el-button>
-                    <el-button type="primary" icon="el-icon-minus" circle></el-button>
+                    <el-button type="primary" icon="el-icon-plus" v-on:click="sftPersonView('MS')" circle></el-button>
+                    <el-button type="primary" icon="el-icon-minus" v-on:click="sftPersonView('W')" circle></el-button>
                     </div>
                 </el-form-item>
                 <el-form-item label="Night Shift">
-                    <el-input v-model="shiftForm.NightShift" ></el-input>
+                    <el-input v-model="teamForm.NightShift" ></el-input>
                     <div class="functionalButton">
-                    <el-button type="primary" icon="el-icon-plus" circle></el-button>
-                    <el-button type="primary" icon="el-icon-minus" circle></el-button>
+                    <el-button type="primary" icon="el-icon-plus" v-on:click="sftPersonView('NS')" circle></el-button>
+                    <el-button type="primary" icon="el-icon-minus" v-on:click="sftPersonView('W')" circle></el-button>
                     </div>
                 </el-form-item>
-                <span>
-                    <el-button @click=";">Cancel</el-button>
-                    <el-button type="primary" @click=";">Confirm</el-button>
-                </span>
             </el-form>
             <el-form v-if="teamView"   :model="teamForm" label-width="140px">
                 <el-form-item label="Month">
@@ -220,6 +227,7 @@ export default {
             addFormVisible:false,
             inputRole:false,
             delFormVisible:false,
+            sftFormVisible:false,
             form: {
                     name: '',
                     region: '',
@@ -239,6 +247,10 @@ export default {
             delForm: {
                 alias: '',
             },
+            sftForm: {
+                alias: '',
+                workType: '',
+            },
             initForm: {
                 TeamName: '',
                 Month: null,
@@ -254,14 +266,8 @@ export default {
                 TeamAdvisor:'',
                 FTE:'',
                 Vendor:'',
-            },
-            shiftForm: {
-                TeamName: '',
-                Month: null,
-                MorningShift: null,
-                NightShift: null,
-                FTE: '',
-                Vendor: '',
+                MorningShift: '',
+                NightShift: '',
             },
             people: 
                     [{
@@ -279,7 +285,6 @@ export default {
         month: {
         async get() {
             this.teamForm.Month = this.globalMonth
-            this.shiftForm.Month = this.globalMonth
             this.initForm.Month = this.globalMonth
             try {
             const res = await this.$http.get(`/api/${this.teamForm.TeamName}/${this.teamForm.Month}`);
@@ -304,7 +309,8 @@ export default {
             res.data.people.forEach(person=> {
                 if(person.principle == 'TM') { this.teamForm.TeamManager += person.name + ';'}
                 else if(person.principle == 'TA') { this.teamForm.TeamAdvisor += person.name + ';'}
-                else if(person.role == 'FTE') { this.teamForm.FTE += person.name + ';'}
+                
+                if(person.role == 'FTE') { this.teamForm.FTE += person.name + ';'}
                 else if(person.role == 'Vendor') { this.teamForm.Vendor += person.name + ';'}
             })
             return res.data;
@@ -342,6 +348,9 @@ export default {
         cleanDelForm: function () {
             this.delForm.alias = ""
         },
+        cleanSftForm: function () {
+            this.sftForm.alias = ""
+        },
         addPersonView(role, principle) {
             this.cleanAddForm()
             this.inputRole = false
@@ -353,6 +362,11 @@ export default {
         delPersonView: function() {
             this.cleanDelForm()
             this.delFormVisible = true
+        },
+        sftPersonView(workType) {
+            this.cleanSftForm()
+            this.sftForm.workType = workType
+            this.sftFormVisible = true
         },
         showTeamView: function () {
             this.teamView = true
@@ -417,10 +431,12 @@ export default {
             var teamAdvisor = (this.initForm.TeamAdvisor).split(";");
             this.people.forEach(person => {
                 teamManager.forEach(tm => {
-                    if(person.alias == tm){person.principle = "TM";}
+                    console.log(tm)
+                    if(person.alias == '(' + tm + ')'){person.principle = "TM";}
                 })
                 teamAdvisor.forEach(ta => {
-                    if(person.alias == ta){person.principle = "TA";}
+                    console.log(ta)
+                    if(person.alias == '(' + ta + ')'){person.principle = "TA";}
                 })
             });
             new Promise((resolve, reject)=>{
@@ -526,6 +542,19 @@ export default {
                 })
             })
         },
+        sftPerson() {
+            return new Promise((resolve, reject) => {
+                this.$http.post(this.apiPathSftPerson, this.apiPayloadSftPerson)
+                .then((response) => {
+                    console.log("shift success")
+                    // if(this.sftForm.workType == "MS") {this.teamForm.MorningShift += this.sftForm.alias + ";"}
+                    // else if(this.sftForm.workType == "NS") {this.teamForm.NightShift += this.sftForm.alias + ";"}
+                })
+                .catch((error)=> {
+                this.addFeedback('error', 'System Error')
+                })
+            })
+        },
         addFeedback(type, msg) {
             const h = this.$createElement;
             if(type == 'error') {
@@ -609,6 +638,21 @@ export default {
             return {
                 alias: this.delForm.alias,
             };
+        },
+        apiPathSftPerson() {
+            return (
+                '/api/' +
+                this.teamForm.TeamName +
+                '/' +
+                this.teamForm.Month + 
+                '/batch/(' +
+                this.sftForm.alias +
+                ')/' + 
+                this.sftForm.workType
+            );
+        },
+        apiPayloadSftPerson() {
+            return {};
         },
         
     }
