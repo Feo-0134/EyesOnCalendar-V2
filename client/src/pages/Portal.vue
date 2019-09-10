@@ -111,14 +111,14 @@
                     <el-input v-model="teamForm.Month" ></el-input>
                 </el-form-item> -->
                 <el-form-item label="Morning Shift">
-                    <el-input v-model="teamForm.MorningShift" ></el-input>
+                    <el-input v-model="teamForm.MorningShift" :disabled="true"></el-input>
                     <div class="functionalButton">
                     <el-button type="primary" icon="el-icon-plus" v-on:click="sftPersonView('MS')" circle></el-button>
                     <el-button type="primary" icon="el-icon-minus" v-on:click="sftPersonView('W')" circle></el-button>
                     </div>
                 </el-form-item>
                 <el-form-item label="Night Shift">
-                    <el-input v-model="teamForm.NightShift" ></el-input>
+                    <el-input v-model="teamForm.NightShift" :disabled="true"></el-input>
                     <div class="functionalButton">
                     <el-button type="primary" icon="el-icon-plus" v-on:click="sftPersonView('NS')" circle></el-button>
                     <el-button type="primary" icon="el-icon-minus" v-on:click="sftPersonView('W')" circle></el-button>
@@ -135,7 +135,7 @@
                     </el-date-picker>
                 </el-form-item>
                 <el-form-item label="Team Name">
-                    <el-input v-model="teamForm.TeamName" ></el-input>
+                    <el-input v-model="teamForm.TeamName" :disabled="true"></el-input>
                 </el-form-item>
                 <!-- <el-form-item label="Month">
                     <el-input v-model="teamForm.Month" ></el-input>
@@ -344,6 +344,8 @@ export default {
             this.teamForm.TeamAdvisor = ""
             this.teamForm.FTE = ""
             this.teamForm.Vendor = ""
+            this.teamForm.MorningShift = ""
+            this.teamForm.NightShift = ""
         },
         cleanAddForm: function () {
             this.addForm.name = ""
@@ -504,7 +506,7 @@ export default {
                 this.addForm.alias = "(" + this.addForm.alias + ")";
             }
             if(store.get('user').admin) {
-                console.log('admin')
+                // console.log('admin')
                 new Promise((resolve, reject) => {
                     this.$http.post(this.apiPathAddPerson, this.apiPayloadAddPerson)
                     .then((response)=> {
@@ -547,12 +549,26 @@ export default {
             })
         },
         sftPerson() {
+            if(this.sftForm.alias[0] === '(') {
+                var strSft = this.sftForm.alias.substring(1)
+                this.sftForm.alias = strSft
+            }
+            if(this.sftForm.alias[this.sftForm.alias.length - 1] === ')') {
+                var strSft = this.sftForm.alias.substring(0,this.sftForm.alias.length - 1)
+                this.sftForm.alias = strSft
+            }
+            this.sftForm.alias = '(' + this.sftForm.alias + ')'
+            console.log(this.apiPathSftPerson)
             return new Promise((resolve, reject) => {
                 this.$http.post(this.apiPathSftPerson, this.apiPayloadSftPerson)
                 .then((response) => {
                     console.log("shift success")
-                    // if(this.sftForm.workType == "MS") {this.teamForm.MorningShift += this.sftForm.alias + ";"}
-                    // else if(this.sftForm.workType == "NS") {this.teamForm.NightShift += this.sftForm.alias + ";"}
+                    // the below lines is a stupid way to sync the display memeber which should be replaced by stocket.io later QwQ
+                    this.teamForm.Month = this.teamForm.Month.split('/')[0] + '/' + (this.teamForm.Month.split('/')[1]-1).toString()
+                    this.teamForm.Month = this.teamForm.Month.split('/')[0] + '/' + (this.teamForm.Month.split('/')[1]-(-1)).toString()
+                    // if(this.sftForm.workType == "MS") {console.log('1')}// {this.teamForm.MorningShift += this.sftForm.alias + ";"}
+                    // else if(this.sftForm.workType == "NS") {console.log('2')}// {this.teamForm.NightShift += this.sftForm.alias + ";"}
+                    // else if(this.sftForm.workType == "W") {console.log('3')}
                 })
                 .catch((error)=> {
                 this.addFeedback('error', 'System Error')
@@ -649,9 +665,9 @@ export default {
                 this.teamForm.TeamName +
                 '/' +
                 this.teamForm.Month + 
-                '/batch/(' +
+                '/batch/' +
                 this.sftForm.alias +
-                ')/' + 
+                '/' + 
                 this.sftForm.workType
             );
         },

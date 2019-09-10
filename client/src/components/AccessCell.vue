@@ -4,6 +4,7 @@
 
 <script>
 var store = require('store')
+import moment from 'moment'
 export default {
     name: 'AccessCell',
     data() {
@@ -104,6 +105,13 @@ export default {
                         store.set('user', {displayName:this.displayName, admin: this.admin, team: 'default'})
                     } else {
                         store.set('user', {displayName:this.displayName, admin: this.admin, team: response.data})
+                    }
+                    if(response.data === 'default' && this.admin) {
+                      // console.log("q1")
+                      this.$router.push('/portal')
+                    } else {
+                      // console.log("q2")
+                      this.$router.push(response.data + moment().format('/YYYY/M'))
                     }
                 })
                 .catch((error) => {
