@@ -44,7 +44,9 @@ export default {
             var that = this
             //Always start with acquireTokenSilent to obtain a token in the signed in user from cache
             var myMSALObj = new Msal.UserAgentApplication(this.msalConfig);
-            // myMSALObj.handleRedirectCallback(this.authRedirectCallBack);
+            
+            //myMSALObj.handleRedirectCallback(this.authRedirectCallBack);
+            
             myMSALObj.acquireTokenSilent(this.requestObj)
             .then(function (tokenResponse) {
                 that.callMSGraph(that.graphConfig.graphMeEndpoint, tokenResponse.accessToken, that.graphAPICallback);
@@ -53,8 +55,8 @@ export default {
                 console.log(error);
                 // Upon acquireTokenSilent failure (due to consent or interaction or login required ONLY)
                 // Call acquireTokenPopup(popup window)
-                if (this.requiresInteraction(error.errorCode)) {
-                    myMSALObj.acquireTokenPopup(this.requestObj).then(function (tokenResponse) {
+                if (that.requiresInteraction(error.errorCode)) {
+                    myMSALObj.acquireTokenPopup(that.requestObj).then(function (tokenResponse) {
                         that.callMSGraph(that.graphConfig.graphMeEndpoint, tokenResponse.accessToken, that.graphAPICallback);
                     }).catch(function (error) {
                         console.log(error);

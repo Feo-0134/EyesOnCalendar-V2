@@ -376,7 +376,7 @@ export default {
       const header = document.getElementById('tablehead');
       const sticky = header.offsetTop;
       // console.log(window.pageYOffset);
-      if (window.pageYOffset <= 130) {
+      if (window.pageYOffset <= 300) {
         this.scrolled = false;
         return;
       }
