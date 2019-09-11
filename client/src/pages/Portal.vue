@@ -1,9 +1,11 @@
 <template> 
     <el-container>
-    <el-header class="navigationBar">EyesonCalendar Administration
-            <el-button class="navigationButton" type="primary" v-show="true" >
+        <div class="navigationBar">
+        <el-button type="primary" v-show="true" >
               <a :href="goCalendar" class="navigationLink">Calendar</a>
-            </el-button>
+        </el-button>
+        </div>
+    <el-header class="navigationBar">EyesonCalendar Administration
     </el-header>
     <el-container>
         <el-aside width="300px">
@@ -182,7 +184,7 @@
                     </el-date-picker>
                 </el-form-item>
                 <el-form-item label="Team Name">
-                    <el-input v-model="teamForm.TeamName" ></el-input>
+                    <el-input v-model="teamForm.TeamName" :disabled="true"></el-input>
                 </el-form-item>
                 <!-- <el-form-item label="Month">
                     <el-input v-model="teamForm.Month" ></el-input>
@@ -195,13 +197,13 @@
                     <div v-if="month">
                         <div id="tablehead" v-bind:class="{sticky: scrolled}" class="row tablehead">
                             <div class="name"> </div>
-                            <div class="celly">Work-Day</div>
-                            <div class="celly">Morning-Shift</div>
-                            <div class="celly">Night-Shift</div>
-                            <div class="celly">Training</div>
-                            <div class="celly">Vacation</div>
-                            <div class="celly">Public-Holiday</div>
-                            <div class="celly">Holiday OnDuty</div>
+                            <div class="reportCell">Work-Day</div>
+                            <div class="reportCell">Morning-Shift</div>
+                            <div class="reportCell">Night-Shift</div>
+                            <div class="reportCell">Training</div>
+                            <div class="reportCell">Vacation</div>
+                            <div class="reportCell">Public-Holiday</div>
+                            <div class="reportCell">Holiday OnDuty</div>
                         </div>
                         <Personsum v-for="(p,index) in month.people" v-bind:key="p._id" v-bind:pindex="index" v-bind:person="p"/>
                     </div>
@@ -680,189 +682,124 @@ export default {
 </script>
 
 <style>
-.el-input.is-disabled .el-input__inner {
-    border-color: #373737;
-}
- .el-main {
-     min-height: 1200px;
- }
- .el-container .el-header {
-     background-color: rgb(37, 37, 37);
-     text-align: left;
-     margin-left: 40px;
-     font-size: xx-large;
- }
- .el-container .el-aside {
-     border-radius: 7px;
-     background-color: #373737;
- }
- .el-container .el-container {
-     height: 1000px;
- }
- .el-row {
-    margin-bottom: 20px;
-  }
-  .el-col {
+    .el-input.is-disabled .el-input__inner {
+        border-color: #373737;
+    }
+    .el-container .el-main {
+        min-height: 1200px;
+    }
+    .el-container .el-header {
+        background-color: rgb(37, 37, 37);
+        text-align: left;
+        margin-left: 40px;
+        font-size: xx-large;
+    }
+    .el-container .el-aside {
+        border-radius: 5px;
+        background-color: #373737;
+    }
+    .el-container .el-container {
+        height: 1000px;
+    }
+    .el-input .el-textarea__inner {
+        border: 10px solid gray;
+        border-radius: 4px;
+    }
+    .el-form-item .el-input.is-disabled .el-input__inner{
+        background-color: #373737;
+        width: 70%;
+        float: left;
+    }
+    .el-form-item .el-input__inner{
+        color: #fff;
+        background-color: #373737;
+        width: 70%;
+        float: left;
+        border-top-color: rgb(51, 57, 71);
+        border-right-color: rgb(51, 57, 71);
+        border-bottom-color: rgb(51, 57, 71);
+        border-left-color: rgb(51, 57, 71);
+    }
+    .el-submenu .el-submenu__title, .el-submenu .el-submenu__title:hover{
+        background-color: #373737;
+        color:#fff;   
+    }
+    .el-aside .el-menu {
+        border-right: solid 0px #373737;
+        background-color: #373737;
+    }
+    .el-submenu .el-menu-item {
+        color: #fff;
+    }
+    .el-submenu .el-menu-item:focus, .el-submenu .el-menu-item:hover {
+        color: #fff;
+        outline: 0;
+        background-color: #262626;
+    }
+    .functionalButton {
+        display: inline-block;
+    }
+    .el-form-item .el-input {
+        width: 80%;
+    }
+    .el-form-item__content {
+        display:flex;
+    }
+    .navigationBar {
+        display: inline-flexbox;
+        margin-bottom: 20px;
+    }
+    .navigationBar .el-button {
+        float: right;
+        background-color:#373737;
+        border-color: gray;
+        margin-right: 20px;
+    }
+    .el-button a:-webkit-any-link {
+        text-decoration: none;
+    }
+    .navigationLink {
+        font-size: 15px;
+        color:gray;
+    }
+    .tablehead {
+    width: 100%;
+    }
+    .sticky {
+    position: fixed;
+    top: 0;
+    background: rgb(37, 37, 37);
+    }
+    .sticky + .tablehead {
+    padding-top: 102px;
+    }
 
-    border-radius: 4px;
-  }
-  .bg-purple-dark {
-    background: #99a9bf;
-  }
-  .bg-purple {
-    background: #d3dce6;
-  }
-  .bg-purple-light {
-    background: #e5e9f2;
-  }
-  .grid-content-small {
-    height: 100px;
-    border-radius: 4px;
-  }
-  .grid-content {
-    height: 170px;
-    border-radius: 4px;
-  }
-  .row-bg {
-    padding: 10px 0;
-    background-color: #f9fafc;
-  }
-  .el-input .el-textarea__inner {
-      border: 10px solid #d3dce6;
-      border-radius: 4px;
-  }
-  .subtitle {
-      border: 20px solid #d3dce6;
-      border-radius: 4px;
-      color: #4E5166;
-      font-size:medium;
-      text-align: left;
-  }
-  .member-list {
-      color: #4E5166;
-      font-size:smaller;
-  }
-  .grid-content .el-button {
-      margin: 20px;
-      width: 135px;
-  }
-  .subtitle-left {
-      margin-top: 10px;
-      border-radius: 4px;
-      color: #4E5166;
-      font-size:medium;
-      display: inline-block;
-      width: 50%;
-      text-align: left;
-  }
-  .subtitle-right {
-      margin-top: 10px;
-      border-radius: 4px;
-      color: #4E5166;
-      font-size:medium;
-      display: inline-block;
-      width: 45%;
-      text-align: left;
-  }
-  .input-inline{
-      margin: 20px;
-      display: inline-block;
-      width: 40%;
-      text-align: left;
-  }
-  .el-input.is-disabled .el-input__inner{
-      background-color: #373737;
-      width: 70%;
-      float: left;
-  }
-  .el-input__inner{
-      color: #fff;
-      background-color: #373737;
-      width: 70%;
-      float: left;
-      border-top-color: rgb(51, 57, 71);
-      border-right-color: rgb(51, 57, 71);
-      border-bottom-color: rgb(51, 57, 71);
-      border-left-color: rgb(51, 57, 71);
-  }
-  .el-submenu__title{
-      background-color: #dcdfe6;   
-  }
-  .functionalButton {
-      display: inline-block;
-  }
-  .el-form-item .el-input {
-      width: 80%;
-  }
-  .el-form-item__content {
-      display:flex;
-  }
-  .searchButton {
-      margin-bottom: 120px;
-      margin-left:140px;
-  }
-  .navigationBar {
-      display: inline-flexbox;
-      margin-bottom: 20px;
-  }
-  .navigationButton {
-      height: 46px;
-      float: right;
-      background-color:#373737;
-      border-color: gray;
-  }
-  .navigationLink {
-      font-size: 15px;
-      color:gray;
-  }
-  header span {
-      padding-top: 0px; 
-  }
-  .attendance {
-  margin: 9px 0 0 0;
-}
+    .pointer {
+    cursor: pointer;
+    margin: 0 5px 0 5px;
+    padding: 0 10px 0 10px;
+    text-decoration: none;
+    color: white;
+    }
 
+    .sectionPointer:hover {
+    background-color: #555;
+    }
 
-.tablehead {
-  width: 100%;
-}
+    .pointer:hover {
+    background-color: #555;
+    }
+    /* .marginLeft {
+    margin-left: 30px
+    } */
 
-.sticky {
-  position: fixed;
-  top: 0;
-  background: rgb(37, 37, 37);
-}
-
-.sticky + .tablehead {
-  padding-top: 102px;
-}
-
-.pointer {
-  cursor: pointer;
-  margin: 0 5px 0 5px;
-  padding: 0 10px 0 10px;
-  text-decoration: none;
-  color: white;
-}
-
-.sectionPointer:hover {
-  background-color: #555;
-}
-
-.pointer:hover {
-  background-color: #555;
-}
-/* .marginLeft {
-   margin-left: 30px
-} */
-
-.celly {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  text-align: center;
-  vertical-align: middle;
-  width: 120px;
-  margin: 10px;
-}
+    .reportCell {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    vertical-align: middle;
+    width: 120px;
+    margin: 10px;
+    }
 </style>

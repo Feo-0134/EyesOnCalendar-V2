@@ -10,8 +10,8 @@
             </span>
           </el-dropdown>
           <el-dropdown>
-            <el-button class="mainViewDropDown" type="primary" v-show="admin" >
-              <a :href="goPortal" class="sectionPointer">Portal</a>
+            <el-button type="primary" v-show="admin" >
+              <a :href="goPortal" class="navigationLink">Portal</a>
             </el-button>
           </el-dropdown>
         </div>
@@ -433,15 +433,13 @@ export default {
   color: white;
 }
 
-.sectionPointer {
-  cursor: pointer;
-  margin: 0 10px 0 10px;
-  text-decoration: none;
-  color: gray;
+.navigationLink {
+    font-size: 15px;
+    color:gray;
 }
 
-.sectionPointer:hover {
-  background-color:none;
+.el-button a:-webkit-any-link {
+    text-decoration: none;
 }
 
 .testClass {
@@ -452,9 +450,6 @@ export default {
 }
 .testClassII {
     text-align: right;
-}
-.pointer:hover {
-  background-color: #555;
 }
 .marginLeft {
   margin-left: 30px
@@ -502,7 +497,7 @@ export default {
   background-color: #373737;
   color:#fff;
 }
-.mainViewDropDown {
+.el-dropdown .el-button {
   background-color: #373737;
   border-color: #808080;
 }
