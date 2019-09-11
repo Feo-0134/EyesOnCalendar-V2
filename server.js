@@ -82,11 +82,13 @@ router.post('/:pod/:year/:month/:person/:day', bodyParser(), async (ctx) => {
  */
 router.post('/:pod/:year/:month/batch/:person/:workType', async (ctx) => {
   var p = ctx.params
+  var flag = 0
   try {
     var currentMonth = await Month.findOne({ year: p.year, month: p.month, pod: p.pod })
     if (currentMonth == null) { throw (errorMsg) }
     currentMonth.people.forEach(record => {
       if (record.alias === p.person) {
+        flag = 1
         record.days.forEach(day => {
           if (day.workType === 'W' || day.workType === 'MS' || day.workType === 'NS') {
             day.workType = p.workType
@@ -98,9 +100,7 @@ router.post('/:pod/:year/:month/batch/:person/:workType', async (ctx) => {
       }
     })
     var result = await currentMonth.save()
-    // if indexes are set, emit update
-    // if (p.workType !== undefined) { io.to('/' + p.year + '/' + p.month).emit('update', p) }
-    ctx.body = result
+    if (flag === 0) { ctx.body = 'No Record' } else { ctx.body = result }
   } catch (e) {
     ctx.status = 400
     ctx.body = e

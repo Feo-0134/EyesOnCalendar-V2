@@ -96,7 +96,7 @@ export default {
             title:'Request Denied',
             message: msg,
             position:'top-left',
-            duration: 0
+            
           });
         }
         if(type == 'notify') {
@@ -104,7 +104,6 @@ export default {
             title:'Notification',
             message: msg,
             position:'top-left',
-            duration: 0,
             type:'warning'
           });
         }
@@ -114,7 +113,7 @@ export default {
             message: h('i', { style: 'color: teal'}, msg),
             position:'top-left',
             type: 'success',
-            duration: 0
+            
           });
         }
       },

@@ -349,7 +349,6 @@ export default {
           message: msg,
           position: 'top-left',
           type: 'warning',
-          duration: 0,
         });
       } else if (type === 'forbid') {
         this.$notify({
@@ -357,7 +356,6 @@ export default {
           message: msg + mon[new Date().getMonth()],
           position: 'top-left',
           type: 'warning',
-          duration: 0,
         });
       }
     },

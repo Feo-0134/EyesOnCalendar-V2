@@ -559,17 +559,17 @@ export default {
                 this.sftForm.alias = strSft
             }
             this.sftForm.alias = '(' + this.sftForm.alias + ')'
-            console.log(this.apiPathSftPerson)
+            // console.log(this.apiPathSftPerson)
             return new Promise((resolve, reject) => {
                 this.$http.post(this.apiPathSftPerson, this.apiPayloadSftPerson)
                 .then((response) => {
-                    console.log("shift success")
+                    // console.log("shift success")
                     // the below lines is a stupid way to sync the display memeber which should be replaced by stocket.io later QwQ
                     this.teamForm.Month = this.teamForm.Month.split('/')[0] + '/' + (this.teamForm.Month.split('/')[1]-1).toString()
                     this.teamForm.Month = this.teamForm.Month.split('/')[0] + '/' + (this.teamForm.Month.split('/')[1]-(-1)).toString()
-                    // if(this.sftForm.workType == "MS") {console.log('1')}// {this.teamForm.MorningShift += this.sftForm.alias + ";"}
-                    // else if(this.sftForm.workType == "NS") {console.log('2')}// {this.teamForm.NightShift += this.sftForm.alias + ";"}
-                    // else if(this.sftForm.workType == "W") {console.log('3')}
+                    if(response.data === 'No Record') { this.addFeedback('notify', 'Person Not Exist') } else { 
+                        this.addFeedback('success', 'Shift is Ready')
+                    }
                 })
                 .catch((error)=> {
                 this.addFeedback('error', 'System Error')
@@ -583,7 +583,7 @@ export default {
                 title:'Request Denied',
                 message: msg,
                 position:'top-left',
-                duration: 0
+                
             });
             }
             if(type == 'notify') {
@@ -591,7 +591,6 @@ export default {
                 title:'Notification',
                 message: msg,
                 position:'top-left',
-                duration: 0,
                 type:'warning'
             });
             }
@@ -601,7 +600,7 @@ export default {
                 message: h('i', { style: 'color: teal'}, msg),
                 position:'top-left',
                 type: 'success',
-                duration: 0
+                
             });
             }
         },
