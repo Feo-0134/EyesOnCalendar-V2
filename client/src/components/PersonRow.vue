@@ -21,19 +21,31 @@
                     <h5 class = "blackFont">Work Day Type</h5>
                     </div>
                     <div class="box-container">
-                        <div v-on:click="cycle($event,0)" class="box green"></div>
-                        <div v-on:click="cycle($event,8)" class="box green">MS</div>
-                        <div v-on:click="cycle($event,9)" class="box green1">NS</div>
+                        <el-button v-on:click="cycle($event,0)" class="box0 green"></el-button>
+                        <el-button v-on:click="cycle($event,8)" class="box0 green">MS</el-button>
+                        <el-button v-on:click="cycle($event,9)" class="box0 green1">NS</el-button>
                         <!-- <h5 class = "blackFont">Work Day</h5> -->
                     </div>
                     <div class="typeTitle">
                     <h5 class = "blackFont">Leave Type (Sick Leave / Annual Leave)</h5>
                     </div>
                     <div class="box-container">
-                    <div v-on:click="cycle($event,2)" class="box purple" v-popover:myname>SL</div>
-                    <!-- <h5 class = "blackFont">Sick Leave</h5> -->
-                    <div v-on:click="cycle($event,3)" class="box purple" v-popover:myname>AL</div>
-                    <!-- <h5 class = "blackFont">Annual Leave</h5> -->
+                    <el-popover
+                      placement="bottom"
+                      width="200"
+                      trigger="click">
+                      <p>Please inform the team about your absence.</p>
+                      <a href="mailto:YOUR_TEAMNAME_HERE@microsoft.com"><img class = "outlookLogo" src="../../static/img/outlook.png"  alt="Outlook" /></a>
+                      <el-button slot="reference" v-on:click="cycle($event,2)" class="box0 purple">SL</el-button>
+                    </el-popover>
+                    <el-popover
+                      placement="bottom"
+                      width="200"
+                      trigger="click">
+                      <p>Please inform the team about your absence.</p>
+                      <a href="mailto:YOUR_TEAMNAME_HERE@microsoft.com"><img class = "outlookLogo" src="../../static/img/outlook.png"  alt="Outlook" /></a>
+                      <el-button slot="reference" v-on:click="cycle($event,3)" class="box0 purple">AL</el-button>
+                    </el-popover>
                     </div>
                     <div class="typeTitle">
                     <h5 class = "blackFont">Half-day Leave Type </h5>
@@ -41,26 +53,46 @@
                     </div>
                     <div class="box-container">
                     <el-switch v-if = "open1" v-model="value1" active-text="AL" inactive-text="SL"> </el-switch>
-                    <div v-on:click="open1 = true; cycle($event,12);" class= "box" :class="value1?'purple2':'purple1'" v-popover:myname>H(M)</div>
-                    <div v-on:click="open2 = true; cycle($event,14);" class= "box" :class="value1?'purple2':'purple1'" v-popover:myname>H(A)</div>
-                    </div><div>
-                    <!-- <h5 class = "blackFont">(SL/AL) +  Half-day Leave Morning / Afternoon</h5> -->
+                    <el-popover
+                      placement="bottom"
+                      width="200"
+                      trigger="click">
+                      <p>Please inform the team about your absence.</p>
+                      <a href="mailto:YOUR_TEAMNAME_HERE@microsoft.com"><img class = "outlookLogo" src="../../static/img/outlook.png"  alt="Outlook" /></a>
+                      <el-button slot="reference" v-on:click="open1 = true; cycle($event,12)" class="box1" :class="value1?'purple2':'purple1'">H(M)</el-button>
+                    </el-popover>
+                    <el-popover
+                      placement="bottom"
+                      width="200"
+                      trigger="click">
+                      <p>Please inform the team about your absence.</p>
+                      <a href="mailto:YOUR_TEAMNAME_HERE@microsoft.com"><img class = "outlookLogo" src="../../static/img/outlook.png"  alt="Outlook" /></a>
+                      <el-button slot="reference" v-on:click="open2 = true; cycle($event,14)" class="box1" :class="value1?'purple2':'purple1'">H(A)</el-button>
+                    </el-popover>
                     </div>
                     <div class="typeTitle">
                     <h5 class = "blackFont">Public Holiday On-duty type </h5>
                     <h5 class = "blackFont">(OnDuty / MorningShift)</h5>
                     </div>
                     <div class="box-container">
-                        <div v-on:click="cycle($event,10)" class="box orange">PO</div>
-                        <div v-on:click="cycle($event,11)" class="box orange">PM</div>
+                        <el-button v-on:click="cycle($event,10)" class="box0 orange">PO</el-button>
+                        <el-button v-on:click="cycle($event,11)" class="box0 orange">PM</el-button>
                         <!-- <h5 class = "blackFont">OnDuty / MorningShift(PH)</h5> -->
                     </div>
                     <div class="typeTitle">
                     <h5 class = "blackFont">Other Type</h5>
                     </div>
                     <div class="box-container">
-                        <div v-on:click="cycle($event,7)" class="box blue" v-popover:myname>T</div><h5 class = "blackFont">Training</h5>
-                        <div v-on:click="cycle($event,1)" class="box red">PH</div><h5 class = "blackFont">Public Holiday</h5>
+                    <el-popover
+                      placement="bottom"
+                      width="200"
+                      trigger="click">
+                      <p>Please inform the team about your absence.</p>
+                      <a href="mailto:YOUR_TEAMNAME_HERE@microsoft.com"><img class = "outlookLogo" src="../../static/img/outlook.png"  alt="Outlook" /></a>
+                      <el-button slot="reference" v-on:click="cycle($event,7)" class="box2 blue">T</el-button>
+                    </el-popover>
+                    <h5 class = "blackFont">Training</h5>
+                    <el-button v-on:click="cycle($event,1)" class="box0 red">PH</el-button><h5 class = "blackFont">Public Holiday</h5>
                     </div>
                     <span slot="footer" class="dialog-footer">
                         <!-- <el-button @click="handleOpen">Cancel</el-button> -->
@@ -73,12 +105,6 @@
       <!-- /**************************************
       Feature 8 Hint one to mail team about the absence
       **************************************/ -->
-      <popover name="myname">
-       <div class="colorFont">
-       <p>Please inform the team about your absence.</p>
-       <a href="mailto:YOURTEAMNAMEHERE@microsoft.com"><img class = "outlookLogo" src="../../static/img/outlook.png"  alt="Outlook" /></a>
-       </div>
-      </popover>
   </div>
 </template>
 
@@ -284,7 +310,7 @@ day {
 .box-container {
   display: flex;
 }
-.box {
+.box1 {
   cursor: pointer;
   margin: 5px;
   width: 40px;
@@ -292,9 +318,30 @@ day {
   color: white;
   border-radius: 3px;
   display: flex;
-  justify-content: center;
-  vertical-align: middle;
   flex-direction: column;
+  padding-left: 3px;
+}
+.box0 {
+  cursor: pointer;
+  margin: 5px;
+  width: 40px;
+  height: 40px;
+  color: white;
+  border-radius: 3px;
+  display: flex;
+  flex-direction: column;
+  padding-left: 10px;
+}
+.box2 {
+  cursor: pointer;
+  margin: 5px;
+  width: 40px;
+  height: 40px;
+  color: white;
+  border-radius: 3px;
+  display: flex;
+  flex-direction: column;
+  padding-left: 15px;
 }
 .large {
   flex-direction: column;
