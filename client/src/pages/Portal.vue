@@ -5,8 +5,7 @@
               <a :href="goCalendar" class="navigationLink">Calendar</a>
         </el-button>
         </div>
-    <el-header class="navigationBar">EyesonCalendar Administration
-    </el-header>
+    <el-header class="navigationBar">EyesonCalendar Administration</el-header>
     <el-container>
         <el-aside width="300px">
             <el-menu>
