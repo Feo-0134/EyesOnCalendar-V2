@@ -2,7 +2,6 @@
   <div class="row">
         <div v-if="large" class="cellxII name">{{displayName}}</div>
         <div v-if="!large" class="cellxII name">{{shortName}}</div>
-      <day class = "dayCell" @customEvent="handleEvent" v-for="(d,index) in person.days" :large="large" :key="d._id" :day="d" :pindex="pindex" :dindex="index" :testparam="dayType" :testparamII="date"/>
       <!-- /**************************************
        Feature 2  add a dialog for updating the status
        Feature 1 add two new status "MS"(morning shift),"NS"(night shift)
@@ -70,13 +69,14 @@
                 </div>
             </div> 
       </Moveable>
+      <day class = "dayCell" @customEvent="handleEvent" v-for="(d,index) in person.days" :large="large" :key="d._id" :day="d" :pindex="pindex" :dindex="index" :testparam="dayType" :testparamII="date"/>
       <!-- /**************************************
       Feature 8 Hint one to mail team about the absence
       **************************************/ -->
       <popover name="myname">
        <div class="colorFont">
        <p>Please inform the team about your absence.</p>
-       <a href="mailto:apgcpaas@microsoft.com"><img class = "outlookLogo" src="../../static/img/outlook.png"  alt="Outlook" /></a>
+       <a href="mailto:YOURTEAMNAMEHERE@microsoft.com"><img class = "outlookLogo" src="../../static/img/outlook.png"  alt="Outlook" /></a>
        </div>
       </popover>
   </div>
