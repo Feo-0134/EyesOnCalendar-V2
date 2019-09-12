@@ -283,6 +283,7 @@ router.post('/:pod/:year/:month/init', upload.any('csv'), async (ctx) => {
       var str3 = arrMonth.join(',')
       str3 = '\r\n%DefaultName% (DefaultAlias-DefaultRole-DefaultPrinciple),' + str3
       lastMonth.people.forEach(person => {
+        console.log(person.name)
         fs.writeFile(filePath, str3, { flag: 'a', encoding: 'utf-8', mode: '0666' },
           function (err) {
             if (err) { return console.error(err) }

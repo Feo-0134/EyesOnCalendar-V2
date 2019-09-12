@@ -147,12 +147,11 @@ export default {
   computed: {
     displayName() {
       var nameArray = this.person.name.split(" ");
-      if(nameArray.length == 2) return nameArray[0] + " " + nameArray[nameArray.length - 1];
-      return nameArray[0] + " " + nameArray[1] + " " + nameArray[nameArray.length - 1];
+      return nameArray[0] + " " + nameArray[nameArray.length - 1] + ' ' + this.person.alias;
     },
     shortName() {
       var nameArray = this.person.name.split(" ");
-      return nameArray[0]; // + " " + nameArray[nameArray.length - 1][0];
+      return nameArray[0];
     },
     large() {
       if (this.size > 1600) return true;

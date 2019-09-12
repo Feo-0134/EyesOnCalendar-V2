@@ -3,8 +3,7 @@ Feature 5 Monthly report
 **************************************/ -->
 <template>
   <div class="row">
-      <div v-if="large" class="cellx name">{{displayName}}</div>
-      <div v-if="!large" class="cellx name">{{shortName}}</div>
+      <div class="cellx name">{{displayName}}</div>
       <div class = "celly workdayCnt">{{workDayCount1}}</div>
       <div class = "celly workdayCnt">{{workDayCount2}}</div>
       <div class = "celly workdayCnt">{{workDayCount3}}</div>
@@ -29,11 +28,7 @@ export default {
   computed: {
     displayName() {
       var nameArray = this.person.name.split(" ");
-      return nameArray[0] + " " + nameArray[1] // + " " + this.person.alias;
-    },
-    shortName() {
-      var nameArray = this.person.name.split(" ");
-      return this.person.alias;
+      return nameArray[0] + " " + this.person.alias;
     },
     large() {
       if (this.size > 1600) return true;

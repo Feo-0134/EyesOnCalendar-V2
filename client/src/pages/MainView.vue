@@ -27,14 +27,14 @@
       </h1>
       <!-- <div class = "Init-button"> -->
       <h2 v-if="!month">{{message}}</h2>
-      <button v-if="!month" class = "button"
+      <!-- <button v-if="!month" class = "button"
       :class="{buttonBackground: initUndo}" v-on:click="init">
         Init Table
       </button>
       <button v-if="!month" class = "button"
       :class="{buttonBackground: !initUndo}" v-on:click="reload">
         Reload Table
-      </button>
+      </button> -->
       <div  v-if="month">
           <el-tabs id="rolesTabview" v-model="activeName" @tab-click="handleClick">
             <el-tab-pane class="mainPanel" label="All Members" name="first">

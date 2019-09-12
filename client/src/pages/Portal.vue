@@ -83,10 +83,10 @@
                     <el-input v-model="initForm.TeamAdvisor" placeholder="example: danzha;anikshen;"></el-input> 
                 </el-form-item>
                 <el-form-item label="FTE">
-                    <el-input v-model="initForm.FTE" placeholder="example: ftealias00;ftealias01;"></el-input>
+                    <el-input v-model="initForm.FTE" placeholder="example: User Zero(ftealias00);User One(ftealias01);"></el-input>
                 </el-form-item>
                 <el-form-item label="Vendor">
-                    <el-input v-model="initForm.Vendor" placeholder="example: vendoralias;"></el-input>
+                    <el-input v-model="initForm.Vendor" placeholder="example: Vendor User2(v-vendoralias);"></el-input>
                 </el-form-item>
                 <!-- <el-form-item label="Others">
                     <el-input v-model="form.name"></el-input>
@@ -185,12 +185,6 @@
                 <el-form-item label="Team Name">
                     <el-input v-model="teamForm.TeamName" :disabled="true"></el-input>
                 </el-form-item>
-                <!-- <el-form-item label="Month">
-                    <el-input v-model="teamForm.Month" ></el-input>
-                </el-form-item> -->
-                <!-- <el-form-item label="Others">
-                    <el-input v-model="form.name"></el-input>
-                </el-form-item> -->
                 <div>
                     <h2 v-if="!month">{{message}}</h2>
                     <div v-if="month">
@@ -259,6 +253,8 @@ export default {
                 TeamAdvisor: '',
                 FTE: '',
                 Vendor: '',
+                MorningShift: '',
+                NightShift: '',
             },
             teamForm: {
                 TeamName: store.get('user').team,
@@ -287,8 +283,20 @@ export default {
         async get() {
             this.teamForm.Month = this.globalMonth
             this.initForm.Month = this.globalMonth
+            let globalform = this.teamForm
+            var year = this.globalMonth.split('/')[0]
+            var month = (this.globalMonth.split('/')[1] - 1)
+            if(month === 0) {
+                year = year - 1
+                month = 12
+            }
+            this.initForm.Month = year +'/'+ month
+            if(this.initView === true) {
+                globalform = this.initForm
+                console.log('test')
+            }
             try {
-            const res = await this.$http.get(`/api/${this.teamForm.TeamName}/${this.teamForm.Month}`);
+            let res = await this.$http.get(`/api/${globalform.TeamName}/${globalform.Month}`);
             this.socket = io({
                 query: {
                 path: this.teamForm.Month,
@@ -303,20 +311,21 @@ export default {
             });
             res.data.people = res.data.people.sort((x, y) => x.name.localeCompare(y.name));
             this.cleanTeamForm()
+            this.cleanInitForm()
             res.data.people.forEach(person=> {
-                if(person.principle == 'TM') { this.teamForm.TeamManager += person.name + ';'}
-                else if(person.principle == 'TA') { this.teamForm.TeamAdvisor += person.name + ';'}
+                if(person.principle == 'TM') { globalform.TeamManager += person.name + person.alias + ';'}
+                else if(person.principle == 'TA') { globalform.TeamAdvisor += person.name + person.alias + ';'}
                 
-                if(person.role == 'FTE') { this.teamForm.FTE += person.name + ';'}
-                else if(person.role == 'Vendor') { this.teamForm.Vendor += person.name + ';'}
+                if(person.role == 'FTE') { globalform.FTE += person.name + person.alias + ';'}
+                else if(person.role == 'Vendor') { globalform.Vendor += person.name + person.alias + ';'}
                 var cntM = 0, cntN = 0, cntW = 0 
                 person.days.forEach(day => {
                     if(day.workType === 'W') {cntW += 1}
                     else if(day.workType === 'MS') {cntM += 1}
                     else if(day.workType === 'NS') {cntN += 1}
                 })
-                if(cntM > cntW && cntM > cntN) {this.teamForm.MorningShift += person.name + ';'}
-                if(cntN > cntW && cntN > cntM) {this.teamForm.NightShift += person.name + ';'}
+                if(cntM > cntW && cntM > cntN) {globalform.MorningShift += person.name + ';'}
+                if(cntN > cntW && cntN > cntM) {globalform.NightShift += person.name + ';'}
             })
             return res.data;
             } catch (e) {
@@ -333,8 +342,6 @@ export default {
     },
     methods: {
         cleanInitForm: function () {
-            this.initForm.TeamName = ""
-            this.initForm.Month = ""
             this.initForm.TeamManager = ""
             this.initForm.TeamAdvisor = ""
             this.initForm.FTE = ""
@@ -439,11 +446,11 @@ export default {
             this.people.forEach(person => {
                 teamManager.forEach(tm => {
                     console.log(tm)
-                    if(person.alias == '(' + tm + ')'){person.principle = "TM";}
+                    if(person.alias == '(' + tm.split('(')[1]){person.principle = "TM";}
                 })
                 teamAdvisor.forEach(ta => {
                     console.log(ta)
-                    if(person.alias == '(' + ta + ')'){person.principle = "TA";}
+                    if(person.alias == '(' + ta.split('(')[1]){person.principle = "TA";}
                 })
             });
             new Promise((resolve, reject)=>{
@@ -619,7 +626,7 @@ export default {
                 "/api/" +
                 this.initForm.TeamName +
                 '/newupload2/' +
-                this.initForm.Month
+                this.globalMonth
             );
         },
         apiPayload() {
