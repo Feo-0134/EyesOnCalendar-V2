@@ -89,7 +89,7 @@ export default {
             this.title = jsonresult.jobTitle
             this.displayName = jsonresult.displayName
             this.alias = '(' + (jsonresult.userPrincipalName.split('@'))[0] + ')'
-            if(jsonresult.jobTitle.match('TECHNICAL ADVISOR') == 'TECHNICAL ADVISOR'|| jsonresult.jobTitle.match('MANAGER') == 'MANAGER'||jsonresult.userPrincipalName == 'Jianan.Lu@microsoft.com' || jsonresult.userPrincipalName == 't-junzhu@microsoft.com')
+            if(jsonresult.jobTitle.match('TECHNICAL ADVISOR') == 'TECHNICAL ADVISOR'|| jsonresult.jobTitle.match('MGR') == 'MGR'|| jsonresult.jobTitle.match('MANAGER') == 'MANAGER'||jsonresult.userPrincipalName == 'Jianan.Lu@microsoft.com' || jsonresult.userPrincipalName == 't-junzhu@microsoft.com')
             { this.admin = true; console.log('admin')}
 
             if( jsonresult.jobTitle === 'TECHNICAL ADVISOR ASIA' || jsonresult.userPrincipalName == 'Jianan.Lu@microsoft.com' || jsonresult.userPrincipalName == 't-junzhu@microsoft.com') {
