@@ -1,5 +1,8 @@
 <template>
-    <div class="PersonalInfo"> {{accessmsg}} </div>
+    <el-container class="PersonalInfo" v-loading="loading"> 
+        {{accessmsg}}
+        
+    </el-container>
 </template>
 
 <script>
@@ -9,7 +12,9 @@ export default {
     name: 'AccessCell',
     data() {
         return {
+            loading: true,
             displayName: '',
+            title: '',
             admin: false,
             alias: '',
             accessmsg: '',
@@ -81,7 +86,8 @@ export default {
             console.log('graphAPICallback');
             let result = JSON.stringify(data, null, 4);
             let jsonresult = JSON.parse(result);
-            this.displayName = jsonresult.displayName;
+            this.title = jsonresult.jobTitle
+            this.displayName = jsonresult.displayName
             this.alias = '(' + (jsonresult.userPrincipalName.split('@'))[0] + ')'
             if(jsonresult.jobTitle.match('TECHNICAL ADVISOR') == 'TECHNICAL ADVISOR'|| jsonresult.jobTitle.match('MANAGER') == 'MANAGER'||jsonresult.userPrincipalName == 'Jianan.Lu@microsoft.com' || jsonresult.userPrincipalName == 't-junzhu@microsoft.com')
             { this.admin = true; console.log('admin')}
@@ -104,13 +110,16 @@ export default {
                     console.log(response.data)
                     if(response.data == "default") {                            
                         // console.log('Your team hasn\'t joined the tool yet')
-                        store.set('user', {displayName:this.displayName, admin: this.admin, team: 'default'})
+                        store.set('user', {displayName:this.displayName, admin: this.admin, title: this.title, team: 'default'})
                     } else {
-                        store.set('user', {displayName:this.displayName, admin: this.admin, team: response.data})
+                        store.set('user', {displayName:this.displayName, admin: this.admin, title: this.title, team: response.data})
                     }
                     if(response.data === 'default' && this.admin) {
-                      // console.log("q1")
+                      // console.log("q0")
                       this.$router.push('/portal')
+                    }else if(response.data === 'default') {
+                      // console.log("q1")
+                      this.$message('Sorry we can not find your information in the system. Please turn to your TM/TA for permission.');
                     } else {
                       // console.log("q2")
                       this.$router.push(response.data + moment().format('/YYYY/M'))
@@ -146,4 +155,10 @@ export default {
 </script>
 
 <style>
+.PersonalInfo{
+    height: 500px;
+}
+.el-container .el-loading-mask {
+    background-color:#262626
+}
 </style>

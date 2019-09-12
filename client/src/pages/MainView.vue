@@ -17,7 +17,7 @@
         </div>
       </div>
       <div class="testClassII welcome">
-        <p>Welcome, {{displayName}}</p>
+        <p>Welcome, {{displayName}} {{displayTitle}}</p>
       </div>
       <!-- <div class = "MonthSwitch"> -->
       <h1>
@@ -151,6 +151,10 @@ export default {
   computed: {
     displayName() {
       return store.get('user').displayName;
+    },
+    displayTitle() {
+      var title = store.get('user').title
+      return '(' + title + ')';
     },
     admin() {
       return store.get('user').admin;
