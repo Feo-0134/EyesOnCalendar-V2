@@ -1,7 +1,17 @@
 <template>
-    <el-container class="PersonalInfo" v-loading="loading"> 
+    <el-container>
+    <el-header class="headbar">Welcome to Shift Arrangement Tool.</el-header>
+    <el-autocomplete class="pickTeam"
+        v-if="podSelect"
+        v-model="teamName"
+        :fetch-suggestions="querySearchAsync"
+        placeholder="POD NAME HERE"
+        @select="handleSelect"
+    >
+    </el-autocomplete>
+    <div class="PersonalInfo" v-loading="loading" v-if="loading"> 
         {{accessmsg}}
-        
+    </div>
     </el-container>
 </template>
 
@@ -12,10 +22,13 @@ export default {
     name: 'AccessCell',
     data() {
         return {
+            teamName: '',
+            podSelect: false,
             loading: true,
             displayName: '',
             title: '',
             admin: false,
+            su: false,
             alias: '',
             accessmsg: '',
             msalConfig: 
@@ -42,8 +55,46 @@ export default {
     },
     mounted() {
         this.acquireTokenPopupAndCallMSGraph();
-	},
+    },
+    computed: {
+        getTeamApiPath() {
+            return ('/api/default/' + new Date().getFullYear() + '/' + (new Date().getMonth() + 1) + '/allTeamName')
+        },
+    },
     methods: {
+        loadTeamName () {
+            new Promise((resolve, reject) => {
+                this.$http.get(this.getTeamApiPath)
+                .then((response)=> {
+                this.links = response.data;
+                console.log('hhh')
+                console.log(response.data)
+                })
+                .catch((error) => {
+                    this.addFeedback('error', 'System Error. Please turn to the developer.');
+                    return [];
+                })
+            })
+        },
+        querySearchAsync(queryString, cb) {
+            var links = this.links;
+            var results = queryString ? links.filter(this.createFilter(queryString)) : links;
+
+            clearTimeout(this.timeout);
+            this.timeout = setTimeout(() => {
+                cb(results);
+            }, 3000 * Math.random());
+        },
+        createFilter(queryString) {
+            return (link) => {
+                return (link.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
+            };
+        },
+        handleSelect(item) {
+            const path = item.link
+            this.$router.push({ path });
+            location.reload();
+        },
         // AAD函数调用入口
         acquireTokenPopupAndCallMSGraph() {
             var that = this
@@ -95,12 +146,20 @@ export default {
                 || jsonresult.userPrincipalName == 'Jianan.Lu@microsoft.com'
                 || jsonresult.userPrincipalName == 't-junzhu@microsoft.com')
             { this.admin = true; console.log('admin')}
+            
+            if(jsonresult.userPrincipalName == 'Jianan.Lu@microsoft.com' 
+                || jsonresult.userPrincipalName == 't-junzhu@microsoft.com') {
+                    this.accessmsg = result;
+            }
 
-            if(jsonresult.userPrincipalName == 'Jianan.Lu@microsoft.com' || jsonresult.userPrincipalName == 't-junzhu@microsoft.com') {
-                this.accessmsg = result;
+            if(jsonresult.userPrincipalName == 'Jianan.Lu@microsoft.com' 
+                || jsonresult.userPrincipalName == 't-junzhu@microsoft.com'
+                || jsonresult.userPrincipalName == 'danzha@microsoft.com') {
+                    this.su = true
+                    this.accessmsg = result;
                 // document.getElementById("json").innerHTML = result;
             } else {
-                this.accessmsg = 'sorry, this portal is for managers only';
+                this.accessmsg = '';
                 // document.getElementById("json").innerHTML = 'sorry, this portal is for managers only';
             }
             this.getTeamName()
@@ -108,19 +167,23 @@ export default {
 
         getTeamName() {
             var apipath = '/api/getpod/' + new Date().getFullYear() + '/' + (new Date().getMonth() + 1) + '/' + this.alias
+            this.loadTeamName() 
             return new Promise((resolve, reject) => {
                 this.$http.get(apipath)
                 .then((response)=> {
                     console.log(response.data)
                     if(response.data == "default") {                            
                         // console.log('Your team hasn\'t joined the tool yet')
-                        store.set('user', {displayName:this.displayName, admin: this.admin, title: this.title, team: 'default'})
+                        store.set('user', {displayName:this.displayName, admin: this.admin, su: this.su, title: this.title, team: 'default'})
                     } else {
-                        store.set('user', {displayName:this.displayName, admin: this.admin, title: this.title, team: response.data})
+                        store.set('user', {displayName:this.displayName, admin: this.admin, su: this.su, title: this.title, team: response.data})
                     }
                     if(response.data === 'default' && this.admin) {
-                      this.$router.push('/portal')
+                      // this.$router.push('/portal')
+                      this.podSelect = true
+                      this.loading = false
                     }else if(response.data === 'default') {
+                      this.loading = false
                       this.$message('Sorry we can not find your information in the system. Please turn to your TM/TA for permission.');
                     } else {
                       this.$router.push(response.data + moment().format('/YYYY/M'))
@@ -158,8 +221,16 @@ export default {
 <style>
 .PersonalInfo{
     height: 500px;
+    margin: auto;
 }
 .el-container .el-loading-mask {
     background-color:#262626
+}
+.pickTeam {
+    margin: auto;
+}
+.headbar {
+    background-color: inherit;
+    font-size: 30px;
 }
 </style>

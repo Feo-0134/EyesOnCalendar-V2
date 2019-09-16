@@ -1,5 +1,5 @@
 <template> 
-    <el-container>
+    <el-container v-show="admin">
         <div class="navigationBar">
         <el-button type="primary" v-show="true" >
               <a :href="goCalendar" class="navigationLink">Calendar</a>
@@ -73,15 +73,12 @@
                 <el-form-item label="Team Name">
                     <el-input v-model="initForm.TeamName" placeholder="example: AppService"></el-input>
                 </el-form-item>
-                <!-- <el-form-item label="Month">
-                    <el-input v-model="initForm.Month" placeholder="example: 2019/8"></el-input>
-                </el-form-item> -->
-                <el-form-item label="Team Manager">
+                <!-- <el-form-item label="Team Manager">
                     <el-input v-model="initForm.TeamManager" placeholder="example: karenzhe"></el-input>
                 </el-form-item>
                 <el-form-item label="Technic Advisor">
                     <el-input v-model="initForm.TeamAdvisor" placeholder="example: danzha;anikshen;"></el-input> 
-                </el-form-item>
+                </el-form-item> -->
                 <el-form-item label="FTE">
                     <el-input v-model="initForm.FTE" placeholder="example: User Zero(ftealias00);User One(ftealias01);"></el-input>
                 </el-form-item>
@@ -106,20 +103,20 @@
                     </el-date-picker>
                 </el-form-item>
                 <el-form-item label="Team Name">
-                    <el-input v-model="teamForm.TeamName" :disabled="true"></el-input>
+                    <el-input v-model="teamForm.TeamName" :disabled="!su"></el-input>
                 </el-form-item>
                 <!-- <el-form-item label="Month">
                     <el-input v-model="teamForm.Month" ></el-input>
                 </el-form-item> -->
                 <el-form-item label="Morning Shift">
-                    <el-input v-model="teamForm.MorningShift" :disabled="true"></el-input>
+                    <el-input v-model="teamForm.MorningShift" :disabled="!su"></el-input>
                     <div class="functionalButton">
                     <el-button type="primary" icon="el-icon-plus" v-on:click="sftPersonView('MS')" circle></el-button>
                     <el-button type="primary" icon="el-icon-minus" v-on:click="sftPersonView('W')" circle></el-button>
                     </div>
                 </el-form-item>
                 <el-form-item label="Night Shift">
-                    <el-input v-model="teamForm.NightShift" :disabled="true"></el-input>
+                    <el-input v-model="teamForm.NightShift" :disabled="!su"></el-input>
                     <div class="functionalButton">
                     <el-button type="primary" icon="el-icon-plus" v-on:click="sftPersonView('NS')" circle></el-button>
                     <el-button type="primary" icon="el-icon-minus" v-on:click="sftPersonView('W')" circle></el-button>
@@ -136,34 +133,34 @@
                     </el-date-picker>
                 </el-form-item>
                 <el-form-item label="Team Name">
-                    <el-input v-model="teamForm.TeamName" :disabled="true"></el-input>
+                    <el-input v-model="teamForm.TeamName" :disabled="!su"></el-input>
                 </el-form-item>
                 <!-- <el-form-item label="Month">
                     <el-input v-model="teamForm.Month" ></el-input>
                 </el-form-item> -->
                 <el-form-item label="Team Manager">
-                    <el-input v-model="teamForm.TeamManager" :disabled="true"></el-input>
+                    <el-input v-model="teamForm.TeamManager" :disabled="!su"></el-input>
                     <div class="functionalButton">
                     <el-button type="primary" icon="el-icon-plus" circle v-on:click="addPersonView('FTE', 'TM')"></el-button>
                     <el-button type="primary" icon="el-icon-minus" circle v-on:click="delPersonView()"></el-button>
                     </div>
                 </el-form-item>
                 <el-form-item label="Technical Advisor">
-                    <el-input v-model="teamForm.TeamAdvisor" :disabled="true"></el-input>
+                    <el-input v-model="teamForm.TeamAdvisor" :disabled="!su"></el-input>
                     <div class="functionalButton">
                     <el-button type="primary" icon="el-icon-plus" circle v-on:click="addPersonView('', 'TA')"></el-button>
                     <el-button type="primary" icon="el-icon-minus" circle v-on:click="delPersonView()"></el-button>
                     </div>
                 </el-form-item>
                                <el-form-item label="FTE Member">
-                    <el-input v-model="teamForm.FTE" :disabled="true"></el-input>
+                    <el-input v-model="teamForm.FTE" :disabled="!su"></el-input>
                     <div class="functionalButton">
                     <el-button type="primary" icon="el-icon-plus" circle v-on:click="addPersonView('FTE', 'None')"></el-button>
                     <el-button type="primary" icon="el-icon-minus" circle v-on:click="delPersonView()"></el-button>
                     </div>
                 </el-form-item>
                                <el-form-item label="Vendor member">
-                    <el-input v-model="teamForm.Vendor" :disabled="true"></el-input>
+                    <el-input v-model="teamForm.Vendor" :disabled="!su"></el-input>
                     <div class="functionalButton">
                     <el-button type="primary" icon="el-icon-plus" circle v-on:click="addPersonView('Vendor', 'None')"></el-button>
                     <el-button type="primary" icon="el-icon-minus" circle v-on:click="delPersonView()"></el-button>
@@ -183,7 +180,7 @@
                     </el-date-picker>
                 </el-form-item>
                 <el-form-item label="Team Name">
-                    <el-input v-model="teamForm.TeamName" :disabled="true"></el-input>
+                    <el-input v-model="teamForm.TeamName" :disabled="!su"></el-input>
                 </el-form-item>
                 <div>
                     <h2 v-if="!month">{{message}}</h2>
@@ -214,6 +211,7 @@ export default {
     components: { Personsum },
     data: function () {
         return {
+            su: false,
             globalMonth: new Date().getFullYear() + '/' + (new Date().getMonth() + 1),
             teamView: true,
             shiftView: false,
@@ -280,61 +278,61 @@ export default {
     },
     asyncComputed: {
         month: {
-        async get() {
-            this.teamForm.Month = this.globalMonth
-            this.initForm.Month = this.globalMonth
-            let globalform = this.teamForm
-            var year = this.globalMonth.split('/')[0]
-            var month = (this.globalMonth.split('/')[1] - 1)
-            if(month === 0) {
-                year = year - 1
-                month = 12
-            }
-            this.initForm.Month = year +'/'+ month
-            if(this.initView === true) {
-                globalform = this.initForm
-                console.log('test')
-            }
-            try {
-            let res = await this.$http.get(`/api/${globalform.TeamName}/${globalform.Month}`);
-            this.socket = io({
-                query: {
-                path: this.teamForm.Month,
-                },
-            });
-            this.socket.on("update", data => {
-                if (data.randomNumber == this.$randomNumber) return;
-                this.month.people[data.indexes.p].days[data.indexes.d].workDay =
-                data.workDay;
-                this.month.people[data.indexes.p].days[data.indexes.d].workType =
-                data.workType;
-            });
-            res.data.people = res.data.people.sort((x, y) => x.name.localeCompare(y.name));
-            this.cleanTeamForm()
-            this.cleanInitForm()
-            res.data.people.forEach(person=> {
-                if(person.principle == 'TM') { globalform.TeamManager += person.name + person.alias + ';'}
-                else if(person.principle == 'TA') { globalform.TeamAdvisor += person.name + person.alias + ';'}
-                
-                if(person.role == 'FTE') { globalform.FTE += person.name + person.alias + ';'}
-                else if(person.role == 'Vendor') { globalform.Vendor += person.name + person.alias + ';'}
-                var cntM = 0, cntN = 0, cntW = 0 
-                person.days.forEach(day => {
-                    if(day.workType === 'W') {cntW += 1}
-                    else if(day.workType === 'MS') {cntM += 1}
-                    else if(day.workType === 'NS') {cntN += 1}
+            async get() {
+                this.teamForm.Month = this.globalMonth
+                this.initForm.Month = this.globalMonth
+                let globalform = this.teamForm
+                var year = this.globalMonth.split('/')[0]
+                var month = (this.globalMonth.split('/')[1] - 1)
+                if(month === 0) {
+                    year = year - 1
+                    month = 12
+                }
+                this.initForm.Month = year +'/'+ month
+                if(this.initView === true) {
+                    globalform = this.initForm
+                    console.log('test')
+                }
+                try {
+                let res = await this.$http.get(`/api/${globalform.TeamName}/${globalform.Month}`);
+                this.socket = io({
+                    query: {
+                    path: this.teamForm.Month,
+                    },
+                });
+                this.socket.on("update", data => {
+                    if (data.randomNumber == this.$randomNumber) return;
+                    this.month.people[data.indexes.p].days[data.indexes.d].workDay =
+                    data.workDay;
+                    this.month.people[data.indexes.p].days[data.indexes.d].workType =
+                    data.workType;
+                });
+                res.data.people = res.data.people.sort((x, y) => x.name.localeCompare(y.name));
+                this.cleanTeamForm()
+                this.cleanInitForm()
+                res.data.people.forEach(person=> {
+                    if(person.principle == 'TM') { globalform.TeamManager += person.name + person.alias + ';'}
+                    else if(person.principle == 'TA') { globalform.TeamAdvisor += person.name + person.alias + ';'}
+                    
+                    if(person.role == 'FTE') { globalform.FTE += person.name + person.alias + ';'}
+                    else if(person.role == 'Vendor') { globalform.Vendor += person.name + person.alias + ';'}
+                    var cntM = 0, cntN = 0, cntW = 0 
+                    person.days.forEach(day => {
+                        if(day.workType === 'W') {cntW += 1}
+                        else if(day.workType === 'MS') {cntM += 1}
+                        else if(day.workType === 'NS') {cntN += 1}
+                    })
+                    if(cntM > cntW && cntM > cntN) {globalform.MorningShift += person.name + ';'}
+                    if(cntN > cntW && cntN > cntM) {globalform.NightShift += person.name + ';'}
                 })
-                if(cntM > cntW && cntM > cntN) {globalform.MorningShift += person.name + ';'}
-                if(cntN > cntW && cntN > cntM) {globalform.NightShift += person.name + ';'}
-            })
-            return res.data;
-            } catch (e) {
-            console.log(e);
-            this.socket = null;
-            this.message = 'Month not found';
-            return null;
-            }
-        },
+                return res.data;
+                } catch (e) {
+                console.log(e);
+                this.socket = null;
+                this.message = 'Month not found';
+                return null;
+                }
+            },
         watch() {
             this.changed;
         },
@@ -613,6 +611,10 @@ export default {
         },
     },
     computed:{
+        admin() {
+            this.su = store.get('user').su
+            return store.get('user').admin;
+        },
         goCalendar() {
             return (
                 '/' + 
