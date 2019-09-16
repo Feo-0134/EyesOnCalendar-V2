@@ -21,9 +21,9 @@
                     <h5 class = "blackFont">Work Day Type</h5>
                     </div>
                     <div class="box-container">
-                        <el-button v-on:click="cycle($event,0)" class="box0 green"></el-button>
-                        <el-button v-on:click="cycle($event,8)" class="box0 green">MS</el-button>
-                        <el-button v-on:click="cycle($event,9)" class="box0 green1">NS</el-button>
+                        <div v-on:click="cycle($event,0)" class="box0 green"></div>
+                        <div v-on:click="cycle($event,8)" class="box0 green">MS</div>
+                        <div v-on:click="cycle($event,9)" class="box0 green1">NS</div>
                         <!-- <h5 class = "blackFont">Work Day</h5> -->
                     </div>
                     <div class="typeTitle">
@@ -36,7 +36,7 @@
                       trigger="click">
                       <p>Please inform the team about your absence.</p>
                       <a href="mailto:YOUR_TEAMNAME_HERE@microsoft.com"><img class = "outlookLogo" src="../../static/img/outlook.png"  alt="Outlook" /></a>
-                      <el-button slot="reference" v-on:click="cycle($event,2)" class="box0 purple">SL</el-button>
+                      <div slot="reference" v-on:click="cycle($event,2)" class="box0 purple">SL</div>
                     </el-popover>
                     <el-popover
                       placement="bottom"
@@ -44,7 +44,7 @@
                       trigger="click">
                       <p>Please inform the team about your absence.</p>
                       <a href="mailto:YOUR_TEAMNAME_HERE@microsoft.com"><img class = "outlookLogo" src="../../static/img/outlook.png"  alt="Outlook" /></a>
-                      <el-button slot="reference" v-on:click="cycle($event,3)" class="box0 purple">AL</el-button>
+                      <div slot="reference" v-on:click="cycle($event,3)" class="box0 purple">AL</div>
                     </el-popover>
                     </div>
                     <div class="typeTitle">
@@ -59,7 +59,7 @@
                       trigger="click">
                       <p>Please inform the team about your absence.</p>
                       <a href="mailto:YOUR_TEAMNAME_HERE@microsoft.com"><img class = "outlookLogo" src="../../static/img/outlook.png"  alt="Outlook" /></a>
-                      <el-button slot="reference" v-on:click="open1 = true; cycle($event,12)" class="box1" :class="value1?'purple2':'purple1'">H(M)</el-button>
+                      <div slot="reference" v-on:click="open1 = true; cycle($event,12)" class="box1" :class="value1?'purple2':'purple1'">H(M)</div>
                     </el-popover>
                     <el-popover
                       placement="bottom"
@@ -67,7 +67,7 @@
                       trigger="click">
                       <p>Please inform the team about your absence.</p>
                       <a href="mailto:YOUR_TEAMNAME_HERE@microsoft.com"><img class = "outlookLogo" src="../../static/img/outlook.png"  alt="Outlook" /></a>
-                      <el-button slot="reference" v-on:click="open2 = true; cycle($event,14)" class="box1" :class="value1?'purple2':'purple1'">H(A)</el-button>
+                      <div slot="reference" v-on:click="open2 = true; cycle($event,14)" class="box1" :class="value1?'purple2':'purple1'">H(A)</div>
                     </el-popover>
                     </div>
                     <div class="typeTitle">
@@ -75,8 +75,8 @@
                     <h5 class = "blackFont">(OnDuty / MorningShift)</h5>
                     </div>
                     <div class="box-container">
-                        <el-button v-on:click="cycle($event,10)" class="box0 orange">PO</el-button>
-                        <el-button v-on:click="cycle($event,11)" class="box0 orange">PM</el-button>
+                        <div v-on:click="cycle($event,10)" class="box0 orange">PO</div>
+                        <div v-on:click="cycle($event,11)" class="box0 orange">PM</div>
                         <!-- <h5 class = "blackFont">OnDuty / MorningShift(PH)</h5> -->
                     </div>
                     <div class="typeTitle">
@@ -89,10 +89,10 @@
                       trigger="click">
                       <p>Please inform the team about your absence.</p>
                       <a href="mailto:YOUR_TEAMNAME_HERE@microsoft.com"><img class = "outlookLogo" src="../../static/img/outlook.png"  alt="Outlook" /></a>
-                      <el-button slot="reference" v-on:click="cycle($event,7)" class="box2 blue">T</el-button>
+                      <div slot="reference" v-on:click="cycle($event,7)" class="box2 blue">T</div>
                     </el-popover>
                     <h5 class = "blackFont">Training</h5>
-                    <el-button v-on:click="cycle($event,1)" class="box0 red">PH</el-button><h5 class = "blackFont">Public Holiday</h5>
+                    <div v-on:click="cycle($event,1)" class="box0 red">PH</div><h5 class = "blackFont">Public Holiday</h5>
                     </div>
                     <span slot="footer" class="dialog-footer">
                         <!-- <el-button @click="handleOpen">Cancel</el-button> -->
@@ -309,38 +309,50 @@ day {
 .box-container {
   display: flex;
 }
+.box-container .el-button {
+  background: inherit;
+  padding: inherit;
+  color:inherit;
+  margin: inherit;
+}
 .box1 {
+  border: 1px solid #404040;
   cursor: pointer;
   margin: 5px;
   width: 40px;
-  height: 40px;
+  height: 25px;
   color: white;
   border-radius: 3px;
   display: flex;
   flex-direction: column;
   padding-left: 3px;
+  padding-top: 10px;
 }
 .box0 {
+  border: 1px solid #404040;
   cursor: pointer;
   margin: 5px;
   width: 40px;
-  height: 40px;
+  height: 25px;
   color: white;
   border-radius: 3px;
   display: flex;
   flex-direction: column;
-  padding-left: 10px;
+  padding-left: 3px;
+  padding-top: 10px;
 }
 .box2 {
+  border: 1px solid #404040;
   cursor: pointer;
   margin: 5px;
   width: 40px;
-  height: 40px;
+  height: 25px;
   color: white;
   border-radius: 3px;
   display: flex;
   flex-direction: column;
-  padding-left: 15px;
+  padding-left: 1px;
+  padding-top: 10px;
 }
 .large {
   flex-direction: column;
@@ -348,6 +360,7 @@ day {
   font-weight: 700;
 }
 .help-dialogII {
+  border: 5px solid #404040;
   background-color: #3D5B5E;
   position: absolute;
   border-radius: 20px;

@@ -87,7 +87,7 @@
             </el-tab-pane>
           </el-tabs>
       </div>
-      <help-screen />
+      <!-- <help-screen /> -->
       <transition name="fade">
         <loading v-if="isLoading"></loading>
       </transition>
