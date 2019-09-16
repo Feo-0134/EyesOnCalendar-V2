@@ -71,7 +71,7 @@
                     </el-date-picker>
                 </el-form-item>
                 <el-form-item label="Team Name">
-                    <el-input v-model="initForm.TeamName" placeholder="example: AppService"></el-input>
+                    <el-input v-model="initForm.TeamName" placeholder="example: AppService * Team-Name can not include a number *"></el-input>
                 </el-form-item>
                 <!-- <el-form-item label="Team Manager">
                     <el-input v-model="initForm.TeamManager" placeholder="example: karenzhe"></el-input>
@@ -405,9 +405,22 @@ export default {
             this.reportView = true
         },
         initFormatCheck: function () {
-            var MontArr = (this.initForm.Month).split("/");
-            if(MontArr.length != 2 || MontArr[1] < 1 || MontArr[1] > 12) {
-                return -1;
+            // var MontArr = (this.initForm.Month).split("/");
+            // if(MontArr.length != 2 || MontArr[1] < 1 || MontArr[1] > 12) {
+            //     return -1;
+            // }
+            var str = this.initForm.TeamName
+            var ilen
+            for(ilen=0;ilen<str.length;ilen++)
+            {
+                if(str.charAt(ilen) > '0' && str.charAt(ilen) < '9' )
+                {
+                    return -1
+                } 
+                if(str.charAt(ilen) === '/' || str.charAt(ilen) === '\\' || str.charAt(ilen) === ' ')
+                {
+                    return -2
+                } 
             }
             // if the last letter is not ';' then insert ';'
             if((this.initForm.Vendor)[(this.initForm.Vendor).length - 1] != ';') {
@@ -418,8 +431,12 @@ export default {
             }
         },
         initiateCalendar: function () {
-            if(this.initFormatCheck() == -1) {
-                this.addFeedback('notify', 'Month is invalid. example: 2019/8')
+            if(this.initFormatCheck() === -1) {
+                this.addFeedback('notify', 'Team-Name can not include a number')
+                return;
+            }
+            else if(this.initFormatCheck() === -2) {
+                this.addFeedback('notify', 'Team-Name can not include \'/\'  or \'\\\' or SPACE')
                 return;
             }
             var peopleArr = (this.initForm.Vendor + this.initForm.FTE).split(";");
