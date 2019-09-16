@@ -443,7 +443,10 @@ export default {
             var vendorArr = (this.initForm.Vendor).split(";");
             for(var cnt = 0; cnt<vendorArr.length-1; cnt++) {
                 this.people[cnt].alias = '(' + peopleArr[cnt].split("(")[1]
-                if(this.people[cnt].alias.match('v-') != 'v-') { this.addFeedback('notify', 'vendor alias with no \'v-\' is invalid.'); return }
+                if(this.people[cnt].alias.match('v-') != 'v-') 
+                { this.addFeedback('notify', 'vendor alias with no \'v-\' is invalid:' + '(' + peopleArr[cnt].split("(")[1]); return }
+                var tempArr = peopleArr[cnt].split("(")[0].split(" ")
+                if(tempArr.length <= 1) {this.addFeedback('notify', 'Employee Name invalid: '+ peopleArr[cnt].split("(")[0]); return;}
                 this.people[cnt].name = peopleArr[cnt].split("(")[0]
                 this.people[cnt].role = "Vendor"
             }
@@ -480,14 +483,14 @@ export default {
         },
         addPerson() {
             if(this.addForm.name == "" || this.addForm.alias == "") {
-            this.addFeedback('notify', 'Please fill the blanks.')
+                this.addFeedback('notify', 'Please fill the blanks.')
             return;
             }
-            // name
-            if(this.addForm.name.toString() === ' ') {
-                this.addFeedback('notify', 'Name invalid. eg. Danielle Zhao')
-                return;
-            }
+            // // name
+            // if(this.addForm.name.toString() === ' ') {
+            //     this.addFeedback('notify', 'Name invalid. eg. Danielle Zhao')
+            //     return;
+            // }
             var nameArr = this.addForm.name.toString().toLowerCase().trim().split(" ");
             if(nameArr.length > 1) { 
                 // apply name to default format: First Name + Last Name and Capital the first letter
@@ -495,25 +498,20 @@ export default {
                 nameArr[nameArr.length - 1] = nameArr[nameArr.length - 1][0].toUpperCase() + nameArr[nameArr.length - 1].substr(1);
                 this.addForm.name = nameArr[0] + " " + nameArr[nameArr.length - 1];
             }else {
-                this.addFeedback('notify', 'Name invalid. eg. Danielle Zhao')
+                this.addFeedback('notify', 'Name length invalid. eg. Danielle Zhao')
                 return;
             }
             // role
             if(this.addForm.role == "FTE" || this.addForm.role == "fte"|| this.addForm.role == "Fte" || this.addForm.role == "FTe"){
-            this.addForm.role = "FTE";
+                this.addForm.role = "FTE";
             }else if(this.addForm.role == "Vendor" || this.addForm.role == "vendor" || this.addForm.role == "v") {
-            this.addForm.role = "Vendor"
+                this.addForm.role = "Vendor"
             }else {
-            this.addFeedback('notify', 'Role invalid. eg. FTE or Vendor')
+                this.addFeedback('notify', "Role invalid. Please use 'FTE' or 'Vendor'")
             return;
             }
             // alias
-            if(this.addForm.alias.toString() === ' ') {
-            this.addFeedback('notify', 'alias invalid. eg. danzha')
-            return;
-            } else {
-                this.addForm.alias = this.addForm.alias.trim()
-            }
+            this.addForm.alias = this.addForm.alias.trim()
             if(this.addForm.role == "Vendor") {
                 if(this.addForm.alias.toString().match('v-') != 'v-') {
                     this.addFeedback('notify', 'vendor alias with no \'v-\' is invalid.')
@@ -522,9 +520,8 @@ export default {
             }
             if(this.addForm.alias[0] == "(" && this.addForm.alias[(this.addForm.alias).length-1] == ")") {
                 ;
-            }else {
-                this.addForm.alias = "(" + this.addForm.alias + ")";
-            }
+            }else { this.addForm.alias = "(" + this.addForm.alias + ")";}
+            
             if(store.get('user').admin) {
                 // console.log('admin')
                 new Promise((resolve, reject) => {

@@ -43,7 +43,6 @@ router.get('/:pod/:year/:month/allTeamName', async (ctx) => {
   try {
     var result = await Month.find({ year: p.year, month: p.month })
     if (result == null) { throw (errorMsg) } else {
-      console.log('good')
       // eslint-disable-next-line no-array-constructor
       var linkList = new Array()
       result.forEach(element => {
