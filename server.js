@@ -38,6 +38,26 @@ router.use(bodyParser())
 //     ctx.body = "Hello"
 // })
 
+router.get('/:pod/:year/:month/allTeamName', async (ctx) => {
+  var p = ctx.params
+  try {
+    var result = await Month.find({ year: p.year, month: p.month })
+    if (result == null) { throw (errorMsg) } else {
+      console.log('good')
+      // eslint-disable-next-line no-array-constructor
+      var linkList = new Array()
+      result.forEach(element => {
+        linkList.push({ value: element.pod, link: '/' + element.pod + '/' + p.year + '/' + p.month })
+        ctx.body = linkList
+      })
+    }
+  } catch (e) {
+    ctx.status = 404
+    ctx.body = e
+    console.log(e)
+  }
+})
+
 /* API to get the month data CHECKED
  */
 router.get('/:pod/:year/:month', async (ctx) => {

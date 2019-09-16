@@ -100,17 +100,13 @@ export default {
           new Promise((resolve, reject) => {
             this.$http.post(this.apiPath, this.apiPayload)
             .then((response)=> {
-              // console.log(response)
               if(response.data == "success") {
-              // console.log('err3');
-              this. addFeedback('success', 'Person Added to Team')}
+                this. addFeedback('success', 'Person Added to Team')}
               else{
-                // console.log('err4');
-              this.addFeedback('notify', 'This employee is already in the system.');}
+                this.addFeedback('notify', 'This employee is already in the system.');}
             })
             .catch((error) => {
-              // console.log(error.response)
-              this.addFeedback('error', 'System Error. Please turn to the developer.');
+                this.addFeedback('error', 'System Error. Please turn to the developer.');
             })
           }) 
         }

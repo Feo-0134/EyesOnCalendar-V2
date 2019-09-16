@@ -89,10 +89,14 @@ export default {
             this.title = jsonresult.jobTitle
             this.displayName = jsonresult.displayName
             this.alias = '(' + (jsonresult.userPrincipalName.split('@'))[0] + ')'
-            if(jsonresult.jobTitle.match('TECHNICAL ADVISOR') == 'TECHNICAL ADVISOR'|| jsonresult.jobTitle.match('MGR') == 'MGR'|| jsonresult.jobTitle.match('MANAGER') == 'MANAGER'||jsonresult.userPrincipalName == 'Jianan.Lu@microsoft.com' || jsonresult.userPrincipalName == 't-junzhu@microsoft.com')
+            if( jsonresult.jobTitle.match('TECHNICAL ADVISOR') == 'TECHNICAL ADVISOR'
+                || jsonresult.jobTitle.match('MGR') == 'MGR'
+                || jsonresult.jobTitle.match('MANAGER') == 'MANAGER'
+                || jsonresult.userPrincipalName == 'Jianan.Lu@microsoft.com'
+                || jsonresult.userPrincipalName == 't-junzhu@microsoft.com')
             { this.admin = true; console.log('admin')}
 
-            if( jsonresult.jobTitle === 'TECHNICAL ADVISOR ASIA' || jsonresult.userPrincipalName == 'Jianan.Lu@microsoft.com' || jsonresult.userPrincipalName == 't-junzhu@microsoft.com') {
+            if(jsonresult.userPrincipalName == 'Jianan.Lu@microsoft.com' || jsonresult.userPrincipalName == 't-junzhu@microsoft.com') {
                 this.accessmsg = result;
                 // document.getElementById("json").innerHTML = result;
             } else {
@@ -115,13 +119,10 @@ export default {
                         store.set('user', {displayName:this.displayName, admin: this.admin, title: this.title, team: response.data})
                     }
                     if(response.data === 'default' && this.admin) {
-                      // console.log("q0")
                       this.$router.push('/portal')
                     }else if(response.data === 'default') {
-                      // console.log("q1")
                       this.$message('Sorry we can not find your information in the system. Please turn to your TM/TA for permission.');
                     } else {
-                      // console.log("q2")
                       this.$router.push(response.data + moment().format('/YYYY/M'))
                     }
                 })

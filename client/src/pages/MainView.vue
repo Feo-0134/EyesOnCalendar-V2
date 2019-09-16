@@ -3,10 +3,15 @@
       <div class = "head">
         <div class="testClass">
           <el-dropdown>
-            <span class="el-dropdown-link">
-                <el-input placeholder="POD NAME HERE" v-model="teamName">
-                  <el-button slot="append" icon="el-icon-search" v-on:click="goPod"></el-button>
-                </el-input>
+            <span>
+                <el-autocomplete
+                  v-model="teamName"
+                  :fetch-suggestions="querySearchAsync"
+                  placeholder="POD NAME HERE"
+                  @select="handleSelect"
+                >
+                  <!-- <el-button slot="append" icon="el-icon-search" v-on:click="goPod"></el-button> -->
+                </el-autocomplete>
             </span>
           </el-dropdown>
           <el-dropdown>
@@ -19,13 +24,11 @@
       <div class="testClassII welcome">
         <p>Welcome, {{displayName}} {{displayTitle}}</p>
       </div>
-      <!-- <div class = "MonthSwitch"> -->
       <h1>
         <a :href="prevMonth" class="pointer">&lt;</a>
         {{prettyDate}}
         <a :href="nextMonth" class="pointer">&gt;</a>
       </h1>
-      <!-- <div class = "Init-button"> -->
       <h2 v-if="!month">{{message}}</h2>
       <!-- <button v-if="!month" class = "button"
       :class="{buttonBackground: initUndo}" v-on:click="init">
@@ -58,9 +61,6 @@
                 <div v-for="(p,index) in month.people[0].days"
                 :key="index" class="cellx">{{index+1}}</div>
               </div>
-              <!-- /**************************************
-              Feature 3 on-duty rate
-              **************************************/ -->
               <div id="tablehead" class="row tablehead">
                 <div class="name attendance">On Duty</div>
                 <div v-for="(p,index) in month.people[0].days"
@@ -76,9 +76,6 @@
                 <div v-for="(p,index) in month.people[0].days"
                 :key="index" class="cellx">{{index+1}}</div>
               </div>
-              <!-- /**************************************
-              Feature 3 on-duty rate
-              **************************************/ -->
               <div id="tablehead" class="row tablehead">
                 <div class="name attendance">On Duty</div>
                 <div v-for="(p,index) in month.people[0].days"
@@ -91,7 +88,6 @@
           </el-tabs>
       </div>
       <help-screen />
-      <!-- <div class = "Init-button"> -->
       <transition name="fade">
         <loading v-if="isLoading"></loading>
       </transition>
@@ -108,7 +104,9 @@ export default {
   components: { Person, HelpScreen, Loading },
   data() {
     return {
-      teamName: "",
+      links: [],
+      timeout:  null,
+      teamName: '',
       message: 'Loading month...',
       scrolled: false,
       changed: false,
@@ -289,6 +287,13 @@ export default {
         year: '2019',
       };
     },
+    getTeamApiPath() {
+      return (
+        `/api${
+          this.$router.currentRoute.path
+        }/allTeamName`
+      );
+    },
   },
   created() {
     window.addEventListener('scroll', this.handleScroll);
@@ -297,15 +302,41 @@ export default {
     window.removeEventListener('scroll', this.handleScroll);
   },
   mounted() {
+    this.loadTeamName()
     this.state = this.$store.state
     window.addEventListener('keyup', (ev) => {
       this.callUndo(ev);
     });
   },
   methods: {
-    goPod() {
-      var customPath = "/" + this.teamName;
-      const path = (customPath + moment(this.date, '/YYYY/M').format('/YYYY/M'));
+    loadTeamName () {
+      new Promise((resolve, reject) => {
+        this.$http.get(this.getTeamApiPath)
+        .then((response)=> {
+          this.links = response.data;
+        })
+        .catch((error) => {
+            this.addFeedback('error', 'System Error. Please turn to the developer.');
+            return [];
+        })
+      })
+    },
+    querySearchAsync(queryString, cb) {
+      var links = this.links;
+      var results = queryString ? links.filter(this.createFilter(queryString)) : links;
+
+      clearTimeout(this.timeout);
+      this.timeout = setTimeout(() => {
+        cb(results);
+      }, 3000 * Math.random());
+    },
+    createFilter(queryString) {
+      return (link) => {
+        return (link.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
+      };
+    },
+    handleSelect(item) {
+      const path = item.link
       this.$router.push({ path });
       location.reload();
     },
@@ -471,10 +502,6 @@ export default {
 }
 .buttonBackground {
   background-color: #4CAF50; /* Green */
-}
-.el-dropdown-link {
-  cursor: pointer;
-  color:gray;
 }
 .el-icon-arrow-down {
   font-size: 12px;
