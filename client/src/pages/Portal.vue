@@ -71,7 +71,7 @@
                     </el-date-picker>
                 </el-form-item>
                 <el-form-item label="Team Name">
-                    <el-input v-model="initForm.TeamName" placeholder="example: AppService * Team-Name can not include a number *"></el-input>
+                    <el-input v-model="initForm.TeamName" placeholder="Team-Name can not include number, '/' , '\' or SPACE"></el-input>
                 </el-form-item>
                 <!-- <el-form-item label="Team Manager">
                     <el-input v-model="initForm.TeamManager" placeholder="example: karenzhe"></el-input>
@@ -80,14 +80,11 @@
                     <el-input v-model="initForm.TeamAdvisor" placeholder="example: danzha;anikshen;"></el-input> 
                 </el-form-item> -->
                 <el-form-item label="FTE">
-                    <el-input v-model="initForm.FTE" placeholder="example: User Zero(ftealias00);User One(ftealias01);"></el-input>
+                    <el-input v-model="initForm.FTE" placeholder="eg. User Zero(ftealias00);User One(ftealias01);"></el-input>
                 </el-form-item>
                 <el-form-item label="Vendor">
-                    <el-input v-model="initForm.Vendor" placeholder="example: Vendor User2(v-vendoralias);"></el-input>
+                    <el-input v-model="initForm.Vendor" placeholder="eg. Vendor User2(v-vendoralias);"></el-input>
                 </el-form-item>
-                <!-- <el-form-item label="Others">
-                    <el-input v-model="form.name"></el-input>
-                </el-form-item> -->
                 <span>
                     <el-button @click="cleanInitForm">Cancel</el-button>
                     <el-button type="primary" @click="initiateCalendar">Confirm</el-button>
