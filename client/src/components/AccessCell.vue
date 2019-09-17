@@ -1,7 +1,8 @@
 <template>
     <el-container>
     <el-header class="headbar">Welcome to Shift Arrangement Tool.</el-header>
-    <el-autocomplete class="pickTeam"
+    <el-container class="welcomPage">
+    <el-autocomplete class="pickTeam InputButton1"
         v-if="podSelect"
         v-model="teamName"
         :fetch-suggestions="querySearchAsync"
@@ -9,6 +10,12 @@
         @select="handleSelect"
     >
     </el-autocomplete>
+    <h2 v-if="podSelect" class="pickTeam InputButton2" >OR</h2>
+    <h2 v-if="podSelect" class="goto" >Go to</h2>
+    <el-button  v-if="podSelect" class="pickTeam InputButton3">
+        <a :href="goPortal" class="navigationLink ">Portal</a>
+    </el-button>
+    </el-container>
     <div class="PersonalInfo" v-loading="loading" v-if="loading"> 
         {{accessmsg}}
     </div>
@@ -57,6 +64,9 @@ export default {
         this.acquireTokenPopupAndCallMSGraph();
     },
     computed: {
+        goPortal() {
+            return (`/portal`);
+        },
         getTeamApiPath() {
             return ('/api/default/' + new Date().getFullYear() + '/' + (new Date().getMonth() + 1) + '/allTeamName')
         },
@@ -219,18 +229,52 @@ export default {
 </script>
 
 <style>
+.InputButton3 {
+    width: 200px;
+    float: left;
+    height: fit-content;
+}
 .PersonalInfo{
     height: 500px;
     margin: auto;
+    display: inline-block;
 }
 .el-container .el-loading-mask {
     background-color:#262626
 }
+.welcomPage {
+    margin-top: 300px; 
+    margin-left: auto;
+    margin-right: auto;
+}
 .pickTeam {
-    margin: auto;
+   display: inline;
 }
 .headbar {
     background-color: inherit;
     font-size: 30px;
+}
+.navigationLink {
+    font-size: 15px;
+    color:gray;
+}
+.InputButton1 {
+    width: 200px;
+    margin-right: 0px;
+    float: right;
+}
+.InputButton2 {
+    width: 200px;
+    padding-left: 50px;
+    margin-right: 10px;
+    margin-left: 10px;
+    margin-top: 10px;
+}
+.goto {
+    margin-top: 10px;
+    margin-right: 10px;
+}
+.el-autocomplete .el-input__inner {
+    background-color: #262626;
 }
 </style>

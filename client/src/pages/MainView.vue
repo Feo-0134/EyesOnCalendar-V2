@@ -530,4 +530,7 @@ export default {
   background-color: #373737;
   border-color: #808080;
 }
+.el-autocomplete .el-input__inner {
+    background-color: #262626;
+}
 </style>
