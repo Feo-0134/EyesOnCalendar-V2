@@ -148,6 +148,12 @@ export default {
     },
     computed:{
         admin() {
+        var path = '/'
+          if(store.get('user')===undefined) {
+            this.$message("Please Login.")
+            this.$router.push({ path })
+            setTimeout(()=>{location.reload()},2000)
+          }
           return store.get('user').admin;
         },
         displayName() {

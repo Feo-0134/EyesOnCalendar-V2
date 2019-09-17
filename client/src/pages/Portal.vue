@@ -521,7 +521,7 @@ export default {
             if(this.addForm.alias[0] == "(" && this.addForm.alias[(this.addForm.alias).length-1] == ")") {
                 ;
             }else { this.addForm.alias = "(" + this.addForm.alias + ")";}
-            
+
             if(store.get('user').admin) {
                 // console.log('admin')
                 new Promise((resolve, reject) => {
@@ -623,6 +623,12 @@ export default {
     },
     computed:{
         admin() {
+            var path = '/'
+            if(store.get('user')===undefined) {
+                this.$message("Please Login.")
+                this.$router.push({ path })
+                setTimeout(()=>{location.reload()},2000)
+            }
             this.su = store.get('user').su
             return store.get('user').admin;
         },
