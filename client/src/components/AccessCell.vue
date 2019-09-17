@@ -15,6 +15,7 @@
     <el-button  v-if="podSelect" class="pickTeam InputButton3">
         <a :href="goPortal" class="navigationLink ">Portal</a>
     </el-button>
+    <h2 v-if="noInform">Sorry we can not find your information in the system. Please turn to your TM/TA for permission.</h2>
     </el-container>
     <div class="PersonalInfo" v-loading="loading" v-if="loading"> 
         {{accessmsg}}
@@ -36,6 +37,7 @@ export default {
             title: '',
             admin: false,
             su: false,
+            noInform: false,
             alias: '',
             accessmsg: '',
             msalConfig: 
@@ -154,7 +156,8 @@ export default {
                 || jsonresult.jobTitle.match('MGR') == 'MGR'
                 || jsonresult.jobTitle.match('MANAGER') == 'MANAGER'
                 || jsonresult.userPrincipalName == 'Jianan.Lu@microsoft.com'
-                || jsonresult.userPrincipalName == 't-junzhu@microsoft.com')
+                || jsonresult.userPrincipalName == 't-junzhu@microsoft.com'
+                )
             { this.admin = true; console.log('admin')}
             
             if(jsonresult.userPrincipalName == 'Jianan.Lu@microsoft.com' 
@@ -194,7 +197,8 @@ export default {
                       this.loading = false
                     }else if(response.data === 'default') {
                       this.loading = false
-                      this.$message('Sorry we can not find your information in the system. Please turn to your TM/TA for permission.');
+                      this.noInform = true
+                      this.$message('Sorry we can not find your information.');
                     } else {
                       this.$router.push(response.data + moment().format('/YYYY/M'))
                     }

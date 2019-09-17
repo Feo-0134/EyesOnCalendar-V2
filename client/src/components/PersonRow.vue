@@ -96,7 +96,7 @@
                     </div>
                     <span slot="footer" class="dialog-footer">
                         <!-- <el-button @click="handleOpen">Cancel</el-button> -->
-                        <el-button class="confirmBtn" type="primary" @click="handleOpen()">Comfirm</el-button>
+                        <el-button class="confirmBtn" type="primary" @click="handleOpen()">Confirm</el-button>
                     </span>
                 </div>
             </div> 
