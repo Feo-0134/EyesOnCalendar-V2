@@ -495,18 +495,21 @@ export default {
             }
             var vendorArr = (this.initForm.Vendor).split(";");
             for(var cnt = 0; cnt<vendorArr.length-1; cnt++) {
-                this.people[cnt].alias = '(' + peopleArr[cnt].split("(")[1]
-                if(this.people[cnt].alias.match('v-') != 'v-') 
-                { this.addFeedback('notify', 'vendor alias with no \'v-\' is invalid:' + '(' + peopleArr[cnt].split("(")[1]); return }
                 var tempArr = peopleArr[cnt].split("(")[0].split(" ")
                 if(tempArr.length <= 1) {this.addFeedback('notify', 'Employee Name invalid: '+ peopleArr[cnt].split("(")[0]); return;}
                 this.people[cnt].name = peopleArr[cnt].split("(")[0]
+                this.people[cnt].alias = '(' + peopleArr[cnt].split("(")[1]
+                if(this.people[cnt].alias.match('v-') != 'v-') 
+                { this.addFeedback('notify', 'vendor alias with no \'v-\' is invalid:' + '(' + peopleArr[cnt].split("(")[1]); return }
                 this.people[cnt].role = "Vendor"
             }
             var fteArr = (this.initForm.FTE).split(";");
             for(var cnt = vendorArr.length-1; cnt<peopleArr.length-1; cnt++) {
-                this.people[cnt].alias = '(' + peopleArr[cnt].split("(")[1]
+                var tempArr = peopleArr[cnt].split("(")[0].split(" ")
+                if(tempArr.length <= 1) {this.addFeedback('notify', 'Employee Name invalid: '+ peopleArr[cnt].split("(")[0]); return;}
                 this.people[cnt].name = peopleArr[cnt].split("(")[0]
+                if(peopleArr[cnt].split("(")[1] === undefined) {this.addFeedback('notify', 'Alias invalid: '+ peopleArr[cnt].split("(")[0]); return;}
+                this.people[cnt].alias = '(' + peopleArr[cnt].split("(")[1]
                 this.people[cnt].role = "FTE"
             }
             var teamManager = (this.initForm.TeamManager).split(";");
