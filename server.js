@@ -38,6 +38,8 @@ router.use(bodyParser())
 //     ctx.body = "Hello"
 // })
 
+/* API to get allTeamName data CHECKED
+ */
 router.get('/:pod/:year/:month/allTeamName', async (ctx) => {
   var p = ctx.params
   try {
@@ -157,6 +159,23 @@ function findRecord (month, alias) {
   if (flag === 1) { return true } else { return false }
 }
 
+/* Function to check
+ * a record with a given alias's principle
+ * in a given month
+ */
+function findPrinciple (month, alias) {
+  // console.log('enterFind')
+  let flag = 0
+  month.people.forEach(person => {
+    if ((person.principle === 'TM' || person.principle === 'TA') && person.alias === alias) {
+      // console.log('Found')
+      flag = 1
+    }
+  })
+  // console.log('notFound')
+  if (flag === 1) { return true } else { return false }
+}
+
 /* Function to insert
  * records to a given month
  */
@@ -164,6 +183,21 @@ function incrementMonth (month, people) {
   console.log('Incremental push')
   people.forEach(person => {
     month.people.push(person)
+  })
+  return month
+}
+
+/* Function to update
+ * records from a given month
+ */
+function updateMonth (month, people) {
+  console.log('updateMonth')
+  people.forEach(person => {
+    month.people.forEach(p => {
+      if (p.alias === person.alias) {
+        p.principle = person.principle
+      }
+    })
   })
   return month
 }
@@ -211,11 +245,28 @@ router.post('/:pod/:year/:month/person', upload.any('csv'), bodyParser(), async 
   people[0].name = b.name
   people[0].role = b.role
   people[0].principle = b.principle
-  if (findRecord(currentMonth, b.alias)) { ctx.body = 'Record exist'; return }
-  var payload = incrementMonth(currentMonth, people)
+
+  var payload
+  if (b.principle === 'TM' || b.principle === 'TA') { // add TM/TA role to a team member
+    if (!findRecord(currentMonth, b.alias)) {
+      ctx.body = 'This is not a team member. Please add him to your team first'; return
+    } else if (findPrinciple(currentMonth, b.alias)) {
+      ctx.body = 'This person is already TM/TA'; return
+    } else {
+      payload = updateMonth(currentMonth, people)
+      ctx.body = 'Permission is Added to the Person'
+    }
+  } else { // add a team member
+    if (findRecord(currentMonth, b.alias)) {
+      ctx.body = 'Record exist'; return
+    } else {
+      payload = incrementMonth(currentMonth, people)
+      ctx.body = 'Person is Added to the Team'
+    }
+  }
+
   try {
     await payload.save()
-    ctx.body = 'success'
   } catch (e) {
     console.log('System Error: crash at insert record' + e)
     ctx.status = 400
@@ -231,14 +282,33 @@ router.post('/:pod/:year/:month/person', upload.any('csv'), bodyParser(), async 
  * {"alias":"apac"}
  */
 router.post('/:pod/:year/:month/delete', bodyParser(), async (ctx) => {
+  const uploadDict = ['january', 'february', 'march', 'april', 'may',
+    'june', 'july', 'august', 'september', 'october', 'november', 'december']
   var p = ctx.params
   var b = ctx.request.body
   var currentMonth = await Month.findOne({ year: p.year, month: p.month, pod: p.pod })
-  var payload = await decrementMonth(currentMonth, b.alias)
-  if (payload === -1) { ctx.body = 'Record not exist'; return }
+  var src = await fs.createReadStream('./uploads/' + uploadDict[p.month - 1] + '.txt')
+  var people = await json(src)
+  people[0].alias = b.alias
+  people[0].principle = 'None'
+  var payload
+  if (b.principle === 'TM' || b.principle === 'TA') { // add TM/TA role to a team member
+    if (!findRecord(currentMonth, b.alias)) {
+      ctx.body = 'Record not exist'; return
+    } else if (!findPrinciple(currentMonth, b.alias)) {
+      ctx.body = 'This person is not TM/TA'; return
+    } else if (findPrinciple(currentMonth, b.alias)) {
+      payload = updateMonth(currentMonth, people)
+      ctx.body = 'Permission is Removed from the Person'
+    }
+  } else { // delete a team member
+    payload = await decrementMonth(currentMonth, b.alias)
+    ctx.body = 'Person is Removed from the Team'
+    if (payload === -1) { ctx.body = 'Record not exist'; return }
+  }
+
   try {
     await payload.save()
-    ctx.body = 'success'
   } catch (e) {
     ctx.status = 400
     ctx.body = 'error'

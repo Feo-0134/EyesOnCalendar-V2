@@ -334,7 +334,7 @@ export default {
       clearTimeout(this.timeout);
       this.timeout = setTimeout(() => {
         cb(results);
-      }, 3000 * Math.random());
+      }, 500);// * Math.random()); // what is this?? check it out later
     },
     createFilter(queryString) {
       return (link) => {

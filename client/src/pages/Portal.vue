@@ -13,10 +13,10 @@
                     <template slot="title"><i class="el-icon-menu"></i>EyesonCalendar</template>
                     <el-menu-item-group>
                     <template slot="title"></template>
-                    <el-menu-item index="2-3" v-on:click="showInitView">Initiate Calendar</el-menu-item>
-                    <el-menu-item index="2-1" v-on:click="showTeamView">Team Management</el-menu-item>
-                    <el-menu-item index="2-2" v-on:click="showShiftView">Shift Management</el-menu-item>
-                    <el-menu-item index="2-4" v-on:click="showReportView">EyesonCalendar Report</el-menu-item>
+                    <el-menu-item index="2-3" v-on:click="showInitView">Initiate Team Calendar</el-menu-item>
+                    <el-menu-item index="2-1" v-on:click="showTeamView">Team Calendar Management</el-menu-item>
+                    <el-menu-item index="2-2" v-on:click="showShiftView">Team Shift Management</el-menu-item>
+                    <el-menu-item index="2-4" v-on:click="showReportView">Team Shift Report</el-menu-item>
                     </el-menu-item-group>
                 </el-submenu>
             </el-menu>
@@ -38,15 +38,12 @@
                     <el-form-item label="Alias" :label-width="formLabelWidth">
                     <el-input v-model="addForm.alias" autocomplete="off"></el-input>
                     </el-form-item>
-                    <el-form-item label="Name" :label-width="formLabelWidth">
+                    <el-form-item label="Name" :label-width="formLabelWidth" v-if="!addTMTA">
                     <el-input v-model="addForm.name" autocomplete="off"></el-input>
-                    </el-form-item>
-                    <el-form-item label="Role" :label-width="formLabelWidth" v-show="inputRole">
-                    <el-input v-model="addForm.role" autocomplete="off"></el-input>
                     </el-form-item>
                 </el-form>
                 <div slot="footer" class="dialog-footer">
-                    <el-button @click="addFormVisible = false">Cancel</el-button>
+                    <el-button @click="addFormVisible = false;addTMTA = false">Cancel</el-button>
                     <el-button type="primary" @click="addPerson();addFormVisible = false">Confirm</el-button>
                 </div>
             </el-dialog>
@@ -138,34 +135,31 @@
                 <el-form-item label="Team Manager">
                     <el-input v-model="teamForm.TeamManager" :disabled="!su"></el-input>
                     <div class="functionalButton">
-                    <el-button type="primary" icon="el-icon-plus" circle v-on:click="addPersonView('FTE', 'TM')"></el-button>
-                    <el-button type="primary" icon="el-icon-minus" circle v-on:click="delPersonView()"></el-button>
+                    <el-button type="primary" icon="el-icon-plus" circle v-on:click="addTMTA=true;addPersonView('FTE', 'TM')"></el-button>
+                    <el-button type="primary" icon="el-icon-minus" circle v-on:click="delPersonView('TM')"></el-button>
                     </div>
                 </el-form-item>
                 <el-form-item label="Technical Advisor">
                     <el-input v-model="teamForm.TeamAdvisor" :disabled="!su"></el-input>
                     <div class="functionalButton">
-                    <el-button type="primary" icon="el-icon-plus" circle v-on:click="addPersonView('', 'TA')"></el-button>
-                    <el-button type="primary" icon="el-icon-minus" circle v-on:click="delPersonView()"></el-button>
+                    <el-button type="primary" icon="el-icon-plus" circle v-on:click="addTMTA=true;addPersonView('', 'TA')"></el-button>
+                    <el-button type="primary" icon="el-icon-minus" circle v-on:click="delPersonView('TA')"></el-button>
                     </div>
                 </el-form-item>
                                <el-form-item label="FTE Member">
                     <el-input v-model="teamForm.FTE" :disabled="!su"></el-input>
                     <div class="functionalButton">
                     <el-button type="primary" icon="el-icon-plus" circle v-on:click="addPersonView('FTE', 'None')"></el-button>
-                    <el-button type="primary" icon="el-icon-minus" circle v-on:click="delPersonView()"></el-button>
+                    <el-button type="primary" icon="el-icon-minus" circle v-on:click="delPersonView('None')"></el-button>
                     </div>
                 </el-form-item>
                                <el-form-item label="Vendor member">
                     <el-input v-model="teamForm.Vendor" :disabled="!su"></el-input>
                     <div class="functionalButton">
                     <el-button type="primary" icon="el-icon-plus" circle v-on:click="addPersonView('Vendor', 'None')"></el-button>
-                    <el-button type="primary" icon="el-icon-minus" circle v-on:click="delPersonView()"></el-button>
+                    <el-button type="primary" icon="el-icon-minus" circle v-on:click="delPersonView('None')"></el-button>
                     </div>
                 </el-form-item>
-                <!-- <el-form-item label="Others">
-                    <el-input v-model="form.name"></el-input>
-                </el-form-item> -->
             </el-form>
             <el-form v-if="reportView" :model="teamForm" label-width="140px">
                 <el-form-item label="Month">
@@ -208,6 +202,7 @@ export default {
     components: { Personsum },
     data: function () {
         return {
+            addTMTA: false,
             su: false,
             globalMonth: new Date().getFullYear() + '/' + (new Date().getMonth() + 1),
             teamView: true,
@@ -218,16 +213,6 @@ export default {
             inputRole:false,
             delFormVisible:false,
             sftFormVisible:false,
-            form: {
-                    name: '',
-                    region: '',
-                    date1: '',
-                    date2: '',
-                    delivery: false,
-                    type: [],
-                    resource: '',
-                    desc: ''
-            },
             addForm: {
                 alias: '',
                 name: '',
@@ -236,6 +221,7 @@ export default {
             },
             delForm: {
                 alias: '',
+                principle: ''
             },
             sftForm: {
                 alias: '',
@@ -356,20 +342,20 @@ export default {
         },
         cleanDelForm: function () {
             this.delForm.alias = ""
+            this.delForm.principle = ""
         },
         cleanSftForm: function () {
             this.sftForm.alias = ""
         },
         addPersonView(role, principle) {
             this.cleanAddForm()
-            this.inputRole = false
-            if(principle == 'TA') { this.inputRole = true }
             this.addForm.role = role
             this.addForm.principle = principle
             this.addFormVisible = true
         },
-        delPersonView: function() {
+        delPersonView: function(principle) {
             this.cleanDelForm()
+            this.delForm.principle = principle
             this.delFormVisible = true
         },
         sftPersonView(workType) {
@@ -420,10 +406,10 @@ export default {
                 } 
             }
             // if the last letter is not ';' then insert ';'
-            if((this.initForm.Vendor)[(this.initForm.Vendor).length - 1] != ';') {
+            if((this.initForm.Vendor).length !== 0 && (this.initForm.Vendor)[(this.initForm.Vendor).length - 1] != ';') {
                 this.initForm.Vendor = this.initForm.Vendor + ";"
             }
-            if((this.initForm.FTE)[(this.initForm.FTE).length - 1] != ';') {
+            if((this.initForm.FTE).length !== 0 && (this.initForm.FTE)[(this.initForm.FTE).length - 1] != ';') {
                 this.initForm.FTE = this.initForm.FTE + ";"
             }
         },
@@ -482,22 +468,21 @@ export default {
             })
         },
         addPerson() {
-            if(this.addForm.name == "" || this.addForm.alias == "") {
-                this.addFeedback('notify', 'Please fill the blanks.')
+            if(this.addForm.alias == "") {
+                this.addFeedback('notify', 'Please fill the alias.')
             return;
             }
-            // // name
-            // if(this.addForm.name.toString() === ' ') {
-            //     this.addFeedback('notify', 'Name invalid. eg. Danielle Zhao')
-            //     return;
-            // }
+            if(this.addTMTA === false && this.addForm.name == "") {
+                this.addFeedback('notify', 'Please fill the name.')
+            return;
+            }
             var nameArr = this.addForm.name.toString().toLowerCase().trim().split(" ");
-            if(nameArr.length > 1) { 
+            if( nameArr.length > 1) { 
                 // apply name to default format: First Name + Last Name and Capital the first letter
                 nameArr[0] = (nameArr[0].toString())[0].toUpperCase() + (nameArr[0].toString()).substr(1);
                 nameArr[nameArr.length - 1] = nameArr[nameArr.length - 1][0].toUpperCase() + nameArr[nameArr.length - 1].substr(1);
                 this.addForm.name = nameArr[0] + " " + nameArr[nameArr.length - 1];
-            }else {
+            }else if(this.addTMTA === false) {
                 this.addFeedback('notify', 'Name length invalid. eg. Danielle Zhao')
                 return;
             }
@@ -506,7 +491,7 @@ export default {
                 this.addForm.role = "FTE";
             }else if(this.addForm.role == "Vendor" || this.addForm.role == "vendor" || this.addForm.role == "v") {
                 this.addForm.role = "Vendor"
-            }else {
+            }else if(this.addTMTA === false) {
                 this.addFeedback('notify', "Role invalid. Please use 'FTE' or 'Vendor'")
             return;
             }
@@ -527,14 +512,14 @@ export default {
                 new Promise((resolve, reject) => {
                     this.$http.post(this.apiPathAddPerson, this.apiPayloadAddPerson)
                     .then((response)=> {
-                        if(response.data == "success") { 
+                        if(response.data == 'Person is Added to the Team' || response.data == 'Permission is Added to the Person') { 
                             // the below lines is a stupid way to sync the display memeber which should be replaced by stocket.io later QwQ
                             this.teamForm.Month = this.teamForm.Month.split('/')[0] + '/' + (this.teamForm.Month.split('/')[1]-1).toString()
                             this.teamForm.Month = this.teamForm.Month.split('/')[0] + '/' + (this.teamForm.Month.split('/')[1]-(-1)).toString()                            
-                            this. addFeedback('success', 'Person Added to Team') }
+                            this. addFeedback('success', response.data) }
                         else{
                             console.log(response)
-                            this.addFeedback('notify', 'This employee is already in the system.');   
+                            this.addFeedback('notify', response.data);   
                         }
                     })
                     .catch((error) => {
@@ -542,6 +527,7 @@ export default {
                     })
                 }) 
             }
+            this.addTMTA = false
         },
         delPerson() {
             if(this.delForm.alias[0] == "(" && this.delForm.alias[(this.delForm.alias).length-1] == ")") {
@@ -552,12 +538,12 @@ export default {
             return new Promise((resolve, reject) => {
                 this.$http.post(this.apiPathDelPerson, this.apiPayloadDelPerson)
                 .then((response)=> {
-                if(response.data == "success")  {
+                if(response.data == 'Person is Removed from the Team'|| response.data == 'Permission is Removed from the Person')  {
                     // the below lines is a stupid way to sync the display memeber which should be replaced by stocket.io later QwQ
                     this.teamForm.Month = this.teamForm.Month.split('/')[0] + '/' + (this.teamForm.Month.split('/')[1]-1).toString()
                     this.teamForm.Month = this.teamForm.Month.split('/')[0] + '/' + (this.teamForm.Month.split('/')[1]-(-1)).toString()                           
-                    this.addFeedback('success', 'Person Deleted from Team')}
-                else{this.addFeedback('notify', 'Person Not Exist');
+                    this.addFeedback('success', response.data)}
+                else{this.addFeedback('notify', response.data);
                 console.log(response)}
                 })
                 .catch((error)=> {
@@ -683,6 +669,7 @@ export default {
         apiPayloadDelPerson() {
             return {
                 alias: this.delForm.alias,
+                principle:this.delForm.principle,
             };
         },
         apiPathSftPerson() {
