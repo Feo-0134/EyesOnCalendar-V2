@@ -832,8 +832,10 @@ export default {
 </script>
 
 <style>
-    .autoFill {
+    .el-form-item .el-autocomplete {
         display: flex;
+    }
+    .autoFill {
         width: 100%;
     }
     .el-input.is-disabled .el-input__inner {
