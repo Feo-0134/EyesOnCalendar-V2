@@ -33,7 +33,7 @@
                     <el-button type="primary" @click="sftPerson();sftFormVisible = false">Confirm</el-button>
                 </div>
             </el-dialog>
-            <el-dialog title="Add Person" :visible.sync="addFormVisible">
+            <el-dialog title="Add Team Manager" :visible.sync="addFormVisible1">
                 <el-form :model="addForm">
                     <el-form-item label="Alias" :label-width="formLabelWidth">
                     <el-input v-model="addForm.alias" autocomplete="off"></el-input>
@@ -43,19 +43,69 @@
                     </el-form-item>
                 </el-form>
                 <div slot="footer" class="dialog-footer">
-                    <el-button @click="addFormVisible = false;addTMTA = false">Cancel</el-button>
-                    <el-button type="primary" @click="addPerson();addFormVisible = false">Confirm</el-button>
+                    <el-button @click="addFormVisible = false;addFormVisible1 = false;addFormVisible2 = false;addTMTA = false">Cancel</el-button>
+                    <el-button type="primary" @click="addPerson();addFormVisible = false;addFormVisible1 = false;addFormVisible2 = false;">Confirm</el-button>
                 </div>
             </el-dialog>
-            <el-dialog title="Delete Person" :visible.sync="delFormVisible">
+            <el-dialog title="Add Team Advisor" :visible.sync="addFormVisible2">
+                <el-form :model="addForm">
+                    <el-form-item label="Alias" :label-width="formLabelWidth">
+                    <el-input v-model="addForm.alias" autocomplete="off"></el-input>
+                    </el-form-item>
+                    <el-form-item label="Name" :label-width="formLabelWidth" v-if="!addTMTA">
+                    <el-input v-model="addForm.name" autocomplete="off"></el-input>
+                    </el-form-item>
+                </el-form>
+                <div slot="footer" class="dialog-footer">
+                    <el-button @click="addFormVisible = false;addFormVisible1 = false;addFormVisible2 = false;addTMTA = false">Cancel</el-button>
+                    <el-button type="primary" @click="addPerson();addFormVisible = false;addFormVisible1 = false;addFormVisible2 = false;">Confirm</el-button>
+                </div>
+            </el-dialog>
+            <el-dialog title="Add FTE/Vendor Member" :visible.sync="addFormVisible">
+                <el-form :model="addForm">
+                    <el-form-item label="Alias" :label-width="formLabelWidth">
+                    <el-input v-model="addForm.alias" autocomplete="off"></el-input>
+                    </el-form-item>
+                    <el-form-item label="Name" :label-width="formLabelWidth" v-if="!addTMTA">
+                    <el-input v-model="addForm.name" autocomplete="off"></el-input>
+                    </el-form-item>
+                </el-form>
+                <div slot="footer" class="dialog-footer">
+                    <el-button @click="addFormVisible = false;addFormVisible1 = false;addFormVisible2 = false;addTMTA = false">Cancel</el-button>
+                    <el-button type="primary" @click="addPerson();addFormVisible = false;addFormVisible1 = false;addFormVisible2 = false;">Confirm</el-button>
+                </div>
+            </el-dialog>
+            <el-dialog title="Delete Team Manager" :visible.sync="delFormVisible1">
                 <el-form :model="delForm">
                     <el-form-item label="Alias" :label-width="formLabelWidth">
                     <el-input v-model="delForm.alias" autocomplete="off"></el-input>
                     </el-form-item>
                 </el-form>
                 <div slot="footer" class="dialog-footer">
-                    <el-button @click="delFormVisible = false">Cancel</el-button>
-                    <el-button type="primary" @click="delPerson();delFormVisible = false">Confirm</el-button>
+                    <el-button @click="delFormVisible = false;delFormVisible1 = false;delFormVisible2 = false;">Cancel</el-button>
+                    <el-button type="primary" @click="delPerson();delFormVisible = false;delFormVisible1 = false;delFormVisible2 = false;">Confirm</el-button>
+                </div>
+            </el-dialog>
+            <el-dialog title="Delete Team Advisor" :visible.sync="delFormVisible2">
+                <el-form :model="delForm">
+                    <el-form-item label="Alias" :label-width="formLabelWidth">
+                    <el-input v-model="delForm.alias" autocomplete="off"></el-input>
+                    </el-form-item>
+                </el-form>
+                <div slot="footer" class="dialog-footer">
+                    <el-button @click="delFormVisible = false;delFormVisible1 = false;delFormVisible2 = false;">Cancel</el-button>
+                    <el-button type="primary" @click="delPerson();delFormVisible = false;delFormVisible1 = false;delFormVisible2 = false;">Confirm</el-button>
+                </div>
+            </el-dialog>
+            <el-dialog title="Delete FTE/Vendor Member" :visible.sync="delFormVisible">
+                <el-form :model="delForm">
+                    <el-form-item label="Alias" :label-width="formLabelWidth">
+                    <el-input v-model="delForm.alias" autocomplete="off"></el-input>
+                    </el-form-item>
+                </el-form>
+                <div slot="footer" class="dialog-footer">
+                    <el-button @click="delFormVisible = false;delFormVisible1 = false;delFormVisible2 = false;">Cancel</el-button>
+                    <el-button type="primary" @click="delPerson();delFormVisible = false;delFormVisible1 = false;delFormVisible2 = false;">Confirm</el-button>
                 </div>
             </el-dialog>
             <el-form v-if="initView"   :model="initForm" label-width="140px">
@@ -68,7 +118,7 @@
                     </el-date-picker>
                 </el-form-item>
                 <el-form-item label="Team Name">
-                    <el-input v-model="initForm.TeamName" placeholder="Team-Name can not include number, '/' , '\' or SPACE"></el-input>
+                    <el-input v-model="initForm.TeamName" placeholder="Team name should not include number, '/' , '\' or SPACE"></el-input>
                 </el-form-item>
                 <!-- <el-form-item label="Team Manager">
                     <el-input v-model="initForm.TeamManager" placeholder="example: karenzhe"></el-input>
@@ -135,29 +185,29 @@
                 <el-form-item label="Team Manager">
                     <el-input v-model="teamForm.TeamManager" :disabled="!su"></el-input>
                     <div class="functionalButton">
-                    <el-button type="primary" icon="el-icon-plus" circle v-on:click="addTMTA=true;addPersonView('FTE', 'TM')"></el-button>
-                    <el-button type="primary" icon="el-icon-minus" circle v-on:click="delPersonView('TM')"></el-button>
+                    <el-button type="primary" icon="el-icon-plus" circle v-on:click="addTMTA=true;addPersonView('FTE', 'TM', 0)"></el-button>
+                    <el-button type="primary" icon="el-icon-minus" circle v-on:click="delPersonView('TM',0)"></el-button>
                     </div>
                 </el-form-item>
                 <el-form-item label="Technical Advisor">
                     <el-input v-model="teamForm.TeamAdvisor" :disabled="!su"></el-input>
                     <div class="functionalButton">
-                    <el-button type="primary" icon="el-icon-plus" circle v-on:click="addTMTA=true;addPersonView('', 'TA')"></el-button>
-                    <el-button type="primary" icon="el-icon-minus" circle v-on:click="delPersonView('TA')"></el-button>
+                    <el-button type="primary" icon="el-icon-plus" circle v-on:click="addTMTA=true;addPersonView('', 'TA', 1)"></el-button>
+                    <el-button type="primary" icon="el-icon-minus" circle v-on:click="delPersonView('TA', 1)"></el-button>
                     </div>
                 </el-form-item>
-                               <el-form-item label="FTE Member">
+                <el-form-item label="FTE Member">
                     <el-input v-model="teamForm.FTE" :disabled="!su"></el-input>
                     <div class="functionalButton">
-                    <el-button type="primary" icon="el-icon-plus" circle v-on:click="addPersonView('FTE', 'None')"></el-button>
-                    <el-button type="primary" icon="el-icon-minus" circle v-on:click="delPersonView('None')"></el-button>
+                    <el-button type="primary" icon="el-icon-plus" circle v-on:click="addPersonView('FTE', 'None',2)"></el-button>
+                    <el-button type="primary" icon="el-icon-minus" circle v-on:click="delPersonView('None',2)"></el-button>
                     </div>
                 </el-form-item>
-                               <el-form-item label="Vendor member">
+                <el-form-item label="Vendor member">
                     <el-input v-model="teamForm.Vendor" :disabled="!su"></el-input>
                     <div class="functionalButton">
-                    <el-button type="primary" icon="el-icon-plus" circle v-on:click="addPersonView('Vendor', 'None')"></el-button>
-                    <el-button type="primary" icon="el-icon-minus" circle v-on:click="delPersonView('None')"></el-button>
+                    <el-button type="primary" icon="el-icon-plus" circle v-on:click="addPersonView('Vendor', 'None',2)"></el-button>
+                    <el-button type="primary" icon="el-icon-minus" circle v-on:click="delPersonView('None',2)"></el-button>
                     </div>
                 </el-form-item>
             </el-form>
@@ -209,8 +259,12 @@ export default {
             shiftView: false,
             reportView: false,
             initView: false,
+            addFormVisible1:false,
+            addFormVisible2:false,
             addFormVisible:false,
             inputRole:false,
+            delFormVisible1:false,
+            delFormVisible2:false,
             delFormVisible:false,
             sftFormVisible:false,
             addForm: {
@@ -347,16 +401,29 @@ export default {
         cleanSftForm: function () {
             this.sftForm.alias = ""
         },
-        addPersonView(role, principle) {
+        addPersonView(role, principle, num) {
             this.cleanAddForm()
             this.addForm.role = role
             this.addForm.principle = principle
-            this.addFormVisible = true
+            if(num === 0) {
+                this.addFormVisible1 = true
+            } else if(num === 1) {
+                this.addFormVisible2 = true
+            } else if(num === 2) {
+                this.addFormVisible = true
+            }
         },
-        delPersonView: function(principle) {
+        delPersonView: function(principle, num) {
             this.cleanDelForm()
             this.delForm.principle = principle
-            this.delFormVisible = true
+            
+            if(num === 0) {
+                this.delFormVisible1 = true
+            } else if(num === 1) {
+                this.delFormVisible2 = true
+            } else if(num === 2) {
+                this.delFormVisible = true
+            }
         },
         sftPersonView(workType) {
             this.cleanSftForm()
