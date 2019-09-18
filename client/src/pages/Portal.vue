@@ -147,7 +147,14 @@
                     </el-date-picker>
                 </el-form-item>
                 <el-form-item label="Team Name">
-                    <el-input v-model="teamForm.TeamName" :disabled="!su"></el-input>
+                    <el-autocomplete class="autoFill"
+                        v-model="teamForm.TeamName"
+                        :fetch-suggestions="querySearchAsync"
+                        placeholder="POD NAME HERE"
+                        @select="handleSelect"
+                    >
+                    </el-autocomplete>
+                    <!-- <el-input v-model="teamForm.TeamName" :disabled="!su"></el-input> -->
                 </el-form-item>
                 <!-- <el-form-item label="Month">
                     <el-input v-model="teamForm.Month" ></el-input>
@@ -177,7 +184,14 @@
                     </el-date-picker>
                 </el-form-item>
                 <el-form-item label="Team Name">
-                    <el-input v-model="teamForm.TeamName" :disabled="!su"></el-input>
+                    <el-autocomplete class="autoFill"
+                        v-model="teamForm.TeamName"
+                        :fetch-suggestions="querySearchAsync"
+                        placeholder="POD NAME HERE"
+                        @select="handleSelect"
+                    >
+                    </el-autocomplete>
+                    <!-- <el-input v-model="teamForm.TeamName" :disabled="!su"></el-input> -->
                 </el-form-item>
                 <!-- <el-form-item label="Month">
                     <el-input v-model="teamForm.Month" ></el-input>
@@ -221,7 +235,14 @@
                     </el-date-picker>
                 </el-form-item>
                 <el-form-item label="Team Name">
-                    <el-input v-model="teamForm.TeamName" :disabled="!su"></el-input>
+                    <el-autocomplete class="autoFill"
+                        v-model="teamForm.TeamName"
+                        :fetch-suggestions="querySearchAsync"
+                        placeholder="POD NAME HERE"
+                        @select="handleSelect"
+                    >
+                    </el-autocomplete>
+                    <!-- <el-input v-model="teamForm.TeamName" :disabled="!su"></el-input> -->
                 </el-form-item>
                 <div>
                     <h2 v-if="!month">{{message}}</h2>
@@ -252,6 +273,7 @@ export default {
     components: { Personsum },
     data: function () {
         return {
+            links: [],
             addTMTA: false,
             su: false,
             globalMonth: new Date().getFullYear() + '/' + (new Date().getMonth() + 1),
@@ -577,8 +599,7 @@ export default {
                 ;
             }else { this.addForm.alias = "(" + this.addForm.alias + ")";}
 
-            if(store.get('user').admin) {
-                // console.log('admin')
+            if(this.admin) {
                 new Promise((resolve, reject) => {
                     this.$http.post(this.apiPathAddPerson, this.apiPayloadAddPerson)
                     .then((response)=> {
@@ -676,6 +697,47 @@ export default {
             });
             }
         },
+        loadTeamName () {
+            console.log('-1')
+            new Promise((resolve, reject) => {
+                this.$http.get(this.getTeamApiPath)
+                .then((response)=> {
+                this.links = response.data;
+                console.log('hhh')
+                console.log(response.data)
+                })
+                .catch((error) => {
+                    this.addFeedback('error', 'System Error. Please turn to the developer.');
+                    return [];
+                })
+            })
+        },
+        querySearchAsync(queryString, cb) {
+            console.log('0')
+            var links = this.links;
+            var results = queryString ? links.filter(this.createFilter(queryString)) : links;
+
+            clearTimeout(this.timeout);
+            this.timeout = setTimeout(() => {
+                cb(results);
+            }, 1500) //* Math.random());
+        },
+        createFilter(queryString) {
+            console.log('1')
+            return (link) => {
+                return (link.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
+            };
+        },
+        handleSelect(item) {
+            console.log('2')
+            const path = item.link
+            this.teamForm.TeamName = item.value
+            // this.$router.push({ path });
+            // location.reload();
+        },
+    },
+    mounted() {
+        this.loadTeamName()
     },
     computed:{
         admin() {
@@ -685,8 +747,9 @@ export default {
                 this.$router.push({ path })
                 setTimeout(()=>{location.reload()},2000)
             }
+            this.alias = store.get('user').alias
             this.su = store.get('user').su
-            return store.get('user').admin;
+            return store.get('user').admin
         },
         goCalendar() {
             return (
@@ -757,12 +820,22 @@ export default {
         apiPayloadSftPerson() {
             return {};
         },
+        getTeamApiPath() {
+            if(this.su === true) {
+                return ('/api/default/' + new Date().getFullYear() + '/' + (new Date().getMonth() + 1) + '/allTeamName')
+            }
+            else {return ('/api/default/' + new Date().getFullYear() + '/' + (new Date().getMonth() + 1) + '/ownTeamName/'+this.alias)}
+        },
         
     }
 }
 </script>
 
 <style>
+    .autoFill {
+        display: flex;
+        width: 100%;
+    }
     .el-input.is-disabled .el-input__inner {
         border-color: #373737;
     }

@@ -59,6 +59,38 @@ router.get('/:pod/:year/:month/allTeamName', async (ctx) => {
   }
 })
 
+/* API to get allTeamName data CHECKED
+ */
+router.get('/:pod/:year/:month/ownTeamName/:alias', async (ctx) => {
+  var p = ctx.params
+  try {
+    var result = await Month.find({ year: p.year, month: p.month })
+    if (result == null) { throw (errorMsg) } else {
+      // eslint-disable-next-line no-array-constructor
+      var linkList = new Array()
+      // eslint-disable-next-line no-array-constructor
+      var resultP = new Array()
+      result.forEach(record => {
+        record.people.forEach(person => {
+          if (person.alias === p.alias) {
+            resultP.push(record)
+          }
+        })
+      })
+      linkList.push({ value: 'TEMPLATE', link: '/TEMPLATE/' + p.year + '/' + p.month })
+      resultP.forEach(record => {
+        linkList.push({ value: record.pod, link: '/' + record.pod + '/' + p.year + '/' + p.month })
+      })
+      ctx.body = linkList
+      console.log(linkList)
+    }
+  } catch (e) {
+    ctx.status = 404
+    ctx.body = e
+    console.log(e)
+  }
+})
+
 /* API to get the month data CHECKED
  */
 router.get('/:pod/:year/:month', async (ctx) => {

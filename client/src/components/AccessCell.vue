@@ -70,7 +70,8 @@ export default {
             return (`/portal`);
         },
         getTeamApiPath() {
-            return ('/api/default/' + new Date().getFullYear() + '/' + (new Date().getMonth() + 1) + '/allTeamName')
+            if(this.su === true) {return ('/api/default/' + new Date().getFullYear() + '/' + (new Date().getMonth() + 1) + '/allTeamName')}
+            else {return ('/api/default/' + new Date().getFullYear() + '/' + (new Date().getMonth() + 1) + '/ownTeamName/'+this.alias)}
         },
     },
     methods: {
@@ -187,9 +188,9 @@ export default {
                     console.log(response.data)
                     if(response.data == "default") {                            
                         // console.log('Your team hasn\'t joined the tool yet')
-                        store.set('user', {displayName:this.displayName, admin: this.admin, su: this.su, title: this.title, team: 'default'})
+                        store.set('user', {displayName:this.displayName, alias: this.alias, admin: this.admin, su: this.su, title: this.title, team: 'default'})
                     } else {
-                        store.set('user', {displayName:this.displayName, admin: this.admin, su: this.su, title: this.title, team: response.data})
+                        store.set('user', {displayName:this.displayName, alias: this.alias, admin: this.admin, su: this.su, title: this.title, team: response.data})
                     }
                     if(response.data === 'default' && this.admin) {
                       // this.$router.push('/portal')

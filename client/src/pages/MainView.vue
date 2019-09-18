@@ -104,6 +104,8 @@ export default {
   components: { Person, HelpScreen, Loading },
   data() {
     return {
+      su: false,
+      alias: '',
       links: [],
       timeout:  null,
       teamName: '',
@@ -161,6 +163,8 @@ export default {
         this.$router.push({ path })
         setTimeout(()=>{location.reload()},2000)
       }
+      this.su = store.get('user').su
+      this.alias = store.get('user').alias
       return store.get('user').admin;
     },
     totalamount() {
@@ -294,11 +298,10 @@ export default {
       };
     },
     getTeamApiPath() {
-      return (
-        `/api${
-          this.$router.currentRoute.path
-        }/allTeamName`
-      );
+      if(this.su === true) {return ( `/api${ this.$router.currentRoute.path}/allTeamName`);}
+      else {
+        return '/api'+ this.$router.currentRoute.path +'/ownTeamName/'+ this.alias;
+      }
     },
   },
   created() {
@@ -320,6 +323,7 @@ export default {
         this.$http.get(this.getTeamApiPath)
         .then((response)=> {
           this.links = response.data;
+          console.log(links)
         })
         .catch((error) => {
             this.addFeedback('error', 'System Error. Please turn to the developer.');
