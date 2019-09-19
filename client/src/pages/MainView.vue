@@ -539,8 +539,10 @@ export default {
 .el-dropdown .el-button {
   background-color: #373737;
   border-color: #808080;
+  margin-left: 25px;
 }
 .el-autocomplete .el-input__inner {
     background-color: #262626;
+    border: 1px solid #808080;
 }
 </style>

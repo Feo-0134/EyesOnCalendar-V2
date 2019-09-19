@@ -234,11 +234,6 @@ export default {
 </script>
 
 <style>
-.InputButton3 {
-    width: 200px;
-    float: left;
-    height: fit-content;
-}
 .PersonalInfo{
     height: 500px;
     margin: auto;
@@ -279,7 +274,13 @@ export default {
     margin-top: 10px;
     margin-right: 10px;
 }
+.InputButton3 {
+    width: 200px;
+    float: left;
+    height: fit-content;
+    background-color: #373737;
+}
 .el-autocomplete .el-input__inner {
-    background-color: #262626;
+    background-color: #373737;
 }
 </style>

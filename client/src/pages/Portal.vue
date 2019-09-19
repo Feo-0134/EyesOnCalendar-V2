@@ -43,7 +43,7 @@
                     </el-form-item>
                 </el-form>
                 <div slot="footer" class="dialog-footer">
-                    <el-button @click="addFormVisible = false;addFormVisible1 = false;addFormVisible2 = false;addTMTA = false">Cancel</el-button>
+                    <el-button @click="addFormVisible = false;addFormVisible1 = false;addFormVisible2 = false;">Cancel</el-button>
                     <el-button type="primary" @click="addPerson();addFormVisible = false;addFormVisible1 = false;addFormVisible2 = false;">Confirm</el-button>
                 </div>
             </el-dialog>
@@ -57,7 +57,7 @@
                     </el-form-item>
                 </el-form>
                 <div slot="footer" class="dialog-footer">
-                    <el-button @click="addFormVisible = false;addFormVisible1 = false;addFormVisible2 = false;addTMTA = false">Cancel</el-button>
+                    <el-button @click="addFormVisible = false;addFormVisible1 = false;addFormVisible2 = false;">Cancel</el-button>
                     <el-button type="primary" @click="addPerson();addFormVisible = false;addFormVisible1 = false;addFormVisible2 = false;">Confirm</el-button>
                 </div>
             </el-dialog>
@@ -71,7 +71,7 @@
                     </el-form-item>
                 </el-form>
                 <div slot="footer" class="dialog-footer">
-                    <el-button @click="addFormVisible = false;addFormVisible1 = false;addFormVisible2 = false;addTMTA = false">Cancel</el-button>
+                    <el-button @click="addFormVisible = false;addFormVisible1 = false;addFormVisible2 = false;">Cancel</el-button>
                     <el-button type="primary" @click="addPerson();addFormVisible = false;addFormVisible1 = false;addFormVisible2 = false;">Confirm</el-button>
                 </div>
             </el-dialog>
@@ -213,14 +213,14 @@
                 <el-form-item label="FTE Member">
                     <el-input v-model="teamForm.FTE" :disabled="!su"></el-input>
                     <div class="functionalButton">
-                    <el-button type="primary" icon="el-icon-plus" circle v-on:click="addPersonView('FTE', 'None',2)"></el-button>
+                    <el-button type="primary" icon="el-icon-plus" circle v-on:click="addTMTA=false;addPersonView('FTE', 'None',2)"></el-button>
                     <el-button type="primary" icon="el-icon-minus" circle v-on:click="delPersonView('None',2)"></el-button>
                     </div>
                 </el-form-item>
                 <el-form-item label="Vendor member">
                     <el-input v-model="teamForm.Vendor" :disabled="!su"></el-input>
                     <div class="functionalButton">
-                    <el-button type="primary" icon="el-icon-plus" circle v-on:click="addPersonView('Vendor', 'None',2)"></el-button>
+                    <el-button type="primary" icon="el-icon-plus" circle v-on:click="addTMTA=false;addPersonView('Vendor', 'None',2)"></el-button>
                     <el-button type="primary" icon="el-icon-minus" circle v-on:click="delPersonView('None',2)"></el-button>
                     </div>
                 </el-form-item>
@@ -618,7 +618,6 @@ export default {
                     })
                 }) 
             }
-            this.addTMTA = false
         },
         delPerson() {
             if(this.delForm.alias[0] == "(" && this.delForm.alias[(this.delForm.alias).length-1] == ")") {
@@ -957,5 +956,11 @@ export default {
     vertical-align: middle;
     width: 120px;
     margin: 10px;
+    }
+    .el-dialog__wrapper .el-dialog {
+        border-radius: 17px;
+    }
+    .el-dialog, .el-pager li {
+        background:#cacaca;
     }
 </style>

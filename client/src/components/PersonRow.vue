@@ -111,12 +111,14 @@
 <script>
 import Day from "@/components/DayCell";
 import Moveable from 'vue-moveable';
+var store = require('store')
 export default {
   components: { Day, Moveable },
   props: ["person", "pindex","userName","openflag"],
 
   data() {
       return {
+        alias: '',
         moveable: {
           draggable: true,
           throttleDrag: 0,
@@ -145,6 +147,10 @@ export default {
   },
 
   computed: {
+    admin() {
+      this.alias = store.get('user').alias
+      return store.get('user').admin
+    },
     displayName() {
       var nameArray = this.person.name.split(" ");
       return nameArray[0] + " " + nameArray[nameArray.length - 1] + ' ' + this.person.alias;
@@ -190,24 +196,14 @@ export default {
       // console.log('onWarp', target);
       target.style.transform = transform;
     },
-    /**************************************
-     * Feature 6 TA & Manager permission
-    **************************************/
    // One can only change his own status
     handleEvent:function(msg) {
-      var nameArray = this.person.name.split(" ");
-      if(this.userName.match(nameArray[0] + " " + nameArray[1]) == nameArray[0] + " " + nameArray[1]
-      || this.userName == "Juncheng Zhu" 
-      || this.userName == "Karen Zheng"  // TM
-      || this.userName == "Anita Yang"    
-      || this.userName == "Anik Shen"
-      || this.userName == "Danielle Zhao" // TA
-      || this.userName == "Dingsong Zhang" 
-      || this.userName == "Sean Wu (AZURE)" ) {
+      if( this.alias === this.person.alias || this.admin === true ) {
         if(this.openflag == false || this.open == true) {
+          if(this.open === false){ this.dayType = msg.split("@")[1] }
           this.open = true
           this.$emit('opensync',true)
-          this.date = msg - 1
+          this.date = msg.split("@")[0] - 1
         }
       }
     },

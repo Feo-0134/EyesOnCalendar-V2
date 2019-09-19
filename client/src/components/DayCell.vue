@@ -12,7 +12,8 @@ export default {
     /*************************************** Feature 2 status update menu **************************************/
     toggle() {
       this.open = !this.open
-      this.$emit('customEvent',this.dindex + 1)
+      // again this is stupid i m so sorry about that plz use multi params replace later
+      this.$emit('customEvent',this.dindex + 1 + "@" + this.day.workType)
       // var undoStep = { path: this.apiPath, payload: this.apiPayload }; // UNDO STEP HERE -- TODO
       // this.$history.push(undoStep);
       this.$http.post(this.apiPath, this.apiPayload);                 // Data upload WHY SYNC TWO TIMES I is here
