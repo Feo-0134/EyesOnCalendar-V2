@@ -4,7 +4,7 @@
       <router-view></router-view>
     </main>
     <footer class="footer">
-      <p>hope you enjoy using this app</p>
+      <!-- <p>hope you enjoy using this app</p> -->
     </footer>
   </div>
 </template>
