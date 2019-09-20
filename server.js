@@ -1,36 +1,40 @@
-const models = require('./models/NewMonth')
-const Month = models.Month
-const fs = require('fs')
-const json = require('./newConvertCsv.js')
 const Koa = require('koa')
 const Router = require('koa-router')
+const router = new Router({ prefix: '/api' })
 const bodyParser = require('koa-bodyparser')
 const serve = require('koa-static')
-const path = require('path')
+const multer = require('koa-multer')
 const send = require('koa-send')
 const app = new Koa()
-const router = new Router({ prefix: '/api' })
-const multer = require('koa-multer')
+const models = require('./models/NewMonth')
+const Month = models.Month
+const path = require('path')
+const fs = require('fs')
+const json = require('./newConvertCsv.js')
 const upload = multer({ dest: 'uploads/' })
 const server = require('http').createServer(app.callback())
 const io = require('socket.io')(server)
 require('dotenv').config()
 
+// const variable here
 var staticPath = ''
 const errorMsg = 'Record not found'
 
+// env params
 if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === undefined) {
   staticPath = '/dist/'
 } else {
   staticPath = './client/dist/'
 }
 
+// db connection
 const db = require('./mongodb')
 db.on('error', console.error.bind(console, 'connection error:'))
 db.once('open', function () {
   console.log('Connected to DB')
 })
 
+// koa router
 router.use(bodyParser())
 
 /* koa interface demo */
@@ -38,28 +42,29 @@ router.use(bodyParser())
 //     ctx.body = "Hello"
 // })
 
-/* API to get allTeamName data CHECKED
+/* ##################################################
+ *   get default team name & team name autocomplete
+ * ##################################################
  */
-router.get('/:pod/:year/:month/allTeamName', async (ctx) => {
+
+/* API to return team of the usr
+ */
+router.get('/getpod/:year/:month/:alias', async (ctx) => {
   var p = ctx.params
-  try {
-    var result = await Month.find({ year: p.year, month: p.month })
-    if (result == null) { throw (errorMsg) } else {
-      // eslint-disable-next-line no-array-constructor
-      var linkList = new Array()
-      result.forEach(element => {
-        linkList.push({ value: element.pod, link: '/' + element.pod + '/' + p.year + '/' + p.month })
-        ctx.body = linkList
-      })
-    }
-  } catch (e) {
-    ctx.status = 404
-    ctx.body = e
-    console.log(e)
-  }
+  console.log(p)
+  var podName = 'default'
+  var flag = 0
+  var monthRecord = await Month.find({ year: p.year, month: p.month })
+  monthRecord.forEach((month) => {
+    month.people.forEach((person) => {
+      if (person.alias === p.alias) { flag = 1 }
+    })
+    if (flag === 1) { podName = month.pod; flag = 0 }
+  })
+  ctx.body = podName
 })
 
-/* API to get allTeamName data CHECKED
+/* API to get team name that usr belongs to
  */
 router.get('/:pod/:year/:month/ownTeamName/:alias', async (ctx) => {
   var p = ctx.params
@@ -91,8 +96,111 @@ router.get('/:pod/:year/:month/ownTeamName/:alias', async (ctx) => {
   }
 })
 
-/* API to get the month data CHECKED
+/* API to get all team name data for su only
  */
+router.get('/:pod/:year/:month/allTeamName', async (ctx) => {
+  var p = ctx.params
+  try {
+    var result = await Month.find({ year: p.year, month: p.month })
+    if (result == null) { throw (errorMsg) } else {
+      // eslint-disable-next-line no-array-constructor
+      var linkList = new Array()
+      result.forEach(element => {
+        linkList.push({ value: element.pod, link: '/' + element.pod + '/' + p.year + '/' + p.month })
+        ctx.body = linkList
+      })
+    }
+  } catch (e) {
+    ctx.status = 404
+    ctx.body = e
+    console.log(e)
+  }
+})
+
+/* ##################################################
+ * CURD Operations with the person record and dayType
+ * ##################################################
+ */
+
+/* Function to constructor a new month
+ */
+function newMonth (year, month, pod, daylock, people) {
+  console.log('Inserting Full Month')
+  return new Month({
+    year: year,
+    month: month,
+    pod: pod,
+    daylock: daylock,
+    people: people
+  })
+}
+
+/* Function to search a record with a given alias in a given month */
+function findRecord (month, alias) {
+  // console.log('enterFind')
+  let flag = 0
+  month.people.forEach(person => {
+    if (person.alias === alias) {
+      // console.log('Found')
+      flag = 1
+    }
+  })
+  // console.log('notFound')
+  if (flag === 1) { return true } else { return false }
+}
+
+/* Function to check a record with a given alias's principle in a given month */
+function findPrinciple (month, alias) {
+  // console.log('enterFind')
+  let flag = 0
+  month.people.forEach(person => {
+    if ((person.principle === 'TM' || person.principle === 'TA') && person.alias === alias) {
+      // console.log('Found')
+      flag = 1
+    }
+  })
+  // console.log('notFound')
+  if (flag === 1) { return true } else { return false }
+}
+
+/* Function to insert records to a given month */
+function incrementMonth (month, people) {
+  console.log('Incremental push')
+  people.forEach(person => {
+    month.people.push(person)
+  })
+  return month
+}
+
+/* Function to update records from a given month */
+function updateMonth (month, people) {
+  console.log('updateMonth')
+  people.forEach(person => {
+    month.people.forEach(p => {
+      if (p.alias === person.alias) {
+        p.principle = person.principle
+      }
+    })
+  })
+  return month
+}
+
+/* Function to delete records from a given month */
+function decrementMonth (month, alias) {
+  console.log('decrementMonth')
+  var position = 0
+  var flag = 0
+  month.people.forEach(person => {
+    if (person.alias === alias) {
+      flag = 1
+      month.people.splice(position, 1)
+    }
+    position = position + 1
+  })
+  if (flag === 0) { return -1 } else { return month }
+}
+
+/* API to get a certain month data */
 router.get('/:pod/:year/:month', async (ctx) => {
   var p = ctx.params
   try {
@@ -105,9 +213,7 @@ router.get('/:pod/:year/:month', async (ctx) => {
   }
 })
 
-/* API for update employee dayType CHECKED
- * Once update one dayType of one person
- */
+/* API for update employee dayType Update one dayType of one person each time */
 router.post('/:pod/:year/:month/:person/:day', bodyParser(), async (ctx) => {
   var p = ctx.params
   var b = ctx.request.body
@@ -129,10 +235,7 @@ router.post('/:pod/:year/:month/:person/:day', bodyParser(), async (ctx) => {
   }
 })
 
-/* API for batch update employee dayType
- * to Morning Shift or Night Shift
- * Once update one dayType of one person
- */
+/* API for batch update employee dayType to Morning Shift or Night Shift one person each time */
 router.post('/:pod/:year/:month/batch/:person/:workType', async (ctx) => {
   var p = ctx.params
   var flag = 0
@@ -161,107 +264,13 @@ router.post('/:pod/:year/:month/batch/:person/:workType', async (ctx) => {
   }
 })
 
-/* Function to constructor a new month
-*/
-function newMonth (year, month, pod, daylock, people) {
-  console.log('Inserting Full Month')
-  return new Month({
-    year: year,
-    month: month,
-    pod: pod,
-    daylock: daylock,
-    people: people
-  })
-}
-
-/* Function to search
- * a record with a given alias
- * in a given month
- */
-function findRecord (month, alias) {
-  // console.log('enterFind')
-  let flag = 0
-  month.people.forEach(person => {
-    if (person.alias === alias) {
-      // console.log('Found')
-      flag = 1
-    }
-  })
-  // console.log('notFound')
-  if (flag === 1) { return true } else { return false }
-}
-
-/* Function to check
- * a record with a given alias's principle
- * in a given month
- */
-function findPrinciple (month, alias) {
-  // console.log('enterFind')
-  let flag = 0
-  month.people.forEach(person => {
-    if ((person.principle === 'TM' || person.principle === 'TA') && person.alias === alias) {
-      // console.log('Found')
-      flag = 1
-    }
-  })
-  // console.log('notFound')
-  if (flag === 1) { return true } else { return false }
-}
-
-/* Function to insert
- * records to a given month
- */
-function incrementMonth (month, people) {
-  console.log('Incremental push')
-  people.forEach(person => {
-    month.people.push(person)
-  })
-  return month
-}
-
-/* Function to update
- * records from a given month
- */
-function updateMonth (month, people) {
-  console.log('updateMonth')
-  people.forEach(person => {
-    month.people.forEach(p => {
-      if (p.alias === person.alias) {
-        p.principle = person.principle
-      }
-    })
-  })
-  return month
-}
-
-/* Function to delete
- * records from a given month
- * with a given alias
- */
-function decrementMonth (month, alias) {
-  console.log('decrementMonth')
-  var position = 0
-  var flag = 0
-  month.people.forEach(person => {
-    if (person.alias === alias) {
-      flag = 1
-      month.people.splice(position, 1)
-    }
-    position = position + 1
-  })
-  if (flag === 0) { return -1 } else { return month }
-}
-
-/* API to insert CHECKED
- * records to a given month
- * with given alias
- * and a default dayType
+/* API to insert records to a given month with given alias and a default dayType
  *
- * demo raw request.body (for postman):
- * {"principle":"None",
- * "role":"Vendor",
- * "alias":"lilpump",
- * "name":"Lil Pump"}
+ * raw request.body (for postman):
+ *       {"principle":"None",
+ *        "role":"Vendor",
+ *        "alias":"lilpump",
+ *        "name":"Lil Pump"}
  */
 router.post('/:pod/:year/:month/person', upload.any('csv'), bodyParser(), async (ctx) => {
   const uploadDict = ['january', 'february', 'march', 'april', 'may',
@@ -306,12 +315,10 @@ router.post('/:pod/:year/:month/person', upload.any('csv'), bodyParser(), async 
   }
 })
 
-/* API to delete CHECKED
- * records from a given month
- * with given alias
+/* API to delete records from a given month with given alias
  *
  * json raw request.body
- * {"alias":"apac"}
+ *        {"alias":"apac"}
  */
 router.post('/:pod/:year/:month/delete', bodyParser(), async (ctx) => {
   const uploadDict = ['january', 'february', 'march', 'april', 'may',
@@ -348,10 +355,12 @@ router.post('/:pod/:year/:month/delete', bodyParser(), async (ctx) => {
   }
 })
 
-/* Function to restore
- * calendar data, back to empty,
- * for calendar initiate
+/* ##################################################
+ *             initiate new month calendar
+ * ##################################################
  */
+
+/* Function to restore calendar template, back to empty */
 function cleanCalendar (filePth) {
   var data = fs.readFileSync(filePth)
   var strData = data.toString()
@@ -363,7 +372,126 @@ function cleanCalendar (filePth) {
   })
 }
 
-/* API to initiate CHECKED
+/* API to Very First Calendar Generator for a new team
+ * to join the tool initiate their data about members
+ *
+ * json raw request.body
+ *          {"people":
+ *           [{
+ *            "principle":"None",
+ *            "role":"Vendor",
+ *            "alias":"lilpump",
+ *            "name":"Lil Pump"
+ *           },
+ *           {
+ *            "principle":"TA",
+ *            "role":"FTE",
+ *            "alias":"danzha",
+ *            "name":"Danielle Zhao"
+ *           }]
+ *          }
+ */
+router.post('/:pod/newupload2/:year/:month', upload.any('csv'), bodyParser(), async (ctx) => {
+  var uploadDict = ['january', 'february', 'march', 'april', 'may',
+    'june', 'july', 'august', 'september', 'october', 'november', 'december']
+  var p = ctx.params
+  var b = ctx.request.body
+  var src = await fs.createReadStream('./uploads/' + uploadDict[p.month - 1] + '.txt')
+  var people = await json(src)
+  people[0].alias = b.people[0].alias
+  people[0].name = b.people[0].name
+  people[0].role = b.people[0].role
+  people[0].principle = b.people[0].principle
+  for (var cnt = 1; cnt < (b.people).length; cnt++) {
+    people[cnt] = Object.assign({}, people[0]) // shallow copy
+    people[cnt].alias = b.people[cnt].alias
+    people[cnt].name = b.people[cnt].name
+    people[cnt].role = b.people[cnt].role
+    people[cnt].principle = b.people[cnt].principle
+  }
+  // eslint-disable-next-line no-array-constructor
+  var daylock = new Array()
+  var payload = newMonth(p.year, p.month, p.pod, daylock, people)
+  try {
+    await payload.save()
+    ctx.body = 'success'
+  } catch (e) {
+    console.log('System Error: crash at insert record' + e)
+    ctx.status = 400
+    ctx.body = 'error'
+  }
+})
+
+io.on('connection', socket => {
+  socket.join(socket.handshake.query.path)
+  socket.on('hello', socket => {
+    console.log(socket.rooms)
+  })
+})
+
+app
+  .use(router.routes())
+  .use(router.allowedMethods())
+  .use(serve(path.resolve(__dirname, staticPath)))
+// catch all for Vue app
+  .use(async ctx => { await send(ctx, 'index.html', { root: path.resolve(__dirname, staticPath) }) })
+
+server.listen(process.env.PORT || 3030, () => {
+  console.log('Listening on ' + (process.env.PORT || 3030))
+})
+
+// items below are no longer used APIs
+
+/* update the new calendar by upload a csv
+ * which is no longer used in the project
+ * only for back up
+ */
+router.post('/:pod/upload/:year/:month', upload.any('csv'), async (ctx) => {
+  var p = ctx.params
+  const tmpPath = ctx.req.files[0].path
+  console.log(tmpPath)
+  const src = fs.createReadStream(tmpPath)
+  const people = await json(src)
+  const currentMonth = await Month.findOne({ year: p.year, month: p.month, section: p.pod })
+  var payload
+  // eslint-disable-next-line no-array-constructor
+  var daylock = new Array()
+  if (currentMonth == null) { payload = newMonth(p.year, p.month, p.pod, daylock, people) } else { payload = incrementMonth(currentMonth, people) }
+  try {
+    await payload.save()
+    ctx.body = 'success'
+  } catch (e) {
+    ctx.status = 400
+    ctx.body = 'error'
+    console.log(e)
+  }
+})
+
+/* Very First Calendar Generator
+ * for a new team to join the tool
+ * initiate their data about members
+ * test-version
+ */
+router.post('/:pod/newupload/:year/:month', upload.any('csv'), async (ctx) => {
+  var p = ctx.params
+  const tmpPath = ctx.req.files[0].path
+  console.log(tmpPath)
+  const src = fs.createReadStream(tmpPath)
+  const people = await json(src)
+  // eslint-disable-next-line no-array-constructor
+  const daylock = new Array()
+  var payload = newMonth(p.year, p.month, p.pod, daylock, people)
+  try {
+    await payload.save()
+    ctx.body = 'success'
+  } catch (e) {
+    ctx.status = 400
+    ctx.body = 'error'
+    console.log(e)
+  }
+})
+
+/* API to initiate
  * records for a given month,
  * (1/2) build the default template
  */
@@ -414,7 +542,7 @@ router.post('/:pod/:year/:month/init', upload.any('csv'), async (ctx) => {
   }
 })
 
-/* API to initiate CHECKED
+/* API to initiate
  * records for a given month,
  * (2/2) filling with the given data
  */
@@ -462,147 +590,5 @@ router.post('/:pod/:year/:month/reload', upload.any('csv'), async (ctx) => {
     setTimeout(function () {
       cleanCalendar(filePath)
     }, 2000)
-  }
-})
-
-/* API to Very First Calendar Generator CHECKED
- * for a new team to join the tool
- * initiate their data about members
- *
- * json raw request.body
- *{"people":
- * [{
- *  "principle":"None",
- *  "role":"Vendor",
- *  "alias":"lilpump",
- *  "name":"Lil Pump"
- * },
- * {
- *  "principle":"TA",
- *  "role":"FTE",
- *  "alias":"danzha",
- *  "name":"Danielle Zhao"
- * }]
- *}
- */
-router.post('/:pod/newupload2/:year/:month', upload.any('csv'), bodyParser(), async (ctx) => {
-  var uploadDict = ['january', 'february', 'march', 'april', 'may',
-    'june', 'july', 'august', 'september', 'october', 'november', 'december']
-  var p = ctx.params
-  var b = ctx.request.body
-  var src = await fs.createReadStream('./uploads/' + uploadDict[p.month - 1] + '.txt')
-  var people = await json(src)
-  people[0].alias = b.people[0].alias
-  people[0].name = b.people[0].name
-  people[0].role = b.people[0].role
-  people[0].principle = b.people[0].principle
-  for (var cnt = 1; cnt < (b.people).length; cnt++) {
-    people[cnt] = Object.assign({}, people[0]) // shallow copy
-    people[cnt].alias = b.people[cnt].alias
-    people[cnt].name = b.people[cnt].name
-    people[cnt].role = b.people[cnt].role
-    people[cnt].principle = b.people[cnt].principle
-  }
-  // eslint-disable-next-line no-array-constructor
-  var daylock = new Array()
-  var payload = newMonth(p.year, p.month, p.pod, daylock, people)
-  try {
-    await payload.save()
-    ctx.body = 'success'
-  } catch (e) {
-    console.log('System Error: crash at insert record' + e)
-    ctx.status = 400
-    ctx.body = 'error'
-  }
-})
-
-/* API to return team of the usr login
- * if return team 'default' then
- * lead usr to the inititate team page
- {
-  "year":2019,
-  "month":8,
-  "alias":"danzha"
- }
- */
-router.get('/getpod/:year/:month/:alias', async (ctx) => {
-  var p = ctx.params
-  console.log(p)
-  var podName = 'default'
-  var flag = 0
-  var monthRecord = await Month.find({ year: p.year, month: p.month })
-  monthRecord.forEach((month) => {
-    month.people.forEach((person) => {
-      if (person.alias === p.alias) { flag = 1 }
-    })
-    if (flag === 1) { podName = month.pod; flag = 0 }
-  })
-  ctx.body = podName
-})
-
-io.on('connection', socket => {
-  socket.join(socket.handshake.query.path)
-  socket.on('hello', socket => {
-    console.log(socket.rooms)
-  })
-})
-
-app
-  .use(router.routes())
-  .use(router.allowedMethods())
-  .use(serve(path.resolve(__dirname, staticPath)))
-// catch all for Vue app
-  .use(async ctx => { await send(ctx, 'index.html', { root: path.resolve(__dirname, staticPath) }) })
-
-server.listen(process.env.PORT || 3030, () => {
-  console.log('Listening on ' + (process.env.PORT || 3030))
-})
-
-/* update the new calendar by upload a csv
- * which is no longer used in the project
- * only for back up
- */
-router.post('/:pod/upload/:year/:month', upload.any('csv'), async (ctx) => {
-  var p = ctx.params
-  const tmpPath = ctx.req.files[0].path
-  console.log(tmpPath)
-  const src = fs.createReadStream(tmpPath)
-  const people = await json(src)
-  const currentMonth = await Month.findOne({ year: p.year, month: p.month, section: p.pod })
-  var payload
-  // eslint-disable-next-line no-array-constructor
-  var daylock = new Array()
-  if (currentMonth == null) { payload = newMonth(p.year, p.month, p.pod, daylock, people) } else { payload = incrementMonth(currentMonth, people) }
-  try {
-    await payload.save()
-    ctx.body = 'success'
-  } catch (e) {
-    ctx.status = 400
-    ctx.body = 'error'
-    console.log(e)
-  }
-})
-
-/* Very First Calendar Generator
- * for a new team to join the tool
- * initiate their data about members
- * test-version
- */
-router.post('/:pod/newupload/:year/:month', upload.any('csv'), async (ctx) => {
-  var p = ctx.params
-  const tmpPath = ctx.req.files[0].path
-  console.log(tmpPath)
-  const src = fs.createReadStream(tmpPath)
-  const people = await json(src)
-  // eslint-disable-next-line no-array-constructor
-  const daylock = new Array()
-  var payload = newMonth(p.year, p.month, p.pod, daylock, people)
-  try {
-    await payload.save()
-    ctx.body = 'success'
-  } catch (e) {
-    ctx.status = 400
-    ctx.body = 'error'
-    console.log(e)
   }
 })
