@@ -14,9 +14,7 @@
             </span>
           </el-dropdown>
           <el-dropdown>
-            <el-button type="primary" v-show="admin" >
-              <a :href="goPortal" class="navigationLink">Portal</a>
-            </el-button>
+            <el-button type="primary" v-show="admin" @click="goPortal()">Portal</el-button>
           </el-dropdown>
         </div>
       </div>
@@ -212,7 +210,9 @@ export default {
           .format('/YYYY/M')}`);
     },
     goPortal() {
-      return (`/portal`);
+        const path = '/portal'
+        this.$router.push({ path });
+        location.reload();
     },
     goReport() {
       return (`/${this.date.split('/')[1].toString()}${moment(this.date, '/YYYY/M').format('/YYYY/M')}/report`);

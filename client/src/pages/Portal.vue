@@ -1,9 +1,7 @@
 <template> 
     <el-container v-show="admin">
         <div class="navigationBar">
-        <el-button type="primary" v-show="true" >
-              <a :href="goCalendar" class="navigationLink">Calendar</a>
-        </el-button>
+        <el-button type="primary" v-show="true" @click="goCalendar()">Calendar</el-button>
         </div>
     <el-header class="navigationBar">EyesonCalendar Administration</el-header>
     <el-container>
@@ -750,12 +748,9 @@ export default {
             return store.get('user').admin
         },
         goCalendar() {
-            return (
-                '/' + 
-                this.teamForm.TeamName +
-                '/' +
-                this.globalMonth
-            );
+            const path ='/' + this.teamForm.TeamName +'/' + this.globalMonth
+            this.$router.push({ path });
+            location.reload();
         },
         apiPath() {
             return (

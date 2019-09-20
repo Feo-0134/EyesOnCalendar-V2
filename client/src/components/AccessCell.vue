@@ -12,9 +12,7 @@
     </el-autocomplete>
     <h2 v-if="podSelect" class="pickTeam InputButton2" >OR</h2>
     <h2 v-if="podSelect" class="goto" >Go to</h2>
-    <el-button  v-if="podSelect" class="pickTeam InputButton3">
-        <a :href="goPortal" class="navigationLink ">Portal</a>
-    </el-button>
+    <el-button v-if="podSelect" class="pickTeam InputButton3" type="primary" @click="goPortal()">Portal</el-button>
     <h2 v-if="noInform">Sorry we can not find your information in the system. Please turn to your TM/TA for permission.</h2>
     </el-container>
     <div class="PersonalInfo" v-loading="loading" v-if="loading"> 
@@ -67,7 +65,8 @@ export default {
     },
     computed: {
         goPortal() {
-            return (`/portal`);
+            const path = '/portal'
+            this.$router.push({ path });
         },
         getTeamApiPath() {
             if(this.su === true) {return ('/api/default/' + new Date().getFullYear() + '/' + (new Date().getMonth() + 1) + '/allTeamName')}
