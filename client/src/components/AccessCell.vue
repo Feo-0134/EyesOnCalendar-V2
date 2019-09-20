@@ -156,17 +156,17 @@ export default {
             if( jsonresult.jobTitle.match('TECHNICAL ADVISOR') == 'TECHNICAL ADVISOR'
                 || jsonresult.jobTitle.match('MGR') == 'MGR'
                 || jsonresult.jobTitle.match('MANAGER') == 'MANAGER'
-                || jsonresult.userPrincipalName == 'Jianan.Lu@microsoft.com'
+                || jsonresult.userPrincipalName == 'jianalu@microsoft.com'
                 || jsonresult.userPrincipalName == 't-junzhu@microsoft.com'
                 )
             { this.admin = true; console.log('admin')}
             
-            if(jsonresult.userPrincipalName == 'Jianan.Lu@microsoft.com' 
+            if(jsonresult.userPrincipalName == 'jianalu@microsoft.com' 
                 || jsonresult.userPrincipalName == 't-junzhu@microsoft.com') {
                     this.accessmsg = result;
             }
 
-            if(jsonresult.userPrincipalName == 'Jianan.Lu@microsoft.com' 
+            if(jsonresult.userPrincipalName == 'jianalu@microsoft.com' 
                 || jsonresult.userPrincipalName == 't-junzhu@microsoft.com'
                 || jsonresult.userPrincipalName == 'danzha@microsoft.com') {
                     this.su = true

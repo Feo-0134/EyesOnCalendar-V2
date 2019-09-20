@@ -338,6 +338,8 @@ export default {
     asyncComputed: {
         month: {
             async get() {
+                this.cleanTeamForm()
+                this.cleanInitForm()
                 this.teamForm.Month = this.globalMonth
                 this.initForm.Month = this.globalMonth
                 let globalform = this.teamForm
@@ -367,8 +369,6 @@ export default {
                     data.workType;
                 });
                 res.data.people = res.data.people.sort((x, y) => x.name.localeCompare(y.name));
-                this.cleanTeamForm()
-                this.cleanInitForm()
                 res.data.people.forEach(person=> {
                     if(person.principle == 'TM') { globalform.TeamManager += person.name + person.alias + ';'}
                     else if(person.principle == 'TA') { globalform.TeamAdvisor += person.name + person.alias + ';'}
@@ -697,6 +697,7 @@ export default {
             }
         },
         loadTeamName () {
+            console.log(this.globalMonth)
             console.log('-1')
             new Promise((resolve, reject) => {
                 this.$http.get(this.getTeamApiPath)
@@ -712,12 +713,13 @@ export default {
             })
         },
         querySearchAsync(queryString, cb) {
+            this.loadTeamName()
             console.log('0')
-            var links = this.links;
-            var results = queryString ? links.filter(this.createFilter(queryString)) : links;
-
+            
             clearTimeout(this.timeout);
             this.timeout = setTimeout(() => {
+                let links = this.links;
+                let results = queryString ? links.filter(this.createFilter(queryString)) : links;
                 cb(results);
             }, 1500) //* Math.random());
         },
@@ -734,9 +736,6 @@ export default {
             // this.$router.push({ path });
             // location.reload();
         },
-    },
-    mounted() {
-        this.loadTeamName()
     },
     computed:{
         admin() {
@@ -820,10 +819,11 @@ export default {
             return {};
         },
         getTeamApiPath() {
+            console.log('6')
             if(this.su === true) {
-                return ('/api/default/' + new Date().getFullYear() + '/' + (new Date().getMonth() + 1) + '/allTeamName')
+                return ('/api/default/' + this.globalMonth + '/allTeamName')
             }
-            else {return ('/api/default/' + new Date().getFullYear() + '/' + (new Date().getMonth() + 1) + '/ownTeamName/'+this.alias)}
+            else {return ('/api/default/' + this.globalMonth + '/ownTeamName/'+this.alias)}
         },
         
     }
