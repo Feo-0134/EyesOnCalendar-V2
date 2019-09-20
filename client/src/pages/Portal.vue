@@ -960,7 +960,7 @@ export default {
     .el-dialog__wrapper .el-dialog {
         border-radius: 17px;
     }
-    .el-dialog, .el-pager li {
+    .el-main .el-dialog, .el-pager li {
         background:#cacaca;
     }
 </style>

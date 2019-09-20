@@ -10,7 +10,6 @@
                   placeholder="SEARCH POD"
                   @select="handleSelect"
                 >
-                  <!-- <el-button slot="append" icon="el-icon-search" v-on:click="goPod"></el-button> -->
                 </el-autocomplete>
             </span>
           </el-dropdown>

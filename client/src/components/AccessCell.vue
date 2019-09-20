@@ -274,7 +274,7 @@ export default {
     margin-top: 10px;
     margin-right: 10px;
 }
-.InputButton3 {
+.welcomPage .InputButton3 {
     width: 200px;
     float: left;
     height: fit-content;
