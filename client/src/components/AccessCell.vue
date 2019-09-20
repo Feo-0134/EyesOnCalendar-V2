@@ -6,7 +6,7 @@
         v-if="podSelect"
         v-model="teamName"
         :fetch-suggestions="querySearchAsync"
-        placeholder="POD NAME HERE"
+        placeholder="SEARCH POD"
         @select="handleSelect"
     >
     </el-autocomplete>

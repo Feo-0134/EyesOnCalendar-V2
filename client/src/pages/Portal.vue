@@ -150,7 +150,7 @@
                     <el-autocomplete class="autoFill"
                         v-model="teamForm.TeamName"
                         :fetch-suggestions="querySearchAsync"
-                        placeholder="POD NAME HERE"
+                        placeholder="SEARCH POD"
                         @select="handleSelect"
                     >
                     </el-autocomplete>
@@ -187,7 +187,7 @@
                     <el-autocomplete class="autoFill"
                         v-model="teamForm.TeamName"
                         :fetch-suggestions="querySearchAsync"
-                        placeholder="POD NAME HERE"
+                        placeholder="SEARCH POD"
                         @select="handleSelect"
                     >
                     </el-autocomplete>
@@ -238,7 +238,7 @@
                     <el-autocomplete class="autoFill"
                         v-model="teamForm.TeamName"
                         :fetch-suggestions="querySearchAsync"
-                        placeholder="POD NAME HERE"
+                        placeholder="SEARCH POD"
                         @select="handleSelect"
                     >
                     </el-autocomplete>

@@ -7,7 +7,7 @@
                 <el-autocomplete
                   v-model="teamName"
                   :fetch-suggestions="querySearchAsync"
-                  placeholder="POD NAME HERE"
+                  placeholder="SEARCH POD"
                   @select="handleSelect"
                 >
                   <!-- <el-button slot="append" icon="el-icon-search" v-on:click="goPod"></el-button> -->
