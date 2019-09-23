@@ -322,12 +322,12 @@ export default {
                 NightShift: '',
             },
             people: 
-                    [{
-                        principle:"None",
-                        role:"default",
-                        alias:"default",
-                        name:"default"
-                    }],
+                [{
+                    principle:"None",
+                    role:"default",
+                    alias:"default",
+                    name:"default"
+                }],
             formLabelWidth: '100px',
             scrolled: false,
             changed: false,
@@ -746,7 +746,14 @@ export default {
             return store.get('user').admin
         },
         goCalendar() {
-            const path ='/' + this.teamForm.TeamName +'/' + this.globalMonth
+            let path = ''
+            if(this.initView && this.initForm.TeamName !== '') {
+                path = '/' + this.initForm.TeamName +'/' + this.globalMonth
+            } else if( this.teamForm.TeamName !== ''){
+                path = '/' + this.teamForm.TeamName +'/' + this.globalMonth
+            } else {
+                path = '/TEMPLATE/' + this.globalMonth
+            }
             this.$router.push({ path });
             location.reload();
         },

@@ -113,6 +113,7 @@ export default {
       activeName: 'first',
       openflag: false,
       state: null,
+      teamName: this.$router.currentRoute.path.split('/')[1],
     };
   },
   asyncComputed: {
@@ -145,9 +146,6 @@ export default {
     },
   },
   computed: {
-    teamName() {
-      return this.$router.currentRoute.path.split('/')[1]
-    },
     displayName() {
       return store.get('user').displayName;
     },
