@@ -187,7 +187,7 @@ export default {
                     console.log(response.data)
                     if(response.data == "default") {                            
                         // console.log('Your team hasn\'t joined the tool yet')
-                        store.set('user', {displayName:this.displayName, alias: this.alias, admin: this.admin, su: this.su, title: this.title, team: 'default'})
+                        store.set('user', {displayName:this.displayName, alias: this.alias, admin: this.admin, su: this.su, title: this.title, team: 'TEMPLATE'})
                     } else {
                         store.set('user', {displayName:this.displayName, alias: this.alias, admin: this.admin, su: this.su, title: this.title, team: response.data})
                     }
