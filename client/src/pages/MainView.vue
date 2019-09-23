@@ -105,7 +105,6 @@ export default {
       alias: '',
       links: [],
       timeout:  null,
-      teamName: '',
       message: 'Loading month...',
       scrolled: false,
       changed: false,
@@ -146,6 +145,9 @@ export default {
     },
   },
   computed: {
+    teamName() {
+      return this.$router.currentRoute.path.split('/')[1]
+    },
     displayName() {
       return store.get('user').displayName;
     },

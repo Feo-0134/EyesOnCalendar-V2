@@ -397,8 +397,6 @@ export default {
     },
     methods: {
         cleanInitForm: function () {
-            this.initForm.TeamManager = ""
-            this.initForm.TeamAdvisor = ""
             this.initForm.FTE = ""
             this.initForm.Vendor = ""
         },
@@ -750,7 +748,7 @@ export default {
         goCalendar() {
             const path ='/' + this.teamForm.TeamName +'/' + this.globalMonth
             this.$router.push({ path });
-            // location.reload();
+            location.reload();
         },
         apiPath() {
             return (
