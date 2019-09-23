@@ -212,7 +212,7 @@ export default {
     goPortal() {
         const path = '/portal'
         this.$router.push({ path });
-        location.reload();
+        // location.reload();
     },
     goReport() {
       return (`/${this.date.split('/')[1].toString()}${moment(this.date, '/YYYY/M').format('/YYYY/M')}/report`);

@@ -750,7 +750,7 @@ export default {
         goCalendar() {
             const path ='/' + this.teamForm.TeamName +'/' + this.globalMonth
             this.$router.push({ path });
-            location.reload();
+            // location.reload();
         },
         apiPath() {
             return (
