@@ -6,15 +6,15 @@
     <el-header class="navigationBar">EyesonCalendar Administration</el-header>
     <el-container>
         <el-aside width="300px">
-            <el-menu>
-                <el-submenu index="2">
+            <el-menu :default-openeds="['1']">
+                <el-submenu index="1">
                     <template slot="title"><i class="el-icon-menu"></i>EyesonCalendar</template>
                     <el-menu-item-group>
                     <template slot="title"></template>
-                    <el-menu-item index="2-3" v-on:click="showInitView">Initiate Team Calendar</el-menu-item>
-                    <el-menu-item index="2-1" v-on:click="showTeamView">Team Calendar Management</el-menu-item>
-                    <el-menu-item index="2-2" v-on:click="showShiftView">Team Shift Management</el-menu-item>
-                    <el-menu-item index="2-4" v-on:click="showReportView">Team Shift Report</el-menu-item>
+                    <el-menu-item index="1-3" v-on:click="showInitView">Initiate Team Calendar</el-menu-item>
+                    <el-menu-item index="1-1" v-on:click="showTeamView">Team Calendar Management</el-menu-item>
+                    <el-menu-item index="1-2" v-on:click="showShiftView">Team Shift Management</el-menu-item>
+                    <el-menu-item index="1-4" v-on:click="showReportView">Team Shift Report</el-menu-item>
                     </el-menu-item-group>
                 </el-submenu>
             </el-menu>

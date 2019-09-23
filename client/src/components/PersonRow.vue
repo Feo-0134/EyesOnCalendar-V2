@@ -261,9 +261,6 @@ day {
 .name {
   width: 180px;
   font-size: 18px;
-  
-  
-  
 }
 .workday {
   color: #C2C4CE;
