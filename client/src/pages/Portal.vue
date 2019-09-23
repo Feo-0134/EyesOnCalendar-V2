@@ -1,7 +1,7 @@
 <template> 
     <el-container v-show="admin">
         <div class="navigationBar">
-        <el-button type="primary" v-show="true" @click="goCalendar()">Calendar</el-button>
+            <el-button type="primary" v-show="true" @click="goCalendar()">Calendar</el-button>
         </div>
     <el-header class="navigationBar">EyesonCalendar Administration</el-header>
     <el-container>
@@ -10,11 +10,11 @@
                 <el-submenu index="1">
                     <template slot="title"><i class="el-icon-menu"></i>EyesonCalendar</template>
                     <el-menu-item-group>
-                    <template slot="title"></template>
-                    <el-menu-item index="1-3" v-on:click="showInitView">Initiate Team Calendar</el-menu-item>
-                    <el-menu-item index="1-1" v-on:click="showTeamView">Team Calendar Management</el-menu-item>
-                    <el-menu-item index="1-2" v-on:click="showShiftView">Team Shift Management</el-menu-item>
-                    <el-menu-item index="1-4" v-on:click="showReportView">Team Shift Report</el-menu-item>
+                        <template slot="title"></template>
+                        <el-menu-item index="1-3" v-on:click="showInitView">Initiate Team Calendar</el-menu-item>
+                        <el-menu-item index="1-1" v-on:click="showTeamView">Team Calendar Management</el-menu-item>
+                        <el-menu-item index="1-2" v-on:click="showShiftView">Team Shift Management</el-menu-item>
+                        <el-menu-item index="1-4" v-on:click="showReportView">Team Shift Report</el-menu-item>
                     </el-menu-item-group>
                 </el-submenu>
             </el-menu>
@@ -23,7 +23,7 @@
             <el-dialog title="Shift Arrangement" :visible.sync="sftFormVisible">
                 <el-form :model="sftForm">
                     <el-form-item label="Alias" :label-width="formLabelWidth">
-                    <el-input v-model="sftForm.alias" autocomplete="off"></el-input>
+                        <el-input v-model="sftForm.alias" autocomplete="off"></el-input>
                     </el-form-item>
                 </el-form>
                 <div slot="footer" class="dialog-footer">
@@ -34,10 +34,10 @@
             <el-dialog title="Add Team Manager" :visible.sync="addFormVisible1">
                 <el-form :model="addForm">
                     <el-form-item label="Alias" :label-width="formLabelWidth">
-                    <el-input v-model="addForm.alias" autocomplete="off"></el-input>
+                        <el-input v-model="addForm.alias" autocomplete="off"></el-input>
                     </el-form-item>
                     <el-form-item label="Name" :label-width="formLabelWidth" v-if="!addTMTA">
-                    <el-input v-model="addForm.name" autocomplete="off"></el-input>
+                        <el-input v-model="addForm.name" autocomplete="off"></el-input>
                     </el-form-item>
                 </el-form>
                 <div slot="footer" class="dialog-footer">
@@ -48,10 +48,10 @@
             <el-dialog title="Add Team Advisor" :visible.sync="addFormVisible2">
                 <el-form :model="addForm">
                     <el-form-item label="Alias" :label-width="formLabelWidth">
-                    <el-input v-model="addForm.alias" autocomplete="off"></el-input>
+                        <el-input v-model="addForm.alias" autocomplete="off"></el-input>
                     </el-form-item>
                     <el-form-item label="Name" :label-width="formLabelWidth" v-if="!addTMTA">
-                    <el-input v-model="addForm.name" autocomplete="off"></el-input>
+                        <el-input v-model="addForm.name" autocomplete="off"></el-input>
                     </el-form-item>
                 </el-form>
                 <div slot="footer" class="dialog-footer">
@@ -62,10 +62,10 @@
             <el-dialog title="Add FTE/Vendor Member" :visible.sync="addFormVisible">
                 <el-form :model="addForm">
                     <el-form-item label="Alias" :label-width="formLabelWidth">
-                    <el-input v-model="addForm.alias" autocomplete="off"></el-input>
+                        <el-input v-model="addForm.alias" autocomplete="off"></el-input>
                     </el-form-item>
                     <el-form-item label="Name" :label-width="formLabelWidth" v-if="!addTMTA">
-                    <el-input v-model="addForm.name" autocomplete="off"></el-input>
+                        <el-input v-model="addForm.name" autocomplete="off"></el-input>
                     </el-form-item>
                 </el-form>
                 <div slot="footer" class="dialog-footer">
@@ -152,20 +152,16 @@
                         @select="handleSelect"
                     >
                     </el-autocomplete>
-                    <!-- <el-input v-model="teamForm.TeamName" :disabled="!su"></el-input> -->
                 </el-form-item>
-                <!-- <el-form-item label="Month">
-                    <el-input v-model="teamForm.Month" ></el-input>
-                </el-form-item> -->
                 <el-form-item label="Morning Shift">
-                    <el-input v-model="teamForm.MorningShift" :disabled="!su"></el-input>
+                    <el-input v-model="teamForm.MorningShift" :disabled="true"></el-input>
                     <div class="functionalButton">
                     <el-button type="primary" icon="el-icon-plus" v-on:click="sftPersonView('MS')" circle></el-button>
                     <el-button type="primary" icon="el-icon-minus" v-on:click="sftPersonView('W')" circle></el-button>
                     </div>
                 </el-form-item>
                 <el-form-item label="Night Shift">
-                    <el-input v-model="teamForm.NightShift" :disabled="!su"></el-input>
+                    <el-input v-model="teamForm.NightShift" :disabled="true"></el-input>
                     <div class="functionalButton">
                     <el-button type="primary" icon="el-icon-plus" v-on:click="sftPersonView('NS')" circle></el-button>
                     <el-button type="primary" icon="el-icon-minus" v-on:click="sftPersonView('W')" circle></el-button>
@@ -189,34 +185,30 @@
                         @select="handleSelect"
                     >
                     </el-autocomplete>
-                    <!-- <el-input v-model="teamForm.TeamName" :disabled="!su"></el-input> -->
                 </el-form-item>
-                <!-- <el-form-item label="Month">
-                    <el-input v-model="teamForm.Month" ></el-input>
-                </el-form-item> -->
                 <el-form-item label="Team Manager">
-                    <el-input v-model="teamForm.TeamManager" :disabled="!su"></el-input>
+                    <el-input v-model="teamForm.TeamManager" :disabled="true"></el-input>
                     <div class="functionalButton">
                     <el-button type="primary" icon="el-icon-plus" circle v-on:click="addTMTA=true;addPersonView('FTE', 'TM', 0)"></el-button>
                     <el-button type="primary" icon="el-icon-minus" circle v-on:click="delPersonView('TM',0)"></el-button>
                     </div>
                 </el-form-item>
                 <el-form-item label="Technical Advisor">
-                    <el-input v-model="teamForm.TeamAdvisor" :disabled="!su"></el-input>
+                    <el-input v-model="teamForm.TeamAdvisor" :disabled="true"></el-input>
                     <div class="functionalButton">
                     <el-button type="primary" icon="el-icon-plus" circle v-on:click="addTMTA=true;addPersonView('', 'TA', 1)"></el-button>
                     <el-button type="primary" icon="el-icon-minus" circle v-on:click="delPersonView('TA', 1)"></el-button>
                     </div>
                 </el-form-item>
                 <el-form-item label="FTE Member">
-                    <el-input v-model="teamForm.FTE" :disabled="!su"></el-input>
+                    <el-input v-model="teamForm.FTE" :disabled="true"></el-input>
                     <div class="functionalButton">
                     <el-button type="primary" icon="el-icon-plus" circle v-on:click="addTMTA=false;addPersonView('FTE', 'None',2)"></el-button>
                     <el-button type="primary" icon="el-icon-minus" circle v-on:click="delPersonView('None',2)"></el-button>
                     </div>
                 </el-form-item>
                 <el-form-item label="Vendor member">
-                    <el-input v-model="teamForm.Vendor" :disabled="!su"></el-input>
+                    <el-input v-model="teamForm.Vendor" :disabled="true"></el-input>
                     <div class="functionalButton">
                     <el-button type="primary" icon="el-icon-plus" circle v-on:click="addTMTA=false;addPersonView('Vendor', 'None',2)"></el-button>
                     <el-button type="primary" icon="el-icon-minus" circle v-on:click="delPersonView('None',2)"></el-button>
@@ -240,7 +232,6 @@
                         @select="handleSelect"
                     >
                     </el-autocomplete>
-                    <!-- <el-input v-model="teamForm.TeamName" :disabled="!su"></el-input> -->
                 </el-form-item>
                 <div>
                     <h2 v-if="!month">{{message}}</h2>
