@@ -6,15 +6,15 @@
     <el-header class="navigationBar">EyesonCalendar Administration</el-header>
     <el-container>
         <el-aside width="300px">
-            <el-menu :default-openeds="['1']">
+            <el-menu :default-openeds="['2']">
                 <el-submenu index="1">
                     <template slot="title"><i class="el-icon-menu"></i>EyesonCalendar</template>
                     <el-menu-item-group>
                         <template slot="title"></template>
-                        <el-menu-item index="1-3" v-on:click="showInitView">Initiate Team Calendar</el-menu-item>
-                        <el-menu-item index="1-1" v-on:click="showTeamView">Team Calendar Management</el-menu-item>
-                        <el-menu-item index="1-2" v-on:click="showShiftView">Team Shift Management</el-menu-item>
-                        <el-menu-item index="1-4" v-on:click="showReportView">Team Shift Report</el-menu-item>
+                        <el-menu-item index="1-1" v-on:click="topicView(0)">Initiate Team Calendar</el-menu-item>
+                        <el-menu-item index="1-2" v-on:click="topicView(1)">Team Calendar Management</el-menu-item>
+                        <el-menu-item index="1-3" v-on:click="topicView(2)">Team Shift Management</el-menu-item>
+                        <el-menu-item index="1-4" v-on:click="topicView(3)">Team Shift Report</el-menu-item>
                         <el-menu-item index="1-5">
                             <p class= "support outlookLogo2">Contact :</p>
                             <a href="mailto:eyesoncalendar2@microsoft.com">
@@ -112,7 +112,7 @@
                     <el-button type="primary" @click="delPerson();delFormVisible = false;delFormVisible1 = false;delFormVisible2 = false;">Confirm</el-button>
                 </div>
             </el-dialog>
-            <el-form v-if="initView"   :model="initForm" label-width="140px">
+            <el-form v-if="topic === 0"   :model="initForm" label-width="140px">
                 <el-form-item label="Month">
                     <el-date-picker
                     v-model="globalMonth"
@@ -141,40 +141,7 @@
                     <el-button type="primary" @click="initiateCalendar">Confirm</el-button>
                 </span>
             </el-form>
-            <el-form v-if="shiftView"  :model="teamForm" label-width="140px">
-                <el-form-item label="Month">
-                    <el-date-picker
-                    v-model="globalMonth"
-                    type="month"
-                    format="yyyy/M" value-format="yyyy/M"
-                    placeholder="Pick a month">
-                    </el-date-picker>
-                </el-form-item>
-                <el-form-item label="Team Name">
-                    <el-autocomplete class="autoFill"
-                        v-model="teamForm.TeamName"
-                        :fetch-suggestions="querySearchAsync"
-                        placeholder="SEARCH POD"
-                        @select="handleSelect"
-                    >
-                    </el-autocomplete>
-                </el-form-item>
-                <el-form-item label="Morning Shift">
-                    <el-input v-model="teamForm.MorningShift" :disabled="true"></el-input>
-                    <div class="functionalButton">
-                    <el-button type="primary" icon="el-icon-plus" v-on:click="sftPersonView('MS')" circle></el-button>
-                    <el-button type="primary" icon="el-icon-minus" v-on:click="sftPersonView('W')" circle></el-button>
-                    </div>
-                </el-form-item>
-                <el-form-item label="Night Shift">
-                    <el-input v-model="teamForm.NightShift" :disabled="true"></el-input>
-                    <div class="functionalButton">
-                    <el-button type="primary" icon="el-icon-plus" v-on:click="sftPersonView('NS')" circle></el-button>
-                    <el-button type="primary" icon="el-icon-minus" v-on:click="sftPersonView('W')" circle></el-button>
-                    </div>
-                </el-form-item>
-            </el-form>
-            <el-form v-if="teamView"   :model="teamForm" label-width="140px">
+            <el-form v-if="topic === 1"   :model="teamForm" label-width="140px">
                 <el-form-item label="Month">
                     <el-date-picker
                     v-model="globalMonth"
@@ -221,7 +188,40 @@
                     </div>
                 </el-form-item>
             </el-form>
-            <el-form v-if="reportView" :model="teamForm" label-width="140px">
+            <el-form v-if="topic === 2"  :model="teamForm" label-width="140px">
+                <el-form-item label="Month">
+                    <el-date-picker
+                    v-model="globalMonth"
+                    type="month"
+                    format="yyyy/M" value-format="yyyy/M"
+                    placeholder="Pick a month">
+                    </el-date-picker>
+                </el-form-item>
+                <el-form-item label="Team Name">
+                    <el-autocomplete class="autoFill"
+                        v-model="teamForm.TeamName"
+                        :fetch-suggestions="querySearchAsync"
+                        placeholder="SEARCH POD"
+                        @select="handleSelect"
+                    >
+                    </el-autocomplete>
+                </el-form-item>
+                <el-form-item label="Morning Shift">
+                    <el-input v-model="teamForm.MorningShift" :disabled="true"></el-input>
+                    <div class="functionalButton">
+                    <el-button type="primary" icon="el-icon-plus" v-on:click="sftPersonView('MS')" circle></el-button>
+                    <el-button type="primary" icon="el-icon-minus" v-on:click="sftPersonView('W')" circle></el-button>
+                    </div>
+                </el-form-item>
+                <el-form-item label="Night Shift">
+                    <el-input v-model="teamForm.NightShift" :disabled="true"></el-input>
+                    <div class="functionalButton">
+                    <el-button type="primary" icon="el-icon-plus" v-on:click="sftPersonView('NS')" circle></el-button>
+                    <el-button type="primary" icon="el-icon-minus" v-on:click="sftPersonView('W')" circle></el-button>
+                    </div>
+                </el-form-item>
+            </el-form>
+            <el-form v-if="topic === 3" :model="teamForm" label-width="140px">
                 <el-form-item label="Month">
                     <el-date-picker
                     v-model="globalMonth"
@@ -263,30 +263,31 @@
 </template>
 
 <script>
-var store = require('store')
-import Personsum from "@/components/PersonRowSum"
-import HelpScreen from '@/components/HelpScreen';
+var store = require('store') // global store
+import Personsum from "@/components/PersonRowSum" // report
+import HelpScreen from '@/components/HelpScreen'; // contact
 export default {
-    components: { Personsum, HelpScreen},
+    components: { Personsum, HelpScreen },
     data: function () {
         return {
-            links: [],
-            su: false,
+            links: [], // get team name for auto-complete
+            su: false, // admin permission
             displayName: '',
-            addTMTA: false,
             globalMonth: new Date().getFullYear() + '/' + (new Date().getMonth() + 1),
-            teamView: true,
-            shiftView: false,
-            reportView: false,
-            initView: false,
+            topic: 1,
+            
+            addTMTA: false,
+
             addFormVisible1:false,
             addFormVisible2:false,
             addFormVisible:false,
-            inputRole:false,
+
             delFormVisible1:false,
             delFormVisible2:false,
             delFormVisible:false,
+
             sftFormVisible:false,
+
             addForm: {
                 alias: '',
                 name: '',
@@ -328,9 +329,9 @@ export default {
                     alias:"default",
                     name:"default"
                 }],
-            formLabelWidth: '100px',
+            formLabelWidth: '100px', // <-- table format start
             scrolled: false,
-            changed: false,
+            changed: false, // <-- table format end
         }
     },
     asyncComputed: {
@@ -390,12 +391,16 @@ export default {
                 return null;
                 }
             },
-        watch() {
-            this.changed;
-        },
+            watch() {
+                this.changed;
+            },
         },
     },
     methods: {
+        topicView(type) {
+            this.topic = type
+        },
+
         cleanInitForm: function () {
             this.initForm.FTE = ""
             this.initForm.Vendor = ""
@@ -419,6 +424,7 @@ export default {
         cleanSftForm: function () {
             this.sftForm.alias = ""
         },
+
         addPersonView(role, principle, num) {
             this.cleanAddForm()
             this.addForm.role = role
@@ -448,30 +454,7 @@ export default {
             this.sftForm.workType = workType
             this.sftFormVisible = true
         },
-        showTeamView: function () {
-            this.teamView = true
-            this.shiftView = false
-            this.initView = false
-            this.reportView = false
-        },
-        showShiftView: function () {
-            this.teamView = false
-            this.shiftView = true
-            this.initView = false
-            this.reportView = false
-        },
-        showInitView: function () {
-            this.teamView = false
-            this.shiftView = false
-            this.initView = true
-            this.reportView = false
-        },
-        showReportView: function () {
-            this.teamView = false
-            this.shiftView = false
-            this.initView = false
-            this.reportView = true
-        },
+        
         initFormatCheck: function () {
             // var MontArr = (this.initForm.Month).split("/");
             // if(MontArr.length != 2 || MontArr[1] < 1 || MontArr[1] > 12) {
@@ -554,7 +537,7 @@ export default {
                 })
             });
             new Promise((resolve, reject)=>{
-                this.$http.post(this.apiPath, this.apiPayload)
+                this.$http.post(this.initPath, this.initPayload)
                 .then((response)=> {
                     if(response.data == "success") {
                     this. addFeedback('success', 'Team Added to Calendar')}
@@ -566,6 +549,7 @@ export default {
                 })
             })
         },
+
         addPerson() {
             if(this.addForm.alias == "") {
                 this.addFeedback('notify', 'Please fill the alias.')
@@ -608,7 +592,7 @@ export default {
 
             if(this.admin) {
                 new Promise((resolve, reject) => {
-                    this.$http.post(this.apiPathAddPerson, this.apiPayloadAddPerson)
+                    this.$http.post(this.addPath, this.addPayload)
                     .then((response)=> {
                         if(response.data == 'Person is Added to the Team' || response.data == 'Permission is Added to the Person') { 
                             // the below lines is a stupid way to sync the display memeber which should be replaced by stocket.io later QwQ
@@ -633,7 +617,7 @@ export default {
                 this.delForm.alias = "(" + this.delForm.alias + ")";
             }
             return new Promise((resolve, reject) => {
-                this.$http.post(this.apiPathDelPerson, this.apiPayloadDelPerson)
+                this.$http.post(this.delPath, this.delPayload)
                 .then((response)=> {
                 if(response.data == 'Person is Removed from the Team'|| response.data == 'Permission is Removed from the Person')  {
                     // the below lines is a stupid way to sync the display memeber which should be replaced by stocket.io later QwQ
@@ -660,7 +644,7 @@ export default {
             this.sftForm.alias = '(' + this.sftForm.alias + ')'
             // console.log(this.apiPathSftPerson)
             return new Promise((resolve, reject) => {
-                this.$http.post(this.apiPathSftPerson, this.apiPayloadSftPerson)
+                this.$http.post(this.sftPath, this.sftPayload)
                 .then((response) => {
                     // console.log("shift success")
                     // the below lines is a stupid way to sync the display memeber which should be replaced by stocket.io later QwQ
@@ -675,6 +659,7 @@ export default {
                 })
             })
         },
+
         addFeedback(type, msg) {
             const h = this.$createElement;
             if(type == 'error') {
@@ -704,11 +689,13 @@ export default {
             });
             }
         },
+        
+        /* Start-- load team name for auto-complete component */
         loadTeamName () {
             console.log(this.globalMonth)
             console.log('-1')
             new Promise((resolve, reject) => {
-                this.$http.get(this.getTeamApiPath)
+                this.$http.get(this.getTeamPath)
                 .then((response)=> {
                 this.links = response.data;
                 //console.log('hhh')
@@ -746,11 +733,12 @@ export default {
             // this.$router.push({ path });
             // location.reload();
         },
+        /* End-- load team name for auto-complete component */
     },
     computed:{
         admin() {
             var path = '/'
-            if(store.get('user')===undefined) {
+            if(store.get('user') === undefined) {
                 this.$message("Please Login.")
                 this.$router.push({ path })
                 setTimeout(()=>{location.reload()},2000)
@@ -759,6 +747,13 @@ export default {
             this.alias = store.get('user').alias
             this.su = store.get('user').su
             return store.get('user').admin
+        },
+        getTeamPath() {
+            console.log('6')
+            if(this.su === true) {
+                return ('/api/default/' + this.globalMonth + '/allTeamName')
+            }
+            else {return ('/api/default/' + this.globalMonth + '/ownTeamName/'+this.alias)}
         },
         goCalendar() {
             let path = ''
@@ -772,7 +767,7 @@ export default {
             this.$router.push({ path });
             location.reload();
         },
-        apiPath() {
+        initPath() {
             return (
                 "/api/" +
                 this.initForm.TeamName +
@@ -780,12 +775,12 @@ export default {
                 this.globalMonth
             );
         },
-        apiPayload() {
+        initPayload() {
             return {
                 people: this.people,
             };
         },
-        apiPathAddPerson() {
+        addPath() {
             return (
                 '/api/' +
                 this.teamForm.TeamName +
@@ -794,7 +789,7 @@ export default {
                 '/person'
             );
         },
-        apiPayloadAddPerson() {
+        addPayload() {
             return {
                 name: this.addForm.name,
                 role:this.addForm.role,
@@ -803,7 +798,7 @@ export default {
                 randomNumber: this.$randomNumber
             };
         },
-        apiPathDelPerson() {
+        delPath() {
             return (
                 '/api/' +
                 this.teamForm.TeamName +
@@ -812,13 +807,13 @@ export default {
                 '/delete'
             );
         },
-        apiPayloadDelPerson() {
+        delPayload() {
             return {
                 alias: this.delForm.alias,
                 principle:this.delForm.principle,
             };
         },
-        apiPathSftPerson() {
+        sftPath() {
             return (
                 '/api/' +
                 this.teamForm.TeamName +
@@ -830,17 +825,9 @@ export default {
                 this.sftForm.workType
             );
         },
-        apiPayloadSftPerson() {
+        sftPayload() {
             return {};
         },
-        getTeamApiPath() {
-            console.log('6')
-            if(this.su === true) {
-                return ('/api/default/' + this.globalMonth + '/allTeamName')
-            }
-            else {return ('/api/default/' + this.globalMonth + '/ownTeamName/'+this.alias)}
-        },
-        
     }
 }
 </script>
