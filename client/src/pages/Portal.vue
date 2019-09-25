@@ -6,7 +6,7 @@
     <el-header class="navigationBar">EyesonCalendar Administration</el-header>
     <el-container>
         <el-aside width="300px">
-            <el-menu :default-openeds="['2']">
+            <el-menu :default-openeds="['1']">
                 <el-submenu index="1">
                     <template slot="title"><i class="el-icon-menu"></i>EyesonCalendar</template>
                     <el-menu-item-group>
