@@ -349,7 +349,7 @@ export default {
                     month = 12
                 }
                 this.initForm.Month = year +'/'+ month
-                if(this.initView === true) {
+                if(this.topic === 0) {
                     globalform = this.initForm
                     console.log('test')
                 }
@@ -757,7 +757,7 @@ export default {
         },
         goCalendar() {
             let path = ''
-            if(this.initView && this.initForm.TeamName !== '') {
+            if(this.topic === 0 && this.initForm.TeamName !== '') {
                 path = '/' + this.initForm.TeamName +'/' + this.globalMonth
             } else if( this.teamForm.TeamName !== ''){
                 path = '/' + this.teamForm.TeamName +'/' + this.globalMonth
