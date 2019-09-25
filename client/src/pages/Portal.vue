@@ -271,8 +271,9 @@ export default {
     data: function () {
         return {
             links: [],
-            addTMTA: false,
             su: false,
+            displayName: '',
+            addTMTA: false,
             globalMonth: new Date().getFullYear() + '/' + (new Date().getMonth() + 1),
             teamView: true,
             shiftView: false,
@@ -506,6 +507,7 @@ export default {
                 this.addFeedback('notify', 'Team-Name can not include \'/\'  or \'\\\' or SPACE')
                 return;
             }
+            var initiaterExist = false
             var peopleArr = (this.initForm.Vendor + this.initForm.FTE).split(";");
             for(var cnt = 1; cnt<peopleArr.length-1; cnt++) {
                 this.people[cnt] = Object.assign({}, this.people[0])
@@ -518,6 +520,7 @@ export default {
                 this.people[cnt].alias = '(' + peopleArr[cnt].split("(")[1]
                 if(this.people[cnt].alias.match('v-') != 'v-') 
                 { this.addFeedback('notify', 'vendor alias with no \'v-\' is invalid:' + '(' + peopleArr[cnt].split("(")[1]); return }
+                if(this.people[cnt].alias === this.alias) {initiaterExist = true}
                 this.people[cnt].role = "Vendor"
             }
             var fteArr = (this.initForm.FTE).split(";");
@@ -527,7 +530,16 @@ export default {
                 this.people[cnt].name = peopleArr[cnt].split("(")[0]
                 if(peopleArr[cnt].split("(")[1] === undefined) {this.addFeedback('notify', 'Alias invalid: '+ peopleArr[cnt].split("(")[0]); return;}
                 this.people[cnt].alias = '(' + peopleArr[cnt].split("(")[1]
+                if(this.people[cnt].alias === this.alias) {initiaterExist = true}
                 this.people[cnt].role = "FTE"
+            }
+            if(initiaterExist === false) {
+                var cnt = this.people.length
+                this.people[cnt] = Object.assign({}, this.people[0])
+                this.people[cnt].name = this.displayName
+                this.people[cnt].alias = this.alias
+                if(this.alias.match('v-') != 'v-') {this.people[cnt].role = "FTE"} else {this.people[cnt].role = "Vendor"}
+                this.addFeedback('notify', 'We have add you to this team. Please add yourself to the team for further team management later.')
             }
             var teamManager = (this.initForm.TeamManager).split(";");
             var teamAdvisor = (this.initForm.TeamAdvisor).split(";");
@@ -670,7 +682,7 @@ export default {
                 title:'Request Denied',
                 message: msg,
                 position:'top-left',
-                
+                duration: 0
             });
             }
             if(type == 'notify') {
@@ -678,7 +690,8 @@ export default {
                 title:'Notification',
                 message: msg,
                 position:'top-left',
-                type:'warning'
+                type:'warning',
+                duration: 0
             });
             }
             if(type == 'success') {
@@ -740,6 +753,7 @@ export default {
                 this.$router.push({ path })
                 setTimeout(()=>{location.reload()},2000)
             }
+            this.displayName = store.get('user').displayName
             this.alias = store.get('user').alias
             this.su = store.get('user').su
             return store.get('user').admin
