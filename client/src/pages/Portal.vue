@@ -533,7 +533,7 @@ export default {
                 if(this.people[cnt].alias === this.alias) {initiaterExist = true}
                 this.people[cnt].role = "FTE"
             }
-            if(initiaterExist === false) {
+            if(initiaterExist === false && this.su === false) {
                 var cnt = this.people.length
                 this.people[cnt] = Object.assign({}, this.people[0])
                 this.people[cnt].name = this.displayName
