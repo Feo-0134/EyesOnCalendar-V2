@@ -561,7 +561,7 @@ export default {
                     console.log(response)
                 })
                 .catch((error)=>{
-                    this.addFeedback('error', 'System Error. Please turn to the developer.');
+                    this.addFeedback('error', (error.toString()).split(':')[1] + '\nPlease turn to the developer.');
                     console.log(error)
                 })
             })
@@ -621,7 +621,7 @@ export default {
                         }
                     })
                     .catch((error) => {
-                    this.addFeedback('error', 'System Error.' + error + 'Please report to the developer team.');
+                    this.addFeedback('error', (error.toString()).split(':')[1] + '\nPlease turn to the developer.');
                     })
                 }) 
             }
@@ -644,7 +644,7 @@ export default {
                 console.log(response)}
                 })
                 .catch((error)=> {
-                this.addFeedback('error', 'System Error')
+                this.addFeedback('error', (error.toString()).split(':')[1]+ '\nPlease turn to the developer.')
                 })
             })
         },
@@ -671,7 +671,7 @@ export default {
                     }
                 })
                 .catch((error)=> {
-                this.addFeedback('error', 'System Error')
+                this.addFeedback('error', (error.toString()).split(':')[1]+ '\nPlease turn to the developer.')
                 })
             })
         },
@@ -679,7 +679,7 @@ export default {
             const h = this.$createElement;
             if(type == 'error') {
             this.$notify.error({
-                title:'Request Denied',
+                title:'Error',
                 message: msg,
                 position:'top-left',
                 duration: 0
@@ -711,11 +711,13 @@ export default {
                 this.$http.get(this.getTeamApiPath)
                 .then((response)=> {
                 this.links = response.data;
-                console.log('hhh')
-                console.log(response.data)
+                //console.log('hhh')
+                //console.log(response.data)
                 })
                 .catch((error) => {
-                    this.addFeedback('error', 'System Error. Please turn to the developer.');
+                    console.log((error.toString()).split(':')[1])
+                    if(((error.toString()).split(':')[1]).match('404') == '404') {this.addFeedback('notify', 'Team information not found.');}
+                    else {this.addFeedback('error', (error.toString()).split(':')[1] + '\nPlease turn to the developer.');}
                     return [];
                 })
             })
