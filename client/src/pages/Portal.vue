@@ -15,6 +15,12 @@
                         <el-menu-item index="1-1" v-on:click="showTeamView">Team Calendar Management</el-menu-item>
                         <el-menu-item index="1-2" v-on:click="showShiftView">Team Shift Management</el-menu-item>
                         <el-menu-item index="1-4" v-on:click="showReportView">Team Shift Report</el-menu-item>
+                        <el-menu-item index="1-5">
+                            <p class= "support outlookLogo2">Contact :</p>
+                            <a href="mailto:eyesoncalendar2@microsoft.com">
+                                <img class = "outlookLogo2" src="../../static/img/outlook.png"  alt="Outlook" />
+                            </a>
+                        </el-menu-item>
                     </el-menu-item-group>
                 </el-submenu>
             </el-menu>
@@ -252,14 +258,16 @@
             </el-form>
         </el-main>
     </el-container>
+          <help-screen />
     </el-container>
 </template>
 
 <script>
 var store = require('store')
 import Personsum from "@/components/PersonRowSum"
+import HelpScreen from '@/components/HelpScreen';
 export default {
-    components: { Personsum },
+    components: { Personsum, HelpScreen},
     data: function () {
         return {
             links: [],
@@ -822,6 +830,15 @@ export default {
 </script>
 
 <style>
+    .support {
+        display:flex;
+    }
+    .outlookLogo2 {
+        width: 70px;
+        height: 40px;
+        margin-left: 5px;
+        display:inline-block
+    }
     .el-form-item .el-autocomplete {
         display: flex;
     }
