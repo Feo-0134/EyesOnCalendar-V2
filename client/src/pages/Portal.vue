@@ -240,7 +240,7 @@
                     </el-autocomplete>
                 </el-form-item>
                 <div>
-                    <h2 v-if="!month">{{message}}</h2>
+                    <!-- <h2 v-if="!month">{{message}}</h2> -->
                     <div v-if="month" class="reportPortal">
                         <div id="tablehead" v-bind:class="{sticky: scrolled}" class="row tablehead">
                             <div class="name"> </div>

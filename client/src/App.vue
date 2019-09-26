@@ -4,7 +4,7 @@
       <router-view></router-view>
     </main>
     <footer class="footer">
-      <p>hope you enjoy using this app</p>
+      <p>Hope you enjoy using this app.</p><p> © 2019 EyesOnCalendar </p>
     </footer>
   </div>
 </template>
