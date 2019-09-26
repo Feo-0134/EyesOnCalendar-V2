@@ -332,8 +332,8 @@ export default {
     },
     querySearchAsync(queryString, cb) {
       var links = this.links;
-      var results = queryString ? links.filter(this.createFilter(queryString)) : links;
-
+      //var results = queryString ? links.filter(this.createFilter(queryString)) : links;
+      var results = links
       clearTimeout(this.timeout);
       this.timeout = setTimeout(() => {
         cb(results);

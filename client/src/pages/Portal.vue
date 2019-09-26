@@ -716,7 +716,8 @@ export default {
             clearTimeout(this.timeout);
             this.timeout = setTimeout(() => {
                 let links = this.links;
-                let results = queryString ? links.filter(this.createFilter(queryString)) : links;
+                // let results = queryString ? links.filter(this.createFilter(queryString)) : links;
+                let results = links
                 cb(results);
             }, 1500) //* Math.random());
         },
