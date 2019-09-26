@@ -141,7 +141,7 @@ export default {
 <style>
 .cellx {
   border-radius: 2px;
-  text-transform: uppercase;
+  /* text-transform: uppercase; */
   margin: 4px;
   user-select: none;
   border: 0px solid;
@@ -165,10 +165,6 @@ export default {
     font-size: 18px;
     padding: 1px;
     border: 2px solid;
-  }
-
-  .name {
-    width: 100px;
   }
 }
 </style>

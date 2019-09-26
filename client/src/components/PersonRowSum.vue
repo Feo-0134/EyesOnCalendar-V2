@@ -4,13 +4,13 @@ Feature 5 Monthly report
 <template>
   <div class="row">
       <div class="cellx name">{{displayName}}</div>
-      <div class = "celly workdayCnt">{{workDayCount1}}</div>
-      <div class = "celly workdayCnt">{{workDayCount2}}</div>
-      <div class = "celly workdayCnt">{{workDayCount3}}</div>
-      <div class = "celly workdayCnt">{{workDayCount4}}</div>
-      <div class = "celly workdayCnt">{{workDayCount5}}</div>
-      <div class = "celly workdayCnt">{{workDayCount6}}</div>
-      <div class = "celly workdayCnt">{{workDayCount7}}</div>
+      <div class = "celly ">{{workDayCount1}}</div>
+      <div class = "celly ">{{workDayCount2}}</div>
+      <div class = "celly ">{{workDayCount3}}</div>
+      <div class = "celly ">{{workDayCount4}}</div>
+      <div class = "celly ">{{workDayCount5}}</div>
+      <div class = "celly ">{{workDayCount6}}</div>
+      <div class = "celly ">{{workDayCount7}}</div>
   </div>
 </template>
 
@@ -127,13 +127,6 @@ export default {
 
 
 <style>
-
-.row-head {
-  display: flex;
-  height: 40px;
-  justify-content: center;
-}
-
 .row {
   display: inline-flex;
   height: 40px;
@@ -145,6 +138,7 @@ export default {
 }
 
 .row:hover>.name {
+    text-align: left;
     color: white !important;
     font-weight: 500;
 }
@@ -158,25 +152,15 @@ export default {
   width: 40px;
 }
 .name {
-  width: 180px;
+  text-align: left;
+  width: 200px;
   font-size: 18px;
   color: #eaeaea;
-  text-align: right;
-  font-family: "Roboto Condensed", sans-serif;
+  font-family: "Roboto", Corbel, Avenir, "Lucida Grande", "Lucida Sans", sans-serif;
 }
 .workday {
   color: white;
   cursor: pointer;
-}
-
-.cellxII {
-  border-radius: 2px;
-  /*text-transform: uppercase;*/
-  margin: 4px;
-  user-select: none;
-  border: 0px solid;
-  font-size: 16px;
-  font-family: "Roboto", Corbel, Avenir, "Lucida Grande", "Lucida Sans", sans-serif;
 }
 
 .workday:hover {
@@ -199,7 +183,9 @@ export default {
   }
 
   .name {
+    text-align: left;
     width: 100px;
+    font-family: "Roboto", Corbel, Avenir, "Lucida Grande", "Lucida Sans", sans-serif;
   }
 }
 .colorCodes {
@@ -334,8 +320,10 @@ export default {
   justify-content: center;
   text-align: center;
   vertical-align: middle;
-  width: 120px;
-  margin: 10px;
+  width: 90px;
+  margin: 2px;
+  background-color: #373737;
+  border-radius: 2px;
 }
 
 .workday:hover {

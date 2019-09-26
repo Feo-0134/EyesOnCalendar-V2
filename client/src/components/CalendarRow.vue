@@ -43,7 +43,9 @@ export default {
         vertical-align: middle;
     }
     .name {
+        text-align: left;
         width: 120px;
+        font-family: "Roboto", Corbel, Avenir, "Lucida Grande", "Lucida Sans", sans-serif;
     }
     .workday {
         width: 40px;

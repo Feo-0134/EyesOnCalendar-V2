@@ -44,7 +44,7 @@
                :key="index" class="cellx">{{index+1}}</div>
                </div>
               <div id="tablehead" class="row tablehead">
-                <div class="name attendance">On Duty</div>
+                <div class="name">On Duty</div>
                 <div v-for="(p,index) in month.people[0].days"
                 :key="index" class="cellx">{{percentage(index)}}%</div>
               </div>
@@ -59,7 +59,7 @@
                 :key="index" class="cellx">{{index+1}}</div>
               </div>
               <div id="tablehead" class="row tablehead">
-                <div class="name attendance">On Duty</div>
+                <div class="name">On Duty</div>
                 <div v-for="(p,index) in month.people[0].days"
                 :key="index" class="cellx">{{percentageFTE(index)}}%</div>
               </div>
@@ -74,7 +74,7 @@
                 :key="index" class="cellx">{{index+1}}</div>
               </div>
               <div id="tablehead" class="row tablehead">
-                <div class="name attendance">On Duty</div>
+                <div class="name">On Duty</div>
                 <div v-for="(p,index) in month.people[0].days"
                 :key="index" class="cellx">{{percentageVendor(index)}}%</div>
               </div>
@@ -449,10 +449,6 @@ export default {
 </script>
 
 <style>
-.attendance {
-  margin: 9px 0 0 0;
-}
-
 .tablehead {
   width: 100%;
 }

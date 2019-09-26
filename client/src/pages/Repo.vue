@@ -7,14 +7,14 @@ Feature 5 Monthly report
       <h2 v-if="!month">{{message}}</h2>
       <div v-if="month">
           <div id="tablehead" v-bind:class="{sticky: scrolled}" class="row tablehead">
-            <div class="name"> </div>
-            <div class="celly">Work-Day</div>
-            <div class="celly">Morning-Shift</div>
-            <div class="celly">Night-Shift</div>
-            <div class="celly">Training</div>
-            <div class="celly">Vacation</div>
-            <div class="celly">Public-Holiday</div>
-            <div class="celly">Holiday OnDuty</div>
+            <!-- <div class="name"> </div> -->
+            <div class="cellY">Work-Day</div>
+            <div class="cellY">Morning-Shift</div>
+            <div class="cellY">Night-Shift</div>
+            <div class="cellY">Training</div>
+            <div class="cellY">Vacation</div>
+            <div class="cellY">Public-Holiday</div>
+            <div class="cellY">Holiday OnDuty</div>
           </div>
           <Personsum class="marginLeft" v-for="(p,index) in month.people" v-bind:key="p._id" v-bind:pindex="index" v-bind:person="p"/>
       </div>
@@ -119,18 +119,19 @@ export default {
 .pointer:hover {
   background-color: #555;
 }
-/* .marginLeft {
-   margin-left: 30px
-} */
+.marginLeft {
+   margin-right: 185px
+}
 
-.celly {
+.cellY {
   display: flex;
   flex-direction: column;
   justify-content: center;
   text-align: center;
   vertical-align: middle;
-  width: 120px;
-  margin: 10px;
+  width: 90px;
+  margin: 2px;
+  border-radius: 2px;
 }
 .linkFontStyle {
     font-size: 16px;

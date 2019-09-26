@@ -5,7 +5,7 @@ Feature 7 Add a new member to the calendar
   <el-container>
   <el-header>Adding Member</el-header>
   <p>Welcome, {{displayName}}</p>
-    <el-main>
+    <el-main class="newPer">
       <img src="../../static/img/joinus.png" alt="joinPic" />
       <div class="inputBox">
        Alias:
@@ -189,7 +189,7 @@ export default {
     font-size: 40px;
   }
   
-  .el-main {
+  .newPer {
     background: rgb(37, 37, 37);
     color: #fff;
     text-align: center;

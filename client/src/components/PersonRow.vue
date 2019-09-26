@@ -261,6 +261,8 @@ day {
 .name {
   width: 180px;
   font-size: 18px;
+  text-align: left;
+  font-family: "Roboto", Corbel, Avenir, "Lucida Grande", "Lucida Sans", sans-serif;
 }
 .workday {
   color: #C2C4CE;
@@ -268,7 +270,6 @@ day {
 }
 .cellxII {
   color: #eaeaea;
-  text-align: right;
   border-radius: 2px;
   margin: 4px;
   user-select: none;
@@ -293,7 +294,9 @@ day {
     border: 2px solid;
   }
   .name {
+    text-align: left;
     width: 100px;
+    font-family: "Roboto", Corbel, Avenir, "Lucida Grande", "Lucida Sans", sans-serif;
   }
 }
 .dayTypes {

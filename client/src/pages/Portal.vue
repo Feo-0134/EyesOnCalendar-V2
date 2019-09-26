@@ -241,7 +241,7 @@
                 </el-form-item>
                 <div>
                     <h2 v-if="!month">{{message}}</h2>
-                    <div v-if="month">
+                    <div v-if="month" class="reportPortal">
                         <div id="tablehead" v-bind:class="{sticky: scrolled}" class="row tablehead">
                             <div class="name"> </div>
                             <div class="reportCell">Work-Day</div>
@@ -274,7 +274,7 @@ export default {
             su: false, // admin permission
             displayName: '',
             globalMonth: new Date().getFullYear() + '/' + (new Date().getMonth() + 1),
-            topic: 1,
+            topic: 3,
             
             addTMTA: false,
 
@@ -834,6 +834,20 @@ export default {
 </script>
 
 <style>
+    .reportPortal .name {
+        width: 160px;
+        font-size: 18px;
+        color: #eaeaea;
+        text-align: left;
+        font-family: "Roboto", Corbel, Avenir, "Lucida Grande", "Lucida Sans", sans-serif;
+    }
+    .reportPortal .row{
+        justify-content: left;
+    }
+    .reportPortal {
+        text-align: left;
+        margin-left: 100px;
+    }
     .support {
         display:flex;
     }
@@ -853,7 +867,7 @@ export default {
         border-color: #373737;
     }
     .el-container .el-main {
-        min-height: 1200px;
+        min-height: fit-content;
     }
     .el-container .el-header {
         background-color: rgb(37, 37, 37);
@@ -866,7 +880,7 @@ export default {
         background-color: #373737;
     }
     .el-container .el-container {
-        height: 1000px;
+        height: fit-content;
     }
     .el-input .el-textarea__inner {
         border: 10px solid gray;
@@ -930,17 +944,16 @@ export default {
         color:gray;
     }
     .tablehead {
-    width: 100%;
+        width: 100%;
     }
     .sticky {
-    position: fixed;
-    top: 0;
-    background: rgb(37, 37, 37);
+        position: fixed;
+        top: 0;
+        background: rgb(37, 37, 37);
     }
     .sticky + .tablehead {
-    padding-top: 102px;
+        padding-top: 102px;
     }
-
     .pointer {
     cursor: pointer;
     margin: 0 5px 0 5px;
@@ -961,13 +974,13 @@ export default {
     } */
 
     .reportCell {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    text-align: center;
-    vertical-align: middle;
-    width: 120px;
-    margin: 10px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        text-align: center;
+        vertical-align: middle;
+        width: 90px;
+        margin: 2px;
     }
     .el-dialog__wrapper .el-dialog {
         border-radius: 17px;
