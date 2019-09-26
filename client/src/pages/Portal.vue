@@ -15,12 +15,7 @@
                         <el-menu-item index="1-2" v-on:click="topicView(1)">Team Calendar Management</el-menu-item>
                         <el-menu-item index="1-3" v-on:click="topicView(2)">Team Shift Management</el-menu-item>
                         <el-menu-item index="1-4" v-on:click="topicView(3)">Team Shift Report</el-menu-item>
-                        <el-menu-item index="1-5">
-                            <p class= "support outlookLogo2">Contact :</p>
-                            <a href="mailto:eyesoncalendar2@microsoft.com">
-                                <img class = "outlookLogo2" src="../../static/img/outlook.png"  alt="Outlook" />
-                            </a>
-                        </el-menu-item>
+                        <el-menu-item index="1-5" v-on:click="topicView(4)">Contact</el-menu-item>
                     </el-menu-item-group>
                 </el-submenu>
             </el-menu>
@@ -256,6 +251,12 @@
                     </div>
                 </div>
             </el-form>
+            <el-form v-if="topic === 4" label-width="140px">
+                    <h1>Contact</h1> 
+                    <p class="contactPage">Please email to </p>
+                    <a href="mailto:eyesoncalendar2@microsoft.com" class="contactPage" >eyesoncalendar2@microsoft.com</a>
+                    <p class="contactPage">for any question or further support.</p>
+            </el-form>
         </el-main>
     </el-container>
           <help-screen />
@@ -265,9 +266,8 @@
 <script>
 var store = require('store') // global store
 import Personsum from "@/components/PersonRowSum" // report
-import HelpScreen from '@/components/HelpScreen'; // contact
 export default {
-    components: { Personsum, HelpScreen },
+    components: { Personsum },
     data: function () {
         return {
             links: [], // get team name for auto-complete
@@ -834,6 +834,15 @@ export default {
 </script>
 
 <style>
+    .contactPage {
+        display: inline-flex;
+    }
+    .outlookLogo {
+    width: 70px;
+    height: 40px;
+    margin-left: 5px;
+    margin-bottom: 5px;
+    }
     .reportPortal .name {
         width: 160px;
         font-size: 18px;
