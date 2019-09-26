@@ -703,7 +703,7 @@ export default {
                 })
                 .catch((error) => {
                     console.log((error.toString()).split(':')[1])
-                    if(((error.toString()).split(':')[1]).match('404') == '404') {this.addFeedback('notify', 'Team information not found.');}
+                    if(((error.toString()).split(':')[1]).match('404') == '404') {this.addFeedback('notify', 'Sorry, we didn\'t find your team data of this month.');}
                     else {this.addFeedback('error', (error.toString()).split(':')[1] + '\nPlease turn to the developer.');}
                     return [];
                 })
