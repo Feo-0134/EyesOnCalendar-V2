@@ -322,7 +322,6 @@ export default {
         this.$http.get(this.getTeamApiPath)
         .then((response)=> {
           this.links = response.data;
-          console.log(links)
         })
         .catch((error) => {
             this.addFeedback('error', 'System Error. Please turn to the developer.');

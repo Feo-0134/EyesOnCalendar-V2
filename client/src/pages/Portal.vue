@@ -360,7 +360,6 @@ export default {
                 this.initForm.Month = year +'/'+ month
                 if(this.topic === 0) {
                     globalform = this.initForm
-                    // console.log('test')
                 }
                 try {
                     let res = await this.$http.get(`/api/${globalform.TeamName}/${globalform.Month}`);
@@ -377,7 +376,6 @@ export default {
                         data.workType;
                     });
                     if(res.data) {
-                        console.log(res.data)
                         res.data.people = res.data.people.sort((x, y) => x.name.localeCompare(y.name));
                         res.data.people.forEach(person=> {
                             if(person.principle == 'TM') { globalform.TeamManager += person.name + person.alias + ';'}
@@ -397,7 +395,7 @@ export default {
                         return res.data;
                     }
                 } catch (error) {
-                    // console.log(error);
+                    console.log(error);
                     if(((error.toString()).split(':')[1]).match('404') == '404' && this.topic === 1) {
                         this.addFeedback('notify', 'Sorry, we didn\'t find your team data of this month. Please initiate your team & calendar first.')
                     }else if(((error.toString()).split(':')[1]).match('404') == '404' && this.topic === 0) {
@@ -547,11 +545,11 @@ export default {
             var teamAdvisor = (this.initForm.TeamAdvisor).split(";");
             this.people.forEach(person => {
                 teamManager.forEach(tm => {
-                    console.log(tm)
+                    // console.log(tm)
                     if(person.alias == '(' + tm.split('(')[1]){person.principle = "TM";}
                 })
                 teamAdvisor.forEach(ta => {
-                    console.log(ta)
+                    // console.log(ta)
                     if(person.alias == '(' + ta.split('(')[1]){person.principle = "TA";}
                 })
             });
@@ -560,7 +558,6 @@ export default {
                 .then((response)=> {
                     if(response.data == "success") {
                     this. addFeedback('success', 'Team Added to Calendar')}
-                    console.log(response)
                 })
                 .catch((error)=>{
                     this.addFeedback('error', (error.toString()).split(':')[1] + '\nPlease turn to the developer.');
@@ -619,7 +616,6 @@ export default {
                             this.teamForm.Month = this.teamForm.Month.split('/')[0] + '/' + (this.teamForm.Month.split('/')[1]-(-1)).toString()                            
                             this. addFeedback('success', response.data) }
                         else{
-                            console.log(response)
                             this.addFeedback('notify', response.data);   
                         }
                     })
@@ -643,8 +639,7 @@ export default {
                     this.teamForm.Month = this.teamForm.Month.split('/')[0] + '/' + (this.teamForm.Month.split('/')[1]-1).toString()
                     this.teamForm.Month = this.teamForm.Month.split('/')[0] + '/' + (this.teamForm.Month.split('/')[1]-(-1)).toString()                           
                     this.addFeedback('success', response.data)}
-                else{this.addFeedback('notify', response.data);
-                console.log(response)}
+                else{this.addFeedback('notify', response.data);}
                 })
                 .catch((error)=> {
                 this.addFeedback('error', (error.toString()).split(':')[1]+ '\nPlease turn to the developer.')
@@ -711,26 +706,37 @@ export default {
         
         /* Start-- load team name for auto-complete component */
         loadTeamName () {
-            console.log(this.globalMonth)
-            console.log('-1')
-            new Promise((resolve, reject) => {
-                this.$http.get(this.getTeamPath)
-                .then((response)=> {
-                this.links = response.data;
-                //console.log('hhh')
-                //console.log(response.data)
+            if(this.topic === 0) {
+                new Promise((resolve, reject) => {
+                    this.$http.get(this.getTeamPathInit)
+                    .then((response)=> {
+                    this.links = response.data;
+                    })
+                    .catch((error) => {
+                        console.log((error.toString()).split(':')[1])
+                        if(((error.toString()).split(':')[1]).match('404') == '404') {this.addFeedback('notify', 'Sorry, we didn\'t find your team data of this month.');}
+                        else {this.addFeedback('error', (error.toString()).split(':')[1] + '\nPlease turn to the developer.');}
+                        return [];
+                    })
                 })
-                .catch((error) => {
-                    console.log((error.toString()).split(':')[1])
-                    if(((error.toString()).split(':')[1]).match('404') == '404') {this.addFeedback('notify', 'Sorry, we didn\'t find your team data of this month.');}
-                    else {this.addFeedback('error', (error.toString()).split(':')[1] + '\nPlease turn to the developer.');}
-                    return [];
+            }else {
+                new Promise((resolve, reject) => {
+                    this.$http.get(this.getTeamPath)
+                    .then((response)=> {
+                    this.links = response.data;
+                    })
+                    .catch((error) => {
+                        console.log((error.toString()).split(':')[1])
+                        if(((error.toString()).split(':')[1]).match('404') == '404') {this.addFeedback('notify', 'Sorry, we didn\'t find your team data of this month.');}
+                        else {this.addFeedback('error', (error.toString()).split(':')[1] + '\nPlease turn to the developer.');}
+                        return [];
+                    })
                 })
-            })
+            }
         },
         querySearchAsync(queryString, cb) {
             this.loadTeamName()
-            console.log('0')
+            // console.log('0')
             
             clearTimeout(this.timeout);
             this.timeout = setTimeout(() => {
@@ -741,13 +747,13 @@ export default {
             }, 1500) //* Math.random());
         },
         createFilter(queryString) {
-            console.log('1')
+            // console.log('1')
             return (link) => {
                 return (link.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
             };
         },
         handleSelect(item) {
-            console.log('2')
+            // console.log('2')
             const path = item.link
             this.teamForm.TeamName = item.value
             // this.$router.push({ path });
@@ -771,8 +777,19 @@ export default {
             this.su = store.get('user').su
             return store.get('user').admin
         },
+        getTeamPathInit() {
+            var year = this.globalMonth.split('/')[0]
+            var month = (this.globalMonth.split('/')[1] - 1)
+            if(month === 0) {
+                year = year - 1
+                month = 12
+            }
+            if(this.su === true) {
+                return ('/api/default/' + year + '/' + month + '/allTeamName')
+            }
+            else {return ('/api/default/' + year + '/' + month + '/ownTeamName/'+this.alias)}
+        },
         getTeamPath() {
-            console.log('6')
             if(this.su === true) {
                 return ('/api/default/' + this.globalMonth + '/allTeamName')
             }

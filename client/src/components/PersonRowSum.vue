@@ -44,7 +44,6 @@ export default {
         if(w.workType == "W"||w.workType == "MS"||w.workType == "NS"||w.workType == "PO"||w.workType == "PM") {
           wdctotal = wdctotal + 1
         }
-        //console.log(wdctotal)
       }
       return wdctotal;
     },
@@ -54,7 +53,6 @@ export default {
         if(w.workType == "MS"||w.workType == "PM") {
           wdctotal = wdctotal + 1
         }
-        //console.log(wdctotal)
       }
       return wdctotal;
     },
@@ -64,7 +62,7 @@ export default {
         if(w.workType == "NS") {
           wdctotal = wdctotal + 1
         }
-        //console.log(wdctotal)
+
       }
       return wdctotal;
     },
@@ -74,7 +72,6 @@ export default {
         if(w.workType == "T") {
           wdctotal = wdctotal + 1
         }
-        //console.log(wdctotal)
       }
       return wdctotal;
     },
@@ -87,7 +84,6 @@ export default {
         if(w.workType == "H(M)"||w.workType == "H(A)"||w.workType == "HMSL"||w.workType == "HASL"||w.workType == "HMAL"||w.workType == "HAAL") { //"HMSL","HASL","HMAL","HASL"
           wdctotal = wdctotal + 0.5
         }
-        //console.log(wdctotal)
       }
       return wdctotal;
     },
@@ -97,7 +93,6 @@ export default {
         if(w.workType == "PH") {
           wdctotal = wdctotal + 1
         }
-        //console.log(wdctotal)
       }
       return wdctotal;
     },
@@ -107,7 +102,6 @@ export default {
         if(w.workType == "PO"||w.workType == "PM") {
           wdctotal = wdctotal + 1
         }
-        //console.log(wdctotal)
       }
       return wdctotal;
     },

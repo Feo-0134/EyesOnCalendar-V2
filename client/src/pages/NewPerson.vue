@@ -59,7 +59,6 @@ export default {
           nameArr[0] = (nameArr[0].toString())[0].toUpperCase() + (nameArr[0].toString()).substr(1);
           nameArr[nameArr.length - 1] = nameArr[nameArr.length - 1][0].toUpperCase() + nameArr[nameArr.length - 1].substr(1);
           nameStr = nameArr[0] + " " + nameArr[nameArr.length - 1];
-          // console.log(nameStr)
         }else {
           // console.log('err1')
           this.addFeedback('notify', 'Name invalid. eg. Danielle Zhao')
@@ -95,7 +94,6 @@ export default {
         }else {
           aliasStr = "(" + this.person.alias + ")";
         }
-        // console.log(this.apiPayload)
         if(this.admin) {
           new Promise((resolve, reject) => {
             this.$http.post(this.apiPath, this.apiPayload)

@@ -44,13 +44,6 @@ Vue.component('modal', {
   },
 });
 
-Vue.filter('tagEx', function(value) {
-  console.log(value)
-  if(value == "Anik Shen") {
-    return true;
-  }return false;
-});
-
 new Vue({
   el: '#app',
   router,

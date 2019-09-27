@@ -81,7 +81,7 @@ export default {
             this.$http.post(this.apiPath, this.apiPayload)
             .then((response)=> {
               if(response.data == "success")  {this.delFeedback('success', 'Person Deleted from Team')}
-              else{this.delFeedback('notify', 'Person Not Exist');console.log(response)}
+              else{this.delFeedback('notify', 'Person Not Exist');}
             })
             .catch((error)=> {
               this.delFeedback('error', 'System Error')

@@ -79,10 +79,9 @@ export default {
                 this.$http.get(this.getTeamApiPath)
                 .then((response)=> {
                 this.links = response.data;
-                console.log('hhh')
-                console.log(response.data)
                 })
                 .catch((error) => {
+                    console.log(error)
                     this.addFeedback('error', 'System Error. Please turn to the developer.');
                     return [];
                 })
@@ -146,7 +145,6 @@ export default {
         },
         // 获得传回数据后向前端页面数据
         graphAPICallback(data) {
-            console.log('graphAPICallback');
             let result = JSON.stringify(data, null, 4);
             let jsonresult = JSON.parse(result);
             this.title = jsonresult.jobTitle
@@ -184,9 +182,7 @@ export default {
             return new Promise((resolve, reject) => {
                 this.$http.get(apipath)
                 .then((response)=> {
-                    console.log(response.data)
                     if(response.data == "default") {                            
-                        // console.log('Your team hasn\'t joined the tool yet')
                         store.set('user', {displayName:this.displayName, alias: this.alias, admin: this.admin, su: this.su, title: this.title, team: 'TEMPLATE'})
                     } else {
                         store.set('user', {displayName:this.displayName, alias: this.alias, admin: this.admin, su: this.su, title: this.title, team: response.data})
