@@ -9,13 +9,43 @@ import _ from 'lodash'
 export default {
   props: ["day", "pindex", "dindex","testparam","testparamII"],
   methods: {
+        addFeedback(type, msg) {
+          const h = this.$createElement;
+          if(type == 'error') {
+          this.$notify.error({
+              title:'Error',
+              message: msg,
+              position:'top-left',
+              duration: 0
+          });
+          }
+          if(type == 'notify') {
+          this.$notify({
+              title:'Notification',
+              message: msg,
+              position:'top-left',
+              type:'warning',
+              duration: 7000
+          });
+          }
+          if(type == 'success') {
+          this.$notify({
+              title: 'Success',
+              message: h('i', { style: 'color: teal'}, msg),
+              position:'top-left',
+              type: 'success',
+              
+          });
+          }
+        },
     /*************************************** Feature 2 status update menu **************************************/
     toggle() {
-      this.open = !this.open
-      this.$emit('customEvent',this.dindex + 1)
+      this.addFeedback('notify', 'We have locked data update. \nPlease update at eyesoncalendar.azurewebsites.net')
+      // this.open = !this.open
+      // this.$emit('customEvent',this.dindex + 1)
       // var undoStep = { path: this.apiPath, payload: this.apiPayload }; // UNDO STEP HERE -- TODO
       // this.$history.push(undoStep);
-      this.$http.post(this.apiPath, this.apiPayload);                 // Data upload WHY SYNC TWO TIMES I is here
+      // this.$http.post(this.apiPath, this.apiPayload);                 // Data upload WHY SYNC TWO TIMES I is here
     },
     debouncedPost() {
       return _.debounce(this.$http.post(this.apiPath,this.apiPayload),500)
