@@ -259,7 +259,7 @@
             </el-form>
         </el-main>
     </el-container>
-          <help-screen />
+          <!-- <help-screen /> -->
     </el-container>
 </template>
 
@@ -274,7 +274,7 @@ export default {
             su: false, // admin permission
             displayName: '',
             globalMonth: new Date().getFullYear() + '/' + (new Date().getMonth() + 1),
-            topic: 3,
+            topic: 1,
             
             addTMTA: false,
 
@@ -351,44 +351,51 @@ export default {
                 this.initForm.Month = year +'/'+ month
                 if(this.topic === 0) {
                     globalform = this.initForm
-                    console.log('test')
+                    // console.log('test')
                 }
                 try {
-                let res = await this.$http.get(`/api/${globalform.TeamName}/${globalform.Month}`);
-                this.socket = io({
-                    query: {
-                    path: this.teamForm.Month,
-                    },
-                });
-                this.socket.on("update", data => {
-                    if (data.randomNumber == this.$randomNumber) return;
-                    this.month.people[data.indexes.p].days[data.indexes.d].workDay =
-                    data.workDay;
-                    this.month.people[data.indexes.p].days[data.indexes.d].workType =
-                    data.workType;
-                });
-                res.data.people = res.data.people.sort((x, y) => x.name.localeCompare(y.name));
-                res.data.people.forEach(person=> {
-                    if(person.principle == 'TM') { globalform.TeamManager += person.name + person.alias + ';'}
-                    else if(person.principle == 'TA') { globalform.TeamAdvisor += person.name + person.alias + ';'}
-                    
-                    if(person.role == 'FTE') { globalform.FTE += person.name + person.alias + ';'}
-                    else if(person.role == 'Vendor') { globalform.Vendor += person.name + person.alias + ';'}
-                    var cntM = 0, cntN = 0, cntW = 0 
-                    person.days.forEach(day => {
-                        if(day.workType === 'W') {cntW += 1}
-                        else if(day.workType === 'MS') {cntM += 1}
-                        else if(day.workType === 'NS') {cntN += 1}
-                    })
-                    if(cntM > cntW && cntM > cntN) {globalform.MorningShift += person.name + ';'}
-                    if(cntN > cntW && cntN > cntM) {globalform.NightShift += person.name + ';'}
-                })
-                return res.data;
-                } catch (e) {
-                console.log(e);
-                this.socket = null;
-                this.message = 'Month not found';
-                return null;
+                    let res = await this.$http.get(`/api/${globalform.TeamName}/${globalform.Month}`);
+                    this.socket = io({
+                        query: {
+                        path: this.teamForm.Month,
+                        },
+                    });
+                    this.socket.on("update", data => {
+                        if (data.randomNumber == this.$randomNumber) return;
+                        this.month.people[data.indexes.p].days[data.indexes.d].workDay =
+                        data.workDay;
+                        this.month.people[data.indexes.p].days[data.indexes.d].workType =
+                        data.workType;
+                    });
+                    if(res.data) {
+                        console.log(res.data)
+                        res.data.people = res.data.people.sort((x, y) => x.name.localeCompare(y.name));
+                        res.data.people.forEach(person=> {
+                            if(person.principle == 'TM') { globalform.TeamManager += person.name + person.alias + ';'}
+                            else if(person.principle == 'TA') { globalform.TeamAdvisor += person.name + person.alias + ';'}
+                            
+                            if(person.role == 'FTE') { globalform.FTE += person.name + person.alias + ';'}
+                            else if(person.role == 'Vendor') { globalform.Vendor += person.name + person.alias + ';'}
+                            var cntM = 0, cntN = 0, cntW = 0 
+                            person.days.forEach(day => {
+                                if(day.workType === 'W') {cntW += 1}
+                                else if(day.workType === 'MS') {cntM += 1}
+                                else if(day.workType === 'NS') {cntN += 1}
+                            })
+                            if(cntM > cntW && cntM > cntN) {globalform.MorningShift += person.name + ';'}
+                            if(cntN > cntW && cntN > cntM) {globalform.NightShift += person.name + ';'}
+                        })
+                        return res.data;
+                    }
+                } catch (error) {
+                    // console.log(error);
+                    if(((error.toString()).split(':')[1]).match('404') == '404' && this.topic === 1) {
+                        this.addFeedback('notify', 'Sorry, we didn\'t find your team data of this month. Please initiate your team & calendar first.')
+                    }else if(((error.toString()).split(':')[1]).match('sort') == 'sort' ) {
+                    }
+                    else {this.addFeedback('error', (error.toString()).split(':')[1] + '\nPlease turn to the developer.');}
+                    this.socket = null;
+                    return null;
                 }
             },
             watch() {
@@ -676,7 +683,7 @@ export default {
                 message: msg,
                 position:'top-left',
                 type:'warning',
-                duration: 0
+                duration: 6000
             });
             }
             if(type == 'success') {

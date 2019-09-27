@@ -205,7 +205,9 @@ router.get('/:pod/:year/:month', async (ctx) => {
   var p = ctx.params
   try {
     var result = await Month.findOne({ year: p.year, month: p.month, pod: p.pod })
-    if (result == null) { throw (errorMsg) } else ctx.body = result
+    if (result == null) {
+      throw (errorMsg)
+    } else ctx.body = result
   } catch (e) {
     ctx.status = 404
     ctx.body = e
