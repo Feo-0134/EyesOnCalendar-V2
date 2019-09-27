@@ -116,8 +116,17 @@
                     placeholder="Pick a month">
                     </el-date-picker>
                 </el-form-item>
-                <el-form-item label="Team Name">
+                <!-- <el-form-item label="Team Name">
                     <el-input v-model="initForm.TeamName" placeholder="Team name should not include number, '/' , '\' or SPACE"></el-input>
+                </el-form-item> -->
+                 <el-form-item label="Team Name">
+                    <el-autocomplete class="autoFill"
+                        v-model="initForm.TeamName"
+                        :fetch-suggestions="querySearchAsync"
+                        placeholder="Team name should not include number, '/' , '\' or SPACE"
+                        @select="handleSelect"
+                    >
+                    </el-autocomplete>
                 </el-form-item>
                 <!-- <el-form-item label="Team Manager">
                     <el-input v-model="initForm.TeamManager" placeholder="example: karenzhe"></el-input>
@@ -391,7 +400,10 @@ export default {
                     // console.log(error);
                     if(((error.toString()).split(':')[1]).match('404') == '404' && this.topic === 1) {
                         this.addFeedback('notify', 'Sorry, we didn\'t find your team data of this month. Please initiate your team & calendar first.')
+                    }else if(((error.toString()).split(':')[1]).match('404') == '404' && this.topic === 0) {
+                        // this.addFeedback('notify', 'Sorry, we didn\'t find your team data of this month. Please initiate your team & calendar first.')
                     }else if(((error.toString()).split(':')[1]).match('sort') == 'sort' ) {
+                        //
                     }
                     else {this.addFeedback('error', (error.toString()).split(':')[1] + '\nPlease turn to the developer.');}
                     this.socket = null;
@@ -740,6 +752,9 @@ export default {
             this.teamForm.TeamName = item.value
             // this.$router.push({ path });
             // location.reload();
+        },
+        handleSelect2(item) {
+            this.initForm.TeamName = item.value
         },
         /* End-- load team name for auto-complete component */
     },

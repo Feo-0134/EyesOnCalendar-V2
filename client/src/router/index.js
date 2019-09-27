@@ -37,16 +37,16 @@ export default new Router({
       name: 'Repo',
       component: Repo
     },
-    {
-      path: '/:pod/:year/:month/person',
-      name: 'NewPerson',
-      component: NewPerson
-    },
-    {
-      path: '/:pod/:year/:month/delete',
-      name: 'DelPerson',
-      component: DelPerson
-    },
+    // {
+    //   path: '/:pod/:year/:month/person',
+    //   name: 'NewPerson',
+    //   component: NewPerson
+    // },
+    // {
+    //   path: '/:pod/:year/:month/delete',
+    //   name: 'DelPerson',
+    //   component: DelPerson
+    // },
     {
       path: '/:pod/upload',
       name: 'Upload',
