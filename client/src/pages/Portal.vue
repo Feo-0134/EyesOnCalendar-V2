@@ -560,7 +560,11 @@ export default {
                     this. addFeedback('success', 'Team Added to Calendar')}
                 })
                 .catch((error)=>{
-                    this.addFeedback('error', (error.toString()).split(':')[1] + '\nPlease turn to the developer.');
+                    // potential bug caution!!!
+                    if(((error.toString()).split(':')[1]).match('400') == '400') {
+                        this.addFeedback('notify', 'It seemed you have already initiated your teams\' calendar for this month.')
+                    }
+                    else{this.addFeedback('error', (error.toString()).split(':')[1] + '\nPlease turn to the developer.');}
                     console.log(error)
                 })
             })
