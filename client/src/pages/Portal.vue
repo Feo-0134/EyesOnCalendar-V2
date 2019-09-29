@@ -256,7 +256,7 @@
                             <div class="reportCell">Public-Holiday</div>
                             <div class="reportCell">Holiday OnDuty</div>
                         </div>
-                        <Personsum v-for="(p,index) in month.people" v-bind:key="p._id" v-bind:pindex="index" v-bind:person="p"/>
+                        <Personsum v-for="(p,index) in month.people" v-show="p.principle != 'TM' " v-bind:key="p._id" v-bind:pindex="index" v-bind:person="p"/>
                     </div>
                 </div>
             </el-form>
@@ -399,7 +399,7 @@ export default {
                     if(((error.toString()).split(':')[1]).match('404') == '404' && this.topic === 1) {
                         this.addFeedback('notify', 'Sorry, we didn\'t find your team data of this month. Please initiate your team & calendar first.')
                     }else if(((error.toString()).split(':')[1]).match('404') == '404' && this.topic === 0) {
-                        // this.addFeedback('notify', 'Sorry, we didn\'t find your team data of this month. Please initiate your team & calendar first.')
+                        // 
                     }else if(((error.toString()).split(':')[1]).match('sort') == 'sort' ) {
                         //
                     }
@@ -714,7 +714,7 @@ export default {
                     })
                     .catch((error) => {
                         console.log((error.toString()).split(':')[1])
-                        if(((error.toString()).split(':')[1]).match('404') == '404') {this.addFeedback('notify', 'Sorry, we didn\'t find your team data of this month.');}
+                        if(((error.toString()).split(':')[1]).match('404') == '404') {}//{this.addFeedback('notify', 'Sorry, we didn\'t find your team data of this month.');}
                         else {this.addFeedback('error', (error.toString()).split(':')[1] + '\nPlease turn to the developer.');}
                         return [];
                     })
