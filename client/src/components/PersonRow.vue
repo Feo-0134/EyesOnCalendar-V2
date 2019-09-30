@@ -1,5 +1,5 @@
 <template>
-  <div class="row">
+  <div :class="{'pickRow': usrrecord,'row': true}">
         <div v-if="large" class="cellxII name">{{displayName}}</div>
         <div v-if="!large" class="cellxII name">{{shortName}}</div>
       <!-- /**************************************
@@ -142,6 +142,7 @@ export default {
         open1: true,
         value: -1,
         value1: false,
+        usrrecord: false,
         size: window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth,
       }
   },
@@ -152,12 +153,21 @@ export default {
       return store.get('user').admin
     },
     displayName() {
-      var nameArray = this.person.name.split(" ");
-      return nameArray[0] + " " + nameArray[nameArray.length - 1] + ' ' + this.person.alias;
+      //console.log(this.userName)
+      //console.log('e')
+      // var nameArray = this.person.name.split(" ");
+      // //console.log(nameArray[0] + " " + nameArray[nameArray.length - 1])
+      // if(this.userName == nameArray[0] + " " + nameArray[nameArray.length - 1]) {this.usrrecord = true}
+      // return nameArray[0] + " " + nameArray[nameArray.length - 1] + ' ' + this.person.alias;
+      if(this.userName == this.person.name.trim()) {this.usrrecord = true}
+      return (this.person.name.split(" "))[0] + ' ' + this.person.alias;
     },
     shortName() {
-      var nameArray = this.person.name.split(" ");
-      return nameArray[0];
+      // var nameArray = this.person.name.split(" ");
+      // if(this.userName == nameArray[0]) {this.usrrecord = true}
+      // return nameArray[0];
+      if(this.userName == this.person.name.trim()) {this.usrrecord = true}
+      return (this.person.name.split(" "))[0]
     },
     large() {
       if (this.size > 1600) return true;
@@ -242,6 +252,9 @@ day {
   display: inline-flex;
   height: 40px;
   justify-content: center;
+}
+.pickRow {
+  border: 2px solid #409eff;
 }
 .row:hover:not(:first-child) {
     background: #444;
