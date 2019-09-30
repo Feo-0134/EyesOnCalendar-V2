@@ -396,10 +396,10 @@ export default {
                     }
                 } catch (error) {
                     console.log(error);
-                    if(((error.toString()).split(':')[1]).match('404') == '404' && this.topic === 1) {
+                    if(((error.toString()).split(':')[1]).match('404') == '404' && this.topic === 0) {
+                        //
+                    }else if(((error.toString()).split(':')[1]).match('404') == '404') {
                         this.addFeedback('notify', 'Sorry, we didn\'t find your team data of this month. Please initiate your team & calendar first.')
-                    }else if(((error.toString()).split(':')[1]).match('404') == '404' && this.topic === 0) {
-                        // 
                     }else if(((error.toString()).split(':')[1]).match('sort') == 'sort' ) {
                         //
                     }
