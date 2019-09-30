@@ -27,7 +27,7 @@
         {{prettyDate}}
         <a :href="nextMonth" class="pointer">&gt;</a>
       </h1>
-      <h2> This Page is read-only.</h2> <h2> Please update your data at <a href="https://eyesoncalendar.azurewebsites.net">eyesoncalendar.azurewebsites.net</a></h2>
+      <h2> This page is read-only.</h2> <h2> Please update your data at <a class="link2EyesOnCalendar" href="https://eyesoncalendar.azurewebsites.net">eyesoncalendar.azurewebsites.net</a></h2>
       <!-- <div class = "Init-button"> -->
       <h2 v-if="!month">{{message}}</h2>
       <button v-if="!month" class = "button"
@@ -444,6 +444,9 @@ export default {
 </script>
 
 <style>
+.link2EyesOnCalendar {
+  color:rgb(93, 156, 236);
+}
 .attendance {
   margin: 9px 0 0 0;
 }
