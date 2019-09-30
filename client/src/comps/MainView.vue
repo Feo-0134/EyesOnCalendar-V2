@@ -27,6 +27,7 @@
         {{prettyDate}}
         <a :href="nextMonth" class="pointer">&gt;</a>
       </h1>
+      <h2> This Page is read-only.</h2> <h2> Please update your data at <a href="https://eyesoncalendar.azurewebsites.net">eyesoncalendar.azurewebsites.net</a></h2>
       <!-- <div class = "Init-button"> -->
       <h2 v-if="!month">{{message}}</h2>
       <button v-if="!month" class = "button"
