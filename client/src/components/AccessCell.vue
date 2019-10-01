@@ -1,23 +1,23 @@
 <template>
     <el-container>
-    <el-header class="headbar">Welcome to Shift Arrangement Tool.</el-header>
+    <el-header class="headbar">Welcome to EyesOnCalendar</el-header>
     <el-container class="welcomPage">
-    <el-autocomplete class="pickTeam InputButton1"
-        v-if="podSelect"
-        v-model="teamName"
-        :fetch-suggestions="querySearchAsync"
-        placeholder="SEARCH POD"
-        @select="handleSelect"
-    >
-    </el-autocomplete>
-    <h2 v-if="podSelect" class="pickTeam InputButton2" >OR</h2>
-    <h2 v-if="podSelect" class="goto" >Go to</h2>
-    <el-button v-if="podSelect" class="pickTeam InputButton3" type="primary" @click="goPortal()">Portal</el-button>
-    <h2 v-if="noInform">Sorry we can not find your information in the system. Please turn to your TM/TA for permission.</h2>
-    </el-container>
-    <div class="PersonalInfo" v-loading="loading" v-if="loading"> 
-        {{accessmsg}}
-    </div>
+        <el-autocomplete class="pickTeam InputButton1"
+            v-if="podSelect"
+            v-model="teamName"
+            :fetch-suggestions="querySearchAsync"
+            placeholder="SEARCH POD"
+            @select="handleSelect"
+        >
+        </el-autocomplete>
+        <h2 v-if="podSelect" class="pickTeam InputButton2" >OR</h2>
+        <h2 v-if="podSelect" class="goto" >Go to</h2>
+        <el-button v-if="podSelect" class="pickTeam InputButton3" type="primary" @click="goPortal()">Portal</el-button>
+        <h2 v-if="noInform">Sorry we can not find your information in the system. Please turn to your TM/TA for permission.</h2>
+        </el-container>
+        <div class="PersonalInfo" v-loading="loading" v-if="loading"> 
+            {{accessmsg}}
+        </div>
     </el-container>
 </template>
 
@@ -28,36 +28,36 @@ export default {
     name: 'AccessCell',
     data() {
         return {
-            teamName: '',
-            podSelect: false,
-            loading: true,
-            displayName: '',
-            title: '',
-            admin: false,
-            su: false,
-            noInform: false,
-            alias: '',
-            accessmsg: '',
-            msalConfig: 
-                {
-                    auth: {
-                        clientId: "c6c7e163-aa0b-4185-b95d-0073ee49fa22", //This is your client ID
-                        authority:
-                        "https://login.microsoftonline.com/72f988bf-86f1-41af-91ab-2d7cd011db47" //This is your tenant info
-                    },
-                    cache: {
-                        cacheLocation: "localStorage",
-                        storeAuthStateInCookie: true
-                    }
+            /* AAD API params */
+            loading: true, // add loading img while doing asyc func
+            msalConfig: {
+                auth: {
+                    clientId: "c6c7e163-aa0b-4185-b95d-0073ee49fa22", //This is your client ID
+                    authority:
+                    "https://login.microsoftonline.com/72f988bf-86f1-41af-91ab-2d7cd011db47" //This is your tenant info
                 },
-            graphConfig:
-                {
-                    graphMeEndpoint: "https://graph.microsoft.com/v1.0/me"
-                },
+                cache: {
+                    cacheLocation: "localStorage",
+                    storeAuthStateInCookie: true
+                }
+            },
+            graphConfig: {
+                graphMeEndpoint: "https://graph.microsoft.com/v1.0/me"
+            },
             requestObj: {
                     scopes: ["user.read"]
-                },
-
+            },
+            /* AAD result */
+            noInform: false, // if failed to get data
+            accessmsg: '',   // result object 
+            title: '',
+            displayName: '',
+            alias: '',
+            admin: false,    // admin access
+            su: false,       // super usr access (DEV GROUP 3 members)
+            /* Team Selection */
+            teamName: '',
+            podSelect: false, // for those admin who have no team data in system
         }
     },
     mounted() {
@@ -68,12 +68,16 @@ export default {
             const path = '/portal'
             this.$router.push({ path });
         },
-        getTeamApiPath() {
+        
+        getTeamApiPath() { 
             if(this.su === true) {return ('/api/default/' + new Date().getFullYear() + '/' + (new Date().getMonth() + 1) + '/allTeamName')}
+            // su can get all team names;
             else {return ('/api/default/' + new Date().getFullYear() + '/' + (new Date().getMonth() + 1) + '/ownTeamName/'+this.alias)}
+            // admin can only get his/her team and TEMPLATE team;
         },
     },
     methods: {
+        /* search team name */
         loadTeamName () {
             new Promise((resolve, reject) => {
                 this.$http.get(this.getTeamApiPath)
@@ -106,6 +110,8 @@ export default {
             this.$router.push({ path });
             location.reload();
         },
+
+        /* AAD related */
         // AAD函数调用入口
         acquireTokenPopupAndCallMSGraph() {
             var that = this
@@ -176,6 +182,29 @@ export default {
             this.getTeamName()
         },
 
+        // 此函数是完成一个 http request
+        callMSGraph(theUrl, accessToken, callback) {
+            var xmlHttp = new XMLHttpRequest();
+            xmlHttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200)
+                callback(JSON.parse(this.responseText));
+            };
+            xmlHttp.open("GET", theUrl, true); // true for asynchronous
+            xmlHttp.setRequestHeader("Authorization", "Bearer " + accessToken);
+            xmlHttp.send();
+        },
+
+        // 错误处理
+        requiresInteraction(errorCode) {
+            if (!errorCode || !errorCode.length) {
+                return false;
+            }
+            return errorCode === "consent_required" ||
+                errorCode === "interaction_required" ||
+                errorCode === "login_required";
+        },
+
+        // 根据结果及权限自动跳转
         getTeamName() {
             var apipath = '/api/getpod/' + new Date().getFullYear() + '/' + (new Date().getMonth() + 1) + '/' + this.alias
             this.loadTeamName() 
@@ -203,26 +232,6 @@ export default {
                     console.log(error);
                 })
             }) 
-        },
-        // 此函数是完成一个 http request
-        callMSGraph(theUrl, accessToken, callback) {
-            var xmlHttp = new XMLHttpRequest();
-            xmlHttp.onreadystatechange = function() {
-                if (this.readyState == 4 && this.status == 200)
-                callback(JSON.parse(this.responseText));
-            };
-            xmlHttp.open("GET", theUrl, true); // true for asynchronous
-            xmlHttp.setRequestHeader("Authorization", "Bearer " + accessToken);
-            xmlHttp.send();
-        },
-        // 错误处理
-        requiresInteraction(errorCode) {
-            if (!errorCode || !errorCode.length) {
-                return false;
-            }
-            return errorCode === "consent_required" ||
-                errorCode === "interaction_required" ||
-                errorCode === "login_required";
         },
     }
 }
