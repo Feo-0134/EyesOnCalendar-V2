@@ -8,19 +8,13 @@
 import _ from 'lodash'
 export default {
   props: ["day", "pindex", "dindex","testparam","testparamII"],
+  data() {
+    return {
+      open:false, // sign to open opertation panel
+    };
+  },
   methods: {
-    /*************************************** Feature 2 status update menu **************************************/
-    toggle() {
-      this.open = !this.open
-      // again this is stupid i m so sorry about that plz use multi params replace later
-      this.$emit('customEvent',this.dindex + 1 + "@" + this.day.workType)
-      // var undoStep = { path: this.apiPath, payload: this.apiPayload }; // UNDO STEP HERE -- TODO
-      // this.$history.push(undoStep);
-      this.$http.post(this.apiPath, this.apiPayload);                 // Data upload WHY SYNC TWO TIMES I is here
-    },
-    debouncedPost() {
-      return _.debounce(this.$http.post(this.apiPath,this.apiPayload),500)
-    },// 0 - 1, 1 - 0, 2 - 0, 3 - 2
+    /* get color */
     getBorderColor() {
       switch (this.day.workDay) {
         case 0:
@@ -70,19 +64,19 @@ export default {
           return "#360036";
           break;
       }
-    }
-  },
-  data() {
-    return {
-    /*************************************** Feature 2 status update menu ***********************************/
-      open:false,
-    };
+    },
+    /* data update */
+    toggle() {
+      this.open = !this.open
+      // this is stupid. Plz use multi params replace later. i m so sorry about that
+      this.$emit('customEvent',this.dindex + 1 + "@" + this.day.workType)
+      // var undoStep = { path: this.apiPath, payload: this.apiPayload }; // UNDO STEP HERE -- TODO
+      // this.$history.push(undoStep);
+      this.$http.post(this.apiPath, this.apiPayload);
+    },
   },
   computed: {
-    dbFunc() {
-      return _.debounce(()=>{this.$http.post(this.apiPath,this.apiPayload)},1080)
-    },
-    /*************************************** Feature 1 new cell status **************************************/
+    /* get color */
     displayValue() {
       if(this.testparamII == this.dindex) {
         this.day.workType = this.testparam
@@ -95,24 +89,26 @@ export default {
         if (this.day.workType == "AL") this.day.workDay = 2;
         if (this.day.workType == "H(M)") this.day.workDay = 2;// //"HMSL","HASL","HMAL","HAAL"
         if (this.day.workType == "H(A)") this.day.workDay = 2;
-        if (this.day.workType == "HMSL") this.day.workDay = 7;
-        if (this.day.workType == "HMAL") this.day.workDay = 6;
-        if (this.day.workType == "HASL") this.day.workDay = 7;
-        if (this.day.workType == "HAAL") this.day.workDay = 6;
         if (this.day.workType == "T") this.day.workDay = 3;
         if (this.day.workType == "PO") this.day.workDay = 4;
         if (this.day.workType == "PM") this.day.workDay = 4;
-
-        this.dbFunc()                                     // WHY SYNC TWO TIMES II is here
+        if (this.day.workType == "HMAL") this.day.workDay = 6;
+        if (this.day.workType == "HAAL") this.day.workDay = 6;
+        if (this.day.workType == "HASL") this.day.workDay = 7;
+        if (this.day.workType == "HMSL") this.day.workDay = 7;
+        this.dbFunc()
       }
       if (this.day.workType == "W") return " "; // not display "W" in the calendar for there are TOO MANY WORKING DAYS
-      if (this.day.workType == "HMSL" ||this.day.workType == "HMAL") return " H(M)"; // not display "W" in the calendar for there are TOO MANY WORKING DAYS
-      if (this.day.workType == "HASL" ||this.day.workType == "HAAL") return " H(A)"; // not display "W" in the calendar for there are TOO MANY WORKING DAYS
+      if (this.day.workType == "HMSL" || this.day.workType == "HMAL") return " H(M)"; // not display "W" in the calendar for there are TOO MANY WORKING DAYS
+      if (this.day.workType == "HASL" || this.day.workType == "HAAL") return " H(A)"; // not display "W" in the calendar for there are TOO MANY WORKING DAYS
       
       // if (this.day.workType == "PH") return " ";
       else return this.day.workType;
     },
-
+    /* data update */
+    dbFunc() {
+      return _.debounce(()=>{this.$http.post(this.apiPath,this.apiPayload)},1080)
+    },
     apiPayload() {
       return {
         workDay: this.day.workDay,
