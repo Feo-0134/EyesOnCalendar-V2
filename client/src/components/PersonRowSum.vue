@@ -4,13 +4,19 @@ Feature 5 Monthly report
 <template>
   <div class="row">
       <div class="cellx name">{{displayName}}</div>
-      <div class = "celly ">{{workDayCount1}}</div>
-      <div class = "celly ">{{workDayCount2}}</div>
-      <div class = "celly ">{{workDayCount3}}</div>
-      <div class = "celly ">{{workDayCount4}}</div>
-      <div class = "celly ">{{workDayCount5}}</div>
-      <div class = "celly ">{{workDayCount6}}</div>
-      <div class = "celly ">{{workDayCount7}}</div>
+      <div class = "celly ">
+        {{fullDayCnt(['W','MS','NS','PO','PM']) +
+         halfDayCnt(["H(A)","H(M)","HMSL","HASL","HMAL","HAAL"])}}
+      </div>
+      <div class = "celly ">{{fullDayCnt(['MS','PM'])}}</div>
+      <div class = "celly ">{{fullDayCnt(['NS'])}}</div>
+      <div class = "celly ">{{fullDayCnt(['T'])}}</div>
+      <div class = "celly ">
+        {{fullDayCnt(['SL','AL','V']) +
+         halfDayCnt(["H(A)","H(M)","HMSL","HASL","HMAL","HAAL"])}}
+      </div>
+      <div class = "celly ">{{fullDayCnt(['PH'])}}</div>
+      <div class = "celly ">{{fullDayCnt(['PO', 'PM'])}}</div>
   </div>
 </template>
 
@@ -24,7 +30,6 @@ export default {
         size: window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth,
       } 
   },
-
   computed: {
     displayName() {
       var nameArray = this.person.name.split(" ");
@@ -34,86 +39,35 @@ export default {
       if (this.size > 1600) return true;
       else return false;
     },
-    
-    /**************************************
-     * Feature 5 Monthly Report
-    **************************************/
-    workDayCount1() { 
-      var wdctotal = 0;
-      for(const w of this.person.days) {
-        if(w.workType == "W"||w.workType == "MS"||w.workType == "NS"||w.workType == "PO"||w.workType == "PM") {
-          wdctotal = wdctotal + 1
-        }
-      }
-      return wdctotal;
-    },
-    workDayCount2() { 
-      var wdctotal = 0;
-      for(const w of this.person.days) {
-        if(w.workType == "MS"||w.workType == "PM") {
-          wdctotal = wdctotal + 1
-        }
-      }
-      return wdctotal;
-    },
-    workDayCount3() { 
-      var wdctotal = 0;
-      for(const w of this.person.days) {
-        if(w.workType == "NS") {
-          wdctotal = wdctotal + 1
-        }
-
-      }
-      return wdctotal;
-    },
-    workDayCount4() { 
-      var wdctotal = 0;
-      for(const w of this.person.days) {
-        if(w.workType == "T") {
-          wdctotal = wdctotal + 1
-        }
-      }
-      return wdctotal;
-    },
-    workDayCount5() { 
-      var wdctotal = 0;
-      for(const w of this.person.days) {
-        if(w.workType == "SL"||w.workType == "AL"||w.workType == "V") {
-          wdctotal = wdctotal + 1
-        }
-        if(w.workType == "H(M)"||w.workType == "H(A)"||w.workType == "HMSL"||w.workType == "HASL"||w.workType == "HMAL"||w.workType == "HAAL") { //"HMSL","HASL","HMAL","HASL"
-          wdctotal = wdctotal + 0.5
-        }
-      }
-      return wdctotal;
-    },
-    workDayCount6() {
-      var wdctotal = 0;
-      for(const w of this.person.days) {
-        if(w.workType == "PH") {
-          wdctotal = wdctotal + 1
-        }
-      }
-      return wdctotal;
-    },
-    workDayCount7() {
-      var wdctotal = 0;
-      for(const w of this.person.days) {
-        if(w.workType == "PO"||w.workType == "PM") {
-          wdctotal = wdctotal + 1
-        }
-      }
-      return wdctotal;
-    },
   },
   created() {
-      window.addEventListener('resize',()=>{
-          this.getWindowWidth()
-      })  
+    window.addEventListener('resize',()=>{
+        this.getWindowWidth()
+    })  
   },
   methods: {
+    /* count day type for report */
+    fullDayCnt:function(typeArray) {
+      var cnt = 0;
+      for(const w of this.person.days) {
+        typeArray.forEach(type => {
+          if(w.workType === type) cnt += 1
+        });
+      }
+      return cnt
+    },
+    halfDayCnt:function(typeArray) {
+      var cnt = 0;
+      for(const w of this.person.days) {
+        typeArray.forEach(type => {
+          if(w.workType === type) cnt += 0.5
+        });
+      }
+      return cnt
+    },
+    /* window view */
     getWindowWidth() {
-        this.size = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth
+      this.size = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth
     },
   }
 };
