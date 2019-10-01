@@ -2,10 +2,6 @@
   <div :class="{'pickRow': usrrecord,'row': true}">
         <div v-if="large" class="cellxII name">{{displayName}}</div>
         <div v-if="!large" class="cellxII name">{{shortName}}</div>
-      <!-- /**************************************
-       Feature 2  add a dialog for updating the status
-       Feature 1 add two new status "MS"(morning shift),"NS"(night shift)
-      **************************************/ -->
       <Moveable v-if= "open"
         @click="open=false"
         class="moveable"
@@ -52,14 +48,14 @@
                     <h5 class = "blackFont">(SL/AL + Morning / Afternoon)</h5>
                     </div>
                     <div class="box-container">
-                    <el-switch v-if = "open1" v-model="value1" active-text="AL" inactive-text="SL"> </el-switch>
+                    <el-switch v-model="alORsl" active-text="AL" inactive-text="SL"> </el-switch>
                     <el-popover
                       placement="bottom"
                       width="200"
                       trigger="click">
                       <p>Please inform the team about your absence.</p>
                       <a href="mailto:YOUR_TEAMNAME_HERE@microsoft.com"><img class = "outlookLogo" src="../../static/img/outlook.png"  alt="Outlook" /></a>
-                      <div slot="reference" v-on:click="open1 = true; cycle($event,12)" class="box1" :class="value1?'purple2':'purple1'">H(M)</div>
+                      <div slot="reference" v-on:click="cycle($event,12)" class="box1" :class="alORsl?'purple2':'purple1'">H(M)</div>
                     </el-popover>
                     <el-popover
                       placement="bottom"
@@ -67,7 +63,7 @@
                       trigger="click">
                       <p>Please inform the team about your absence.</p>
                       <a href="mailto:YOUR_TEAMNAME_HERE@microsoft.com"><img class = "outlookLogo" src="../../static/img/outlook.png"  alt="Outlook" /></a>
-                      <div slot="reference" v-on:click="open2 = true; cycle($event,14)" class="box1" :class="value1?'purple2':'purple1'">H(A)</div>
+                      <div slot="reference" v-on:click="cycle($event,14)" class="box1" :class="alORsl?'purple2':'purple1'">H(A)</div>
                     </el-popover>
                     </div>
                     <div class="typeTitle">
@@ -102,9 +98,6 @@
             </div> 
       </Moveable>
       <day class = "dayCell" @customEvent="handleEvent" v-for="(d,index) in person.days" :large="large" :key="d._id" :day="d" :pindex="pindex" :dindex="index" :testparam="dayType" :testparamII="date"/>
-      <!-- /**************************************
-      Feature 8 Hint one to mail team about the absence
-      **************************************/ -->
   </div>
 </template>
 
@@ -118,55 +111,43 @@ export default {
 
   data() {
       return {
-        alias: '',
-        moveable: {
-          draggable: true,
-          throttleDrag: 0,
-          resizable: false,
-          throttleResize: 1,
+        alias: '', // permission control
+
+        workTypes: ["W", "PH", "SL", "AL", "H(M)", "H(A)", "V", "T", "MS", "NS", "PO", "PM","HMSL","HMAL","HASL","HAAL"],
+        dayType: "W", // default value for data update
+        date: null, // default value for data update
+
+        /* window view params */
+        usrrecord: false, // highlight the record of the current usr
+        moveable: {       // operation panel
           keepRatio: true,
+          draggable: true,
+          resizable: false,
           scalable: false,
-          throttleScale: 0,
           rotatable: false,
+          throttleDrag: 0,          
+          throttleResize: 1,
+          throttleScale: 0,
           throttleRotate: 0
         },
-        num: null,
-        /**************************************
-        * Feature 1 add two new status "MS"(morning shift),"NS"(night shift)
-        * Feature 2  add a dialog for updating the status
-        **************************************/
-        workTypes: ["W", "PH", "SL", "AL", "H(M)", "H(A)", "V", "T", "MS", "NS", "PO", "PM","HMSL","HMAL","HASL","HAAL"],
-        open: false,
-        dayType: "W",
-        date: null,
-        open1: true,
-        value: -1,
-        value1: false,
-        usrrecord: false,
+        open: false, // operation panel params
+        alORsl: false, // AL or SL default false means sick leave
         size: window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth,
       }
   },
 
   computed: {
+    /* permission control */
     admin() {
       this.alias = store.get('user').alias
+      if(this.alias === this.person.alias) {this.usrrecord = true}
       return store.get('user').admin
     },
+    /* window views */
     displayName() {
-      //console.log(this.userName)
-      //console.log('e')
-      // var nameArray = this.person.name.split(" ");
-      // //console.log(nameArray[0] + " " + nameArray[nameArray.length - 1])
-      // if(this.userName == nameArray[0] + " " + nameArray[nameArray.length - 1]) {this.usrrecord = true}
-      // return nameArray[0] + " " + nameArray[nameArray.length - 1] + ' ' + this.person.alias;
-      if(this.userName == this.person.name.trim()) {this.usrrecord = true}
       return (this.person.name.split(" "))[0] + ' ' + this.person.alias;
     },
     shortName() {
-      // var nameArray = this.person.name.split(" ");
-      // if(this.userName == nameArray[0]) {this.usrrecord = true}
-      // return nameArray[0];
-      if(this.userName == this.person.name.trim()) {this.usrrecord = true}
       return (this.person.name.split(" "))[0]
     },
     large() {
@@ -181,7 +162,7 @@ export default {
       })
   },
   methods: {
-    // moveable method
+    /* moveable method */
     handleDrag({ target, left, top }) {
       // console.log('onDrag left, top', left, top);
       target.style.left = `${left}px`;
@@ -206,7 +187,8 @@ export default {
       // console.log('onWarp', target);
       target.style.transform = transform;
     },
-   // One can only change his own status
+   
+    /* data update */
     handleEvent:function(msg) {
       if( this.alias === this.person.alias || this.admin === true ) {
         if(this.openflag == false || this.open == true) {
@@ -222,15 +204,13 @@ export default {
       this.$emit('opensync',false)
       // location.reload();
     },
-    cycleII(arg) {
-      this.value = arg;
-    },
     cycle(e, arg) {
       // if(arg === -1) return;
-      if(this.value1 && (arg == 12 || arg == 14)) arg = arg + 1;
+      if(this.alORsl && (arg == 12 || arg == 14)) arg = arg + 1;
       this.dayType = this.workTypes[arg];      
     },
 
+    /* Window View */
     getWindowWidth() {
         this.size = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth
     },
