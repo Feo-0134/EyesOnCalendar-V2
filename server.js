@@ -357,22 +357,37 @@ router.post('/:pod/:year/:month/delete', bodyParser(), async (ctx) => {
   }
 })
 
-/* ##################################################
- *             initiate new month calendar
- * ##################################################
- */
-
-/* Function to restore calendar template, back to empty */
-function cleanCalendar (filePth) {
-  var data = fs.readFileSync(filePth)
-  var strData = data.toString()
-  var arrData = strData.split('\r\n')
-  fs.writeFile(filePth, arrData[0] + '\r\n' + arrData[1], { flag: 'w', encoding: 'utf-8', mode: '0666' }, function (err) {
-    if (err) {
-      return console.error('System Error: crash at clean calendar' + err)
+function modifyTemplate (year, month) {
+  if (typeof (year) !== 'number' || typeof (month) !== 'number') { return }
+  var filepath = './uploads/calendarTemplate.txt'
+  var days = new Date(year, month, 0).getDate()
+  var monthArr = ['January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December']
+  var name = monthArr[month - 1]
+  var str = ''
+  str += name
+  for (var i = 0; i < days; i++) {
+    str += ','
+  }
+  str += '\nEmployee Name'
+  for (i = 0; i < days; i++) {
+    str += ',' + (i + 1).toString()
+  }
+  str += '\n%DefaultName% (DefaultAlias-DefaultRole-DefaultPrinciple)'
+  for (i = 0; i < days; i++) {
+    var tmp = year + '-' + month + '-' + (i + 1)
+    var dayptr = new Date(tmp).getDay().toString()
+    var type = ''
+    if (dayptr === '0' || dayptr === '6') {
+      type = 'PH'
+    } else {
+      type = 'W'
     }
-  })
-}
+    str += ',' + type
+  }
+  // console.log(str)
+  fs.writeFile(filepath, str, { flag: 'w', encoding: 'utf-8', mode: '0666' }, function (e) { console.log(e) })
+};
 
 /* API to Very First Calendar Generator for a new team
  * to join the tool initiate their data about members
@@ -394,11 +409,13 @@ function cleanCalendar (filePth) {
  *          }
  */
 router.post('/:pod/newupload2/:year/:month', upload.any('csv'), bodyParser(), async (ctx) => {
-  var uploadDict = ['january', 'february', 'march', 'april', 'may',
-    'june', 'july', 'august', 'september', 'october', 'november', 'december']
+  // var uploadDict = ['january', 'february', 'march', 'april', 'may',
+  //   'june', 'july', 'august', 'september', 'october', 'november', 'december']
   var p = ctx.params
   var b = ctx.request.body
-  var src = await fs.createReadStream('./uploads/' + uploadDict[p.month - 1] + '.txt')
+  await modifyTemplate(Number(p.year), Number(p.month))
+  var src = await fs.createReadStream('./uploads/calendarTemplate.txt')
+  // var src = await fs.createReadStream('./uploads/' + uploadDict[p.month - 1] + '.txt')
   var people = await json(src)
   people[0].alias = b.people[0].alias
   people[0].name = b.people[0].name
@@ -442,7 +459,9 @@ server.listen(process.env.PORT || 3030, () => {
   console.log('Listening on ' + (process.env.PORT || 3030))
 })
 
-// items below are no longer used APIs
+/********************************
+ items below are no longer used APIs
+ ********************************/
 
 /* update the new calendar by upload a csv
  * which is no longer used in the project
@@ -492,6 +511,18 @@ router.post('/:pod/newupload/:year/:month', upload.any('csv'), async (ctx) => {
     console.log(e)
   }
 })
+
+/* Function to restore calendar template, back to empty */
+function cleanCalendar (filePth) {
+  var data = fs.readFileSync(filePth)
+  var strData = data.toString()
+  var arrData = strData.split('\r\n')
+  fs.writeFile(filePth, arrData[0] + '\r\n' + arrData[1], { flag: 'w', encoding: 'utf-8', mode: '0666' }, function (err) {
+    if (err) {
+      return console.error('System Error: crash at clean calendar' + err)
+    }
+  })
+}
 
 /* API to initiate
  * records for a given month,
