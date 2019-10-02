@@ -85,9 +85,9 @@
           </el-tabs>
       </div>
       <help-screen />
-      <transition name="fade">
+      <!-- <transition name="fade">
         <loading v-if="isLoading"></loading>
-      </transition>
+      </transition> -->
   </div>
 </template>
 
@@ -95,10 +95,10 @@
 import moment from 'moment';
 import Person from '@/components/PersonRow';
 import HelpScreen from '@/components/HelpScreen';
-import Loading from '@/components/LoadButton';
+// import Loading from '@/components/LoadButton';
 var store = require('store')
 export default {
-  components: { Person, HelpScreen, Loading },
+  components: { Person, HelpScreen },
   data() {
     return {
       su: false,

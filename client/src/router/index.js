@@ -3,13 +3,10 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Upload from '@/pages/Upload'
 import LoadCurrentMonth from '@/pages/LoadCurrentMonth'
-import MainView from '@/pages/MainView'
-import Repo from '@/pages/Repo'
-import NewPerson from '@/pages/NewPerson'
-import DelPerson from '@/pages/DelPerson'
-import NotFound from '@/pages/NotFound'
-import AccessCell from '@/components/AccessCell'
-import Portal from '@/pages/Portal'
+import MainPage from '@/pages/MainPage'
+import ReportPage from '@/pages/ReportPage'
+import NotFoundPage from '@/pages/NotFoundPage'
+import PortalPage from '@/pages/PortalPage'
 
 Vue.use(Router)
 
@@ -24,29 +21,19 @@ export default new Router({
     },
     {
       path: '/portal',
-      name: 'Portal',
-      component: Portal
+      name: 'PortalPage',
+      component: PortalPage
     },
     {
       path: '/:pod/:year/:month',
-      name: 'MainView',
-      component: MainView
+      name: 'MainPage',
+      component: MainPage
     },
     {
       path: '/:pod/:year/:month/report',
-      name: 'Repo',
-      component: Repo
+      name: 'ReportPage',
+      component: ReportPage
     },
-    // {
-    //   path: '/:pod/:year/:month/person',
-    //   name: 'NewPerson',
-    //   component: NewPerson
-    // },
-    // {
-    //   path: '/:pod/:year/:month/delete',
-    //   name: 'DelPerson',
-    //   component: DelPerson
-    // },
     {
       path: '/:pod/upload',
       name: 'Upload',
@@ -54,8 +41,9 @@ export default new Router({
     },
     {
       path:'*',
-      name: 'NotFound',
-      component: NotFound
+      name: 'NotFoundPage',
+      component: NotFoundPage
+
     }
   ]
 })

@@ -1,6 +1,3 @@
-<!-- /**************************************
-Feature 5 Monthly report
-**************************************/ -->
 <template>
     <div>
       <h1>Monthly Report</h1>
@@ -70,9 +67,6 @@ export default {
     }
   },
   computed: {
-    /**************************************
-     * Feature 5 Monthly report
-    **************************************/
     date() {
       this.changed=!this.changed
       return (this.$router.currentRoute.path).replace('/report','');
