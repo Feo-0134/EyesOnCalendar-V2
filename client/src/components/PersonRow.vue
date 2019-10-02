@@ -139,8 +139,6 @@ export default {
   computed: {
     /* permission control */
     admin() {
-      this.alias = store.get('user').alias
-      if(this.alias === this.person.alias) {this.usrrecord = true}
       return store.get('user').admin
     },
     /* window views */
@@ -155,11 +153,14 @@ export default {
       else return false;
     },
   },
-
   created() {
-      window.addEventListener('resize',()=>{
-          this.getWindowWidth()
-      })
+    window.addEventListener('resize',()=>{
+        this.getWindowWidth()
+    })
+  },
+  mounted() {
+    this.alias = store.get('user').alias
+    if(this.alias === this.person.alias) {this.usrrecord = true}
   },
   methods: {
     /* moveable method */

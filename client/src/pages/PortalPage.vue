@@ -214,14 +214,17 @@
                     <el-input v-model="teamForm.MorningShift" :disabled="true"></el-input>
                     <div class="functionalButton">
                     <el-button type="primary" icon="el-icon-plus" v-on:click="sftPersonView('MS')" circle></el-button>
-                    <el-button type="primary" icon="el-icon-minus" v-on:click="sftPersonView('W')" circle></el-button>
                     </div>
                 </el-form-item>
                 <el-form-item label="Night Shift">
                     <el-input v-model="teamForm.NightShift" :disabled="true"></el-input>
                     <div class="functionalButton">
                     <el-button type="primary" icon="el-icon-plus" v-on:click="sftPersonView('NS')" circle></el-button>
-                    <el-button type="primary" icon="el-icon-minus" v-on:click="sftPersonView('W')" circle></el-button>
+                    </div>
+                </el-form-item>
+                <el-form-item label="Normal Shift">
+                    <div class="functionalButton">
+                    <el-button type="primary" v-on:click="sftPersonView('W')" >Set Person to Normal Shift</el-button>
                     </div>
                 </el-form-item>
             </el-form>
