@@ -357,7 +357,7 @@ router.post('/:pod/:year/:month/delete', bodyParser(), async (ctx) => {
   }
 })
 
-function modifyTemplate (year, month) {
+async function modifyTemplate (year, month, peopleSrc) {
   if (typeof (year) !== 'number' || typeof (month) !== 'number') { return }
   var filepath = './uploads/calendarTemplate.txt'
   var days = new Date(year, month, 0).getDate()
@@ -387,6 +387,22 @@ function modifyTemplate (year, month) {
   }
   // console.log(str)
   fs.writeFile(filepath, str, { flag: 'w', encoding: 'utf-8', mode: '0666' }, function (e) { console.log(e) })
+
+  var src = await fs.createReadStream('./uploads/calendarTemplate.txt')
+  // var src = await fs.createReadStream('./uploads/' + uploadDict[p.month - 1] + '.txt')
+  var people = await json(src)
+  people[0].alias = peopleSrc[0].alias
+  people[0].name = peopleSrc[0].name
+  people[0].role = peopleSrc[0].role
+  people[0].principle = peopleSrc[0].principle
+  for (var cnt = 1; cnt < (peopleSrc).length; cnt++) {
+    people[cnt] = Object.assign({}, people[0]) // shallow copy
+    people[cnt].alias = peopleSrc[cnt].alias
+    people[cnt].name = peopleSrc[cnt].name
+    people[cnt].role = peopleSrc[cnt].role
+    people[cnt].principle = peopleSrc[cnt].principle
+  }
+  return people
 };
 
 /* API to Very First Calendar Generator for a new team
@@ -413,21 +429,8 @@ router.post('/:pod/newupload2/:year/:month', upload.any('csv'), bodyParser(), as
   //   'june', 'july', 'august', 'september', 'october', 'november', 'december']
   var p = ctx.params
   var b = ctx.request.body
-  await modifyTemplate(Number(p.year), Number(p.month))
-  var src = await fs.createReadStream('./uploads/calendarTemplate.txt')
-  // var src = await fs.createReadStream('./uploads/' + uploadDict[p.month - 1] + '.txt')
-  var people = await json(src)
-  people[0].alias = b.people[0].alias
-  people[0].name = b.people[0].name
-  people[0].role = b.people[0].role
-  people[0].principle = b.people[0].principle
-  for (var cnt = 1; cnt < (b.people).length; cnt++) {
-    people[cnt] = Object.assign({}, people[0]) // shallow copy
-    people[cnt].alias = b.people[cnt].alias
-    people[cnt].name = b.people[cnt].name
-    people[cnt].role = b.people[cnt].role
-    people[cnt].principle = b.people[cnt].principle
-  }
+  var people = await modifyTemplate(Number(p.year), Number(p.month), b.people)
+
   // eslint-disable-next-line no-array-constructor
   var daylock = new Array()
   var payload = newMonth(p.year, p.month, p.pod, daylock, people)
