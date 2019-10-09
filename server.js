@@ -54,14 +54,20 @@ router.get('/getpod/:year/:month/:alias', async (ctx) => {
   console.log(p)
   var podName = 'default'
   var flag = 0
+  var name = 'default'
+  var role = 'default'
   var monthRecord = await Month.find({ year: p.year, month: p.month })
   monthRecord.forEach((month) => {
     month.people.forEach((person) => {
-      if (person.alias === p.alias) { flag = 1 }
+      if (person.alias === p.alias) {
+        flag = 1
+        name = person.name
+        role = person.role
+      }
     })
     if (flag === 1) { podName = month.pod; flag = 0 }
   })
-  ctx.body = podName
+  ctx.body = { pod: podName, name: name, role: role }
 })
 
 /* API to get team name that usr belongs to
