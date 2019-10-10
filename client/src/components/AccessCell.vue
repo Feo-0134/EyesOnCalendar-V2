@@ -14,7 +14,7 @@
             <h2 v-if="podSelect" class="pickTeam InputButton2" >OR</h2>
             <h2 v-if="podSelect" class="goto" >Go to</h2>
             <el-button v-if="podSelect" class="pickTeam InputButton3" type="primary" @click="goPortal()">Portal</el-button>
-            <el-button v-if="manualLoginBtn" class="InputButton3" type="primary" @click="manualLogin = true">Login</el-button>
+            <el-button v-if="!podSelect && manualLoginBtn" class="InputButton3" type="primary" @click="manualLogin = true">Login</el-button>
         </el-container>
         <el-dialog title="Manual Login" :visible.sync="manualLogin">
             <el-form>
@@ -92,7 +92,7 @@ export default {
                 return ('/api/default/' + new Date().getFullYear() + '/' + (new Date().getMonth() + 1) + '/allTeamName')
             } // su can get all team names;
             else {
-                return ('/api/default/' + new Date().getFullYear() + '/' + (new Date().getMonth() + 1) + '/ownTeamName/'+this.alias)
+                return ('/api/default/' + new Date().getFullYear() + '/' + (new Date().getMonth() + 1) + '/ownTeamName/'+ this.alias)
             } // admin can only get his/her team and TEMPLATE team;
         },
     },
@@ -147,6 +147,7 @@ export default {
             var that = this
             //Always start with acquireTokenSilent to obtain a token in the signed in user from cache
             var myMSALObj = new Msal.UserAgentApplication(this.msalConfig);
+            // (optional when using redirect methods) register redirect call back for Success or Error
             // myMSALObj.handleRedirectCallback(this.authRedirectCallBack);
             myMSALObj.acquireTokenSilent(this.requestObj)
             .then(function (tokenResponse) {
@@ -162,15 +163,17 @@ export default {
                         that.callMSGraph(that.graphConfig.graphMeEndpoint, tokenResponse.accessToken, that.graphAPICallback);
                     }).catch(function (error) {
                         console.log(error);
-                        this.addFeedback('error', 'System Error. Please turn to the developer.');
+                        that.addFeedback('error', 'System Error. Please turn to the developer.');
                     });
                 }
             });
         },
-
+        
+        // callback for using redirect methods
         authRedirectCallBack(error, response) {
             if (error) {
                 console.log(error);
+                this.addFeedback('error', 'System Error. Please turn to the developer.');
             } else {
                 if (response.tokenType === "access_token") {
                     callMSGraph(this.graphConfig.graphMeEndpoint, response.accessToken, this.graphAPICallback);
@@ -180,6 +183,7 @@ export default {
             }
         },
 
+        // a savage for request AAD resource
         callMSGraph(theUrl, accessToken, callback) {
             var xmlHttp = new XMLHttpRequest();
             xmlHttp.onreadystatechange = function() {
@@ -190,7 +194,8 @@ export default {
             xmlHttp.setRequestHeader("Authorization", "Bearer " + accessToken);
             xmlHttp.send();
         },
-
+        
+        // process AAD result
         graphAPICallback(data) {
             let result = JSON.stringify(data, null, 4);
             let jsonresult = JSON.parse(result);
@@ -206,6 +211,7 @@ export default {
             } 
 
             if( jsonresult.jobTitle.match('TECHNICAL ADVISOR') == 'TECHNICAL ADVISOR'
+                || jsonresult.jobTitle.match('TECH ADVISOR') == 'TECH ADVISOR'
                 || jsonresult.jobTitle.match('MGR') == 'MGR'
                 || jsonresult.jobTitle.match('MANAGER') == 'MANAGER'
                 || jsonresult.userPrincipalName == 'jianalu@microsoft.com'
@@ -234,7 +240,7 @@ export default {
             if(this.admin) {
                 this.loadTeamName() 
             }
-            if(this.manualLogin) {
+            if(!(this.podSelect) && this.manualLoginBtn) {
                 if(this.alias.match('v-') !== 'v-') {
                     this.addFeedback('notify', 'FTE please use https://eyesoncalendar.azurewebsites.net')
                     return
@@ -249,16 +255,20 @@ export default {
                 this.$http.get(apipath)
                 .then((response)=> {
                     console.log(response.data)
+                    if(!(this.podSelect) && this.manualLoginBtn) {
+                        this.displayName = response.data.name
+                    }
                     if(response.data.pod == "default") {                            
-                        store.set('user', {displayName:response.data.name, alias: this.alias, admin: this.admin, su: this.su, title: this.title, team: 'TEMPLATE'})
+                        store.set('user', {displayName:this.displayName, alias: this.alias, admin: this.admin, su: this.su, title: this.title, team: 'TEMPLATE'})
                     } else {
-                        store.set('user', {displayName:response.data.name, alias: this.alias, admin: this.admin, su: this.su, title: this.title, team: response.data.pod})
+                        store.set('user', {displayName:this.displayName, alias: this.alias, admin: this.admin, su: this.su, title: this.title, team: response.data.pod})
                     }
                     if(response.data.pod === 'default' && this.admin) {
                       this.podSelect = true
                       this.loading = false
                     } else if(response.data.pod === 'default') {
                       this.loading = false
+                    //   this.manualLoginBtn = false
                       this.noInform = true
                     } else {
                       this.$router.push(response.data.pod + moment().format('/YYYY/M'))

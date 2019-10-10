@@ -1,26 +1,31 @@
 const Koa = require('koa')
+const app = new Koa()
+const server = require('http').createServer(app.callback())
+const io = require('socket.io')(server)
+
 const Router = require('koa-router')
 const router = new Router({ prefix: '/api' })
 const bodyParser = require('koa-bodyparser')
+
 const serve = require('koa-static')
 const multer = require('koa-multer')
 const send = require('koa-send')
-const app = new Koa()
+
 const models = require('./models/NewMonth')
 const Month = models.Month
+
 const path = require('path')
 const fs = require('fs')
 const json = require('./newConvertCsv.js')
 const upload = multer({ dest: 'uploads/' })
-const server = require('http').createServer(app.callback())
-const io = require('socket.io')(server)
+
 require('dotenv').config()
 
 // const variable here
-var staticPath = ''
 const errorMsg = 'Record not found'
 
 // env params
+var staticPath = ''
 if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === undefined) {
   staticPath = '/dist/'
 } else {
@@ -37,23 +42,16 @@ db.once('open', function () {
 // koa router
 router.use(bodyParser())
 
-/* koa interface demo */
-// router.get('/', ctx => {
-//     ctx.body = "Hello"
-// })
-
 /* ##################################################
  *   get default team name & team name autocomplete
  * ##################################################
  */
 
-/* API to return team of the usr
- */
+/* API return teamName (for smart router) */
 router.get('/getpod/:year/:month/:alias', async (ctx) => {
   var p = ctx.params
-  console.log(p)
-  var podName = 'default'
   var flag = 0
+  var podName = 'default'
   var name = 'default'
   var role = 'default'
   var monthRecord = await Month.find({ year: p.year, month: p.month })
@@ -70,8 +68,7 @@ router.get('/getpod/:year/:month/:alias', async (ctx) => {
   ctx.body = { pod: podName, name: name, role: role }
 })
 
-/* API to get team name that usr belongs to
- */
+/* API return teamName (for autocomplete when pick teamName) */
 router.get('/:pod/:year/:month/ownTeamName/:alias', async (ctx) => {
   var p = ctx.params
   try {
@@ -79,17 +76,15 @@ router.get('/:pod/:year/:month/ownTeamName/:alias', async (ctx) => {
     if (result == null) { throw (errorMsg) } else {
       // eslint-disable-next-line no-array-constructor
       var linkList = new Array()
+      linkList.push({ value: 'TEMPLATE', link: '/TEMPLATE/' + p.year + '/' + p.month })
       // eslint-disable-next-line no-array-constructor
-      var resultP = new Array()
+      var resultRecord = new Array()
       result.forEach(record => {
         record.people.forEach(person => {
-          if (person.alias === p.alias) {
-            resultP.push(record)
-          }
+          if (person.alias === p.alias) { resultRecord.push(record) }
         })
       })
-      linkList.push({ value: 'TEMPLATE', link: '/TEMPLATE/' + p.year + '/' + p.month })
-      resultP.forEach(record => {
+      resultRecord.forEach(record => {
         linkList.push({ value: record.pod, link: '/' + record.pod + '/' + p.year + '/' + p.month })
       })
       ctx.body = linkList
@@ -102,8 +97,7 @@ router.get('/:pod/:year/:month/ownTeamName/:alias', async (ctx) => {
   }
 })
 
-/* API to get all team name data for su only
- */
+/* API return all team name data for su */
 router.get('/:pod/:year/:month/allTeamName', async (ctx) => {
   var p = ctx.params
   try {
