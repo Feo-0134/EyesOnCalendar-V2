@@ -53,19 +53,19 @@ router.get('/getpod/:year/:month/:alias', async (ctx) => {
   var flag = 0
   var podName = 'default'
   var name = 'default'
-  var role = 'default'
+  var principle = 'default'
   var monthRecord = await Month.find({ year: p.year, month: p.month })
   monthRecord.forEach((month) => {
     month.people.forEach((person) => {
       if (person.alias === p.alias) {
         flag = 1
         name = person.name
-        role = person.role
+        principle = person.principle
       }
     })
     if (flag === 1) { podName = month.pod; flag = 0 }
   })
-  ctx.body = { pod: podName, name: name, role: role }
+  ctx.body = { pod: podName, name: name, principle: principle }
 })
 
 /* API return teamName (for autocomplete when pick teamName) */
@@ -279,20 +279,11 @@ router.post('/:pod/:year/:month/batch/:person/:workType', async (ctx) => {
  *        "name":"Lil Pump"}
  */
 router.post('/:pod/:year/:month/person', upload.any('csv'), bodyParser(), async (ctx) => {
-  const uploadDict = ['january', 'february', 'march', 'april', 'may',
-    'june', 'july', 'august', 'september', 'october', 'november', 'december']
   var p = ctx.params
   var b = ctx.request.body
   var currentMonth = await Month.findOne({ year: p.year, month: p.month, pod: p.pod })
-  var src = await fs.createReadStream('./uploads/' + uploadDict[p.month - 1] + '.txt')
-  var people = await json(src)
-  // replace person's default info
-  // by data from request body
-  people[0].alias = b.alias
-  people[0].name = b.name
-  people[0].role = b.role
-  people[0].principle = b.principle
-
+  // eslint-disable-next-line no-array-constructor
+  var people = await modifyTemplate(Number(p.year), Number(p.month), b.people)
   var payload
   if (b.principle === 'TM' || b.principle === 'TA') { // add TM/TA role to a team member
     if (!findRecord(currentMonth, b.alias)) {
@@ -327,15 +318,11 @@ router.post('/:pod/:year/:month/person', upload.any('csv'), bodyParser(), async 
  *        {"alias":"apac"}
  */
 router.post('/:pod/:year/:month/delete', bodyParser(), async (ctx) => {
-  const uploadDict = ['january', 'february', 'march', 'april', 'may',
-    'june', 'july', 'august', 'september', 'october', 'november', 'december']
   var p = ctx.params
   var b = ctx.request.body
   var currentMonth = await Month.findOne({ year: p.year, month: p.month, pod: p.pod })
-  var src = await fs.createReadStream('./uploads/' + uploadDict[p.month - 1] + '.txt')
-  var people = await json(src)
-  people[0].alias = b.alias
-  people[0].principle = 'None'
+  // eslint-disable-next-line no-array-constructor
+  var people = await modifyTemplate(Number(p.year), Number(p.month), b.people)
   var payload
   if (b.principle === 'TM' || b.principle === 'TA') { // add TM/TA role to a team member
     if (!findRecord(currentMonth, b.alias)) {
@@ -343,6 +330,7 @@ router.post('/:pod/:year/:month/delete', bodyParser(), async (ctx) => {
     } else if (!findPrinciple(currentMonth, b.alias)) {
       ctx.body = 'This person is not TM/TA'; return
     } else if (findPrinciple(currentMonth, b.alias)) {
+      people[0].principle = 'None'
       payload = updateMonth(currentMonth, people)
       ctx.body = 'Permission is Removed from the Person'
     }
@@ -392,8 +380,7 @@ async function modifyTemplate (year, month, peopleSrc) {
   // console.log(str)
   fs.writeFile(filepath, str, { flag: 'w', encoding: 'utf-8', mode: '0666' }, function (e) { console.log(e) })
 
-  var src = await fs.createReadStream('./uploads/calendarTemplate.txt')
-  // var src = await fs.createReadStream('./uploads/' + uploadDict[p.month - 1] + '.txt')
+  var src = await fs.createReadStream(filepath)
   var people = await json(src)
   people[0].alias = peopleSrc[0].alias
   people[0].name = peopleSrc[0].name
@@ -470,165 +457,169 @@ server.listen(process.env.PORT || 3030, () => {
  items below are no longer used APIs
  ********************************/
 
-/* update the new calendar by upload a csv
- * which is no longer used in the project
- * only for back up
- */
-router.post('/:pod/upload/:year/:month', upload.any('csv'), async (ctx) => {
-  var p = ctx.params
-  const tmpPath = ctx.req.files[0].path
-  console.log(tmpPath)
-  const src = fs.createReadStream(tmpPath)
-  const people = await json(src)
-  const currentMonth = await Month.findOne({ year: p.year, month: p.month, section: p.pod })
-  var payload
-  // eslint-disable-next-line no-array-constructor
-  var daylock = new Array()
-  if (currentMonth == null) { payload = newMonth(p.year, p.month, p.pod, daylock, people) } else { payload = incrementMonth(currentMonth, people) }
-  try {
-    await payload.save()
-    ctx.body = 'success'
-  } catch (e) {
-    ctx.status = 400
-    ctx.body = 'error'
-    console.log(e)
-  }
-})
-
-/* Very First Calendar Generator
- * for a new team to join the tool
- * initiate their data about members
- * test-version
- */
-router.post('/:pod/newupload/:year/:month', upload.any('csv'), async (ctx) => {
-  var p = ctx.params
-  const tmpPath = ctx.req.files[0].path
-  console.log(tmpPath)
-  const src = fs.createReadStream(tmpPath)
-  const people = await json(src)
-  // eslint-disable-next-line no-array-constructor
-  const daylock = new Array()
-  var payload = newMonth(p.year, p.month, p.pod, daylock, people)
-  try {
-    await payload.save()
-    ctx.body = 'success'
-  } catch (e) {
-    ctx.status = 400
-    ctx.body = 'error'
-    console.log(e)
-  }
-})
-
-/* Function to restore calendar template, back to empty */
-function cleanCalendar (filePth) {
-  var data = fs.readFileSync(filePth)
-  var strData = data.toString()
-  var arrData = strData.split('\r\n')
-  fs.writeFile(filePth, arrData[0] + '\r\n' + arrData[1], { flag: 'w', encoding: 'utf-8', mode: '0666' }, function (err) {
-    if (err) {
-      return console.error('System Error: crash at clean calendar' + err)
-    }
-  })
-}
-
-/* API to initiate
- * records for a given month,
- * (1/2) build the default template
- */
-router.post('/:pod/:year/:month/init', upload.any('csv'), async (ctx) => {
-  var monthArr = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-  // compare current month and target month
-  // if target month == current month + 1
-  // the initiate process goes on, else it stop
-  var p = ctx.params
-  var lastMon = (p.month - 1) % 12 ? (p.month - 1) % 12 : 12
-  var lastYear = lastMon === 12 ? p.year - 1 : p.year
-  var thisMon = new Date().getMonth() + 1
-  var flag = false
-  var str2 = (p.year).toString() + '-' + (p.month).toString() + '-'
-  console.log('initiate ' + str2 + ' Calendar')
-  console.log('last calendar:' + lastYear + '-' + lastMon)
-  if (thisMon === lastMon) { flag = true }
-  // eslint-disable-next-line no-array-constructor
-  var arrMonth = new Array()
-  var lastMonth = await Month.findOne({ year: lastYear, month: lastMon, pod: p.pod })
-  var filePath = './uploads/months/' + monthArr[p.month - 1] + '.txt'
-  var dayNum = new Date(p.year, p.month, 0).getDate()
-  var cnt = 0
-  cleanCalendar(filePath)
-  if (flag) {
-    setTimeout(function () {
-      while (cnt < dayNum) {
-        var tmp = str2 + (cnt + 1).toString()
-        var dayPtr = new Date(tmp).getDay().toString()
-        if (dayPtr === '0' || dayPtr === '6') {
-          // "0" stands Sundays & "6" stands Saturdays
-          arrMonth[cnt] = 'PH'
-        } else {
-          arrMonth[cnt] = 'W'
-        }
-        cnt++
+/*
+    //  update the new calendar by upload a csv
+    //  which is no longer used in the project
+    //  only for back up
+    //
+    router.post('/:pod/upload/:year/:month', upload.any('csv'), async (ctx) => {
+      var p = ctx.params
+      const tmpPath = ctx.req.files[0].path
+      console.log(tmpPath)
+      const src = fs.createReadStream(tmpPath)
+      const people = await json(src)
+      const currentMonth = await Month.findOne({ year: p.year, month: p.month, section: p.pod })
+      var payload
+      // eslint-disable-next-line no-array-constructor
+      var daylock = new Array()
+      if (currentMonth == null) { payload = newMonth(p.year, p.month, p.pod, daylock, people)
+      } else { payload = incrementMonth(currentMonth, people) }
+      try {
+        await payload.save()
+        ctx.body = 'success'
+      } catch (e) {
+        ctx.status = 400
+        ctx.body = 'error'
+        console.log(e)
       }
-      var str3 = arrMonth.join(',')
-      str3 = '\r\n%DefaultName% (DefaultAlias-DefaultRole-DefaultPrinciple),' + str3
-      lastMonth.people.forEach(person => {
-        console.log(person.name)
-        fs.writeFile(filePath, str3, { flag: 'a', encoding: 'utf-8', mode: '0666' },
-          function (err) {
-            if (err) { return console.error(err) }
-          })
-      })
-    }, 50)
-  }
-})
-
-/* API to initiate
- * records for a given month,
- * (2/2) filling with the given data
- */
-router.post('/:pod/:year/:month/reload', upload.any('csv'), async (ctx) => {
-  var monthArr = ['January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December']
-  // compare current month and target month
-  // if target month == current month + 1
-  // the initiate process goes on, else it stop
-  var p = ctx.params
-  var lastMon = (p.month - 1) % 12 ? (p.month - 1) % 12 : 12
-  var lastYear = lastMon === 12 ? p.year - 1 : p.year
-  var thisMon = new Date().getMonth() + 1
-  var flag = false
-  if (thisMon === lastMon) { flag = true }
-  var filePath = './uploads/months/' + monthArr[p.month - 1] + '.txt'
-  // if target month == current month + 1
-  // replace the default data (alias, name, role, principle)
-  // with data from last month
-  if (flag) {
-    var src = await fs.createReadStream(filePath)
-    var people = await json(src)
-    var lastMonth = await Month.findOne({ year: lastYear, month: lastMon, pod: p.pod })
-    var countNum = 0
-    people.forEach(person => {
-      person.alias = lastMonth.people[countNum].alias
-      person.name = lastMonth.people[countNum].name
-      person.role = lastMonth.people[countNum].role
-      person.principle = lastMonth.people[countNum].principle
-      countNum++
     })
-    // eslint-disable-next-line no-array-constructor
-    var daylock = new Array()
-    var payload = newMonth(p.year, p.month, p.pod, daylock, people)
-    try {
-      await payload.save()
-      ctx.body = 'Record Saved'
-    } catch (e) {
-      ctx.status = 400
-      ctx.body = e
-      console.log(e)
+
+    // Very First Calendar Generator
+    // for a new team to join the tool
+    // initiate their data about members
+    // test-version
+    //
+    router.post('/:pod/newupload/:year/:month', upload.any('csv'), async (ctx) => {
+      var p = ctx.params
+      const tmpPath = ctx.req.files[0].path
+      console.log(tmpPath)
+      const src = fs.createReadStream(tmpPath)
+      const people = await json(src)
+      // eslint-disable-next-line no-array-constructor
+      const daylock = new Array()
+      var payload = newMonth(p.year, p.month, p.pod, daylock, people)
+      try {
+        await payload.save()
+        ctx.body = 'success'
+      } catch (e) {
+        ctx.status = 400
+        ctx.body = 'error'
+        console.log(e)
+      }
+    })
+
+    // Function to restore calendar template, back to empty
+    function cleanCalendar (filePth) {
+      var data = fs.readFileSync(filePth)
+      var strData = data.toString()
+      var arrData = strData.split('\r\n')
+      fs.writeFile(filePth, arrData[0] + '\r\n' + arrData[1], { flag: 'w', encoding: 'utf-8', mode: '0666' }, function (err) {
+        if (err) {
+          return console.error('System Error: crash at clean calendar' + err)
+        }
+      })
     }
-    // restore calendar generator data
-    // help it back to empty
-    setTimeout(function () {
+
+    // API to initiate
+    // records for a given month,
+    // (1/2) build the default template
+    //
+    router.post('/:pod/:year/:month/init', upload.any('csv'), async (ctx) => {
+      var monthArr = ['January', 'February', 'March', 'April', 'May', 'June',
+       'July', 'August', 'September', 'October', 'November', 'December']
+      // compare current month and target month
+      // if target month == current month + 1
+      // the initiate process goes on, else it stop
+      var p = ctx.params
+      var lastMon = (p.month - 1) % 12 ? (p.month - 1) % 12 : 12
+      var lastYear = lastMon === 12 ? p.year - 1 : p.year
+      var thisMon = new Date().getMonth() + 1
+      var flag = false
+      var str2 = (p.year).toString() + '-' + (p.month).toString() + '-'
+      console.log('initiate ' + str2 + ' Calendar')
+      console.log('last calendar:' + lastYear + '-' + lastMon)
+      if (thisMon === lastMon) { flag = true }
+      // eslint-disable-next-line no-array-constructor
+      var arrMonth = new Array()
+      var lastMonth = await Month.findOne({ year: lastYear, month: lastMon, pod: p.pod })
+      var filePath = './uploads/months/' + monthArr[p.month - 1] + '.txt'
+      var dayNum = new Date(p.year, p.month, 0).getDate()
+      var cnt = 0
       cleanCalendar(filePath)
-    }, 2000)
-  }
-})
+      if (flag) {
+        setTimeout(function () {
+          while (cnt < dayNum) {
+            var tmp = str2 + (cnt + 1).toString()
+            var dayPtr = new Date(tmp).getDay().toString()
+            if (dayPtr === '0' || dayPtr === '6') {
+              // "0" stands Sundays & "6" stands Saturdays
+              arrMonth[cnt] = 'PH'
+            } else {
+              arrMonth[cnt] = 'W'
+            }
+            cnt++
+          }
+          var str3 = arrMonth.join(',')
+          str3 = '\r\n%DefaultName% (DefaultAlias-DefaultRole-DefaultPrinciple),' + str3
+          lastMonth.people.forEach(person => {
+            console.log(person.name)
+            fs.writeFile(filePath, str3, { flag: 'a', encoding: 'utf-8', mode: '0666' },
+              function (err) {
+                if (err) { return console.error(err) }
+              })
+          })
+        }, 50)
+      }
+    })
+
+    // API to initiate
+    // records for a given month,
+    // (2/2) filling with the given data
+    //
+    router.post('/:pod/:year/:month/reload', upload.any('csv'), async (ctx) => {
+      var monthArr = ['January', 'February', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December']
+      // compare current month and target month
+      // if target month == current month + 1
+      // the initiate process goes on, else it stop
+      var p = ctx.params
+      var lastMon = (p.month - 1) % 12 ? (p.month - 1) % 12 : 12
+      var lastYear = lastMon === 12 ? p.year - 1 : p.year
+      var thisMon = new Date().getMonth() + 1
+      var flag = false
+      if (thisMon === lastMon) { flag = true }
+      var filePath = './uploads/months/' + monthArr[p.month - 1] + '.txt'
+      // if target month == current month + 1
+      // replace the default data (alias, name, role, principle)
+      // with data from last month
+      if (flag) {
+        var src = await fs.createReadStream(filePath)
+        var people = await json(src)
+        var lastMonth = await Month.findOne({ year: lastYear, month: lastMon, pod: p.pod })
+        var countNum = 0
+        people.forEach(person => {
+          person.alias = lastMonth.people[countNum].alias
+          person.name = lastMonth.people[countNum].name
+          person.role = lastMonth.people[countNum].role
+          person.principle = lastMonth.people[countNum].principle
+          countNum++
+        })
+        // eslint-disable-next-line no-array-constructor
+        var daylock = new Array()
+        var payload = newMonth(p.year, p.month, p.pod, daylock, people)
+        try {
+          await payload.save()
+          ctx.body = 'Record Saved'
+        } catch (e) {
+          ctx.status = 400
+          ctx.body = e
+          console.log(e)
+        }
+        // restore calendar generator data
+        // help it back to empty
+        setTimeout(function () {
+          cleanCalendar(filePath)
+        }, 2000)
+      }
+    })
+*/
