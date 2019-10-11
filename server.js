@@ -73,7 +73,9 @@ router.get('/:pod/:year/:month/ownTeamName/:alias', async (ctx) => {
   var p = ctx.params
   try {
     var result = await Month.find({ year: p.year, month: p.month })
-    if (result == null) { throw (errorMsg) } else {
+    if (result == null) {
+      throw (errorMsg)
+    } else {
       // eslint-disable-next-line no-array-constructor
       var linkList = new Array()
       linkList.push({ value: 'TEMPLATE', link: '/TEMPLATE/' + p.year + '/' + p.month })
@@ -102,7 +104,9 @@ router.get('/:pod/:year/:month/allTeamName', async (ctx) => {
   var p = ctx.params
   try {
     var result = await Month.find({ year: p.year, month: p.month })
-    if (result == null) { throw (errorMsg) } else {
+    if (result == null) {
+      throw (errorMsg)
+    } else {
       // eslint-disable-next-line no-array-constructor
       var linkList = new Array()
       result.forEach(element => {

@@ -241,12 +241,12 @@ export default {
                 this.loadTeamName() 
             }
             if(!(this.podSelect) && this.manualLoginBtn) {
-                if(this.alias.match('v-') !== 'v-') {
-                    this.addFeedback('notify', 'FTE please use https://eyesoncalendar.azurewebsites.net')
-                    return
+                if(this.alias[0] != '(') {
+                    this.alias = '('+this.alias+')'
+                    if(this.alias[1] !== 'v' || this.alias[2] !== '-') {
+                        this.addFeedback('notify', 'FTE please use https://eyesoncalendar.azurewebsites.net.');
+                    }
                 }
-                if(this.alias[0] != '(')
-                this.alias = '('+this.alias+')'
             }
             var that = this
             var apipath = '/api/getpod/' + new Date().getFullYear() + '/' + (new Date().getMonth() + 1) + '/' + this.alias
