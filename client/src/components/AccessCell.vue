@@ -1,20 +1,31 @@
 <template>
     <el-container>
     <el-header class="headbar">Welcome to EyesOnCalendar</el-header>
-    <el-container class="welcomPage">
-        <el-autocomplete class="pickTeam InputButton1"
-            v-if="podSelect"
-            v-model="teamName"
-            :fetch-suggestions="querySearchAsync"
-            placeholder="SEARCH POD"
-            @select="handleSelect"
-        >
-        </el-autocomplete>
-        <h2 v-if="podSelect" class="pickTeam InputButton2" >OR</h2>
-        <h2 v-if="podSelect" class="goto" >Go to</h2>
-        <el-button v-if="podSelect" class="pickTeam InputButton3" type="primary" @click="goPortal()">Portal</el-button>
-        <h2 v-if="noInform">Sorry we can not find your information in the system. Please turn to your TM/TA for permission.</h2>
+        <h2 v-if="noInform">Sorry we can not find your information in the system. Please turn to your TM/TA for permission.</h2>       
+        <el-container class="welcomPage">
+            <el-autocomplete class="pickTeam InputButton1"
+                v-if="podSelect"
+                v-model="teamName"
+                :fetch-suggestions="querySearchAsync"
+                placeholder="SEARCH POD"
+                @select="handleSelect"
+            >
+            </el-autocomplete>
+            <h2 v-if="podSelect" class="pickTeam InputButton2" >OR</h2>
+            <h2 v-if="podSelect" class="goto" >Go to</h2>
+            <el-button v-if="podSelect" class="pickTeam InputButton3" type="primary" @click="goPortal()">Portal</el-button>
+            <el-button v-if="!podSelect && manualLoginBtn" class="InputButton3" type="primary" @click="manualLogin = true">Login</el-button>
         </el-container>
+        <el-dialog title="Manual Login" :visible.sync="manualLogin">
+            <el-form>
+                <el-form-item label="Alias" :label-width="formLabelWidth">
+                    <el-input v-model="alias"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="getTeamName();manualLogin = false">Sign In</el-button>
+            </div>
+        </el-dialog> 
         <div class="PersonalInfo" v-loading="loading" v-if="loading"> 
             {{accessmsg}}
         </div>
@@ -28,8 +39,14 @@ export default {
     name: 'AccessCell',
     data() {
         return {
+            loading: true,         // add loading img while doing asyc func
+
+            /* Manual Login */
+            manualLoginBtn: false, // if AAD not works use manual login
+            manualLogin:false,
+            // alias: '',
+
             /* AAD API params */
-            loading: true, // add loading img while doing asyc func
             msalConfig: {
                 auth: {
                     clientId: "c6c7e163-aa0b-4185-b95d-0073ee49fa22", //This is your client ID
@@ -47,37 +64,48 @@ export default {
             requestObj: {
                     scopes: ["user.read"]
             },
+
             /* AAD result */
             noInform: false, // if failed to get data
             accessmsg: '',   // result object 
-            title: '',
+            title: 'default',
             displayName: '',
             alias: '',
             admin: false,    // admin access
             su: false,       // super usr access (DEV GROUP 3 members)
+
             /* Team Selection */
             teamName: '',
             podSelect: false, // for those admin who have no team data in system
+            
+            /* format */
+            formLabelWidth: '100px',
         }
     },
     mounted() {
+        this.loginManually()
         this.acquireTokenPopupAndCallMSGraph();
     },
     computed: {
-        goPortal() {
-            const path = '/portal'
-            this.$router.push({ path });
-        },
-        
         getTeamApiPath() { 
-            if(this.su === true) {return ('/api/default/' + new Date().getFullYear() + '/' + (new Date().getMonth() + 1) + '/allTeamName')}
-            // su can get all team names;
-            else {return ('/api/default/' + new Date().getFullYear() + '/' + (new Date().getMonth() + 1) + '/ownTeamName/'+this.alias)}
-            // admin can only get his/her team and TEMPLATE team;
+            if(this.su === true) {
+                return ('/api/default/' + new Date().getFullYear() + '/' + (new Date().getMonth() + 1) + '/allTeamName')
+            } // su can get all team names;
+            else {
+                return ('/api/default/' + new Date().getFullYear() + '/' + (new Date().getMonth() + 1) + '/ownTeamName/'+ this.alias)
+            } // admin can only get his/her team and TEMPLATE team;
         },
     },
     methods: {
-        /* search team name */
+        // if AAD have no feedback after 6s switch to manual login
+        loginManually() {
+          setTimeout(() => {
+            this.loading = false;
+            this.manualLoginBtn = true;
+          }, 7000);
+        },
+
+        /* Search team name */
         loadTeamName () {
             new Promise((resolve, reject) => {
                 this.$http.get(this.getTeamApiPath)
@@ -91,6 +119,7 @@ export default {
                 })
             })
         },
+
         querySearchAsync(queryString, cb) {
             var links = this.links;
             // var results = queryString ? links.filter(this.createFilter(queryString)) : links;
@@ -100,11 +129,13 @@ export default {
                 cb(results);
             }, 3000 * Math.random());
         },
+
         createFilter(queryString) {
             return (link) => {
                 return (link.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
             };
         },
+
         handleSelect(item) {
             const path = item.link
             this.$router.push({ path });
@@ -112,20 +143,19 @@ export default {
         },
 
         /* AAD related */
-        // AAD函数调用入口
         acquireTokenPopupAndCallMSGraph() {
             var that = this
             //Always start with acquireTokenSilent to obtain a token in the signed in user from cache
             var myMSALObj = new Msal.UserAgentApplication(this.msalConfig);
-            
-            //myMSALObj.handleRedirectCallback(this.authRedirectCallBack);
-            
+            // (optional when using redirect methods) register redirect call back for Success or Error
+            // myMSALObj.handleRedirectCallback(this.authRedirectCallBack);
             myMSALObj.acquireTokenSilent(this.requestObj)
             .then(function (tokenResponse) {
                 that.callMSGraph(that.graphConfig.graphMeEndpoint, tokenResponse.accessToken, that.graphAPICallback);
             })
             .catch(function (error) {
                 console.log(error);
+                this.addFeedback('error', 'System Error. Please turn to the developer.');
                 // Upon acquireTokenSilent failure (due to consent or interaction or login required ONLY)
                 // Call acquireTokenPopup(popup window)
                 if (that.requiresInteraction(error.errorCode)) {
@@ -133,14 +163,17 @@ export default {
                         that.callMSGraph(that.graphConfig.graphMeEndpoint, tokenResponse.accessToken, that.graphAPICallback);
                     }).catch(function (error) {
                         console.log(error);
+                        that.addFeedback('error', 'System Error. Please turn to the developer.');
                     });
                 }
             });
         },
-        // 获取本地 access_token
+        
+        // callback for using redirect methods
         authRedirectCallBack(error, response) {
             if (error) {
                 console.log(error);
+                this.addFeedback('error', 'System Error. Please turn to the developer.');
             } else {
                 if (response.tokenType === "access_token") {
                     callMSGraph(this.graphConfig.graphMeEndpoint, response.accessToken, this.graphAPICallback);
@@ -149,40 +182,8 @@ export default {
                 }
             }
         },
-        // 获得传回数据后向前端页面数据
-        graphAPICallback(data) {
-            let result = JSON.stringify(data, null, 4);
-            let jsonresult = JSON.parse(result);
-            this.title = jsonresult.jobTitle
-            this.displayName = jsonresult.displayName
-            this.alias = '(' + (jsonresult.userPrincipalName.split('@'))[0] + ')'
-            if( jsonresult.jobTitle.match('TECHNICAL ADVISOR') == 'TECHNICAL ADVISOR'
-                || jsonresult.jobTitle.match('MGR') == 'MGR'
-                || jsonresult.jobTitle.match('MANAGER') == 'MANAGER'
-                || jsonresult.userPrincipalName == 'jianalu@microsoft.com'
-                || jsonresult.userPrincipalName == 't-junzhu@microsoft.com'
-                )
-            { this.admin = true; console.log('admin')}
-            
-            if(jsonresult.userPrincipalName == 'jianalu@microsoft.com' 
-                || jsonresult.userPrincipalName == 't-junzhu@microsoft.com') {
-                    this.accessmsg = result;
-            }
 
-            if(jsonresult.userPrincipalName == 'jianalu@microsoft.com' 
-                || jsonresult.userPrincipalName == 't-junzhu@microsoft.com'
-                || jsonresult.userPrincipalName == 'danzha@microsoft.com') {
-                    this.su = true
-                    this.accessmsg = result;
-                // document.getElementById("json").innerHTML = result;
-            } else {
-                this.accessmsg = '';
-                // document.getElementById("json").innerHTML = 'sorry, this portal is for managers only';
-            }
-            this.getTeamName()
-        },
-
-        // 此函数是完成一个 http request
+        // a savage for request AAD resource
         callMSGraph(theUrl, accessToken, callback) {
             var xmlHttp = new XMLHttpRequest();
             xmlHttp.onreadystatechange = function() {
@@ -193,8 +194,38 @@ export default {
             xmlHttp.setRequestHeader("Authorization", "Bearer " + accessToken);
             xmlHttp.send();
         },
+        
+        // process AAD result
+        graphAPICallback(data) {
+            let result = JSON.stringify(data, null, 4);
+            let jsonresult = JSON.parse(result);
+            this.title = jsonresult.jobTitle
+            this.displayName = jsonresult.displayName
+            this.alias = '(' + (jsonresult.userPrincipalName.split('@'))[0] + ')'
+            
+            if(jsonresult.userPrincipalName == 'jianalu@microsoft.com' 
+                || jsonresult.userPrincipalName == 't-junzhu@microsoft.com'
+                || jsonresult.userPrincipalName == 'danzha@microsoft.com')
+            {
+                this.su = true
+            } 
 
-        // 错误处理
+            if( jsonresult.jobTitle.match('TECHNICAL ADVISOR') == 'TECHNICAL ADVISOR'
+                || jsonresult.jobTitle.match('TECH ADVISOR') == 'TECH ADVISOR'
+                || jsonresult.jobTitle.match('MGR') == 'MGR'
+                || jsonresult.jobTitle.match('MANAGER') == 'MANAGER'
+                || jsonresult.userPrincipalName == 'jianalu@microsoft.com'
+                || jsonresult.userPrincipalName == 't-junzhu@microsoft.com'
+                || jsonresult.userPrincipalName == 'danzha@microsoft.com'
+                )
+            {
+                this.admin = true;
+                console.log('admin')
+            }
+            
+            this.getTeamName()
+        },
+
         requiresInteraction(errorCode) {
             if (!errorCode || !errorCode.length) {
                 return false;
@@ -204,34 +235,87 @@ export default {
                 errorCode === "login_required";
         },
 
-        // 根据结果及权限自动跳转
+        /* Smart Router */
         getTeamName() {
+            if(this.admin) {
+                this.loadTeamName() 
+            }
+            if(!(this.podSelect) && this.manualLoginBtn) {
+                if(this.alias[0] != '(') {
+                    this.alias = '('+this.alias+')'
+                    if(this.alias[1] !== 'v' || this.alias[2] !== '-') {
+                        this.addFeedback('notify', 'FTE please use https://eyesoncalendar.azurewebsites.net.');
+                    }
+                }
+            }
+            var that = this
             var apipath = '/api/getpod/' + new Date().getFullYear() + '/' + (new Date().getMonth() + 1) + '/' + this.alias
-            this.loadTeamName() 
+            console.log(apipath)
             return new Promise((resolve, reject) => {
                 this.$http.get(apipath)
                 .then((response)=> {
-                    if(response.data == "default") {                            
+                    console.log(response.data)
+                    if(!(this.podSelect) && this.manualLoginBtn) {
+                        this.displayName = response.data.name
+                        if(response.data.principal == 'TM' || response.data.principal == 'TA') this.admin = true 
+                    }
+                    if(response.data.pod == "default") {                            
                         store.set('user', {displayName:this.displayName, alias: this.alias, admin: this.admin, su: this.su, title: this.title, team: 'TEMPLATE'})
                     } else {
-                        store.set('user', {displayName:this.displayName, alias: this.alias, admin: this.admin, su: this.su, title: this.title, team: response.data})
+                        store.set('user', {displayName:this.displayName, alias: this.alias, admin: this.admin, su: this.su, title: this.title, team: response.data.pod})
                     }
-                    if(response.data === 'default' && this.admin) {
-                      // this.$router.push('/portal')
+                    if(response.data.pod === 'default' && this.admin) {
                       this.podSelect = true
                       this.loading = false
-                    }else if(response.data === 'default') {
+                    } else if(response.data.pod === 'default') {
                       this.loading = false
+                    //   this.manualLoginBtn = false
                       this.noInform = true
-                      this.$message('Sorry we can not find your information.');
                     } else {
-                      this.$router.push(response.data + moment().format('/YYYY/M'))
+                      this.$router.push(response.data.pod + moment().format('/YYYY/M'))
                     }
                 })
                 .catch((error) => {
                     console.log(error);
+                    this.addFeedback('error', 'System Error. Please turn to the developer.');
                 })
             }) 
+        },
+        
+        goPortal() {
+            const path = '/portal'
+            this.$router.push({ path });
+        },
+
+        /* System Feedback */
+        addFeedback(type, msg) {
+            const h = this.$createElement;
+            if(type == 'error') {
+                this.$notify.error({
+                    title:'Error',
+                    message: msg,
+                    position:'top-left',
+                    duration: 0
+                });
+            }
+            if(type == 'notify') {
+                this.$notify({
+                    title:'Notification',
+                    message: msg,
+                    position:'top-left',
+                    type:'warning',
+                    duration: 6000
+                });
+            }
+            if(type == 'success') {
+                this.$notify({
+                    title: 'Success',
+                    message: h('i', { style: 'color: teal'}, msg),
+                    position:'top-left',
+                    type: 'success',
+                    
+                });
+            }
         },
     }
 }

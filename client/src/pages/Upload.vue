@@ -1,14 +1,12 @@
 <template>
   <div class="container">
-    
     <div class="column">
       <datepicker v-model="datepicked" :minimumView="'month'" :maximumView="'month'" :inline="true" />
       <div class="input-box">
         <input type="file" class="inputfile" id="file" ref="file" v-on:change="handleFileUpload()"/>
-        
-          <label for="file">{{inputLabel}}</label>
-          <button class="subbut" :disabled="datepicked=='' || file==''" v-on:click="submitFile()">Submit</button>
-        </div>
+        <label for="file">{{inputLabel}}</label>
+        <button class="subbut" :disabled="datepicked=='' || file==''" v-on:click="submitFile()">Submit</button>
+      </div>
       <h1>
         <span v-if="status==1">Success!</span>
         <span v-if="status==2">Something went wrong. Either CSV is badly formatted or month already exists</span>

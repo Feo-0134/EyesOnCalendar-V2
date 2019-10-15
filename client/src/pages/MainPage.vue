@@ -151,7 +151,8 @@ export default {
     },
     displayTitle() {
       var title = store.get('user').title
-      return '(' + title + ')';
+      if(title === 'default') { return }
+      else{ return '(' + title + ')'}
     },
     admin() {
       var path = '/'
