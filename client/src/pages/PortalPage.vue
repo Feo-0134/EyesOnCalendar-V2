@@ -341,8 +341,6 @@ export default {
             },
             delForm: {
                 alias: '',
-                name: 'default',
-                role: 'default',
                 principle: ''
             },
             sftForm: {
@@ -836,7 +834,7 @@ export default {
         openShiftTable(){
             console.log('opening shift data');
             this.WFMData = this.month.people;
-            console.log(this.WFMData);
+            // console.log(this.WFMData);
 
             // get all weekends in this month
             let year = this.month.year;
@@ -1011,13 +1009,7 @@ export default {
                 role:this.addForm.role,
                 principle:this.addForm.principle,
                 alias:this.addForm.alias,
-                people:
-                [{
-                    name: this.addForm.name,
-                    role:this.addForm.role,
-                    principle:this.addForm.principle,
-                    alias:this.addForm.alias
-                }]
+                randomNumber: this.$randomNumber
             };
         },
         delPath() {
@@ -1031,17 +1023,8 @@ export default {
         },
         delPayload() {
             return {
-                name: this.delForm.name,
-                role: this.delForm.role,
-                principle: this.delForm.principle,
                 alias: this.delForm.alias,
-                people:
-                [{
-                    name: this.delForm.name,
-                    role: this.delForm.role,
-                    principle: 'None',
-                    alias: this.delForm.alias,
-                }]
+                principle:this.delForm.principle,
             };
         },
         sftPath() {
