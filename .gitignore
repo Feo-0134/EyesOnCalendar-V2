@@ -14,3 +14,4 @@ yarn-error.log*
 backup-previous-version
 node_modules
 client/node_modules
+.env
