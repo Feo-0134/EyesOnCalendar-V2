@@ -36,7 +36,7 @@ if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === undefined)
 const db = require('./mongodb')
 db.on('error', console.error.bind(console, 'connection error:'))
 db.once('open', function () {
-  console.log('Connected to DB')
+  console.log('Connected to DB ' + process.env.NODE_ENV);
 })
 
 // koa router

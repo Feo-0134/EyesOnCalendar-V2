@@ -154,8 +154,8 @@ export default {
                 that.callMSGraph(that.graphConfig.graphMeEndpoint, tokenResponse.accessToken, that.graphAPICallback);
             })
             .catch(function (error) {
-                console.log(error);
-                this.addFeedback('error', 'System Error. Please turn to the developer.');
+                // console.log(error);
+                // this.addFeedback('error', 'System Error. Please turn to the developer.');
                 // Upon acquireTokenSilent failure (due to consent or interaction or login required ONLY)
                 // Call acquireTokenPopup(popup window)
                 if (that.requiresInteraction(error.errorCode)) {
@@ -210,8 +210,23 @@ export default {
                 this.su = true
             } 
 
-            if( jsonresult.jobTitle.match('TECHNICAL ADVISOR') == 'TECHNICAL ADVISOR'
-                || jsonresult.jobTitle.match('TECH ADVISOR') == 'TECH ADVISOR'
+            // if( jsonresult.jobTitle.match('TECHNICAL ADVISOR') == 'TECHNICAL ADVISOR'
+            //     || jsonresult.jobTitle.match('TECH ADVISOR') == 'TECH ADVISOR'
+            //     || jsonresult.jobTitle.match('MGR') == 'MGR'
+            //     || jsonresult.jobTitle.match('MANAGER') == 'MANAGER'
+            //     || jsonresult.userPrincipalName == 'jianalu@microsoft.com'
+            //     || jsonresult.userPrincipalName == 't-junzhu@microsoft.com'
+            //     || jsonresult.userPrincipalName == 'danzha@microsoft.com'
+            //     )
+            // {
+            //     this.admin = true;
+            //     console.log('admin')
+            // }
+
+            if (jsonresult.jobTitle == null){
+                this.getTeamName();
+            } else if( jsonresult.jobTitle === 'TECHNICAL ADVISOR'
+                || jsonresult.jobTitle === 'TECH ADVISOR'
                 || jsonresult.jobTitle.match('MGR') == 'MGR'
                 || jsonresult.jobTitle.match('MANAGER') == 'MANAGER'
                 || jsonresult.userPrincipalName == 'jianalu@microsoft.com'
@@ -220,10 +235,10 @@ export default {
                 )
             {
                 this.admin = true;
-                console.log('admin')
+                console.log('admin');
+                this.getTeamName();
             }
             
-            this.getTeamName()
         },
 
         requiresInteraction(errorCode) {

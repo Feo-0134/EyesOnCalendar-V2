@@ -84,6 +84,46 @@
             </el-tab-pane>
           </el-tabs>
       </div>
+
+      <div>
+        <el-button type="primary" icon="el-icon-message" @click="dialogTableVisible = true" ></el-button>
+
+        <el-dialog title="WFM Shift Data" width="70%" :visible.sync="dialogTableVisible" @open="openShiftTable" :before-close="beforeTableViewClose">
+            <el-row id="copy-table" style="background-color:white; font-family: Calibri; color: #000000; font-size:15px">
+                <span >TeamShift Data</span>
+                <el-table :data=WFMData :default-sort = "{prop: 'alias', order: 'scending'}" border width="100%">
+                    <el-table-column prop="alias" label="Alias" :formatter="sliceAlise" width="120"> </el-table-column>
+                    <el-table-column prop="region"  label="Region" width="120"> {{copyShiftInfoData}} </el-table-column>
+                    <el-table-column prop="dayofshift" label="Days of Shift" width="150"> </el-table-column>
+                    <el-table-column prop="weekdayshift" label="Weekday Shift Time" > </el-table-column>
+                    <el-table-column prop="weekendshift" label="Weekend Shift Time" > </el-table-column>
+                    <el-table-column prop="lunchtime" label="Lunch Time" > </el-table-column>
+                </el-table>
+                <br>
+                <span>Individual Shift</span>
+                <el-table :data=WFMData border width="100%">
+                    <el-table-column prop="alias" label="Engineer" width="120" :formatter="sliceAlise"> </el-table-column>
+                    <el-table-column prop="status" label="Status"> </el-table-column>
+                    <el-table-column prop="date" label="Date"> </el-table-column>
+                </el-table>
+            </el-row>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click=copyShiftInfo>{{ copyShiftInfoData }}</el-button>
+                <el-button type="primary" @click=openOutlook>Open Outlook</el-button>
+                <el-row :gutter="24">
+                  <el-col :span="10" :offset="14">
+                    <el-alert
+                      title="please click copy shift data first and then click open outlook!"
+                      type="warning" 
+                      :closable="false">
+                    </el-alert>
+                  </el-col>
+                </el-row>
+                
+            </span>
+        </el-dialog>
+      </div>
+      
       <help-screen />
       <!-- <transition name="fade">
         <loading v-if="isLoading"></loading>
@@ -114,6 +154,39 @@ export default {
       openflag: false,
       state: null,
       teamName: this.$router.currentRoute.path.split('/')[1],
+
+      teamForm: {
+        MorningShift: '',
+        NightShift: '',
+      },
+
+      dialogTableVisible: false,
+      copyShiftInfoData: 'Copy Shift Data',
+      TeamShiftText: "Team Shift",
+      WFMData: [],
+      shiftData: [],
+      Region:{
+          gcr: "GCR",
+          eu: "EMEA",
+          us: "US"
+      },
+      DayOfShift:{
+          normal: "Mon-Fri",
+          weekendshift: "Sun-Thu"
+      },
+      WeekdayShiftType:{
+          normal: "9:00am~18:00pm",
+          morningshift: "7:00am~16:00pm",
+          nightshift: "2:00pm~23:00pm"
+      },
+      WeekendShiftType:{
+          saturday: "Sat: 7:00am~16:00pm",
+          sunday: "Sun: 7:00am~16:00pm",
+      },
+      LunchTime:{
+          normal: "12:30~13:30pm",
+          morningshift: "11:30~12:30pm",
+      },
     };
   },
   asyncComputed: {
@@ -444,6 +517,112 @@ export default {
     //     this.$http.post(x.path, x.payload);
     //   }
     // },
+
+    openShiftTable(){
+      console.log('opening shift data');
+      this.WFMData = this.month.people;
+      // console.log(this.WFMData);
+
+      // get all weekends in this month
+      let year = this.month.year;
+      let month = this.month.month;
+
+      for(let key of this.WFMData) {
+        // get client region
+        let newdate = new Date();
+        let timezone = newdate.getTimezoneOffset() / 60;
+        // console.log(timezone);
+        if(timezone == '-8'){
+            key.region = this.Region.gcr;
+        } else if (timezone == '5') {
+            key.region = this.Region.eu;
+        } else if (timezone == '1') {
+            key.region = this.Region.us;
+        }
+        // get day of shift
+        // console.log(key.days);
+        let weekendcount = 0;
+        for(let days of key.days){
+            // console.log(days.day + days.workType);
+            let d = new Date(year + "-" + month + "-" + days.day);
+            // console.log(d.getDay() + days.workType);
+            if((d.getDay() == 6 && days.workType == "MS") || (d.getDay() == 0 && days.workType == "MS")) {
+                weekendcount ++;
+                // console.log(weekendcount);
+                // console.log(d.getDay() + days.workType);
+            };
+        }
+        if(weekendcount > 2){
+            // engineer is on weekend shift
+            key.dayofshift = this.DayOfShift.weekendshift;
+            key.weekendshift = this.WeekendShiftType.sunday;
+        } else {
+            key.dayofshift = this.DayOfShift.normal;
+        }
+        
+        // get weekdayshift
+        let morningsft = this.teamForm.MorningShift;
+        let nightsft = this.teamForm.NightShift;
+
+        let utctime = 0 - timezone;
+        let timezonesign = (utctime >= 0)? "+" : "";
+        if(morningsft.includes(key.name)) {
+            // console.log(utctime);
+            // console.log(timezonesign);
+            // console.log(timezone);
+            key.weekdayshift = this.WeekdayShiftType.morningshift + " UTC" + timezonesign + utctime;
+            key.lunchtime = this.LunchTime.morningshift + " UTC" + timezonesign + utctime;
+        } else if(nightsft.includes(key.name)){
+            key.weekdayshift = this.WeekdayShiftType.nightshift + " UTC" + timezonesign + utctime;
+        } else {
+            key.weekdayshift = this.WeekdayShiftType.normal + " UTC" + timezonesign + utctime;
+            key.lunchtime = this.LunchTime.normal + " UTC" + timezonesign + utctime;
+        }
+        key.status = "";
+        key.date = "2019-10-01";
+      }
+
+      // let shiftData = this.teamForm;
+      // console.log(shiftData);
+  },
+
+  copyShiftInfo() {
+    console.log("copying shift data");
+
+    const table = document.getElementById('copy-table');
+    const range = document.createRange();
+
+    range.selectNode(table);  // define copy data is table
+
+    const selection = window.getSelection();
+    if (selection.rangeCount > 0) selection.removeAllRanges();
+    selection.addRange(range);
+
+    var successful = document.execCommand('copy');  // execute copy
+    var msg = successful ? 'successful' : 'unsuccessful';
+
+    if(msg === 'successful'){
+        this.copyShiftInfoData = 'Copied!!'
+    }else {
+        this.addFeedback('notify', 'Sorry, failed to copy, please try manually');
+    }
+
+    selection.removeAllRanges();  // remove selection
+  },
+  beforeTableViewClose() {
+      this.dialogTableVisible = false;
+      this.copyShiftInfoData = 'Copy Shift Data'
+  },
+  openOutlook() {
+      console.log("opening outlook");
+      window.location.href = "mailto:wfms@microsoft.com?subject=[REVIEW REQUIRED] WFM Update List";
+      this.dialogTableVisible = false;
+      this.copyShiftInfoData = 'Copy Shift Data'
+  },
+  sliceAlise(row, column) {
+    // console.log('slice alice');
+    return row.alias.slice(1, -1);
+  },
   },
 };
 </script>
@@ -541,4 +720,5 @@ export default {
     background-color: #262626;
     border: 1px solid #808080;
 }
+
 </style>
