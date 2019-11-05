@@ -15,3 +15,4 @@ backup-previous-version
 node_modules
 client/node_modules
 .env
+client/package-lock.json

@@ -172,7 +172,7 @@ export default {
         // callback for using redirect methods
         authRedirectCallBack(error, response) {
             if (error) {
-                console.log(error);
+                // console.log(error);
                 this.addFeedback('error', 'System Error. Please turn to the developer.');
             } else {
                 if (response.tokenType === "access_token") {
@@ -209,8 +209,10 @@ export default {
             {
                 this.su = true
             } 
-
-            if( jsonresult.jobTitle.match('TECHNICAL ADVISOR') == 'TECHNICAL ADVISOR'
+            
+            if(jsonresult.jobTitle == null) {
+                this.getTeamName();
+            } else if( jsonresult.jobTitle.match('TECHNICAL ADVISOR') == 'TECHNICAL ADVISOR'
                 || jsonresult.jobTitle.match('TECH ADVISOR') == 'TECH ADVISOR'
                 || jsonresult.jobTitle.match('MGR') == 'MGR'
                 || jsonresult.jobTitle.match('MANAGER') == 'MANAGER'
@@ -220,10 +222,11 @@ export default {
                 )
             {
                 this.admin = true;
-                console.log('admin')
+                console.log('admin');
+                this.getTeamName();
             }
             
-            this.getTeamName()
+            
         },
 
         requiresInteraction(errorCode) {
