@@ -154,11 +154,13 @@ export default {
                 that.callMSGraph(that.graphConfig.graphMeEndpoint, tokenResponse.accessToken, that.graphAPICallback);
             })
             .catch(function (error) {
+                console.log("acquireTokenPopupAndCallMSGraph()");
                 console.log(error);
-                this.addFeedback('error', 'System Error. Please turn to the developer.');
+                //this.addFeedback('error', 'System Error. Please turn to the developer.');
                 // Upon acquireTokenSilent failure (due to consent or interaction or login required ONLY)
                 // Call acquireTokenPopup(popup window)
                 if (that.requiresInteraction(error.errorCode)) {
+                    console.log("requiresInteraction()");
                     myMSALObj.acquireTokenPopup(that.requestObj).then(function (tokenResponse) {
                         that.callMSGraph(that.graphConfig.graphMeEndpoint, tokenResponse.accessToken, that.graphAPICallback);
                     }).catch(function (error) {
@@ -172,8 +174,8 @@ export default {
         // callback for using redirect methods
         authRedirectCallBack(error, response) {
             if (error) {
-                // console.log(error);
-                this.addFeedback('error', 'System Error. Please turn to the developer.');
+                console.log(error);
+                //this.addFeedback('error', 'System Error. Please turn to the developer.');
             } else {
                 if (response.tokenType === "access_token") {
                     callMSGraph(this.graphConfig.graphMeEndpoint, response.accessToken, this.graphAPICallback);
@@ -194,9 +196,10 @@ export default {
             xmlHttp.setRequestHeader("Authorization", "Bearer " + accessToken);
             xmlHttp.send();
         },
-        
+
         // process AAD result
         graphAPICallback(data) {
+            console.log("graphAPICallback");
             let result = JSON.stringify(data, null, 4);
             let jsonresult = JSON.parse(result);
             this.title = jsonresult.jobTitle
@@ -209,8 +212,10 @@ export default {
             {
                 this.su = true
             } 
-            
+            console.log("jsonresult.jobTitle"+ jsonresult.jobTitle);
+
             if(jsonresult.jobTitle == null) {
+                console.log("null jobTitle" + jsonresult);
                 this.getTeamName();
             } else if( jsonresult.jobTitle.match('TECHNICAL ADVISOR') == 'TECHNICAL ADVISOR'
                 || jsonresult.jobTitle.match('TECH ADVISOR') == 'TECH ADVISOR'
@@ -225,8 +230,7 @@ export default {
                 console.log('admin');
                 this.getTeamName();
             }
-            
-            
+            // this.getTeamName();
         },
 
         requiresInteraction(errorCode) {
