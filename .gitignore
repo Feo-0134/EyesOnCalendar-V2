@@ -14,7 +14,6 @@ yarn-error.log*
 backup-previous-version
 node_modules
 client/node_modules
-
 client/package-lock.json
 
 
@@ -25,13 +24,13 @@ client/package-lock.json
 _retired
 _backup-previous-version
 
-client/build
-client/config
-client/src
-client/static
-client/.babelrc
-client/.eslintrc.json
-client/.postcssrc.js
-client/index.html
-client/package.json
-client/package-lock.json
+# client/build
+# client/config
+# client/src
+# client/static
+# client/.babelrc
+# client/.eslintrc.json
+# client/.postcssrc.js
+# client/index.html
+# client/package.json
+# client/package-lock.json
