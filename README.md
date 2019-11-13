@@ -1,6 +1,6 @@
 # apaccalendar
 
-> A mayonnaise powered calendar
+> A Mayonnaise Powered Calendar
 
 ## Run locally
 
