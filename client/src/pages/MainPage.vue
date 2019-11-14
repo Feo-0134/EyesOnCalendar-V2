@@ -598,10 +598,9 @@ export default {
       this.openflag = msg;
     },
     handleScroll() {
-      const header = document.getElementById('tablehead');
-      const sticky = header.offsetTop;
+      const sticky = document.getElementById('tablehead').offsetTop;
       // console.log(window.pageYOffset);
-      if (window.pageYOffset <= 300) {
+      if (window.pageYOffset <= 500) {
         this.scrolled = false;
         return;
       }
