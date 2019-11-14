@@ -34,7 +34,8 @@ var monthSchema = new Schema({
   month: Number,
   pod: String,
   lockdate: [],
-  people: [personSchema]
+  people: [personSchema],
+  customDayType: []
 })
 
 monthSchema.index({ year: 1, month: 1, pod: 1 }, { unique: true })

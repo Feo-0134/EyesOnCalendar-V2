@@ -2,7 +2,7 @@
   <div unselectable="on" v-bind:style="{'background-color': getColor(), 'border-color': getBorderColor()}"  class="cellx workday"  v-on:click="toggle" >
     <p v-if="!today">{{displayValue}}</p>
     <el-badge :value="caseNum" v-if="today">
-    <p v-bind:style="{'height': '10px'}" >{{displayValue}}</p>
+      <p v-bind:style="{'height': '10px'}" >{{displayValue}}</p>
     </el-badge>
   </div>
 </template>
@@ -10,13 +10,15 @@
 <script>
 import _ from 'lodash'
 export default {
-  props: ["day", "pindex", "dindex","testparam","testparamII"],
+  props: ["day", "pindex", "dindex","testparam","testparamII", "custom"],
   data() {
     return {
       open:false, // sign to open opertation panel
       today: false,
       month: this.$router.currentRoute.path.split('/')[3],
       caseNum: 2,
+      borderColor: ["#ED5565", "#bada55", "#9742b3", "#5D9CEC", "#ffcc80", "#808F85"],
+      ctxColor:["#8c2230","#557037", "#403259", "#375c8c","#b36b00", "#3B4D50", "#63474D", "#360036"],
     };
   },
   mounted() {
@@ -24,101 +26,58 @@ export default {
       var date = new Date().getDate()
 
       if(month == this.month && date == this.day.day) {
-        // console.log("target:" + month + '/' + date)
-        // console.log("this:" + this.month + '/' + this.day.day)
         this.today = true
       }
   },
   methods: {
     /* get color */
     getBorderColor() {
-      switch (this.day.workDay) {
-        case 0:
-          return "#ED5565";
-          break;
-        case 1:
-          return "#bada55";
-          break;
-        case 2:
-          return "#9742b3";
-          break;
-        case 3:
-          return "#5D9CEC";
-          break;
-        case 4:
-          return "#ffcc80";
-          break;
-        case 5:
-          return "#808F85";
-          break;
-      }
+      return this.borderColor[this.day.workDay]
     },
     getColor() {
-      switch (this.day.workDay) {
-        case 1:
-          return "#557037";
-          break;
-        case 0:
-          return "#8c2230";
-          break;
-        case 2:
-          return "#403259";
-          break;
-        case 3:
-          return "#375c8c";
-          break;
-        case 4:
-          return "#b36b00";
-          break;
-        case 5:
-          return "#3B4D50";
-          break;
-        case 6:
-          return "#63474D";
-          break;
-        case 7:
-          return "#360036";
-          break;
-      }
+      return this.ctxColor[this.day.workDay]
     },
     /* data update */
     toggle() {
       this.open = !this.open
-      // this is stupid. Plz use multi params replace later. i m so sorry about that
+      // this is stupid. Plz use multi params replace later.
       this.$emit('customEvent',this.dindex + 1 + "@" + this.day.workType)
       // var undoStep = { path: this.apiPath, payload: this.apiPayload }; // UNDO STEP HERE -- TODO
       // this.$history.push(undoStep);
       this.$http.post(this.apiPath, this.apiPayload);
     },
+
   },
   computed: {
     /* get color */
     displayValue() {
       if(this.testparamII == this.dindex) {
         this.day.workType = this.testparam
-        if (this.day.workType == "V") this.day.workDay = 0;
-        if (this.day.workType == "PH") this.day.workDay = 0;
-        if (this.day.workType == "W") this.day.workDay = 1;
-        if (this.day.workType == "MS") this.day.workDay = 1;
-        if (this.day.workType == "NS") this.day.workDay = 5;
-        if (this.day.workType == "SL") this.day.workDay = 2;
-        if (this.day.workType == "AL") this.day.workDay = 2;
-        if (this.day.workType == "H(M)") this.day.workDay = 2;// //"HMSL","HASL","HMAL","HAAL"
-        if (this.day.workType == "H(A)") this.day.workDay = 2;
-        if (this.day.workType == "T") this.day.workDay = 3;
-        if (this.day.workType == "PO") this.day.workDay = 4;
-        if (this.day.workType == "PM") this.day.workDay = 4;
-        if (this.day.workType == "HMAL") this.day.workDay = 6;
-        if (this.day.workType == "HAAL") this.day.workDay = 6;
-        if (this.day.workType == "HASL") this.day.workDay = 7;
-        if (this.day.workType == "HMSL") this.day.workDay = 7;
+        if (this.day.workType == "V") {this.day.workDay = 0;}
+        if (this.day.workType == "PH") {this.day.workDay = 0;}
+        if (this.day.workType == "W") {this.day.workDay = 1;}
+        if (this.day.workType == "MS") {this.day.workDay = 1;}
+        if (this.day.workType == "NS") {this.day.workDay = 5;}
+        if (this.day.workType == "SL") {this.day.workDay = 2;}
+        if (this.day.workType == "AL") {this.day.workDay = 2;}
+        if (this.day.workType == "H(M)"){ this.day.workDay = 2;}// //"HMSL","HASL","HMAL","HAAL"
+        if (this.day.workType == "H(A)") {this.day.workDay = 2;}
+        if (this.day.workType == "T") {this.day.workDay = 3;}
+        if (this.day.workType == "PO") {this.day.workDay = 4;}
+        if (this.day.workType == "PM") {this.day.workDay = 4;}
+        if (this.day.workType == "HMAL") {this.day.workDay = 6;}
+        if (this.day.workType == "HAAL") {this.day.workDay = 6;}
+        if (this.day.workType == "HASL") {this.day.workDay = 7;}
+        if (this.day.workType == "HMSL") {this.day.workDay = 7;}
+        if (this.custom == true) {
+          this.day.workDay = 8;
+        }
         this.dbFunc()
       }
       if (this.day.workType == "W") return " "; // not display "W" in the calendar for there are TOO MANY WORKING DAYS
-      if (this.day.workType == "HMSL" || this.day.workType == "HMAL") return " H(M)"; // not display "W" in the calendar for there are TOO MANY WORKING DAYS
-      if (this.day.workType == "HASL" || this.day.workType == "HAAL") return " H(A)"; // not display "W" in the calendar for there are TOO MANY WORKING DAYS
-      
-      // if (this.day.workType == "PH") return " ";
+      if (this.day.workType == "HMSL" || this.day.workType == "HMAL") return " H(M)";
+      if (this.day.workType == "HASL" || this.day.workType == "HAAL") return " H(A)";
+
       else return this.day.workType;
     },
     /* data update */
