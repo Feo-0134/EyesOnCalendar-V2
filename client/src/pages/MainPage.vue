@@ -149,8 +149,18 @@
             
         </span>
       </el-dialog>
+      <el-dialog
+        title="This Calendar Needs Init"
+        :visible.sync="dialogVisible"
+        width="30%">
+        <span>Click Comfirm Button to Init Calendar</span>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="dialogVisible = false">Cancel</el-button>
+          <el-button type="primary" @click="dialogVisible = false; extendCalendar()">Confirm</el-button>
+        </span>
+      </el-dialog>
       
-      <h2 v-if="!month">{{message}}</h2>
+      <h2 v-if="!month" v-loading="loading"  class="noMonth welcome" >{{message}}</h2>
       <!-- <button v-if="!month" class = "button"
       :class="{buttonBackground: initUndo}" v-on:click="init">
         Init Table
@@ -238,12 +248,12 @@ export default {
       openflag: false,
       state: null,
       teamName: this.$router.currentRoute.path.split('/')[1],
-
+      loading:false,
       teamForm: {
         MorningShift: '',
         NightShift: '',
       },
-
+      dialogVisible: false,
       dialogTableVisible: false,
       copyShiftInfoData: 'Copy Shift Data',
       TeamShiftText: "Team Shift",
@@ -295,6 +305,7 @@ export default {
           console.log(e);
           this.socket = null;
           this.message = 'Month not found';
+          this.dialogVisible = true
           return null;
         }
       },
@@ -473,6 +484,18 @@ export default {
   },
 
   methods: {
+    extendCalendar() {
+      try{
+        this.loading = true
+        this.$http.post("/api/"+this.teamName+"/extendCalendar/"+this.$router.currentRoute.path.split('/')[2]+'/'+this.$router.currentRoute.path.split('/')[3])
+        .then((response)=>{location.reload();})
+        setTimeout(() => {
+          location.reload();
+        }, 4000);
+      }catch(e){
+
+      }
+    },
     goPortal() {
         const path = '/portal'
         this.$router.push({ path });
@@ -715,6 +738,16 @@ export default {
 </script>
 
 <style>
+.el-loading-mask {
+    background-color:#262626 !important;
+}
+.noMonth {
+  min-height: 600px;
+}
+.welcome {
+  margin-top: 30px;
+  text-align: center;
+}
 .tablehead {
   width: 100%;
 }

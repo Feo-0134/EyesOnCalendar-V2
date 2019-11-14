@@ -329,6 +329,27 @@ const initCalendar = async (ctx) => {
   }
 }
 
+const extendCalendar = async (ctx) => {
+  var p = ctx.params
+  try {
+    // (new Date().getMonth() + 2) % 12 ? (new Date().getMonth() + 2) % 12 : 12;
+    var lastMonth = (p.month - 1) % 12 ? (p.month - 1) % 12 : 12
+    var lastYear = lastMonth === 12 ? p.year - 1 : p.year
+    var currentMonth =
+      await Month.findOne({ year: lastYear, month: lastMonth, pod: p.pod })
+    console.log(currentMonth)
+    var people =
+      await modifyTemplate(Number(p.year), Number(p.month), currentMonth.people)
+    // eslint-disable-next-line no-array-constructor
+    var daylock = new Array()
+    var payload = newMonth(p.year, p.month, p.pod, daylock, people)
+    await payload.save()
+  } catch (e) {
+    console.log(e)
+    ctx.body = e
+  }
+}
+
 const updateRecords = {
   getMonth: getMonth,
   rmMonth: rmMonth,
@@ -336,7 +357,8 @@ const updateRecords = {
   updateDayTypeBatch: updateDayTypeBatch,
   addPerson: addPerson,
   removePerson: removePerson,
-  initCalendar: initCalendar
+  initCalendar: initCalendar,
+  extendCalendar: extendCalendar,
 }
 
 module.exports = updateRecords
