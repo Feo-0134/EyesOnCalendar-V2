@@ -27,6 +27,93 @@
           <el-button class="WFbutton" type="primary" icon="el-icon-message" size="mini" @click="dialogTableVisible = true" ></el-button>
         </el-tooltip>
       </h1>
+        <el-row :gutter="20" class="sketch-up">
+        <el-col :span="14" :offset="5" class="sketch-up-content">
+            <div class="grid-content bg-purple">
+                <el-row :gutter="20">
+                <el-col :span="4">
+                    <div class="grid-content bg-purple-light">
+                        <div class = "cmtCell" style="display:inline; width:10px; height:50%; background-color: rgb(85, 112, 55);">MS</div>
+                        <div class = "comment">Morning Shift</div>
+                    </div>
+                </el-col>
+                <el-col :span="4"><div class="grid-content bg-purple-light">
+                        <div class="grid-content bg-purple-light">
+                        <div class = "cmtCell" style="display:inline; width:10px; height:50%; background-color: #3b4d50;">NS</div>
+                        <div class = "comment">Night Shift</div>
+                    </div>    
+                </div></el-col>          
+                <el-col :span="4"><div class="grid-content bg-purple-light">
+                        <div class="grid-content bg-purple-light">
+                        <div class = "cmtCell" style="display:inline; width:10px; height:50%; background-color: #513566;">SL</div>
+                        <div class = "comment">Sick Leave</div>
+                    </div>  
+                    </div></el-col>
+                <el-col :span="4"><div class="grid-content bg-purple-light">
+                        <div class="grid-content bg-purple-light">
+                        <div class = "cmtCell" style="display:inline; width:10px; height:50%; background-color: #513566;">AL</div>
+                        <div class = "comment">Annual Leave</div>
+                    </div>      
+                </div></el-col>
+                <el-col :span="4"><div class="grid-content bg-purple-light">
+                        <div class="grid-content bg-purple-light">
+                        <div class = "cmtCell" style="display:inline; width:10px; height:50%; background-color: #360136;">H(M)</div>
+                        <div class = "comment">Half Day SL(Morning)</div>
+                    </div>      
+                </div></el-col>
+                <el-col :span="4"><div class="grid-content bg-purple-light">
+                        <div class="grid-content bg-purple-light">
+                        <div class = "cmtCell" style="display:inline; width:10px; height:50%; background-color: #360136;">H(A)</div>
+                        <div class = "comment">Half Day SL(Afternoon)</div>
+                </div>  
+                </div></el-col>
+                </el-row>
+            </div>
+        </el-col>
+        <el-col :span="14" :offset="5" class="sketch-up-content">
+            <div class="grid-content bg-purple">
+                <el-row :gutter="20">
+                       
+                <el-col :span="4"><div class="grid-content bg-purple-light">
+                        <div class="grid-content bg-purple-light">
+                        <div class = "cmtCell" style="display:inline; width:10px; height:50%; background-color: #b36a01;">PO</div>
+                        <div class = "comment">Public Holiday OnDuty</div>
+                    </div>  
+                    </div></el-col>
+                <el-col :span="4"><div class="grid-content bg-purple-light">
+                        <div class="grid-content bg-purple-light">
+                        <div class = "cmtCell" style="display:inline; width:10px; height:50%; background-color: #b36a01;">PM</div>
+                        <div class = "comment">Public Holiday MS</div>
+                    </div>      
+                </div></el-col>
+                <el-col :span="4"><div class="grid-content bg-purple-light">
+                        <div class="grid-content bg-purple-light">
+                        <div class = "cmtCell" style="display:inline; width:10px; height:50%; background-color: #375c8c;">T</div>
+                        <div class = "comment">Training</div>
+                    </div>      
+                </div></el-col>
+                <el-col :span="4"><div class="grid-content bg-purple-light">
+                        <div class="grid-content bg-purple-light">
+                        <div class = "cmtCell" style="display:inline; width:10px; height:50%; background-color: #8c2230;">PH</div>
+                        <div class = "comment">Public Holiday</div>
+                </div>  
+                </div></el-col>
+                <el-col :span="4">
+                    <div class="grid-content bg-purple-light">
+                        <div class = "cmtCell" style="display:inline; width:10px; height:50%; background-color: #62474c;">H(M)</div>
+                        <div class = "comment">Half Day AL(Morning)</div>
+                    </div>
+                </el-col>
+                <el-col :span="4"><div class="grid-content bg-purple-light">
+                        <div class="grid-content bg-purple-light">
+                        <div class = "cmtCell" style="display:inline; width:10px; height:50%; background-color: #62474c;">H(A)</div>
+                        <div class = "comment">Half Day AL(Afternoon)</div>
+                    </div>    
+                </div></el-col>   
+                </el-row>
+            </div>
+        </el-col>
+        </el-row>
       <el-dialog title="WFM Shift Data" width="70%" :visible.sync="dialogTableVisible" @open="openShiftTable" :before-close="beforeTableViewClose">
         <el-row id="copy-table" style="background-color:white; font-family: Calibri; color: #000000; font-size:15px">
             <span >TeamShift Data</span>
@@ -739,5 +826,20 @@ export default {
   line-height: 1.2;
   min-width: 10px;
   word-wrap: break-word;
+}
+.comment{
+  display:inline; 
+  font-size: 0.70em;
+}
+.cmtCell {
+  font-size: 0.70em;
+  padding: 4px;
+}
+.sketch-up {
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+.sketch-up-content {
+  margin-bottom: 15px;
 }
 </style>
