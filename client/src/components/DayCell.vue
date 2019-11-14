@@ -1,6 +1,9 @@
 <template>
   <div unselectable="on" v-bind:style="{'background-color': getColor(), 'border-color': getBorderColor()}"  class="cellx workday"  v-on:click="toggle" >
-    {{displayValue}}
+    <p v-if="!today">{{displayValue}}</p>
+    <el-badge :value="caseNum" v-if="today">
+    <p v-bind:style="{'height': '10px'}" >{{displayValue}}</p>
+    </el-badge>
   </div>
 </template>
 
@@ -11,7 +14,20 @@ export default {
   data() {
     return {
       open:false, // sign to open opertation panel
+      today: false,
+      month: this.$router.currentRoute.path.split('/')[3],
+      caseNum: 2,
     };
+  },
+  mounted() {
+      var month = new Date().getMonth() + 1
+      var date = new Date().getDate()
+
+      if(month == this.month && date == this.day.day) {
+        // console.log("target:" + month + '/' + date)
+        // console.log("this:" + this.month + '/' + this.day.day)
+        this.today = true
+      }
   },
   methods: {
     /* get color */
