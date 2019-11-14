@@ -66,6 +66,16 @@
                       <div slot="reference" v-on:click="cycle($event,14)" class="box1" :class="alORsl?'purple2':'purple1'">H(A)</div>
                     </el-popover>
                     </div>
+                    <div style="float: right">
+                      <div class="typeTitle">
+                        <h5 class = "blackFont">Custom DayType </h5>
+                      </div>
+                      <div class="box-container"  style="margin-top: 37px;">
+                          <div v-on:click="cycle($event,10)" class="box0 ">{{customDayType(0)}}</div>
+                          <div v-on:click="cycle($event,11)" class="box0 ">{{customDayType(1)}}</div>
+                      </div>
+                    </div>
+                    
                     <div class="typeTitle">
                     <h5 class = "blackFont">Public Holiday On-duty type </h5>
                     <h5 class = "blackFont">(OnDuty / MorningShift)</h5>
@@ -73,7 +83,6 @@
                     <div class="box-container">
                         <div v-on:click="cycle($event,10)" class="box0 orange">PO</div>
                         <div v-on:click="cycle($event,11)" class="box0 orange">PM</div>
-                        <!-- <h5 class = "blackFont">OnDuty / MorningShift(PH)</h5> -->
                     </div>
                     <div class="typeTitle">
                     <h5 class = "blackFont">Other Type</h5>
@@ -112,8 +121,9 @@ export default {
   data() {
       return {
         alias: '', // permission control
-
-        workTypes: ["W", "PH", "SL", "AL", "H(M)", "H(A)", "V", "T", "MS", "NS", "PO", "PM","HMSL","HMAL","HASL","HAAL"],
+        workTypes: ["W", "PH", "SL", "AL", "H(M)",
+         "H(A)", "V", "T", "MS", "NS",
+         "PO", "PM","HMSL","HMAL","HASL","HAAL"],
         dayType: "W", // default value for data update
         date: null, // default value for data update
         customType: false,
@@ -163,29 +173,32 @@ export default {
     if(this.alias === this.person.alias) {this.usrrecord = true}
   },
   methods: {
+    customDayType(num) {
+      if(num == 0) return 'C1'
+      else return 'C2'
+    },
+    customDayColor(num) {
+      if(num == 0) return '#000'
+      else return '#fff'
+    },
     /* moveable method */
     handleDrag({ target, left, top }) {
-      // console.log('onDrag left, top', left, top);
       target.style.left = `${left}px`;
       target.style.top = `${top}px`;
     },
     handleResize({
       target, width, height, delta,
     }) {
-      // console.log('onResize', width, height);
       delta[0] && (target.style.width = `${width}px`);
       delta[1] && (target.style.height = `${height}px`);
     },
     handleScale({ target, transform, scale }) {
-      // console.log('onScale scale', scale);
       target.style.transform = transform;
     },
     handleRotate({ target, dist, transform }) {
-      // console.log('onRotate', dist);
       target.style.transform = transform;
     },
     handleWarp({ target, transform }) {
-      // console.log('onWarp', target);
       target.style.transform = transform;
     },
    
@@ -206,7 +219,6 @@ export default {
       // location.reload();
     },
     cycle(e, arg) {
-      // if(arg === -1) return;
       if(this.alORsl && (arg == 12 || arg == 14)) arg = arg + 1;
       this.dayType = this.workTypes[arg];      
     },
