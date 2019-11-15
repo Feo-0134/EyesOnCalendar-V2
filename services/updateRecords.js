@@ -7,14 +7,15 @@ const errorMsg = 'Record not found'
 /* Function to constructor a new month
  */
 
-function newMonth (year, month, pod, daylock, people) {
+function newMonth (year, month, pod, daylock, people, customDayType) {
   console.log('Inserting Full Month')
   return new Month({
     year: year,
     month: month,
     pod: pod,
     daylock: daylock,
-    people: people
+    people: people,
+    customDayType: customDayType,
   })
 }
 
@@ -318,7 +319,8 @@ const initCalendar = async (ctx) => {
   await modifyTemplate(Number(p.year), Number(p.month), b.people)
   // eslint-disable-next-line no-array-constructor
   var daylock = new Array()
-  var payload = newMonth(p.year, p.month, p.pod, daylock, people)
+  var payload = newMonth(p.year, p.month, p.pod, daylock, people, 
+    { Type: ['C1', 'C2'], color: ['#007EA7', '#003459'] })
   try {
     await payload.save()
     ctx.body = 'success'
@@ -337,14 +339,29 @@ const extendCalendar = async (ctx) => {
     var lastYear = lastMonth === 12 ? p.year - 1 : p.year
     var currentMonth =
       await Month.findOne({ year: lastYear, month: lastMonth, pod: p.pod })
-    console.log(currentMonth)
     var people =
       await modifyTemplate(Number(p.year), Number(p.month), currentMonth.people)
     // eslint-disable-next-line no-array-constructor
     var daylock = new Array()
-    var payload = newMonth(p.year, p.month, p.pod, daylock, people)
+    var payload = newMonth(p.year, p.month, p.pod, daylock, people, currentMonth.customDayType)
     await payload.save()
   } catch (e) {
+    console.log(e)
+    ctx.body = e
+  }
+}
+
+const setCustomDayType = async (ctx) => {
+  var p = ctx.params
+  var b = ctx.request.body
+  try {
+    var currentMonth =
+      await Month.findOne({year: p.year, month: p.month, pod: p.pod})
+    currentMonth.customDayType = b.customDayType;
+    const payload = currentMonth
+    await payload.save()
+    ctx.body = 'success'
+  }catch(e) {
     console.log(e)
     ctx.body = e
   }
@@ -359,6 +376,7 @@ const updateRecords = {
   removePerson: removePerson,
   initCalendar: initCalendar,
   extendCalendar: extendCalendar,
+  setCustomDayType: setCustomDayType
 }
 
 module.exports = updateRecords
