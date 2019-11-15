@@ -183,7 +183,7 @@
                 :key="index" class="cellx">{{percentage(index)}}%</div>
               </div>
               <person  v-for="(p,index) in month.people" :key="p._id"
-              :pindex="index" :person="p"  v-show="p.principle != 'TM' " :userName="displayName"
+              :pindex="index" :person="p"  v-show="p.principle != 'TM' " :userName="displayName" :custom="month.customDayType"
               :openflag = "openflag" @opensync = "handleOpenPanel"/>
             </el-tab-pane>
             <el-tab-pane class="mainPanel" label="FTE Members" name="second">
@@ -198,7 +198,7 @@
                 :key="index" class="cellx">{{percentageFTE(index)}}%</div>
               </div>
               <person  v-for="(p,index) in month.people" v-show="p.role == 'FTE' && p.principle != 'TM' "
-              :key="p._id" :pindex="index" :person="p" :userName="displayName"
+              :key="p._id" :pindex="index" :person="p" :userName="displayName" :custom="month.customDayType"
               :openflag = "openflag" @opensync = "handleOpenPanel"/>
             </el-tab-pane>
             <el-tab-pane class="mainPanel" label="Vendor Members" name="third">
@@ -213,7 +213,7 @@
                 :key="index" class="cellx">{{percentageVendor(index)}}%</div>
               </div>
               <person  v-for="(p,index) in month.people" v-show="p.role =='Vendor'"
-              :key="p._id" :pindex="index" :person="p" :userName="displayName"
+              :key="p._id" :pindex="index" :person="p" :userName="displayName" :custom="month.customDayType"
               :openflag = "openflag" @opensync = "handleOpenPanel"/>
             </el-tab-pane>
           </el-tabs>

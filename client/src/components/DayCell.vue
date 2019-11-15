@@ -10,7 +10,7 @@
 <script>
 import _ from 'lodash'
 export default {
-  props: ["day", "pindex", "dindex","testparam","testparamII", "custom"],
+  props: ["day", "pindex", "dindex","testparam","testparamII", "custom", "customParam"],
   data() {
     return {
       open:false, // sign to open opertation panel
@@ -32,9 +32,15 @@ export default {
   methods: {
     /* get color */
     getBorderColor() {
+      if(this.day.workDay < 0) {
+        return this.custom.color[-1-this.day.workDay]
+      }
       return this.borderColor[this.day.workDay]
     },
     getColor() {
+      if(this.day.workDay < 0) {
+        return this.custom.color[-1-this.day.workDay]
+      }
       return this.ctxColor[this.day.workDay]
     },
     /* data update */
@@ -44,7 +50,6 @@ export default {
       this.$emit('customEvent',this.dindex + 1 + "@" + this.day.workType)
       // var undoStep = { path: this.apiPath, payload: this.apiPayload }; // UNDO STEP HERE -- TODO
       // this.$history.push(undoStep);
-      this.$http.post(this.apiPath, this.apiPayload);
     },
 
   },
@@ -52,27 +57,24 @@ export default {
     /* get color */
     displayValue() {
       if(this.testparamII == this.dindex) {
-        this.day.workType = this.testparam
-        if (this.day.workType == "V") {this.day.workDay = 0;}
-        if (this.day.workType == "PH") {this.day.workDay = 0;}
-        if (this.day.workType == "W") {this.day.workDay = 1;}
-        if (this.day.workType == "MS") {this.day.workDay = 1;}
-        if (this.day.workType == "NS") {this.day.workDay = 5;}
-        if (this.day.workType == "SL") {this.day.workDay = 2;}
-        if (this.day.workType == "AL") {this.day.workDay = 2;}
-        if (this.day.workType == "H(M)"){ this.day.workDay = 2;}// //"HMSL","HASL","HMAL","HAAL"
-        if (this.day.workType == "H(A)") {this.day.workDay = 2;}
-        if (this.day.workType == "T") {this.day.workDay = 3;}
-        if (this.day.workType == "PO") {this.day.workDay = 4;}
-        if (this.day.workType == "PM") {this.day.workDay = 4;}
-        if (this.day.workType == "HMAL") {this.day.workDay = 6;}
-        if (this.day.workType == "HAAL") {this.day.workDay = 6;}
-        if (this.day.workType == "HASL") {this.day.workDay = 7;}
-        if (this.day.workType == "HMSL") {this.day.workDay = 7;}
-        if (this.custom == true) {
-          this.day.workDay = 8;
-        }
-        this.dbFunc()
+          this.day.workType = this.testparam
+          if (this.day.workType == "PH") {this.day.workDay = 0;}
+          else if (this.day.workType == "W") {this.day.workDay = 1;}
+          else if (this.day.workType == "MS") {this.day.workDay = 1;}
+          else if (this.day.workType == "NS") {this.day.workDay = 5;}
+          else if (this.day.workType == "SL") {this.day.workDay = 2;}
+          else if (this.day.workType == "AL") {this.day.workDay = 2;}
+          else if (this.day.workType == "H(M)"){ this.day.workDay = 2;}// //"HMSL","HASL","HMAL","HAAL"
+          else if (this.day.workType == "H(A)") {this.day.workDay = 2;}
+          else if (this.day.workType == "T") {this.day.workDay = 3;}
+          else if (this.day.workType == "PO") {this.day.workDay = 4;}
+          else if (this.day.workType == "PM") {this.day.workDay = 4;}
+          else if (this.day.workType == "HMAL") {this.day.workDay = 6;}
+          else if (this.day.workType == "HAAL") {this.day.workDay = 6;}
+          else if (this.day.workType == "HASL") {this.day.workDay = 7;}
+          else if (this.day.workType == "HMSL") {this.day.workDay = 7;}
+          else {this.day.workDay = this.customParam}
+          this.dbFunc()
       }
       if (this.day.workType == "W") return " "; // not display "W" in the calendar for there are TOO MANY WORKING DAYS
       if (this.day.workType == "HMSL" || this.day.workType == "HMAL") return " H(M)";
