@@ -114,7 +114,7 @@ export default {
                 })
                 .catch((error) => {
                     console.log(error)
-                    this.addFeedback('error', 'System Error. Please turn to the developer.');
+                    // this.addFeedback('error', 'System Error. Please turn to the developer.');
                     return [];
                 })
             })
@@ -163,7 +163,7 @@ export default {
                         that.callMSGraph(that.graphConfig.graphMeEndpoint, tokenResponse.accessToken, that.graphAPICallback);
                     }).catch(function (error) {
                         console.log(error);
-                        that.addFeedback('error', 'System Error. Please turn to the developer.');
+                        // that.addFeedback('error', 'System Error. Please turn to the developer.');
                     });
                 }
             });
@@ -283,7 +283,7 @@ export default {
                 })
                 .catch((error) => {
                     console.log(error);
-                    this.addFeedback('error', 'System Error. Please turn to the developer.');
+                    // this.addFeedback('error', 'System Error. Please turn to the developer.');
                 })
             }) 
         },
