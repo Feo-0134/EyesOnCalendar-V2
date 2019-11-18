@@ -475,7 +475,7 @@ export default {
                     }else if(((error.toString()).split(':')[1]).match('500') == '500') {
                         //
                     }
-                    else {this.addFeedback('error', (error.toString()).split(':')[1] + '\nPlease turn to the developer.');}
+                    else {this.addFeedback('error', (error.toString()).split(':')[1] + '\nPlease contact eyesoncalendar team.');}
                     this.socket = null;
                     return null;
                 }
@@ -657,7 +657,7 @@ export default {
                     if(((error.toString()).split(':')[1]).match('400') == '400') {
                         this.addFeedback('notify', 'It seemed you have already initiated your teams\' calendar for this month.')
                     }
-                    else{this.addFeedback('error', (error.toString()).split(':')[1] + '\nPlease turn to the developer.');}
+                    else{this.addFeedback('error', (error.toString()).split(':')[1] + '\nPlease contact eyesoncalendar team.');}
                     console.log(error)
                 })
             })
@@ -717,7 +717,7 @@ export default {
                         }
                     })
                     .catch((error) => {
-                    this.addFeedback('error', (error.toString()).split(':')[1] + '\nPlease turn to the developer.');
+                    this.addFeedback('error', (error.toString()).split(':')[1] + '\nPlease contact eyesoncalendar team.');
                     })
                 }) 
             }
@@ -739,7 +739,7 @@ export default {
                 else{this.addFeedback('notify', response.data);}
                 })
                 .catch((error)=> {
-                this.addFeedback('error', (error.toString()).split(':')[1]+ '\nPlease turn to the developer.')
+                this.addFeedback('error', (error.toString()).split(':')[1]+ '\nPlease contact eyesoncalendar team.')
                 })
             })
         },
@@ -766,7 +766,7 @@ export default {
                     }
                 })
                 .catch((error)=> {
-                this.addFeedback('error', (error.toString()).split(':')[1]+ '\nPlease turn to the developer.')
+                this.addFeedback('error', (error.toString()).split(':')[1]+ '\nPlease contact eyesoncalendar team.')
                 })
             })
         },
@@ -813,7 +813,7 @@ export default {
                         console.log((error.toString()).split(':')[1])
                         if(((error.toString()).split(':')[1]).match('404') == '404') {return [];}
                         //{ this.addFeedback('notify', 'Sorry, we didn\'t find your team data of this month.');}
-                        // else {this.addFeedback('error', (error.toString()).split(':')[1] + '\nPlease turn to the developer.');}
+                        // else {this.addFeedback('error', (error.toString()).split(':')[1] + '\nPlease contact eyesoncalendar team.');}
                         return [];
                     })
                 })
@@ -826,7 +826,7 @@ export default {
                     .catch((error) => {
                         console.log((error.toString()).split(':')[1])
                         if(((error.toString()).split(':')[1]).match('404') == '404') {return [];}
-                        // else {this.addFeedback('error', (error.toString()).split(':')[1] + '\nPlease turn to the developer.');}
+                        // else {this.addFeedback('error', (error.toString()).split(':')[1] + '\nPlease contact eyesoncalendar team.');}
                         return [];
                     })
                 })
