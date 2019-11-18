@@ -206,7 +206,7 @@
             <span >TeamShift Data</span>
             <el-table :data=WFMData :default-sort = "{prop: 'alias', order: 'scending'}" border width="100%">
                 <el-table-column prop="alias" label="Alias" :formatter="sliceAlise" width="120"> </el-table-column>
-                <el-table-column prop="region"  label="Region" width="120"> {{copyShiftInfoData}} </el-table-column>
+                <el-table-column prop="region"  label="Region" width="120"> </el-table-column>
                 <el-table-column prop="dayofshift" label="Days of Shift" width="150"> </el-table-column>
                 <el-table-column prop="weekdayshift" label="Weekday Shift Time" > </el-table-column>
                 <el-table-column prop="weekendshift" label="Weekend Shift Time" > </el-table-column>

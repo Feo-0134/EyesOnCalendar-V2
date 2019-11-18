@@ -6,6 +6,7 @@
         @click="open=false"
         class="moveable"
         v-bind="moveable"
+        :showClose="true"
         @drag="handleDrag"
         @resize="handleResize"
         @scale="handleScale"
@@ -99,9 +100,12 @@
                       <div v-on:click="cycle($event,1)" class="box0 " v-bind:style="{'background-color':getBackground(0)}">{{displayValue(1)}}</div>
                       <h5 class = "panelFont">Public Holiday</h5>
                     </div>
-                    <span slot="footer" class="dialog-footer">
+                    <!-- <span slot="footer" class="dialog-footer">
                         <el-button class="confirmBtn" type="primary" @click="handleOpen()">Confirm</el-button>
-                    </span>
+                    </span> -->
+              </div>
+              <div class="closeButton"> 
+                <el-button round size="mini" type="info" @click="handleOpen()">X</el-button>
               </div>
           </div> 
       </Moveable>
@@ -157,7 +161,7 @@ export default {
           throttleDrag: 0,          
           throttleResize: 1,
           throttleScale: 0,
-          throttleRotate: 0
+          throttleRotate: 0,
         },
         open: false, // operation panel params
         alORsl: false, // AL or SL default false means sick leave
@@ -387,7 +391,7 @@ day {
   left: 50%;
   margin-left: -150px;
   width: 280px;
-  padding: 30px;
+  padding: 20px;
   color: black;
   display: flex;
   justify-content: left;
@@ -425,5 +429,9 @@ day {
   background: inherit;
   padding: inherit;
   color:inherit;
+}
+.closeButton {
+  text-align: right;
+  color: white;
 }
 </style>
