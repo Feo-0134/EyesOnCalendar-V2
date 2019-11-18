@@ -6,18 +6,23 @@
     <el-header class="navigationBar">EyesonCalendar Administration</el-header>
     <el-container>
         <el-aside width="300px">
-            <el-menu :default-openeds="['1']">
-                <el-submenu index="1">
-                    <template slot="title"><i class="el-icon-menu"></i>EyesonCalendar</template>
-                    <el-menu-item-group>
-                        <template slot="title"></template>
-                        <el-menu-item index="1-1" v-on:click="topicView(0)">Initiate Team Calendar</el-menu-item>
-                        <el-menu-item index="1-2" v-on:click="topicView(1)">Team Calendar Management</el-menu-item>
-                        <el-menu-item index="1-3" v-on:click="topicView(2)">Team Shift Management</el-menu-item>
-                        <el-menu-item index="1-4" v-on:click="topicView(3)">Team Shift Report</el-menu-item>
-                        <el-menu-item index="1-5" v-on:click="topicView(4)">Contact</el-menu-item>
-                    </el-menu-item-group>
-                </el-submenu>
+            <el-menu default-active="1" >
+                <template slot="title"><i class="el-icon-menu"></i>EyesonCalendar</template>
+                <el-menu-item index="0" v-on:click="topicView(0)" >
+                    <template slot="title">Initiate Team Calendar</template>
+                </el-menu-item>
+                <el-menu-item index="1" v-on:click="topicView(1)" >
+                    <template slot="title" >Team Calendar Management</template>
+                </el-menu-item>
+                <el-menu-item index="2" v-on:click="topicView(2)" >
+                    <template slot="title" >Team Shift Management</template>
+                </el-menu-item>
+                <el-menu-item index="3" v-on:click="topicView(3)" >                       
+                    <template slot="title" >Team Shift Report</template>
+                </el-menu-item>
+                <el-menu-item index="4" v-on:click="topicView(4)" >  
+                    <template slot="title" >Contact</template>
+                </el-menu-item>
             </el-menu>
         </el-aside>
         <el-main>
@@ -135,10 +140,10 @@
                     <el-input v-model="initForm.TeamAdvisor" placeholder="example: danzha;anikshen;"></el-input> 
                 </el-form-item> -->
                 <el-form-item label="FTE">
-                    <el-input v-model="initForm.FTE" placeholder="eg. User Zero(ftealias00);User One(ftealias01);"></el-input>
+                    <el-input v-model="initForm.FTE" placeholder="eg. Roronoa Zoro(zor);Vinsmoke Sanji(sav);"></el-input>
                 </el-form-item>
                 <el-form-item label="Vendor">
-                    <el-input v-model="initForm.Vendor" placeholder="eg. Vendor User2(v-vendoralias);"></el-input>
+                    <el-input v-model="initForm.Vendor" placeholder="eg. Skeleton Brook(v-brs);"></el-input>
                 </el-form-item>
                 <span>
                     <el-button @click="cleanInitForm">Cancel</el-button>
@@ -1000,7 +1005,6 @@ export default {
             }
             else {return ('/api/default/' + this.globalMonth + '/ownTeamName/'+this.alias)}
         },
-        
         initPath() {
             return (
                 "/api/" +
@@ -1134,7 +1138,8 @@ export default {
     }
     .el-container .el-aside {
         border-radius: 5px;
-        background-color: #373737;
+        background-color:#373737;
+        margin-left: 45px;
     }
     .el-container .el-container {
         height: fit-content;
@@ -1164,15 +1169,20 @@ export default {
     }
     .el-aside .el-menu {
         border-right: solid 0px #373737;
-        background-color: #373737;
+        background-color: #37373782;
+        margin-left: 35px;
     }
     .el-submenu .el-menu-item {
         color: #fff;
     }
+    .el-menu-item{
+        color:azure;
+        background-color: #37373782;
+        display: flex;
+    }
     .el-submenu .el-menu-item:focus, .el-submenu .el-menu-item:hover {
         color: #fff;
         outline: 0;
-        background-color: #262626;
     }
     .functionalButton {
         display: inline-block;
@@ -1248,4 +1258,7 @@ export default {
     /* .el-table th {
         display: table-cell!important; 
     } */
+    .el-menu-item:focus, .el-menu-item:hover{
+        background-color: #409eff42 !important;
+    }
 </style>
