@@ -191,6 +191,10 @@
                     <el-button type="primary" icon="el-icon-minus" circle v-on:click="delPersonView('None',2)"></el-button>
                     </div>
                 </el-form-item>
+                <el-form-item label="Custom DayType">
+                    <el-input v-model="teamForm.customDayType" ></el-input>
+                    <el-button type="primary" v-on:click="setCustomDayType()">Update</el-button>
+                </el-form-item>
             </el-form>
             <el-form v-if="topic === 2"  :model="teamForm" label-width="140px">
                 <el-form-item label="Month">
@@ -310,6 +314,7 @@
 
 <script>
 var store = require('store') // global store
+import _ from 'lodash'
 import Personsum from "@/components/PersonRowSum" // report
 export default {
     components: { Personsum },
@@ -467,6 +472,8 @@ export default {
                         this.addFeedback('notify', 'Sorry, we didn\'t find your team data of this month. Please initiate your team & calendar first.')
                     }else if(((error.toString()).split(':')[1]).match('sort') == 'sort' ) {
                         //
+                    }else if(((error.toString()).split(':')[1]).match('500') == '500') {
+                        //
                     }
                     else {this.addFeedback('error', (error.toString()).split(':')[1] + '\nPlease turn to the developer.');}
                     this.socket = null;
@@ -479,6 +486,14 @@ export default {
         },
     },
     methods: {
+        setCustomDayType() {
+            new Promise((resolve, reject)=>{
+                this.$http.post("api/" + this.teamForm.TeamName +
+                 "/setCustomDayType/"+this.teamForm.Month,
+                 JSON.parse(this.teamForm.customDayType))
+            })
+        },
+
         goCalendar() {
             let path = ''
             if(this.topic === 0 && this.initForm.TeamName !== '') {
@@ -796,8 +811,9 @@ export default {
                     })
                     .catch((error) => {
                         console.log((error.toString()).split(':')[1])
-                        if(((error.toString()).split(':')[1]).match('404') == '404') {}//{this.addFeedback('notify', 'Sorry, we didn\'t find your team data of this month.');}
-                        else {this.addFeedback('error', (error.toString()).split(':')[1] + '\nPlease turn to the developer.');}
+                        if(((error.toString()).split(':')[1]).match('404') == '404') {return [];}
+                        //{ this.addFeedback('notify', 'Sorry, we didn\'t find your team data of this month.');}
+                        // else {this.addFeedback('error', (error.toString()).split(':')[1] + '\nPlease turn to the developer.');}
                         return [];
                     })
                 })
@@ -809,8 +825,8 @@ export default {
                     })
                     .catch((error) => {
                         console.log((error.toString()).split(':')[1])
-                        if(((error.toString()).split(':')[1]).match('404') == '404') {this.addFeedback('notify', 'Sorry, we didn\'t find your team data of this month.');}
-                        else {this.addFeedback('error', (error.toString()).split(':')[1] + '\nPlease turn to the developer.');}
+                        if(((error.toString()).split(':')[1]).match('404') == '404') {return [];}
+                        // else {this.addFeedback('error', (error.toString()).split(':')[1] + '\nPlease turn to the developer.');}
                         return [];
                     })
                 })
