@@ -1172,16 +1172,12 @@ export default {
         background-color: #37373782;
         margin-left: 35px;
     }
-    .el-submenu .el-menu-item {
-        color: #fff;
-    }
     .el-menu-item{
-        color:azure;
+        color:azure !important;
         background-color: #37373782;
         display: flex;
     }
     .el-submenu .el-menu-item:focus, .el-submenu .el-menu-item:hover {
-        color: #fff;
         outline: 0;
     }
     .functionalButton {
