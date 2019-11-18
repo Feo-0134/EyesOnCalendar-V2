@@ -1257,4 +1257,7 @@ export default {
     .el-menu-item:focus, .el-menu-item:hover{
         background-color: #409eff42 !important;
     }
+    .el-menu-item.is-active {
+        color: #409eff !important;
+    }
 </style>
