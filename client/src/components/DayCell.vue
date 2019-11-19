@@ -1,8 +1,8 @@
 <template>
   <div unselectable="on" v-bind:style="{'background-color': getColor(), 'border-color': getBorderColor()}"  class="cellx workday"  v-on:click="toggle" >
     <p v-if="!today">{{displayValue}}</p>
-    <el-badge :value="caseNum" v-if="today">
-      <p v-bind:style="{'height': '10px'}" >{{displayValue}}</p>
+    <el-badge :value="caseNum" v-if="today" type="primary" >
+      <p v-bind:style="{'height': '17px'}" >{{displayValue}}</p>
     </el-badge>
   </div>
 </template>
@@ -16,7 +16,7 @@ export default {
       open:false, // sign to open opertation panel
       today: false,
       month: this.$router.currentRoute.path.split('/')[3],
-      caseNum: 2,
+      caseNum: '',
       borderColor: ["#ED5565", "#bada55", "#9742b3", "#5D9CEC", "#ffcc80", "#808F85"],
       ctxColor:["#8c2230","#557037", "#403259", "#375c8c","#b36b00", "#3B4D50", "#63474D", "#360036"],
     };
@@ -28,6 +28,7 @@ export default {
       if(month == this.month && date == this.day.day) {
         this.today = true
       }
+      this.getNumber();
   },
   methods: {
     /* get color */
@@ -51,7 +52,16 @@ export default {
       // var undoStep = { path: this.apiPath, payload: this.apiPayload }; // UNDO STEP HERE -- TODO
       // this.$history.push(undoStep);
     },
-
+    getNumber()  {
+      console.log("DayCell: " + this.$store.state.dailycasenumber);
+      this.caseNum = 0;
+    }
+  },
+  watch: {
+    "$store.state.dailycasenumber": function(newVal) {
+      console.log("case number changed");
+      this.caseNum = newVal;
+    }
   },
   computed: {
     /* get color */
@@ -107,7 +117,7 @@ export default {
         this.day._id
       );
     }
-  }
+  },
 };
 </script>
 

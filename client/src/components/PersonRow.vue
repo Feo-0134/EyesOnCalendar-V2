@@ -100,9 +100,9 @@
                       <div v-on:click="cycle($event,1)" class="box0 " v-bind:style="{'background-color':getBackground(0)}">{{displayValue(1)}}</div>
                       <h5 class = "panelFont">Public Holiday</h5>
                     </div>
-                    <!-- <span slot="footer" class="dialog-footer">
+                    <span slot="footer" class="dialog-footer">
                         <el-button class="confirmBtn" type="primary" @click="handleOpen()">Confirm</el-button>
-                    </span> -->
+                    </span>
               </div>
               <div class="closeButton"> 
                 <el-button round size="mini" type="info" @click="handleOpen()">X</el-button>
