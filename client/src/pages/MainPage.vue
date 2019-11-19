@@ -237,10 +237,9 @@
         </span>
       </el-dialog>
       <el-dialog
-        title="This Calendar Needs Init"
         :visible.sync="dialogVisible"
         width="30%">
-        <span>Click Comfirm Button to Init Calendar</span>
+        <span>Do you want to initiate this month data?</span>
         <span slot="footer" class="dialog-footer">
           <el-button @click="dialogVisible = false">Cancel</el-button>
           <el-button type="primary" @click="dialogVisible = false; extendCalendar()">Confirm</el-button>
