@@ -1,9 +1,10 @@
 <template>
   <div unselectable="on" v-bind:style="{'background-color': getColor(), 'border-color': getBorderColor()}"  class="cellx workday"  v-on:click="toggle" >
-    <p v-if="!today">{{displayValue}}</p>
-    <el-badge :value="caseNum" v-if="today">
+    <p>{{displayValue}}</p>
+    <!-- <p v-if="!today">{{displayValue}}</p> -->
+    <!-- <el-badge :value="caseNum" v-if="today">
       <p v-bind:style="{'height': '10px'}" >{{displayValue}}</p>
-    </el-badge>
+    </el-badge> -->
   </div>
 </template>
 
