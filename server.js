@@ -89,6 +89,13 @@ router.post('/:pod/:year/:month/delete',
 router.post('/:pod/newupload2/:year/:month',
   upload.any('csv'), bodyParser(), updateRecords.initCalendar)
 
+// why needs upload.any('csv')
+router.post('/:pod/extendCalendar/:year/:month',
+  upload.any('csv'), bodyParser(), updateRecords.extendCalendar)
+
+router.post('/:pod/setCustomDayType/:year/:month',
+ bodyParser(), updateRecords.setCustomDayType)
+
 io.on('connection', socket => {
   socket.join(socket.handshake.query.path)
   socket.on('hello', socket => {
