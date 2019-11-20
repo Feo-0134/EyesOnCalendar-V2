@@ -1,7 +1,7 @@
 <template>
   <div unselectable="on" v-bind:style="{'background-color': getColor(), 'border-color': getBorderColor()}"  class="cellx workday"  v-on:click="toggle" >
     <p v-if="!today">{{displayValue}}</p>
-    <el-badge :value="caseNum" v-if="today" type="primary" >
+    <el-badge :value="caseNum" v-if="today" type="primary">
       <p v-bind:style="{'height': '17px'}" >{{displayValue}}</p>
     </el-badge>
   </div>
@@ -147,7 +147,7 @@ export default {
 
 .el-badge__content.is-fixed {
     position: absolute;
-    top: 12px;
+    top: 12px !important;
     right: 10px;
     -webkit-transform: translateY(-50%) translateX(100%);
     transform: translateY(-50%) translateX(100%);
