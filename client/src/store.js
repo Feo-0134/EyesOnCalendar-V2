@@ -7,7 +7,7 @@ const store = new Vuex.Store({
   state: {
     calendar: null,
     socket: null,
-    dailycasenumber: 1,
+    dailycasenumber: [],
   },
   mutations: { // sync
     toggleDay(state, data) {

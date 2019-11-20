@@ -750,8 +750,19 @@ export default {
       }
     })
     .then((response)=>{
-      console.log(response.data);
-      this.$store.commit('getDailyCaseNumber', 2);
+
+      // let jsondata = JSON.stringify(response.data);
+      let jsondata = response.data;
+      console.log(jsondata);
+
+      let arrayAlias = [];
+      
+      for(let i in jsondata){
+        arrayAlias.push({alias: i, casenumber: jsondata[i]});
+      }
+      console.log(arrayAlias);
+
+      this.$store.commit('getDailyCaseNumber', arrayAlias);
     })
     .catch((error)=>{
       console.log(error);

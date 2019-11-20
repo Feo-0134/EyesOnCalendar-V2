@@ -10,7 +10,7 @@
 <script>
 import _ from 'lodash'
 export default {
-  props: ["day", "pindex", "dindex","testparam","testparamII", "custom", "customParam"],
+  props: ["day", "pindex", "dindex","testparam","testparamII", "custom", "customParam" , "alias" ],
   data() {
     return {
       open:false, // sign to open opertation panel
@@ -53,14 +53,21 @@ export default {
       // this.$history.push(undoStep);
     },
     getNumber()  {
-      console.log("DayCell: " + this.$store.state.dailycasenumber);
-      this.caseNum = 0;
+      this.caseNum = '...';
     }
   },
   watch: {
     "$store.state.dailycasenumber": function(newVal) {
-      console.log("case number changed");
-      this.caseNum = newVal;
+      // console.log("case number changed ");
+      let newalias = this.alias.slice(1, -1);
+
+      for(let key of newVal){
+        // console.log("key alias: "+key.alias);
+        // console.log("newalias: "+newalias);
+        if(key.alias == newalias){
+          this.caseNum = (key.casenumber == 0 ? '' : key.casenumber)
+        }
+      }
     }
   },
   computed: {
@@ -136,6 +143,14 @@ export default {
   margin: 0px;
   padding: 1px;
   border: 3px solid;
+}
+
+.el-badge__content.is-fixed {
+    position: absolute;
+    top: 12px;
+    right: 10px;
+    -webkit-transform: translateY(-50%) translateX(100%);
+    transform: translateY(-50%) translateX(100%);
 }
 
 @media only screen and (max-width: 1600px) {

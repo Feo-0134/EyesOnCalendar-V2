@@ -116,7 +116,11 @@
         :pindex="pindex" :dindex="index" 
         :testparam="dayType" :testparamII="date" 
         :custom="custom"
-        :customParam="customParam" />
+        :customParam="customParam" 
+        
+        :alias = "person.alias"
+
+        />
   </div>
 </template>
 
