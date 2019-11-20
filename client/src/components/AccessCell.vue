@@ -14,8 +14,7 @@
             <h2 v-if="podSelect" class="pickTeam InputButton2" >OR</h2>
             <h2 v-if="podSelect" class="goto" >Go to</h2>
             <el-button v-if="podSelect" class="pickTeam InputButton3" type="primary" @click="goPortal()">Portal</el-button>
-            <p v-if="!podSelect && manualLoginBtn">Please enable pop-up to sign in with AAD</p>
-            <el-button v-if="!podSelect && manualLoginBtn" class="InputButton3" type="primary" @click="manualLogin = true" disabled>Login</el-button>
+            <el-button v-if="!podSelect && manualLoginBtn" class="InputButton3" type="primary" @click="manualLogin = true">Login</el-button>
         </el-container>
         <el-dialog title="Manual Login" :visible.sync="manualLogin">
             <el-form>
