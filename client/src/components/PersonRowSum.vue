@@ -15,7 +15,7 @@ Feature 5 Monthly report
         {{fullDayCnt(['SL','AL','V']) +
          halfDayCnt(["H(A)","H(M)","HMSL","HASL","HMAL","HAAL"])}}
       </div>
-      <div class = "celly ">{{fullDayCnt(['PH','WD'])}}</div>
+      <div class = "celly ">{{fullDayCnt(['PH','Sft'])}}</div>
       <div class = "celly ">{{fullDayCnt(['PO','PM'])}}</div>
   </div>
 </template>

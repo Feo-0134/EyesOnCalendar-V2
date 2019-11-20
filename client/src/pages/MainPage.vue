@@ -237,6 +237,7 @@
         </span>
       </el-dialog>
       <el-dialog
+        v-show="admin"
         title="EyesOnCalendar"
         :visible.sync="dialogVisible"
         width="30%">
