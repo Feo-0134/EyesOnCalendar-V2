@@ -378,6 +378,7 @@ export default {
                 Vendor:'',
                 MorningShift: '',
                 NightShift: '',
+                customDayType:'{"customDayType": {"Type": ["WS", "WD"],"color": ["#73937E", "#E09891"]}}',
             },
             people: 
                 [{

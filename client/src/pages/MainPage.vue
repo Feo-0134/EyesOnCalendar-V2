@@ -475,7 +475,8 @@ export default {
           || this.month.people[b].days[val].workType === 'MS'
           || this.month.people[b].days[val].workType === 'NS'
           || this.month.people[b].days[val].workType === 'PO'
-          || this.month.people[b].days[val].workType === 'PM') {
+          || this.month.people[b].days[val].workType === 'PM'
+          || this.month.people[b].days[val].workType === 'WS') {
             sum += 1;
           }
         }
@@ -491,7 +492,8 @@ export default {
           || this.month.people[b].days[val].workType === 'MS'
           || this.month.people[b].days[val].workType === 'NS'
           || this.month.people[b].days[val].workType === 'PO'
-          || this.month.people[b].days[val].workType === 'PM')) {
+          || this.month.people[b].days[val].workType === 'PM'
+          || this.month.people[b].days[val].workType === 'WS')) {
             sum += 1;
           }
         }
@@ -508,7 +510,8 @@ export default {
           || this.month.people[b].days[val].workType === 'MS'
           || this.month.people[b].days[val].workType === 'NS'
           || this.month.people[b].days[val].workType === 'PO'
-          || this.month.people[b].days[val].workType === 'PM')) {
+          || this.month.people[b].days[val].workType === 'PM'
+          || this.month.people[b].days[val].workType === 'WS')) {
             sum += 1;
           }
         }
