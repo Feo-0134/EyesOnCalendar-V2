@@ -14,7 +14,7 @@
             <h2 v-if="podSelect" class="pickTeam InputButton2" >OR</h2>
             <h2 v-if="podSelect" class="goto" >Go to</h2>
             <el-button v-if="podSelect" class="pickTeam InputButton3" type="primary" @click="goPortal()">Portal</el-button>
-            <el-button v-if="!podSelect && manualLoginBtn" class="InputButton3" type="primary" @click="manualLogin = true" >Login</el-button>
+            <el-button v-if="!podSelect && manualLoginBtn" class="InputButton3" type="primary" @click="manualLoginMtd()" >Login</el-button>
         </el-container>
         <el-dialog title="Manual Login" :visible.sync="manualLogin">
             <el-form>
@@ -287,7 +287,15 @@ export default {
                 })
             }) 
         },
-        
+        manualLoginMtd() {
+            var myMSALObj = new Msal.UserAgentApplication(this.msalConfig);
+            myMSALObj.acquireTokenPopup(this.requestObj).then(function (tokenResponse) {
+                that.callMSGraph(this.graphConfig.graphMeEndpoint, tokenResponse.accessToken, this.graphAPICallback);
+            }).catch(function (error) {
+                console.log(error);
+                // that.addFeedback('error', 'System Error. Please turn to the developer.');
+            });
+        },
         goPortal() {
             const path = '/portal'
             this.$router.push({ path });
