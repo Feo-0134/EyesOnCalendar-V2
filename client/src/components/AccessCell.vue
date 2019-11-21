@@ -288,9 +288,10 @@ export default {
             }) 
         },
         manualLoginMtd() {
+            var that = this
             var myMSALObj = new Msal.UserAgentApplication(this.msalConfig);
             myMSALObj.acquireTokenPopup(this.requestObj).then(function (tokenResponse) {
-                that.callMSGraph(this.graphConfig.graphMeEndpoint, tokenResponse.accessToken, this.graphAPICallback);
+                that.callMSGraph(that.graphConfig.graphMeEndpoint, tokenResponse.accessToken, that.graphAPICallback);
             }).catch(function (error) {
                 console.log(error);
                 // that.addFeedback('error', 'System Error. Please turn to the developer.');
