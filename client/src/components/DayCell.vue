@@ -1,5 +1,7 @@
 <template>
-  <div unselectable="on" v-bind:style="{'background-color': getColor(), 'border-color': getBorderColor()}"  :class="{'special':today ,'cellx': true, 'workday': !open, 'workdayII': openSign&&open}"  v-on:click="toggle" >
+  <div unselectable="on" v-bind:style="{'background-color': getColor(), 'border-color': getBorderColor()}"  
+  :class="{'special':today ,'cellx': true, 'workday': !open, 'workdayII': openSign&&open}"  
+  v-on:click="toggle" >
     <p>{{displayValue}}</p>
     <!-- <p v-if="!today">{{displayValue}}</p> -->
     <!-- <el-badge :value="caseNum" v-if="today">
@@ -21,6 +23,11 @@ export default {
       borderColor: ["#ED5565", "#bada55", "#9742b3", "#5D9CEC", "#ffcc80", "#808F85"],
       ctxColor:["#8c2230","#557037", "#403259", "#375c8c","#b36b00", "#3B4D50", "#63474D", "#360036"],
     };
+  },
+  watch: {
+    openSign: function() {
+      if(this.openSign === false) this.open = false
+    }
   },
   mounted() {
       var month = new Date().getMonth() + 1
