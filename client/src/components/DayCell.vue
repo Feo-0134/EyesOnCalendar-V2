@@ -53,7 +53,7 @@ export default {
     },
     /* data update */
     toggle() {
-      this.open = !this.open
+      this.open = true
       // this is stupid. Plz use multi params replace later.
       this.$emit('customEvent',this.dindex + 1 + "@" + this.day.workType)
       // var undoStep = { path: this.apiPath, payload: this.apiPayload }; // UNDO STEP HERE -- TODO
