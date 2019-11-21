@@ -215,7 +215,6 @@ export default {
             if(jsonresult.jobTitle == null) {
                 // console.log("null jobTitle" + jsonresult);
                 jsonresult.jobTitle = 'SUPPORT ENG'
-                this.getTeamName();
             } else if( jsonresult.jobTitle.includes('TECHNICAL ADVISOR')
                 || jsonresult.jobTitle.includes('TECH ADVISOR')
                 || jsonresult.jobTitle.includes('MGR')
@@ -227,9 +226,8 @@ export default {
             {
                 this.admin = true;
                 console.log('admin');
-                this.getTeamName();
             }
-            // this.getTeamName();
+            this.getTeamName();
         },
 
         requiresInteraction(errorCode) {
