@@ -1,5 +1,5 @@
 <template>
-  <div unselectable="on" v-bind:style="{'background-color': getColor(), 'border-color': getBorderColor()}"  class="cellx workday"  v-on:click="toggle" >
+  <div unselectable="on" v-bind:style="{'background-color': getColor(), 'border-color': getBorderColor()}"  :class="{'special':today ,'cellx': true, 'workday': !open, 'workdayII': openSign&&open}"  v-on:click="toggle" >
     <p>{{displayValue}}</p>
     <!-- <p v-if="!today">{{displayValue}}</p> -->
     <!-- <el-badge :value="caseNum" v-if="today">
@@ -11,7 +11,7 @@
 <script>
 import _ from 'lodash'
 export default {
-  props: ["day", "pindex", "dindex","testparam","testparamII", "custom", "customParam"],
+  props: ["day", "pindex", "dindex","testparam","testparamII", "custom", "customParam","openSign"],
   data() {
     return {
       open:false, // sign to open opertation panel
@@ -127,6 +127,18 @@ export default {
   margin: 0px;
   padding: 1px;
   border: 3px solid;
+}
+
+.workdayII {
+  font-size: 21px;
+  margin: 0px;
+  padding: 1px;
+  border: 3px solid;
+}
+
+.special.cellx.workday.dayCell {
+    border-left: 5px solid #409eff;
+    width: 35px !important;
 }
 
 @media only screen and (max-width: 1600px) {
