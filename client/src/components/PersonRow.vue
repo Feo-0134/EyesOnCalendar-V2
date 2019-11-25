@@ -12,7 +12,7 @@
         @scale="handleScale"
         @rotate="handleRotate"
         @warp="handleWarp">
-          <div class="panelFrame">
+          <div @mousedown="grabSign=true" @mouseup="grabSign=false" v-bind:class="{'grab':!grabSign, 'grabbing':grabSign, 'panelFrame':true}">
               <div>
                     <div class="typeTitle">
                       <h5 class = "panelFont">Work Day Type</h5>
@@ -104,9 +104,6 @@
                         <el-button class="confirmBtn" type="primary" @click="handleOpen()">Confirm</el-button>
                     </span>
               </div>
-              <div class="closeButton"> 
-                <el-button round size="mini" type="info" @click="handleOpen()">X</el-button>
-              </div>
           </div> 
       </Moveable>
       <day class = "dayCell" 
@@ -119,8 +116,7 @@
         :customParam="customParam" 
         
         :alias = "person.alias"
-
-        />
+        :openSign="open" />
   </div>
 </template>
 
@@ -135,6 +131,7 @@ export default {
   data() {
       return {
         alias: '', // permission control
+        grabSign: false,
         workTypes: [
          "W", "PH", "SL", "AL", // 0, 1, 2, 3
          "H(M)", "H(A)", "V", "T", // 4, 5, 6, 7
@@ -395,7 +392,7 @@ day {
   left: 50%;
   margin-left: -150px;
   width: 280px;
-  padding: 20px;
+  padding: 30px;
   color: black;
   display: flex;
   justify-content: left;
@@ -434,8 +431,6 @@ day {
   padding: inherit;
   color:inherit;
 }
-.closeButton {
-  text-align: right;
-  color: white;
-}
+.grab {cursor: grab;}
+.grabbing {cursor: grabbing;}
 </style>

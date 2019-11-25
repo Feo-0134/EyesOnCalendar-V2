@@ -145,25 +145,17 @@
         </span>
       </el-dialog>
       <el-dialog
-        title="This Calendar Needs Init"
+        v-show="admin"
+        title="EyesOnCalendar"
         :visible.sync="dialogVisible"
         width="30%">
-        <span>Click Comfirm Button to Init Calendar</span>
+        <span>Do you want to initiate this month data?</span>
         <span slot="footer" class="dialog-footer">
           <el-button @click="dialogVisible = false">Cancel</el-button>
           <el-button type="primary" @click="dialogVisible = false; extendCalendar()">Confirm</el-button>
         </span>
       </el-dialog>
-      
       <h2 v-if="!month" v-loading="loading"  class="noMonth welcome" >{{message}}</h2>
-      <!-- <button v-if="!month" class = "button"
-      :class="{buttonBackground: initUndo}" v-on:click="init">
-        Init Table
-      </button>
-      <button v-if="!month" class = "button"
-      :class="{buttonBackground: !initUndo}" v-on:click="reload">
-        Reload Table
-      </button> -->
       <div  v-if="month">
           <el-tabs id="rolesTabview" v-model="activeName" @tab-click="handleClick">
             <el-tab-pane class="mainPanel" label="All Members" name="first">
@@ -175,7 +167,7 @@
               <div id="tablehead" class="row tablehead">
                 <div class="name">On Duty</div>
                 <div v-for="(p,index) in month.people[0].days"
-                :key="index" class="cellx">{{percentage(index)}}%</div>
+                :key="index" class="cellx"  v-bind:class="{ percentageStageNotify: percentage(index)<80 && percentage(index)>=60,percentageStageWarn: percentage(index)<60}" >{{percentage(index)}}%</div>
               </div>
               <person  v-for="(p,index) in month.people" :key="p._id"
               :pindex="index" :person="p"  v-show="p.principle != 'TM' " :userName="displayName" :custom="month.customDayType"
@@ -190,7 +182,7 @@
               <div id="tablehead" class="row tablehead">
                 <div class="name">On Duty</div>
                 <div v-for="(p,index) in month.people[0].days"
-                :key="index" class="cellx">{{percentageFTE(index)}}%</div>
+                :key="index" class="cellx"  v-bind:class="{ percentageStageNotify: percentageFTE(index)<80 && percentage(index)>=60,percentageStageWarn: percentageFTE(index)<60}">{{percentageFTE(index)}}%</div>
               </div>
               <person  v-for="(p,index) in month.people" v-show="p.role == 'FTE' && p.principle != 'TM' "
               :key="p._id" :pindex="index" :person="p" :userName="displayName" :custom="month.customDayType"
@@ -205,7 +197,7 @@
               <div id="tablehead" class="row tablehead">
                 <div class="name">On Duty</div>
                 <div v-for="(p,index) in month.people[0].days"
-                :key="index" class="cellx">{{percentageVendor(index)}}%</div>
+                :key="index" class="cellx"  v-bind:class="{ percentageStageNotify: percentageVendor(index)<80 && percentage(index)>=60,percentageStageWarn: percentageVendor(index)<60}">{{percentageVendor(index)}}%</div>
               </div>
               <person  v-for="(p,index) in month.people" v-show="p.role =='Vendor'"
               :key="p._id" :pindex="index" :person="p" :userName="displayName" :custom="month.customDayType"
@@ -404,7 +396,8 @@ export default {
           || this.month.people[b].days[val].workType === 'MS'
           || this.month.people[b].days[val].workType === 'NS'
           || this.month.people[b].days[val].workType === 'PO'
-          || this.month.people[b].days[val].workType === 'PM') {
+          || this.month.people[b].days[val].workType === 'PM'
+          || this.month.people[b].days[val].workType === 'WS') {
             sum += 1;
           }
         }
@@ -420,7 +413,8 @@ export default {
           || this.month.people[b].days[val].workType === 'MS'
           || this.month.people[b].days[val].workType === 'NS'
           || this.month.people[b].days[val].workType === 'PO'
-          || this.month.people[b].days[val].workType === 'PM')) {
+          || this.month.people[b].days[val].workType === 'PM'
+          || this.month.people[b].days[val].workType === 'WS')) {
             sum += 1;
           }
         }
@@ -437,7 +431,8 @@ export default {
           || this.month.people[b].days[val].workType === 'MS'
           || this.month.people[b].days[val].workType === 'NS'
           || this.month.people[b].days[val].workType === 'PO'
-          || this.month.people[b].days[val].workType === 'PM')) {
+          || this.month.people[b].days[val].workType === 'PM'
+          || this.month.people[b].days[val].workType === 'WS')) {
             sum += 1;
           }
         }
@@ -912,5 +907,11 @@ export default {
 }
 .sketch-up-content {
   margin-bottom: 5px;
+}
+.percentageStageWarn {
+  color: red !important;
+}
+.percentageStageNotify {
+  color: orange !important;
 }
 </style>

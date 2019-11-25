@@ -14,7 +14,7 @@
             <h2 v-if="podSelect" class="pickTeam InputButton2" >OR</h2>
             <h2 v-if="podSelect" class="goto" >Go to</h2>
             <el-button v-if="podSelect" class="pickTeam InputButton3" type="primary" @click="goPortal()">Portal</el-button>
-            <el-button v-if="!podSelect && manualLoginBtn" class="InputButton3" type="primary" @click="manualLogin = true">Login</el-button>
+            <el-button v-if="!podSelect && manualLoginBtn" class="InputButton3" type="primary" @click="manualLoginMtd()" >Login</el-button>
         </el-container>
         <el-dialog title="Manual Login" :visible.sync="manualLogin">
             <el-form>
@@ -23,7 +23,7 @@
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="getTeamName();manualLogin = false">Sign In</el-button>
+                <el-button type="primary" @click="getTeamName();manualLogin = false" disabled>Sign In</el-button>
             </div>
         </el-dialog> 
         <div class="PersonalInfo" v-loading="loading" v-if="loading"> 
@@ -285,7 +285,16 @@ export default {
                 })
             }) 
         },
-        
+        manualLoginMtd() {
+            var that = this
+            var myMSALObj = new Msal.UserAgentApplication(this.msalConfig);
+            myMSALObj.acquireTokenPopup(this.requestObj).then(function (tokenResponse) {
+                that.callMSGraph(that.graphConfig.graphMeEndpoint, tokenResponse.accessToken, that.graphAPICallback);
+            }).catch(function (error) {
+                console.log(error);
+                // that.addFeedback('error', 'System Error. Please turn to the developer.');
+            });
+        },
         goPortal() {
             const path = '/portal'
             this.$router.push({ path });

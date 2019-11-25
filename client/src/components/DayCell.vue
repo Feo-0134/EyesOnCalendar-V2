@@ -1,6 +1,9 @@
 <template>
-  <div unselectable="on" v-bind:style="{'background-color': getColor(), 'border-color': getBorderColor()}"  class="cellx workday"  v-on:click="toggle" >
-    <p v-if="!today">{{displayValue}}</p>
+  <div unselectable="on" v-bind:style="{'background-color': getColor(), 'border-color': getBorderColor()}"  
+  :class="{'special':today ,'cellx': true, 'workday': !open, 'workdayII': openSign&&open}"  
+  v-on:click="toggle" >
+    <p>{{displayValue}}</p>
+    <!-- <p v-if="!today">{{displayValue}}</p> -->
     <el-badge :value="caseNum" v-if="today" type="primary">
       <p v-bind:style="{'height': '17px'}" >{{displayValue}}</p>
     </el-badge>
@@ -10,7 +13,7 @@
 <script>
 import _ from 'lodash'
 export default {
-  props: ["day", "pindex", "dindex","testparam","testparamII", "custom", "customParam" , "alias" ],
+  props: ["day", "pindex", "dindex","testparam","testparamII", "custom", "customParam" , "openSign", "alias" ],
   data() {
     return {
       open:false, // sign to open opertation panel
@@ -20,6 +23,11 @@ export default {
       borderColor: ["#ED5565", "#bada55", "#9742b3", "#5D9CEC", "#ffcc80", "#808F85"],
       ctxColor:["#8c2230","#557037", "#403259", "#375c8c","#b36b00", "#3B4D50", "#63474D", "#360036"],
     };
+  },
+  watch: {
+    openSign: function() {
+      if(this.openSign === false) this.open = false
+    }
   },
   mounted() {
       var month = new Date().getMonth() + 1
@@ -46,7 +54,7 @@ export default {
     },
     /* data update */
     toggle() {
-      this.open = !this.open
+      this.open = true
       // this is stupid. Plz use multi params replace later.
       this.$emit('customEvent',this.dindex + 1 + "@" + this.day.workType)
       // var undoStep = { path: this.apiPath, payload: this.apiPayload }; // UNDO STEP HERE -- TODO
@@ -143,6 +151,18 @@ export default {
   margin: 0px;
   padding: 1px;
   border: 3px solid;
+}
+
+.workdayII {
+  font-size: 21px;
+  margin: 0px;
+  padding: 1px;
+  border: 3px solid;
+}
+
+.special.cellx.workday.dayCell {
+    border-left: 5px solid #409eff;
+    width: 35px !important;
 }
 
 .el-badge__content.is-fixed {
