@@ -734,8 +734,8 @@ export default {
     return row.alias.slice(1, -1);
   },
   getCaeNumber() {
-    console.log("get caseNumber from main page");
-    console.log(this.TeamEmails);
+    // console.log("get caseNumber from main page");
+    // console.log(this.TeamEmails);
 
     axios({
       method: 'post',
@@ -755,7 +755,7 @@ export default {
       for(let i in jsondata){
         arrayAlias.push({alias: i, casenumber: jsondata[i]});
       }
-      console.log(arrayAlias);
+      // console.log(arrayAlias);
 
       this.$store.commit('getDailyCaseNumber', arrayAlias);
     })

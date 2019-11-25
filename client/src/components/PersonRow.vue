@@ -104,6 +104,9 @@
                         <el-button class="confirmBtn" type="primary" @click="handleOpen()">Confirm</el-button>
                     </span>
               </div>
+              <div class="closeButton"> 
+                <el-button round size="mini" type="info" @click="handleOpen()">X</el-button>
+              </div>
           </div> 
       </Moveable>
       <day class = "dayCell" 
@@ -430,6 +433,10 @@ day {
   background: inherit;
   padding: inherit;
   color:inherit;
+}
+.closeButton {
+  text-align: right;
+  color: white;
 }
 .grab {cursor: grab;}
 .grabbing {cursor: grabbing;}

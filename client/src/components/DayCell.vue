@@ -2,8 +2,8 @@
   <div unselectable="on" v-bind:style="{'background-color': getColor(), 'border-color': getBorderColor()}"  
   :class="{'special':today ,'cellx': true, 'workday': !open, 'workdayII': openSign&&open}"  
   v-on:click="toggle" >
-    <p>{{displayValue}}</p>
-    <!-- <p v-if="!today">{{displayValue}}</p> -->
+    <!-- <p>{{displayValue}}</p> -->
+    <p v-if="!today">{{displayValue}}</p>
     <el-badge :value="caseNum" v-if="today" type="primary">
       <p v-bind:style="{'height': '17px'}" >{{displayValue}}</p>
     </el-badge>
