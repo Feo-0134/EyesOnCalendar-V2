@@ -492,6 +492,14 @@ export default {
         },
     },
     methods: {
+        formatUsrName(str) {
+            var arr = str.split(" ")
+            var ans = ''
+            var elem;
+            for (elem in arr) { arr[elem] = arr[elem][0].toUpperCase() + arr[elem].slice(1);ans += arr[elem] + ' '}
+            ans.trim()
+            return ans.trim()
+        },
         setCustomDayType() {
             new Promise((resolve, reject)=>{
                 this.$http.post("api/" + this.teamForm.TeamName +
@@ -615,10 +623,11 @@ export default {
             for(var cnt = 0; cnt<vendorArr.length-1; cnt++) {
                 var tempArr = peopleArr[cnt].split("(")[0].split(" ")
                 if(tempArr.length <= 1) {this.addFeedback('notify', 'Employee Name invalid: '+ peopleArr[cnt].split("(")[0]); return;}
-                this.people[cnt].name = peopleArr[cnt].split("(")[0]
-                this.people[cnt].alias = '(' + peopleArr[cnt].split("(")[1]
+                console.log('test')
+                this.people[cnt].name = this.formatUsrName((peopleArr[cnt].split("(")[0]).trim())
+                this.people[cnt].alias = ('(' + peopleArr[cnt].split("(")[1]).trim()
                 if(this.people[cnt].alias.match('v-') != 'v-') 
-                { this.addFeedback('notify', 'vendor alias with no \'v-\' is invalid:' + '(' + peopleArr[cnt].split("(")[1]); return }
+                { this.addFeedback('notify', 'vendor alias with no \'v-\' is invalid:' + '(' + peopleArr[cnt].split("(")[1]); return; }
                 if(this.people[cnt].alias === this.alias) {initiaterExist = true}
                 this.people[cnt].role = "Vendor"
             }
@@ -626,9 +635,9 @@ export default {
             for(var cnt = vendorArr.length-1; cnt<peopleArr.length-1; cnt++) {
                 var tempArr = peopleArr[cnt].split("(")[0].split(" ")
                 if(tempArr.length <= 1) {this.addFeedback('notify', 'Employee Name invalid: '+ peopleArr[cnt].split("(")[0]); return;}
-                this.people[cnt].name = peopleArr[cnt].split("(")[0]
+                this.people[cnt].name = this.formatUsrName((peopleArr[cnt].split("(")[0]).trim())
                 if(peopleArr[cnt].split("(")[1] === undefined) {this.addFeedback('notify', 'Alias invalid: '+ peopleArr[cnt].split("(")[0]); return;}
-                this.people[cnt].alias = '(' + peopleArr[cnt].split("(")[1]
+                this.people[cnt].alias = ('(' + peopleArr[cnt].split("(")[1]).trim()
                 if(this.people[cnt].alias === this.alias) {initiaterExist = true}
                 this.people[cnt].role = "FTE"
             }
