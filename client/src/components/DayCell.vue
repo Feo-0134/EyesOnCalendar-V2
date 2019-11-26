@@ -16,18 +16,13 @@ export default {
   props: ["day", "pindex", "dindex","testparam","testparamII", "custom", "customParam" , "openSign", "alias" ],
   data() {
     return {
-      open:false, // sign to open opertation panel
+      open: false, // sign to open opertation panel
       today: false,
       month: this.$router.currentRoute.path.split('/')[3],
       caseNum: '',
       borderColor: ["#ED5565", "#bada55", "#9742b3", "#5D9CEC", "#ffcc80", "#808F85"],
       ctxColor:["#8c2230","#557037", "#403259", "#375c8c","#b36b00", "#3B4D50", "#63474D", "#360036"],
     };
-  },
-  watch: {
-    openSign: function() {
-      if(this.openSign === false) this.open = false
-    }
   },
   mounted() {
       var month = new Date().getMonth() + 1
@@ -76,6 +71,9 @@ export default {
           this.caseNum = (key.casenumber == 0 ? '' : key.casenumber)
         }
       }
+    },
+    openSign: function() {
+      if(this.openSign === false) this.open = false
     }
   },
   computed: {
