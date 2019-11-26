@@ -6,6 +6,7 @@
         @click="open=false"
         class="moveable"
         v-bind="moveable"
+        :showClose="true"
         @drag="handleDrag"
         @resize="handleResize"
         @scale="handleScale"
@@ -103,6 +104,9 @@
                         <el-button class="confirmBtn" type="primary" @click="handleOpen()">Confirm</el-button>
                     </span>
               </div>
+              <div class="closeButton"> 
+                <el-button round size="mini" type="info" @click="handleOpen()">X</el-button>
+              </div>
           </div> 
       </Moveable>
       <day class = "dayCell" 
@@ -113,6 +117,8 @@
         :testparam="dayType" :testparamII="date" 
         :custom="custom"
         :customParam="customParam" 
+        
+        :alias = "person.alias"
         :openSign="open" />
   </div>
 </template>
@@ -159,7 +165,7 @@ export default {
           throttleDrag: 0,          
           throttleResize: 1,
           throttleScale: 0,
-          throttleRotate: 0
+          throttleRotate: 0,
         },
         open: false, // operation panel params
         alORsl: false, // AL or SL default false means sick leave
@@ -427,6 +433,10 @@ day {
   background: inherit;
   padding: inherit;
   color:inherit;
+}
+.closeButton {
+  text-align: right;
+  color: white;
 }
 .grab {cursor: grab;}
 .grabbing {cursor: grabbing;}
