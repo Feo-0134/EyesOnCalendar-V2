@@ -335,7 +335,7 @@ const extendCalendar = async (ctx) => {
   var p = ctx.params
   try {
     // (new Date().getMonth() + 2) % 12 ? (new Date().getMonth() + 2) % 12 : 12;
-    var lastMonth = (p.month - 1) % 12 ? (p.month - 1) % 12 : 12
+    var lastMonth = ((p.month - 1) % 12) ? (p.month - 1) % 12 : 12
     var lastYear = lastMonth === 12 ? p.year - 1 : p.year
     var currentMonth =
       await Month.findOne({ year: lastYear, month: lastMonth, pod: p.pod })
