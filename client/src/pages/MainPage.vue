@@ -486,15 +486,54 @@ export default {
   },
 
   methods: {
+    addFeedback(type, msg) {
+        const h = this.$createElement;
+        if(type == 'error') {
+            this.$notify.error({
+                title:'Error',
+                message: msg,
+                position:'top-left',
+                duration: 0
+            });
+        }
+        if(type == 'notify') {
+            this.$notify({
+                title:'Notification',
+                message: msg,
+                position:'top-left',
+                type:'warning',
+                duration: 6000
+            });
+        }
+        if(type == 'success') {
+            this.$notify({
+                title: 'Success',
+                message: h('i', { style: 'color: teal'}, msg),
+                position:'top-left',
+                type: 'success',
+                
+            });
+        }
+    },
     extendCalendar() {
       try{
         this.loading = true
+        var that = this
         this.$http.post("/api/"+this.teamName+"/extendCalendar/"+this.$router.currentRoute.path.split('/')[2]+'/'+this.$router.currentRoute.path.split('/')[3])
-        .then((response)=>{location.reload();})
+        .then((response)=>{
+          // location.reload();
+          console.log(response)
+          if(response.data === 'no last month data') {
+            that.loading = false
+            that.addFeedback('notify', 'Please initiate last month data.');
+            return;
+          }
+        })
         setTimeout(() => {
-          location.reload();
+          if(this.loading === true ) location.reload();
         }, 4000);
       }catch(e){
+        console.log(e)
       }
     },
     goPortal() {
