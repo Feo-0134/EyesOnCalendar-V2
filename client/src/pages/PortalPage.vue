@@ -197,15 +197,19 @@
                     </div>
                 </el-form-item>
                 <el-form-item label="">
-                    <p style="width:10% !important;margin-left:-25px;">Shortening</p><p style="width:10% !important;margin-left:-10px; ">Color</p>
+                    <p style="width:10% !important;margin-left:-25px;">Shortening</p><p style="width:10% !important;margin-left:-5px; ">Color</p>
                 </el-form-item>
                 <el-form-item label="Custom DayType I">
-                    <el-input style="width:10% !important;" v-model="teamForm.customDayType.customDayType.Type[0]"></el-input>
-                    <el-input style="width:10% !important;" v-model="teamForm.customDayType.customDayType.color[0]"></el-input>
+                    <el-input style="width:10% !important;"  :placeholder="teamForm.customDayType.customDayType.Type[0]"
+                    v-model="teamForm.updateCustomDayType.customDayType.Type[0]"></el-input>
+                    <el-input style="width:20% !important;"  :placeholder="teamForm.customDayType.customDayType.color[0]"
+                    v-model="teamForm.updateCustomDayType.customDayType.color[0]"></el-input>
                 </el-form-item>
                 <el-form-item label="Custom DayType II">
-                    <el-input style="width:10% !important;" v-model="teamForm.customDayType.customDayType.Type[1]"></el-input>
-                    <el-input style="width:10% !important;" v-model="teamForm.customDayType.customDayType.color[1]"></el-input>
+                    <el-input style="width:10% !important;"  :placeholder="teamForm.customDayType.customDayType.Type[1]"
+                    v-model="teamForm.updateCustomDayType.customDayType.Type[1]"></el-input>
+                    <el-input style="width:20% !important;"  :placeholder="teamForm.customDayType.customDayType.color[1]"
+                    v-model="teamForm.updateCustomDayType.customDayType.color[1]"></el-input>
                 </el-form-item>
                 <el-form-item label="">
                     <el-button type="primary" v-on:click="setCustomDayType()">Update Custom DayType</el-button>
@@ -394,6 +398,12 @@ export default {
                         color: ["#73937E", "#E09891"]
                     }
                 },
+                updateCustomDayType:{
+                    customDayType: {
+                        Type: ['', ''],
+                        color: ['', '']
+                    }
+                },
             },
             people: 
                 [{
@@ -467,6 +477,7 @@ export default {
                         data.workType;
                     });
                     if(res.data) {
+                        this.teamForm.customDayType.customDayType = res.data.customDayType
                         res.data.people = res.data.people.sort((x, y) => x.name.localeCompare(y.name));
                         res.data.people.forEach(person=> {
                             if(person.principle == 'TM') { globalform.TeamManager += person.name + person.alias + ';'}
@@ -483,6 +494,7 @@ export default {
                             if(cntM > cntW && cntM > cntN) {globalform.MorningShift += person.name + ';'}
                             if(cntN > cntW && cntN > cntM) {globalform.NightShift += person.name + ';'}
                         })
+
                         return res.data;
                     }
                 } catch (error) {
@@ -516,10 +528,25 @@ export default {
             return ans.trim()
         },
         setCustomDayType() {
+
+            var updateCustomDayType = this.teamForm.updateCustomDayType
+            updateCustomDayType.customDayType.Type[0] = 
+            this.teamForm.updateCustomDayType.customDayType.Type[0] ||
+             this.teamForm.customDayType.customDayType.Type[0]
+            updateCustomDayType.customDayType.Type[1] = 
+            this.teamForm.updateCustomDayType.customDayType.Type[1] ||
+             this.teamForm.customDayType.customDayType.Type[1]
+            updateCustomDayType.customDayType.color[0] = 
+            this.teamForm.updateCustomDayType.customDayType.color[0] ||
+             this.teamForm.customDayType.customDayType.color[0]
+            updateCustomDayType.customDayType.color[1] = 
+            this.teamForm.updateCustomDayType.customDayType.color[1] ||
+             this.teamForm.customDayType.customDayType.color[1]
+
             new Promise((resolve, reject)=>{
                 this.$http.post("api/" + this.teamForm.TeamName +
                  "/setCustomDayType/"+this.teamForm.Month,
-                 this.teamForm.customDayType)
+                 this.teamForm.updateCustomDayType)
             })
         },
 
