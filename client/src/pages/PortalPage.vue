@@ -196,9 +196,19 @@
                     <el-button type="primary" icon="el-icon-minus" circle v-on:click="delPersonView('None',2)"></el-button>
                     </div>
                 </el-form-item>
-                <el-form-item label="Custom DayType">
-                    <el-input v-model="teamForm.customDayType" ></el-input>
-                    <el-button type="primary" v-on:click="setCustomDayType()">Update</el-button>
+                <el-form-item label="">
+                    <p style="width:10% !important;margin-left:-25px;">Shortening</p><p style="width:10% !important;margin-left:-10px; ">Color</p>
+                </el-form-item>
+                <el-form-item label="Custom DayType I">
+                    <el-input style="width:10% !important;" v-model="teamForm.customDayType.customDayType.Type[0]"></el-input>
+                    <el-input style="width:10% !important;" v-model="teamForm.customDayType.customDayType.color[0]"></el-input>
+                </el-form-item>
+                <el-form-item label="Custom DayType II">
+                    <el-input style="width:10% !important;" v-model="teamForm.customDayType.customDayType.Type[1]"></el-input>
+                    <el-input style="width:10% !important;" v-model="teamForm.customDayType.customDayType.color[1]"></el-input>
+                </el-form-item>
+                <el-form-item label="">
+                    <el-button type="primary" v-on:click="setCustomDayType()">Update Custom DayType</el-button>
                 </el-form-item>
             </el-form>
             <el-form v-if="topic === 2"  :model="teamForm" label-width="140px">
@@ -378,7 +388,12 @@ export default {
                 Vendor:'',
                 MorningShift: '',
                 NightShift: '',
-                customDayType:'{"customDayType": {"Type": ["WS", "WD"],"color": ["#73937E", "#E09891"]}}',
+                customDayType:{
+                    customDayType: {
+                        Type: ["WS", "WD"],
+                        color: ["#73937E", "#E09891"]
+                    }
+                },
             },
             people: 
                 [{
@@ -504,7 +519,7 @@ export default {
             new Promise((resolve, reject)=>{
                 this.$http.post("api/" + this.teamForm.TeamName +
                  "/setCustomDayType/"+this.teamForm.Month,
-                 JSON.parse(this.teamForm.customDayType))
+                 this.teamForm.customDayType)
             })
         },
 
