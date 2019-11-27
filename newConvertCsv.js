@@ -18,13 +18,13 @@ module.exports = function (stream) {
 }
 
 var parseCalendar = function (calendar) {
-  console.log(calendar)
+  // console.log(calendar)
   // var keys = calendar
   return calendar
     .filter(row => {
       if (row[2] !== '') console.log('OK')
       else console.log('REJECT')
-      console.log(row[0])
+      // console.log(row[0])
       return row[2] !== ''
     })
     .filter(row => {
