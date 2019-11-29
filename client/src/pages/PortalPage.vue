@@ -467,7 +467,7 @@ export default {
 
                     this.socket = io({
                         query: {
-                        path: this.teamForm.Month,
+                            path: this.teamForm.Month,
                         },
                     });
                     this.socket.on("update", data => {
@@ -500,10 +500,8 @@ export default {
                     }
                 } catch (error) {
                     console.log(error);
-                    if(((error.toString()).split(':')[1]).match('404') == '404' && this.topic === 0) {
-                        //
-                    }else if(((error.toString()).split(':')[1]).match('404') == '404') {
-                        this.addFeedback('notify', 'Sorry, we didn\'t find your team data of this month. Please initiate your team & calendar first.')
+                    if(((error.toString()).split(':')[1]).match('404') == '404') {
+                        // this.addFeedback('notify', 'Sorry, we didn\'t find your team data of this month. Please initiate your team & calendar first.')
                     }else if(((error.toString()).split(':')[1]).match('sort') == 'sort' ) {
                         //
                     }else if(((error.toString()).split(':')[1]).match('500') == '500') {
