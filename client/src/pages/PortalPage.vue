@@ -463,7 +463,8 @@ export default {
                     globalform = this.initForm
                 }
                 try {
-                    let res = await _.debounce(()=>{this.$http.get(`/api/${globalform.TeamName}/${globalform.Month}`)}, 2000)
+                    let res = await this.$http.get(`/api/${globalform.TeamName}/${globalform.Month}`)
+
                     this.socket = io({
                         query: {
                         path: this.teamForm.Month,
