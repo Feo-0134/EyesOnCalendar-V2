@@ -28,7 +28,7 @@
         </el-tooltip>
       </h1>
         <el-row :gutter="20" class="sketch-up" v-show="true">
-          <el-col :span="14" :offset="9" class="sketch-up-content">
+          <el-col :span="16" :offset="8" class="sketch-up-content">
               <div class="grid-content bg-purple">
                   <el-row :gutter="20" class="cmt-roll">
                   <el-col :span="1">
@@ -42,32 +42,50 @@
                           <div class = "cmtCell" style="display:inline; width:10px; height:50%; background-color: #3b4d50;">NS</div>
                           <div class = "comment">Night Shift</div>
                       </div>    
-                  </div></el-col>          
+                  </div></el-col>        
                   <el-col :span="1"><div class="grid-content bg-purple-light">
                           <div class="grid-content bg-purple-light">
-                          <div class = "cmtCell" style="display:inline; width:10px; height:50%; background-color: #513566;">SL</div>
+                          <div class = "cmtCell" style="display:inline; width:10px; height:50%; background-color: #375c8c;"> T </div>
+                          <div class = "comment">Training</div>
+                      </div>      
+                  </div></el-col>  
+                  <el-col :span="1"><div class="grid-content bg-purple-light">
+                          <div class="grid-content bg-purple-light">
+                          <div class = "cmtCell" style="display:inline; width:10px; height:50%; background-color: #9488A6;">AL</div>
+                          <div class = "comment">Annual Leave</div>
+                      </div>      
+                  </div></el-col>
+                  <el-col :span="1">
+                      <div class="grid-content bg-purple-light">
+                         <div class="grid-content bg-purple-light">
+                          <div class = "cmtCell" style="display:inline; width:10px; height:50%; background-color: #9488A6;">H(M)</div>
+                          <div class = "comment">Morning AL</div>
+                      </div>
+                   </div></el-col>
+                  <el-col :span="1"><div class="grid-content bg-purple-light">
+                          <div class="grid-content bg-purple-light">
+                          <div class = "cmtCell" style="display:inline; width:10px; height:50%; background-color: #9488A6;">H(A)</div>
+                          <div class = "comment">Afternoon AL</div>
+                      </div>    
+                  </div></el-col>
+                  <el-col :span="1"><div class="grid-content bg-purple-light">
+                          <div class="grid-content bg-purple-light">
+                          <div class = "cmtCell" style="display:inline; width:10px; height:50%; background-color: #403259;">SL</div>
                           <div class = "comment">Sick Leave</div>
                       </div>  
                       </div></el-col>
                   <el-col :span="1"><div class="grid-content bg-purple-light">
                           <div class="grid-content bg-purple-light">
-                          <div class = "cmtCell" style="display:inline; width:10px; height:50%; background-color: #513566;">AL</div>
-                          <div class = "comment">Annual Leave</div>
-                      </div>      
-                  </div></el-col>
-                  <el-col :span="1"><div class="grid-content bg-purple-light">
-                          <div class="grid-content bg-purple-light">
-                          <div class = "cmtCell" style="display:inline; width:10px; height:50%; background-color: #360136;">H(M)</div>
+                          <div class = "cmtCell" style="display:inline; width:10px; height:50%; background-color: #403259;">H(M)</div>
                           <div class = "comment">Morning SL</div>
                       </div>      
                   </div></el-col>
                   <el-col :span="1"><div class="grid-content bg-purple-light">
                           <div class="grid-content bg-purple-light">
-                          <div class = "cmtCell" style="display:inline; width:10px; height:50%; background-color: #360136;">H(A)</div>
+                          <div class = "cmtCell" style="display:inline; width:10px; height:50%; background-color: #403259;">H(A)</div>
                           <div class = "comment">Afternoon SL</div>
                   </div>  
                   </div></el-col>
-                        
                   <el-col :span="1"><div class="grid-content bg-purple-light">
                           <div class="grid-content bg-purple-light">
                           <div class = "cmtCell" style="display:inline; width:10px; height:50%; background-color: #b36a01;">PO</div>
@@ -82,28 +100,11 @@
                   </div></el-col>
                   <el-col :span="1"><div class="grid-content bg-purple-light">
                           <div class="grid-content bg-purple-light">
-                          <div class = "cmtCell" style="display:inline; width:10px; height:50%; background-color: #375c8c;"> T </div>
-                          <div class = "comment">Training</div>
-                      </div>      
-                  </div></el-col>
-                  <el-col :span="1"><div class="grid-content bg-purple-light">
-                          <div class="grid-content bg-purple-light">
                           <div class = "cmtCell" style="display:inline; width:10px; height:50%; background-color: #8c2230;">PH</div>
                           <div class = "comment">Public Holiday</div>
                   </div>  
                   </div></el-col>
-                  <el-col :span="1">
-                      <div class="grid-content bg-purple-light">
-                          <div class = "cmtCell" style="display:inline; width:10px; height:50%; background-color: #62474c;">H(M)</div>
-                          <div class = "comment">Morning AL</div>
-                      </div>
-                  </el-col>
-                  <el-col :span="1"><div class="grid-content bg-purple-light">
-                          <div class="grid-content bg-purple-light">
-                          <div class = "cmtCell" style="display:inline; width:10px; height:50%; background-color: #62474c;">H(A)</div>
-                          <div class = "comment">Afternoon AL</div>
-                      </div>    
-                  </div></el-col>   
+ 
                   </el-row>
               </div>
           </el-col>
@@ -929,11 +930,11 @@ export default {
 }
 .comment{
   display:inline; 
-  font-size: 9.5px;
+  font-size: 8.5px;
 }
 .cmtCell {
-  font-size: 10px;
-  padding: 4px;
+  font-size: 8px;
+  padding: 2px;
 }
 .cmt-roll {
   margin-left: 0px !important;

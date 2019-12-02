@@ -20,8 +20,8 @@ export default {
       today: false,
       month: this.$router.currentRoute.path.split('/')[3],
       caseNum: '',
-      borderColor: ["#ED5565", "#bada55", "#9742b3", "#5D9CEC", "#ffcc80", "#808F85"],
-      ctxColor:["#8c2230","#557037", "#403259", "#375c8c","#b36b00", "#3B4D50", "#63474D", "#360036"],
+      borderColor: ["#ED5565", "#bada55", "#9742b3", "#5D9CEC", "#ffcc80", "#808F85","#E1CFFC", "#B700B7"],
+      ctxColor:["#8c2230","#557037", "#403259", "#375c8c","#b36b00", "#3B4D50", "#9488A6", "#360036"],
     };
   },
   mounted() {
@@ -85,17 +85,15 @@ export default {
           else if (this.day.workType == "W") {this.day.workDay = 1;}
           else if (this.day.workType == "MS") {this.day.workDay = 1;}
           else if (this.day.workType == "NS") {this.day.workDay = 5;}
+          else if (this.day.workType == "AL") {this.day.workDay = 6;}
           else if (this.day.workType == "SL") {this.day.workDay = 2;}
-          else if (this.day.workType == "AL") {this.day.workDay = 2;}
-          else if (this.day.workType == "H(M)"){ this.day.workDay = 2;}// //"HMSL","HASL","HMAL","HAAL"
-          else if (this.day.workType == "H(A)") {this.day.workDay = 2;}
           else if (this.day.workType == "T") {this.day.workDay = 3;}
           else if (this.day.workType == "PO") {this.day.workDay = 4;}
           else if (this.day.workType == "PM") {this.day.workDay = 4;}
           else if (this.day.workType == "HMAL") {this.day.workDay = 6;}
           else if (this.day.workType == "HAAL") {this.day.workDay = 6;}
-          else if (this.day.workType == "HASL") {this.day.workDay = 7;}
-          else if (this.day.workType == "HMSL") {this.day.workDay = 7;}
+          else if (this.day.workType == "HASL") {this.day.workDay = 2;}
+          else if (this.day.workType == "HMSL") {this.day.workDay = 2;}
           else {this.day.workDay = this.customParam}
           this.dbFunc()
       }

@@ -24,7 +24,7 @@
                           <!-- <h5 class = "panelFont">Work Day</h5> -->
                     </div>
                     <div class="typeTitle">
-                      <h5 class = "panelFont">Leave Type (Sick Leave / Annual Leave)</h5>
+                      <h5 class = "panelFont">Leave Type (Sick Leave / Annual Leave/ Half Day)</h5>
                     </div>
                     <div class="box-container">
                       <el-popover
@@ -41,22 +41,26 @@
                         trigger="click">
                         <p>Please inform the team about your absence.</p>
                         <a href="mailto:wfms@microsoft.com"><img class = "outlookLogo" src="../../static/img/outlook.png"  alt="Outlook" /></a>
-                        <div slot="reference" v-on:click="cycle($event,3)" class="box0" v-bind:style="{'background-color':getBackground(4)}">{{displayValue(3)}}</div>
+                        <div slot="reference" v-on:click="cycle($event,12)" class="box0 purple1">{{displayValue(4)}}</div>
                       </el-popover>
-                    </div>
-                    <div class="typeTitle">
-                      <h5 class = "panelFont">Half-day Leave Type </h5>
-                      <h5 class = "panelFont">(SL/AL + Morning / Afternoon)</h5>
+                      <el-popover
+                        placement="bottom"
+                        width="200"
+                        trigger="click">
+                        <p>Please inform the team about your absence.</p>
+                        <a href="mailto:wfms@microsoft.com"><img class = "outlookLogo" src="../../static/img/outlook.png"  alt="Outlook" /></a>
+                        <div slot="reference" v-on:click="cycle($event,14)" class="box0 purple1">{{displayValue(5)}}</div>
+                      </el-popover>
+                      
                     </div>
                     <div class="box-container">
-                      <el-switch v-model="alORsl" active-text="AL" inactive-text="SL"> </el-switch>
                       <el-popover
                         placement="bottom"
                         width="200"
                         trigger="click">
                         <p>Please inform the team about your absence.</p>
                         <a href="mailto:wfms@microsoft.com"><img class = "outlookLogo" src="../../static/img/outlook.png"  alt="Outlook" /></a>
-                        <div slot="reference" v-on:click="cycle($event,12)" class="box0" :class="alORsl?'purple2':'purple1'">{{displayValue(4)}}</div>
+                        <div slot="reference" v-on:click="cycle($event,3)" class="box0" v-bind:style="{'background-color':getBackground(6)}">{{displayValue(3)}}</div>
                       </el-popover>
                       <el-popover
                         placement="bottom"
@@ -64,25 +68,34 @@
                         trigger="click">
                         <p>Please inform the team about your absence.</p>
                         <a href="mailto:wfms@microsoft.com"><img class = "outlookLogo" src="../../static/img/outlook.png"  alt="Outlook" /></a>
-                        <div slot="reference" v-on:click="cycle($event,14)" class="box0" :class="alORsl?'purple2':'purple1'">{{displayValue(5)}}</div>
+                        <div slot="reference" v-on:click="cycle($event,13)" class="box0 purple2">{{displayValue(4)}}</div>
+                      </el-popover>
+                      <el-popover
+                        placement="bottom"
+                        width="200"
+                        trigger="click">
+                        <p>Please inform the team about your absence.</p>
+                        <a href="mailto:wfms@microsoft.com"><img class = "outlookLogo" src="../../static/img/outlook.png"  alt="Outlook" /></a>
+                        <div slot="reference" v-on:click="cycle($event,15)" class="box0 purple2">{{displayValue(5)}}</div>
                       </el-popover>
                     </div>
-                    <div style="float: right">
+                    <!-- <div style="float: right">
                       <div class="typeTitle">
                         <h5 class = "panelFont">Custom DayType </h5>
                       </div>
-                      <div class="box-container"  style="margin-top: 45px;">
+                      <div class="box-container" >
                           <div v-on:click="cycle($event,-1)" class="box0" v-bind:style="{'background-color':getBackground(-1)}">{{displayValue(-1)}}</div>
                           <div v-on:click="cycle($event,-2)" class="box0" v-bind:style="{'background-color':getBackground(-2)}">{{displayValue(-2)}}</div>
                       </div>
-                    </div>
+                    </div> -->
                     <div class="typeTitle">
-                      <h5 class = "panelFont">Public Holiday On-duty type </h5>
-                      <h5 class = "panelFont">(OnDuty / MorningShift)</h5>
+                      <h5 class = "panelFont">Holiday On-duty type&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Custom DayType</h5>
                     </div>
                     <div class="box-container">
                         <div v-on:click="cycle($event,10)" class="box0" v-bind:style="{'background-color':getBackground(7)}">{{displayValue(10)}}</div>
                         <div v-on:click="cycle($event,11)" class="box0" v-bind:style="{'background-color':getBackground(7)}">{{displayValue(11)}}</div>
+                        <div v-on:click="cycle($event,-1)" class="box0" v-bind:style="{'margin-left':'30px','background-color':getBackground(-1)}">{{displayValue(-1)}}</div>
+                        <div v-on:click="cycle($event,-2)" class="box0" v-bind:style="{'background-color':getBackground(-2)}">{{displayValue(-2)}}</div>
                     </div>
                     <div class="typeTitle">
                       <h5 class = "panelFont">Other Type</h5>
@@ -148,8 +161,8 @@ export default {
           "#3B4D50", // 2 green1
           "#375c8c", // 3 blue
           "#403259", // 4 purple
-          "#360036", // 5 purple1
-          "#63474D", // 6 purple2
+          "#403259", // 5 purple1
+          "#9488A6", // 6 purple2
           "#b36b00", // 7 orange
           "#555555", // 8 grey
          ],
@@ -354,10 +367,10 @@ day {
   }
 }
 .purple2 {
-  background-color: #63474D;
+  background-color: #9488A6;
 }
 .purple1 {
-  background-color: #360036;
+  background-color: #403259;
 }
 
 .confirmBtn{
