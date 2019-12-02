@@ -5,15 +5,24 @@
       <div v-if="month">
           <div id="tablehead" v-bind:class="{sticky: scrolled}" class="row tablehead">
             <!-- <div class="name"> </div> -->
-            <div class="cellY">Work-Day</div>
-            <div class="cellY">Morning-Shift</div>
-            <div class="cellY">Night-Shift</div>
-            <div class="cellY">Training</div>
-            <div class="cellY">Vacation</div>
-            <div class="cellY">Public-Holiday</div>
-            <div class="cellY">Holiday OnDuty</div>
+            <div class="cellY" @click="workDayShow = !workDayShow">Base-WorkDay</div>
+            <div class="cellY" v-show="workDayShow">Normal</div>
+            <div class="cellY" v-show="workDayShow">Morning-Shift</div>
+            <div class="cellY" v-show="workDayShow">Night-Shift</div>
+            <div class="cellY" v-show="workDayShow">Training</div>
+            <div class="cellY" @click="leaveShow= !leaveShow">Leave</div>
+            <div class="cellY" v-show="leaveShow">Sick-Leave</div> 
+            <div class="cellY" v-show="leaveShow">Annual-Leave</div> 
+            <div class="cellY" @click="holidayShow = !holidayShow">Base-Holiday</div>
+            <div class="cellY" v-show="holidayShow">Holiday-OnDuty</div>
+            <div class="cellY" v-show="holidayShow">Holiday-MS</div>
+            <div class="cellY" >Weekend-Shift</div>
+            <div class="cellY" >Shift-Leave</div>
           </div>
-          <Personsum class="marginLeft" v-for="(p,index) in month.people" v-bind:key="p._id" v-bind:pindex="index" v-bind:person="p"/>
+          <Personsum class="marginLeft" v-for="(p,index) in month.people" 
+          :key="p._id" :pindex="index" :person="p" :workDayShow="workDayShow"
+          :leaveShow="leaveShow" :holidayShow="holidayShow"
+          />
       </div>
       <button class="modal-default-button linkFontStyle" onclick="history.back(-1)">
                 Back To Calendar
@@ -27,6 +36,9 @@ export default {
   components: { Personsum },
     data() {
     return {
+      workDayShow: true,
+      leaveShow: true,
+      holidayShow: true,
       message: "Loading month...",
       scrolled: false,
       changed: false,

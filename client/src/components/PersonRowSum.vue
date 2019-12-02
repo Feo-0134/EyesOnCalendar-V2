@@ -4,19 +4,34 @@ Feature 5 Monthly report
 <template>
   <div class="row">
       <div class="cellx name">{{displayName}}</div>
-      <div class = "celly ">
-        {{fullDayCnt(['W','MS','NS','PO','PM','WS']) +
-         halfDayCnt(["H(A)","H(M)","HMSL","HASL","HMAL","HAAL"])}}
+      <div class = "cellMain " >
+        {{fullDayCnt(['W','MS','NS','T']) +
+         halfDayCnt(["HMSL","HASL","HMAL","HAAL"])}}
       </div>
-      <div class = "celly ">{{fullDayCnt(['MS','PM'])}}</div>
-      <div class = "celly ">{{fullDayCnt(['NS'])}}</div>
-      <div class = "celly ">{{fullDayCnt(['T'])}}</div>
-      <div class = "celly ">
-        {{fullDayCnt(['SL','AL','V']) +
-         halfDayCnt(["H(A)","H(M)","HMSL","HASL","HMAL","HAAL"])}}
+        <div class = "celly " v-show="workDayShow">
+          {{fullDayCnt(['W']) +
+          halfDayCnt(["HMSL","HASL","HMAL","HAAL"])}}
+        </div>
+        <div class = "celly " v-show="workDayShow">{{fullDayCnt(['MS'])}}</div>
+        <div class = "celly " v-show="workDayShow">{{fullDayCnt(['NS'])}}</div>
+        <div class = "celly " v-show="workDayShow">{{fullDayCnt(['T'])}}</div>
+      <div class = "cellMain " >
+        {{fullDayCnt(['SL','AL']) +
+         halfDayCnt(["HMSL","HASL","HMAL","HAAL"])}}
       </div>
-      <div class = "celly ">{{fullDayCnt(['PH','Sft'])}}</div>
-      <div class = "celly ">{{fullDayCnt(['PO','PM'])}}</div>
+        <div class = "celly " v-show="leaveShow">
+          {{fullDayCnt(['SL']) +
+          halfDayCnt(["HMSL","HASL"])}}
+        </div>
+        <div class = "celly " v-show="leaveShow">
+          {{fullDayCnt(['AL']) +
+          halfDayCnt(["HMAL","HAAL"])}}
+        </div>
+      <div class = "cellMain " >{{fullDayCnt(['PH','PO','PM'])}}</div>
+        <div class = "celly " v-show="holidayShow">{{fullDayCnt(['PO','PM'])}}</div>
+        <div class = "celly " v-show="holidayShow">{{fullDayCnt(['PM'])}}</div>
+        <div class = "celly " >{{fullDayCnt(['WS'])}}</div>
+        <div class = "celly " >{{fullDayCnt(['Sft'])}}</div>
   </div>
 </template>
 
@@ -24,7 +39,7 @@ Feature 5 Monthly report
 import Day from "@/components/DayCell";
 export default {
   components: { Day },
-  props: ["person"],
+  props: ["person", "workDayShow", "leaveShow", "holidayShow"],
   data() {
       return {
         size: window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth,
@@ -271,6 +286,17 @@ export default {
   width: 90px;
   margin: 2px;
   background-color: #373737;
+  border-radius: 2px;
+}
+.cellMain {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  vertical-align: middle;
+  width: 90px;
+  margin: 2px;
+  background-color: #4E5560;
   border-radius: 2px;
 }
 
