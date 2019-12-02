@@ -934,7 +934,7 @@ export default {
 }
 .cmtCell {
   font-size: 8px;
-  padding: 2px;
+  padding: 3px;
 }
 .cmt-roll {
   margin-left: 0px !important;
