@@ -1,6 +1,6 @@
 <template>
     <div>
-      <h1>Monthly Report</h1>
+      <h1>Monthly Harry Porter</h1>
       <h2 v-if="!month">{{message}}</h2>
       <div v-if="month">
           <div id="tablehead" v-bind:class="{sticky: scrolled}" class="row tablehead">
