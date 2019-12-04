@@ -4,7 +4,7 @@ Feature 5 Monthly report
 <template>
   <div class="row">
       <div class="cellx name">{{displayName}}</div>
-      <div class = "cellMain " >
+      <!-- <div class = "cellMain " >
         {{fullDayCnt(['W','MS','NS','T']) +
          halfDayCnt(["HMSL","HASL","HMAL","HAAL"])}}
       </div>
@@ -31,7 +31,20 @@ Feature 5 Monthly report
         <div class = "celly " v-show="holidayShow">{{fullDayCnt(['PO','PM'])}}</div>
         <div class = "celly " v-show="holidayShow">{{fullDayCnt(['PM'])}}</div>
         <div class = "celly " >{{fullDayCnt(['WS'])}}</div>
-        <div class = "celly " >{{fullDayCnt(['Sft'])}}</div>
+        <div class = "celly " >{{fullDayCnt(['Sft'])}}</div> -->
+      <div class = "celly ">
+        {{fullDayCnt(['W','MS','NS','PO','PM']) +
+         halfDayCnt(["H(A)","H(M)","HMSL","HASL","HMAL","HAAL"])}}
+      </div>
+      <div class = "celly ">{{fullDayCnt(['MS','PM'])}}</div>
+      <div class = "celly ">{{fullDayCnt(['NS'])}}</div>
+      <div class = "celly ">{{fullDayCnt(['T'])}}</div>
+      <div class = "celly ">
+        {{fullDayCnt(['SL','AL','V']) +
+         halfDayCnt(["H(A)","H(M)","HMSL","HASL","HMAL","HAAL"])}}
+      </div>
+      <div class = "celly ">{{fullDayCnt(['PH'])}}</div>
+      <div class = "celly ">{{fullDayCnt(['PO','PM'])}}</div>
   </div>
 </template>
 
