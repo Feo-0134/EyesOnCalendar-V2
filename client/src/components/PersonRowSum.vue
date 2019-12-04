@@ -210,12 +210,6 @@ export default {
 .purple {
   background-color: #513567;
 }
-.purple1 {
-  background-color: #360036;
-}
-.purple2 {
-  background-color: #63474D;
-}
 
 .orange {
   background-color: #b36b00;
