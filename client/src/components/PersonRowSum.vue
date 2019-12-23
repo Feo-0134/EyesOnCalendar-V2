@@ -4,34 +4,6 @@ Feature 5 Monthly report
 <template>
   <div class="row">
       <div class="cellx name">{{displayName}}</div>
-      <!-- <div class = "cellMain " >
-        {{fullDayCnt(['W','MS','NS','T']) +
-         halfDayCnt(["HMSL","HASL","HMAL","HAAL"])}}
-      </div>
-        <div class = "celly " v-show="workDayShow">
-          {{fullDayCnt(['W']) +
-          halfDayCnt(["HMSL","HASL","HMAL","HAAL"])}}
-        </div>
-        <div class = "celly " v-show="workDayShow">{{fullDayCnt(['MS'])}}</div>
-        <div class = "celly " v-show="workDayShow">{{fullDayCnt(['NS'])}}</div>
-        <div class = "celly " v-show="workDayShow">{{fullDayCnt(['T'])}}</div>
-      <div class = "cellMain " >
-        {{fullDayCnt(['SL','AL']) +
-         halfDayCnt(["HMSL","HASL","HMAL","HAAL"])}}
-      </div>
-        <div class = "celly " v-show="leaveShow">
-          {{fullDayCnt(['SL']) +
-          halfDayCnt(["HMSL","HASL"])}}
-        </div>
-        <div class = "celly " v-show="leaveShow">
-          {{fullDayCnt(['AL']) +
-          halfDayCnt(["HMAL","HAAL"])}}
-        </div>
-      <div class = "cellMain " >{{fullDayCnt(['PH','PO','PM'])}}</div>
-        <div class = "celly " v-show="holidayShow">{{fullDayCnt(['PO','PM'])}}</div>
-        <div class = "celly " v-show="holidayShow">{{fullDayCnt(['PM'])}}</div>
-        <div class = "celly " >{{fullDayCnt(['WS'])}}</div>
-        <div class = "celly " >{{fullDayCnt(['Sft'])}}</div> -->
       <div class = "celly ">
         {{fullDayCnt(['W','MS','NS','PO','PM']) +
          halfDayCnt(["H(A)","H(M)","HMSL","HASL","HMAL","HAAL"])}}
@@ -45,59 +17,71 @@ Feature 5 Monthly report
       </div>
       <div class = "celly ">{{fullDayCnt(['PH'])}}</div>
       <div class = "celly ">{{fullDayCnt(['PO','PM'])}}</div>
+      <div class = "celly ">{{fullDayCnt(['custom0'])}}</div>
+      <div class = "celly ">{{fullDayCnt(['custom1'])}}</div>
   </div>
 </template>
 
 <script>
-import Day from "@/components/DayCell";
 export default {
-  components: { Day },
-  props: ["person", "workDayShow", "leaveShow", "holidayShow"],
+  props: ['person', 'workDayShow', 'leaveShow', 'holidayShow', 'customType'],
   data() {
-      return {
-        size: window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth,
-      } 
+    return {
+      size: window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth,
+    };
   },
   computed: {
     displayName() {
-      var nameArray = this.person.name.split(" ");
-      return nameArray[0] + " " + this.person.alias;
+      const nameArray = this.person.name.split(' ');
+      return nameArray[0] + ' ' + this.person.alias
     },
     large() {
       if (this.size > 1600) return true;
-      else return false;
+      return false;
     },
   },
   created() {
-    window.addEventListener('resize',()=>{
-        this.getWindowWidth()
-    })  
+    window.addEventListener('resize', () => {
+      this.getWindowWidth();
+    });
   },
   methods: {
     /* count day type for report */
-    fullDayCnt:function(typeArray) {
-      var cnt = 0;
-      for(const w of this.person.days) {
-        typeArray.forEach(type => {
-          if(w.workType === type) cnt += 1
-        });
+    fullDayCnt(typeArray) {
+      let cnt = 0;
+      if (typeArray[0] === 'custom0') {
+        for(const w of this.person.days) {
+            if(w.workType === this.customType[0]) cnt += 1
+        }
+      } else if (typeArray[0] === 'custom1') {
+        for(const w of this.person.days) {
+            if(w.workType === this.customType[1]) cnt += 1
+        }
+      } else {
+        for(const w of this.person.days) {
+          typeArray.forEach(type => {
+            if(w.workType === type) cnt += 1
+          });
+        }
       }
-      return cnt
+      return cnt;
     },
-    halfDayCnt:function(typeArray) {
-      var cnt = 0;
+
+    halfDayCnt(typeArray) {
+      let cnt = 0;
       for(const w of this.person.days) {
         typeArray.forEach(type => {
           if(w.workType === type) cnt += 0.5
         });
       }
-      return cnt
+      return cnt;
     },
     /* window view */
     getWindowWidth() {
-      this.size = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth
+      this.size = window.innerWidth
+      || document.documentElement.clientWidth || document.body.clientWidth;
     },
-  }
+  },
 };
 </script>
 

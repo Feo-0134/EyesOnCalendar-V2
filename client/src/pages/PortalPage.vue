@@ -314,8 +314,10 @@
                             <div class="reportCell">Vacation</div>
                             <div class="reportCell">Public-Holiday</div>
                             <div class="reportCell">Holiday OnDuty</div>
+                            <div class="reportCell">{{month.customDayType.Type[0]}}</div>
+                            <div class="reportCell">{{month.customDayType.Type[1]}}</div>
                         </div>
-                        <Personsum v-for="(p,index) in month.people" v-show="p.principle != 'TM' " v-bind:key="p._id" v-bind:pindex="index" v-bind:person="p"/>
+                        <Personsum v-for="(p,index) in month.people" v-show="p.principle != 'TM' " v-bind:key="p._id" v-bind:pindex="index" v-bind:person="p" :customType="month.customDayType.Type"/>
                     </div>
                 </div>
             </el-form>
@@ -1178,7 +1180,7 @@ export default {
     }
     .reportPortal {
         text-align: left;
-        margin-left: 100px;
+        margin-left: 50px;
     }
     .support {
         display:flex;
