@@ -10,8 +10,6 @@ This repository contains:
 2. backend build by Node.js + Koa.js
 3. database mongodb connstr file (.env)
 
-
-
 ## Table of Contents
 
 - [Background](#background)
