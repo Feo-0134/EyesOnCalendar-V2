@@ -1,0 +1,574 @@
+.container 
+{
+    width: 100vw;
+    height: 90vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.el-container .el-main 
+{
+    min-height: fit-content;
+}
+
+.el-container .el-header 
+{
+    background-color: rgb(37, 37, 37);
+    text-align: left;
+    margin-left: 40px;
+    font-size: xx-large;
+}
+
+.el-container .el-aside 
+{
+    border-radius: 5px;
+    background-color:#373737;
+    margin-left: 45px;
+}
+
+.el-container .el-container 
+{
+    height: fit-content;
+}
+
+.column 
+{
+    max-width: 605px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.cell 
+{
+    color: black;
+}
+
+.cellY 
+{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    vertical-align: middle;
+    width: 90px;
+    margin: 2px;
+    border-radius: 2px;
+}
+
+.reportCell 
+{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    vertical-align: middle;
+    width: 90px;
+    margin: 2px;
+}
+
+.cmtCell 
+{
+    font-size: 8px;
+    padding: 3px;
+}
+
+.subbut 
+{
+    background-color: #bada55;
+    border: none;
+    width: 50%;
+    font-size: 1.25em;
+    font-weight: 700;
+    font-family: "Montserrat", sans-serif;
+}
+
+.input-box 
+{
+    display: flex;
+    flex-direction: row;
+    margin: 10px;
+    width: 100%;
+    height: 50px;
+}
+
+.inputfile 
+{
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+}
+
+.inputfile + label 
+{
+    font-size: 1.25em;
+    font-weight: 700;
+    color: white;
+    background-color: #8c2230;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 50%;
+}
+
+.inputfile:focus + label,
+
+.inputfile + label:hover 
+{
+    background-color: #e5374e;
+}
+
+.el-input.is-disabled .el-input__inner
+{
+    border-color: #373737;
+}
+
+.el-input .el-textarea__inner 
+{
+    border: 10px solid gray;
+    border-radius: 4px;
+}
+
+.el-form-item .el-input.is-disabled .el-input__inner
+{
+    background-color: #373737;
+    width: 70%;
+    float: left;
+}
+
+.el-form-item .el-input__inner 
+{
+    color: #fff;
+    background-color: #373737;
+    width: 70%;
+    float: left;
+    border-top-color: rgb(51, 57, 71);
+    border-right-color: rgb(51, 57, 71);
+    border-bottom-color: rgb(51, 57, 71);
+    border-left-color: rgb(51, 57, 71);
+}
+
+.autoFill 
+{
+    width: 100%;
+}
+
+.el-form-item__content 
+{
+    display:flex;
+}
+
+.el-form-item .el-input 
+{
+    width: 80%;
+}
+
+.el-form-item .el-autocomplete 
+{
+    display: flex;
+}
+
+.el-input-group--append .el-input__inner, .el-input-group__prepend 
+{
+    background-color: #373737;
+    color:#fff;
+}
+
+.el-dropdown .el-button 
+{
+    background-color: #373737;
+    border-color: #808080;
+    margin-left: 25px;
+}
+
+.el-autocomplete .el-input__inner 
+{
+    background-color: #262626;
+    border: 1px solid #808080;
+}
+
+.attendance 
+{
+    margin: 9px 0 0 0;
+}
+
+.tablehead 
+{
+    width: 100%;
+}
+
+.sticky 
+{
+    position: fixed;
+    top: 0;
+    background: rgb(37, 37, 37);
+}
+
+.sticky + .tablehead 
+{
+    padding-top: 102px;
+}
+
+/* .el-table th {
+display: table-cell!important; 
+} */
+
+.pointer 
+{
+    cursor: pointer;
+    margin: 0 5px 0 5px;
+    padding: 0 10px 0 10px;
+    text-decoration: none;
+    color: white;
+}
+
+.sectionPointer:hover 
+{
+    background-color: #555;
+}
+
+.pointer:hover 
+{
+    background-color: #555;
+}
+
+.pointer 
+{
+    cursor: pointer;
+    margin: 0 5px 0 5px;
+    padding: 0 10px 0 10px;
+    text-decoration: none;
+    color: white;
+}
+
+.sectionPointer:hover 
+{
+    background-color: #555;
+}
+
+.pointer:hover
+{
+    background-color: #555;
+}
+
+.pointer 
+{
+    cursor: pointer;
+    margin: 0 5px 0 5px;
+    padding: 0 10px 0 10px;
+    text-decoration: none;
+    color: white;
+}
+
+.marginLeft 
+{
+    margin-right: 185px;
+    margin-left: 30px;
+}
+
+
+.linkFontStyle 
+{
+    font-size: 16px;
+    color: #FFF;
+    text-decoration: none;
+}
+
+.modal-default-button 
+{
+    background-color: #4CAF50; /* Green */
+    border: none;
+    color: rgb(255, 255, 255);
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 20px;
+}
+
+.functionalButton 
+{
+    display: inline-block;
+}
+
+.navigationBar .el-button 
+{
+    float: right;
+    background-color:#373737;
+    border-color: gray;
+    margin-right: 20px;
+}
+
+.el-button a:-webkit-any-link 
+{
+    text-decoration: none;
+}
+
+.modal-default-button 
+{
+    background-color: #4CAF50; /* Green */
+    border: none;
+    color: rgb(255, 255, 255);
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 20px;
+}
+
+.el-button a:-webkit-any-link 
+{
+    text-decoration: none;
+}
+
+.button 
+{
+    border: none;
+    margin: 10px;
+    color: rgb(255, 255, 255);
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    border-radius: 15px;
+}
+
+.buttonBackground 
+{
+    background-color: #4CAF50; /* Green */
+}
+
+.WFbutton
+{
+    vertical-align: middle;
+    padding: 7px 15px;
+}
+
+.navigationLink 
+{
+    font-size: 15px;
+    color:gray;
+}
+
+.navigationBar 
+{
+    display: inline-flexbox;
+    margin-bottom: 20px;
+}
+
+.navigationLink 
+{
+    font-size: 15px;
+    color:gray;
+}
+
+.contactPage 
+{
+    display: inline-flex;
+}
+
+.outlookLogo 
+{
+    width: 70px;
+    height: 40px;
+    margin-left: 5px;
+    margin-bottom: 5px;
+}
+
+.outlookLogo2 
+{
+    width: 70px;
+    height: 40px;
+    margin-left: 5px;
+    display:inline-block
+}
+
+.reportPortal .name 
+{
+    width: 160px;
+    font-size: 18px;
+    color: #eaeaea;
+    text-align: left;
+    font-family: "Roboto", Corbel, Avenir, "Lucida Grande", "Lucida Sans", sans-serif;
+}
+.reportPortal .row
+{
+    justify-content: left;
+}
+
+.reportPortal 
+{
+    text-align: left;
+    margin-left: 50px;
+}
+
+.support 
+{
+    display:flex;
+}
+
+.el-submenu .el-submenu__title, .el-submenu .el-submenu__title:hover
+{
+    background-color: #373737;
+    color:#fff;   
+}
+
+.el-aside .el-menu 
+{
+    border-right: solid 0px #373737;
+    background-color: #37373782;
+    margin-left: 35px;
+}
+
+.el-menu-item
+{
+    color:azure !important;
+    background-color: #37373782;
+    display: flex;
+}
+
+.item 
+{
+    margin: 4px;
+}
+
+.el-submenu .el-menu-item:focus, .el-submenu .el-menu-item:hover 
+{
+    outline: 0;
+}
+
+.el-menu-item:focus, .el-menu-item:hover
+{
+    background-color: #409eff42 !important;
+}
+.el-menu-item.is-active 
+{
+    color: #409eff !important;
+}
+
+.el-dialog__wrapper .el-dialog 
+{
+    border-radius: 17px;
+}
+
+.el-main .el-dialog, .el-pager li 
+{
+    background:#cacaca;
+}
+
+
+
+.el-loading-mask 
+{
+    background-color:#262626 !important;
+}
+.noMonth 
+{
+    min-height: 600px;
+}
+.welcome 
+{
+    margin-top: 30px;
+    text-align: center;
+}
+
+.testClass 
+{
+    margin-right: 40px;
+    margin-bottom: 55px;
+    text-align:right;
+}
+.testClassII 
+{
+    text-align: right;
+}
+
+
+
+
+.el-icon-arrow-down 
+{
+    font-size: 12px;
+}
+
+#rolesTabview .el-tabs__item
+{
+    color:#808080;
+}
+
+#rolesTabview .el-tabs__nav-scroll 
+{
+    margin-left:50px;
+}
+
+.el-tabs__nav-wrap::after 
+{
+    visibility: hidden;
+}
+.moveable-line 
+{
+    visibility: hidden;
+}
+
+.mainPanel 
+{
+    min-height: 1000px;
+    min-width: fit-content;
+}
+
+.dateTop
+{
+    padding-left: 25px;
+}
+
+
+.el-tooltip__popper 
+{
+    position: absolute;
+    border-radius: 4px;
+    padding: 10px;
+    z-index: 2000;
+    font-size: 15px;
+    line-height: 1.2;
+    min-width: 10px;
+    word-wrap: break-word;
+}
+
+.comment
+{
+    display:inline; 
+    font-size: 8.5px;
+}
+
+.cmt-roll 
+{
+    margin-left: 0px !important;
+}
+
+.sketch-up 
+{
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+.sketch-up-content 
+{
+    margin-bottom: 5px;
+}
+
+.percentageStageWarn 
+{
+    color: red !important;
+}
+.percentageStageNotify 
+{
+    color: orange !important;
+}
