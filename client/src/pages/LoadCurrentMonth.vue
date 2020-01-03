@@ -3,22 +3,14 @@
 </template>
 
 <script>
-import AccessCell from '@/components/AccessCell'
-import moment from 'moment'
-var store = require('store')
+import AccessCell from '@/components/AccessCell';
+
 export default {
-  components: {AccessCell},
+  components: { AccessCell },
   data() {
     return {
-      current: "Loading current month..."
-    }
+      current: 'Loading current month...',
+    };
   },
-  created() {
-    // if(store.get('user').team === 'default') {
-    //   this.$router.push('/portal')
-    // } else {
-    //   this.$router.push(store.get('user').team + moment().format('/YYYY/M'))
-    // }
-  },
-}
+};
 </script>
