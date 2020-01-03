@@ -24,11 +24,17 @@
     background: rgb(37, 37, 37);
   }
   
+  .title_font{
+    font-size: 50px;
+    font-family: 'Roboto Condensed', sans-serif;    
+  }
+  
   h1 {
     font-family: 'Roboto Condensed', sans-serif;
   }
   
   p {
+    font-family: 'Roboto Condensed', sans-serif;
     text-align: center;
   }
   

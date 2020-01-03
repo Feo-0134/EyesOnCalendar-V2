@@ -1,4 +1,4 @@
-.container 
+.container /*Upload*/
 {
     width: 100vw;
     height: 90vh;
@@ -32,7 +32,7 @@
     height: fit-content;
 }
 
-.column 
+.column /*Upload*/
 {
     max-width: 605px;
     display: flex;
@@ -273,25 +273,13 @@ display: table-cell!important;
 }
 
 
-.linkFontStyle 
+.link_font /* NotFound */
 {
     font-size: 16px;
     color: #FFF;
     text-decoration: none;
 }
 
-.modal-default-button 
-{
-    background-color: #4CAF50; /* Green */
-    border: none;
-    color: rgb(255, 255, 255);
-    padding: 15px 32px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin: 20px;
-}
 
 .functionalButton 
 {
@@ -309,19 +297,6 @@ display: table-cell!important;
 .el-button a:-webkit-any-link 
 {
     text-decoration: none;
-}
-
-.modal-default-button 
-{
-    background-color: #4CAF50; /* Green */
-    border: none;
-    color: rgb(255, 255, 255);
-    padding: 15px 32px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin: 20px;
 }
 
 .el-button a:-webkit-any-link 

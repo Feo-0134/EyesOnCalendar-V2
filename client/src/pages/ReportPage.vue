@@ -24,9 +24,9 @@
           :leaveShow="leaveShow" :holidayShow="holidayShow"
           />
       </div>
-      <button class="modal-default-button linkFontStyle" onclick="history.back(-1)">
+      <el-button type='primary' class="link_font" onclick="history.back(-1)">
                 Back To Calendar
-              </button>
+              </el-button>
   </div>
 </template>
 
