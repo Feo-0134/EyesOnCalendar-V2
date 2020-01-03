@@ -4,21 +4,21 @@ Feature 5 Monthly report
 <template>
   <div class="row">
       <div class="cellx name">{{displayName}}</div>
-      <div class = "celly ">
+      <div class = "report_cell report_content_cell">
         {{fullDayCnt(['W','MS','NS','PO','PM']) +
          halfDayCnt(["H(A)","H(M)","HMSL","HASL","HMAL","HAAL"])}}
       </div>
-      <div class = "celly ">{{fullDayCnt(['MS','PM'])}}</div>
-      <div class = "celly ">{{fullDayCnt(['NS'])}}</div>
-      <div class = "celly ">{{fullDayCnt(['T'])}}</div>
-      <div class = "celly ">
+      <div class = "report_cell report_content_cell">{{fullDayCnt(['MS','PM'])}}</div>
+      <div class = "report_cell report_content_cell">{{fullDayCnt(['NS'])}}</div>
+      <div class = "report_cell report_content_cell">{{fullDayCnt(['T'])}}</div>
+      <div class = "report_cell report_content_cell">
         {{fullDayCnt(['SL','AL','V']) +
          halfDayCnt(["H(A)","H(M)","HMSL","HASL","HMAL","HAAL"])}}
       </div>
-      <div class = "celly ">{{fullDayCnt(['PH'])}}</div>
-      <div class = "celly ">{{fullDayCnt(['PO','PM'])}}</div>
-      <div class = "celly ">{{fullDayCnt(['custom0'])}}</div>
-      <div class = "celly ">{{fullDayCnt(['custom1'])}}</div>
+      <div class = "report_cell report_content_cell">{{fullDayCnt(['PH'])}}</div>
+      <div class = "report_cell report_content_cell">{{fullDayCnt(['PO','PM'])}}</div>
+      <div class = "report_cell report_content_cell">{{fullDayCnt(['custom0'])}}</div>
+      <div class = "report_cell report_content_cell">{{fullDayCnt(['custom1'])}}</div>
   </div>
 </template>
 
@@ -268,17 +268,7 @@ export default {
 .colorFont {
   color: cornflowerblue;
 }
-.celly {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  text-align: center;
-  vertical-align: middle;
-  width: 90px;
-  margin: 2px;
-  background-color: #373737;
-  border-radius: 2px;
-}
+
 .cellMain {
   display: flex;
   flex-direction: column;

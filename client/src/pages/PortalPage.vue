@@ -307,15 +307,15 @@
                     <div v-if="month" class="reportPortal">
                         <div id="tablehead" v-bind:class="{sticky: scrolled}" class="row tablehead">
                             <div class="name"> </div>
-                            <div class="reportCell">Work-Day</div>
-                            <div class="reportCell">Morning-Shift</div>
-                            <div class="reportCell">Night-Shift</div>
-                            <div class="reportCell">Training</div>
-                            <div class="reportCell">Vacation</div>
-                            <div class="reportCell">Public-Holiday</div>
-                            <div class="reportCell">Holiday OnDuty</div>
-                            <div class="reportCell">{{month.customDayType.Type[0]}}</div>
-                            <div class="reportCell">{{month.customDayType.Type[1]}}</div>
+                            <div class="report_cell">Work-Day</div>
+                            <div class="report_cell">Morning-Shift</div>
+                            <div class="report_cell">Night-Shift</div>
+                            <div class="report_cell">Training</div>
+                            <div class="report_cell">Vacation</div>
+                            <div class="report_cell">Public-Holiday</div>
+                            <div class="report_cell">Holiday OnDuty</div>
+                            <div class="report_cell">{{month.customDayType.Type[0]}}</div>
+                            <div class="report_cell">{{month.customDayType.Type[1]}}</div>
                         </div>
                         <Personsum v-for="(p,index) in month.people" v-show="p.principle != 'TM' " v-bind:key="p._id" v-bind:pindex="index" v-bind:person="p" :customType="month.customDayType.Type"/>
                     </div>

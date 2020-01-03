@@ -136,7 +136,7 @@
               <el-col :span="10" :offset="14">
                 <el-alert
                   title="please click copy shift data first and then click open outlook!"
-                  type="warning" 
+                  type="warning"
                   :closable="false"
                   center>
                 </el-alert>
@@ -160,12 +160,12 @@
       <div  v-if="month">
           <el-tabs id="rolesTabview" v-model="activeName" @tab-click="handleClick">
             <el-tab-pane class="mainPanel" label="All Members" name="first">
-               <div id="tablehead" :class="{sticky: scrolled}" class="row tablehead">
+               <div id="tablehead" :class="{sticky: scrolled}" class="row">
                <div class="name"></div>
                <div v-for="(p,index) in month.people[0].days"
                :key="index" class="cellx">{{index+1}}</div>
                </div>
-              <div id="tablehead" class="row tablehead">
+              <div id="tablehead" class="row">
                 <div class="name">On Duty</div>
                 <div v-for="(p,index) in month.people[0].days"
                 :key="index" class="cellx"  v-bind:class="{ percentageStageNotify: percentage(index)<80 && percentage(index)>=60,percentageStageWarn: percentage(index)<60}" >{{percentage(index)}}%</div>
@@ -175,12 +175,12 @@
               :openflag = "openflag" @opensync = "handleOpenPanel"/>
             </el-tab-pane>
             <el-tab-pane class="mainPanel" label="FTE Members" name="second">
-              <div id="tablehead" :class="{sticky: scrolled}" class="row tablehead">
+              <div id="tablehead" :class="{sticky: scrolled}" class="row">
                 <div class="name"></div>
                 <div v-for="(p,index) in month.people[0].days"
                 :key="index" class="cellx">{{index+1}}</div>
               </div>
-              <div id="tablehead" class="row tablehead">
+              <div id="tablehead" class="row">
                 <div class="name">On Duty</div>
                 <div v-for="(p,index) in month.people[0].days"
                 :key="index" class="cellx"  v-bind:class="{ percentageStageNotify: percentageFTE(index)<80 && percentage(index)>=60,percentageStageWarn: percentageFTE(index)<60}">{{percentageFTE(index)}}%</div>
@@ -190,12 +190,12 @@
               :openflag = "openflag" @opensync = "handleOpenPanel"/>
             </el-tab-pane>
             <el-tab-pane class="mainPanel" label="Vendor Members" name="third">
-               <div id="tablehead" :class="{sticky: scrolled}" class="row tablehead">
+               <div id="tablehead" :class="{sticky: scrolled}" class="row">
                 <div class="name"></div>
                 <div v-for="(p,index) in month.people[0].days"
                 :key="index" class="cellx">{{index+1}}</div>
               </div>
-              <div id="tablehead" class="row tablehead">
+              <div id="tablehead" class="row">
                 <div class="name">On Duty</div>
                 <div v-for="(p,index) in month.people[0].days"
                 :key="index" class="cellx"  v-bind:class="{ percentageStageNotify: percentageVendor(index)<80 && percentage(index)>=60,percentageStageWarn: percentageVendor(index)<60}">{{percentageVendor(index)}}%</div>

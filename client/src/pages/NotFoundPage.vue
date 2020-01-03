@@ -19,5 +19,4 @@ export default {
 
 <style>
 @import"test.css";
-
 </style>
