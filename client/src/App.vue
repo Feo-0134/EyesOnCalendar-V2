@@ -3,7 +3,7 @@
     <main>
       <router-view></router-view>
     </main>
-    <footer class="footer">
+    <footer>
       <p>Hope you enjoy using this app.
         For any issues, please contact eyesoncalendar2@microsoft.com
       </p>
