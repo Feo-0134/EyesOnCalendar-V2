@@ -23,8 +23,11 @@
         <a :href="prevMonth" class="pointer">&lt;</a>
         {{prettyDate}}
         <a :href="nextMonth" class="pointer">&gt;</a>
-        <el-tooltip v-show="admin" class="item" effect="light" content="Click to view WFM report" placement="right">
-          <el-button class="WFbutton" type="primary" icon="el-icon-message" size="mini" @click="dialogTableVisible = true" ></el-button>
+        <el-tooltip v-show="admin" class="item"
+        effect="light" content="Click to view WFM report" placement="right">
+          <el-button class="WFbutton" type="primary"
+          icon="el-icon-message" size="mini" @click="dialogTableVisible = true" >
+          </el-button>
         </el-tooltip>
       </h1>
         <el-row :gutter="20" class="sketch-up" v-show="true">
@@ -33,90 +36,106 @@
                   <el-row :gutter="20" class="cmt-roll">
                   <el-col :span="1">
                       <div class="grid-content bg-purple-light">
-                          <div class = "cmtCell" style="display:inline; width:10px; height:50%; background-color: rgb(85, 112, 55);">MS</div>
+                          <div class = "cmtCell"
+                          style="display:inline; width:10px; height:50%;
+                          background-color: rgb(85, 112, 55);">MS</div>
                           <div class = "comment">Morning Shift</div>
                       </div>
                   </el-col>
                   <el-col :span="1"><div class="grid-content bg-purple-light">
                           <div class="grid-content bg-purple-light">
-                          <div class = "cmtCell" style="display:inline; width:10px; height:50%; background-color: #3b4d50;">NS</div>
+                          <div class = "cmtCell" style="display:inline;
+                           width:10px; height:50%; background-color: #3b4d50;">NS</div>
                           <div class = "comment">Night Shift</div>
-                      </div>    
-                  </div></el-col>        
+                      </div>
+                  </div></el-col>
                   <el-col :span="1"><div class="grid-content bg-purple-light">
                           <div class="grid-content bg-purple-light">
-                          <div class = "cmtCell" style="display:inline; width:10px; height:50%; background-color: #375c8c;"> T </div>
+                          <div class = "cmtCell" style="display:inline;
+                           width:10px; height:50%; background-color: #375c8c;"> T </div>
                           <div class = "comment">Training</div>
-                      </div>      
-                  </div></el-col>  
+                      </div>
+                  </div></el-col>
                   <el-col :span="1"><div class="grid-content bg-purple-light">
                           <div class="grid-content bg-purple-light">
-                          <div class = "cmtCell" style="display:inline; width:10px; height:50%; background-color: #9488A6;">AL</div>
+                          <div class = "cmtCell" style="display:inline;
+                           width:10px; height:50%; background-color: #9488A6;">AL</div>
                           <div class = "comment">Annual Leave</div>
-                      </div>      
+                      </div>
                   </div></el-col>
                   <el-col :span="1">
                       <div class="grid-content bg-purple-light">
                          <div class="grid-content bg-purple-light">
-                          <div class = "cmtCell" style="display:inline; width:10px; height:50%; background-color: #9488A6;">H(M)</div>
+                          <div class = "cmtCell" style="display:inline;
+                           width:10px; height:50%; background-color: #9488A6;">H(M)</div>
                           <div class = "comment">Morning AL</div>
                       </div>
                    </div></el-col>
                   <el-col :span="1"><div class="grid-content bg-purple-light">
                           <div class="grid-content bg-purple-light">
-                          <div class = "cmtCell" style="display:inline; width:10px; height:50%; background-color: #9488A6;">H(A)</div>
+                          <div class = "cmtCell" style="display:inline;
+                           width:10px; height:50%; background-color: #9488A6;">H(A)</div>
                           <div class = "comment">Afternoon AL</div>
-                      </div>    
+                      </div>
                   </div></el-col>
                   <el-col :span="1"><div class="grid-content bg-purple-light">
                           <div class="grid-content bg-purple-light">
-                          <div class = "cmtCell" style="display:inline; width:10px; height:50%; background-color: #403259;">SL</div>
+                          <div class = "cmtCell" style="display:inline;
+                           width:10px; height:50%; background-color: #403259;">SL</div>
                           <div class = "comment">Sick Leave</div>
-                      </div>  
+                      </div>
                       </div></el-col>
                   <el-col :span="1"><div class="grid-content bg-purple-light">
                           <div class="grid-content bg-purple-light">
                           <div class = "cmtCell" style="display:inline; width:10px; height:50%; background-color: #403259;">H(M)</div>
                           <div class = "comment">Morning SL</div>
-                      </div>      
+                      </div>
                   </div></el-col>
                   <el-col :span="1"><div class="grid-content bg-purple-light">
                           <div class="grid-content bg-purple-light">
-                          <div class = "cmtCell" style="display:inline; width:10px; height:50%; background-color: #403259;">H(A)</div>
+                          <div class = "cmtCell" style="display:inline;
+                           width:10px; height:50%; background-color: #403259;">H(A)</div>
                           <div class = "comment">Afternoon SL</div>
-                  </div>  
+                  </div>
                   </div></el-col>
                   <el-col :span="1"><div class="grid-content bg-purple-light">
                           <div class="grid-content bg-purple-light">
-                          <div class = "cmtCell" style="display:inline; width:10px; height:50%; background-color: #b36a01;">PO</div>
+                          <div class = "cmtCell" style="display:inline;
+                           width:10px; height:50%; background-color: #b36a01;">PO</div>
                           <div class = "comment">Holiday OnDuty</div>
-                      </div>  
+                      </div>
                       </div></el-col>
                   <el-col :span="1"><div class="grid-content bg-purple-light">
                           <div class="grid-content bg-purple-light">
-                          <div class = "cmtCell" style="display:inline; width:10px; height:50%; background-color: #b36a01;">PM</div>
+                          <div class = "cmtCell" style="display:inline;
+                           width:10px; height:50%; background-color: #b36a01;">PM</div>
                           <div class = "comment">Holiday MS</div>
-                      </div>      
+                      </div>
                   </div></el-col>
                   <el-col :span="1"><div class="grid-content bg-purple-light">
                           <div class="grid-content bg-purple-light">
-                          <div class = "cmtCell" style="display:inline; width:10px; height:50%; background-color: #8c2230;">PH</div>
+                          <div class = "cmtCell" style="display:inline;
+                           width:10px; height:50%; background-color: #8c2230;">PH</div>
                           <div class = "comment">Public Holiday</div>
-                  </div>  
+                  </div>
                   </div></el-col>
- 
                   </el-row>
               </div>
           </el-col>
         </el-row>
-        
-      <el-dialog title="WFM Shift Data" width="70%" :visible.sync="dialogTableVisible" @open="openShiftTable" :before-close="beforeTableViewClose">
-        <el-row id="copy-table" style="background-color:white; font-family: Calibri; color: #000000; font-size:15px">
+
+      <el-dialog title="WFM Shift Data" width="70%" :visible.sync="dialogTableVisible"
+       @open="openShiftTable" :before-close="beforeTableViewClose">
+        <el-row id="copy-table" style="background-color:white;
+         font-family: Calibri; color: #000000; font-size:15px">
             <span >TeamShift Data</span>
-            <el-table :data=WFMData :default-sort = "{prop: 'alias', order: 'scending'}" border width="100%">
-                <el-table-column prop="alias" label="Alias" :formatter="sliceAlise" width="120"> </el-table-column>
+            <el-table :data=WFMData :default-sort = "{prop: 'alias', order: 'scending'}"
+             border width="100%">
+                <el-table-column prop="alias" label="Alias" :formatter="sliceAlise" width="120">
+                  </el-table-column>
                 <el-table-column prop="region"  label="Region" width="120"> </el-table-column>
-                <el-table-column prop="dayofshift" label="Days of Shift" width="150"> </el-table-column>
+                <el-table-column prop="dayofshift" label="Days of Shift" width="150">
+                  </el-table-column>
                 <el-table-column prop="weekdayshift" label="Weekday Shift Time" > </el-table-column>
                 <el-table-column prop="weekendshift" label="Weekend Shift Time" > </el-table-column>
                 <el-table-column prop="lunchtime" label="Lunch Time" > </el-table-column>
@@ -124,7 +143,8 @@
             <br>
             <span>Individual Shift</span>
             <el-table :data=WFMData border width="100%">
-                <el-table-column prop="alias" label="Engineer" width="120" :formatter="sliceAlise"> </el-table-column>
+                <el-table-column prop="alias" label="Engineer"
+                 width="120" :formatter="sliceAlise"> </el-table-column>
                 <el-table-column prop="status" label="Status"> </el-table-column>
                 <el-table-column prop="date" label="Date"> </el-table-column>
             </el-table>
@@ -142,7 +162,6 @@
                 </el-alert>
               </el-col>
             </el-row>
-            
         </span>
       </el-dialog>
       <el-dialog
@@ -153,7 +172,8 @@
         <span>Do you want to initiate this month data?</span>
         <span slot="footer" class="dialog-footer">
           <el-button @click="dialogVisible = false">Cancel</el-button>
-          <el-button type="primary" @click="dialogVisible = false; extendCalendar()">Confirm</el-button>
+          <el-button type="primary" @click="dialogVisible = false;
+           extendCalendar()">Confirm</el-button>
         </span>
       </el-dialog>
       <h2 v-if="!month" v-loading="loading"  class="noMonth welcome" >{{message}}</h2>
@@ -168,10 +188,15 @@
               <div id="tablehead" class="row">
                 <div class="name">On Duty</div>
                 <div v-for="(p,index) in month.people[0].days"
-                :key="index" class="cellx"  v-bind:class="{ percentageStageNotify: percentage(index)<80 && percentage(index)>=60,percentageStageWarn: percentage(index)<60}" >{{percentage(index)}}%</div>
+                :key="index" class="cellx"
+                v-bind:class="{ percentageStageNotify: percentage(index)<80
+                && percentage(index)>=60,percentageStageWarn: percentage(index)<60}" >
+                  {{percentage(index)}}%
+                </div>
               </div>
               <person  v-for="(p,index) in month.people" :key="p._id"
-              :pindex="index" :person="p"  v-show="p.principle != 'TM' " :userName="displayName" :custom="month.customDayType"
+              :pindex="index" :person="p"  v-show="p.principle != 'TM' "
+              :userName="displayName" :custom="month.customDayType"
               :openflag = "openflag" @opensync = "handleOpenPanel"/>
             </el-tab-pane>
             <el-tab-pane class="mainPanel" label="FTE Members" name="second">
@@ -183,10 +208,15 @@
               <div id="tablehead" class="row">
                 <div class="name">On Duty</div>
                 <div v-for="(p,index) in month.people[0].days"
-                :key="index" class="cellx"  v-bind:class="{ percentageStageNotify: percentageFTE(index)<80 && percentage(index)>=60,percentageStageWarn: percentageFTE(index)<60}">{{percentageFTE(index)}}%</div>
+                :key="index" class="cellx"
+                v-bind:class="{ percentageStageNotify: percentageFTE(index)<80
+                && percentage(index)>=60,percentageStageWarn: percentageFTE(index)<60}">
+                  {{percentageFTE(index)}}%</div>
               </div>
-              <person  v-for="(p,index) in month.people" v-show="p.role == 'FTE' && p.principle != 'TM' "
-              :key="p._id" :pindex="index" :person="p" :userName="displayName" :custom="month.customDayType"
+              <person  v-for="(p,index) in month.people"
+               v-show="p.role == 'FTE' && p.principle != 'TM' "
+              :key="p._id" :pindex="index" :person="p" :userName="displayName"
+              :custom="month.customDayType"
               :openflag = "openflag" @opensync = "handleOpenPanel"/>
             </el-tab-pane>
             <el-tab-pane class="mainPanel" label="Vendor Members" name="third">
@@ -198,10 +228,14 @@
               <div id="tablehead" class="row">
                 <div class="name">On Duty</div>
                 <div v-for="(p,index) in month.people[0].days"
-                :key="index" class="cellx"  v-bind:class="{ percentageStageNotify: percentageVendor(index)<80 && percentage(index)>=60,percentageStageWarn: percentageVendor(index)<60}">{{percentageVendor(index)}}%</div>
+                :key="index" class="cellx"
+                 v-bind:class="{ percentageStageNotify: percentageVendor(index)<80
+                 && percentage(index)>=60,percentageStageWarn: percentageVendor(index)<60}">
+                   {{percentageVendor(index)}}%</div>
               </div>
               <person  v-for="(p,index) in month.people" v-show="p.role =='Vendor'"
-              :key="p._id" :pindex="index" :person="p" :userName="displayName" :custom="month.customDayType"
+              :key="p._id" :pindex="index" :person="p" :userName="displayName"
+              :custom="month.customDayType"
               :openflag = "openflag" @opensync = "handleOpenPanel"/>
             </el-tab-pane>
           </el-tabs>

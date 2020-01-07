@@ -1,4 +1,5 @@
-<template> 
+/* eslint-disable max-len */
+<template>
     <el-container v-show="admin">
         <div class="navigationBar">
             <el-button type="primary" v-show="true" @click="goCalendar()">Calendar</el-button>
@@ -17,10 +18,10 @@
                 <el-menu-item index="2" v-on:click="topicView(2)" >
                     <template slot="title" >Team Shift Management</template>
                 </el-menu-item>
-                <el-menu-item index="3" v-on:click="topicView(3)" >                       
+                <el-menu-item index="3" v-on:click="topicView(3)" >
                     <template slot="title" >Team Shift Report</template>
                 </el-menu-item>
-                <el-menu-item index="4" v-on:click="topicView(4)" >  
+                <el-menu-item index="4" v-on:click="topicView(4)" >
                     <template slot="title" >Contact</template>
                 </el-menu-item>
             </el-menu>
@@ -34,7 +35,9 @@
                 </el-form>
                 <div slot="footer" class="dialog-footer">
                     <el-button @click="sftFormVisible = false">Cancel</el-button>
-                    <el-button type="primary" @click="sftPerson();sftFormVisible = false">Confirm</el-button>
+                    <el-button type="primary" @click="sftPerson();sftFormVisible = false">
+                        Confirm
+                    </el-button>
                 </div>
             </el-dialog>
             <el-dialog title="Add Team Manager" :visible.sync="addFormVisible1">
@@ -47,8 +50,16 @@
                     </el-form-item>
                 </el-form>
                 <div slot="footer" class="dialog-footer">
-                    <el-button @click="addFormVisible = false;addFormVisible1 = false;addFormVisible2 = false;">Cancel</el-button>
-                    <el-button type="primary" @click="addPerson();addFormVisible = false;addFormVisible1 = false;addFormVisible2 = false;">Confirm</el-button>
+                    <el-button
+                    @click="addFormVisible = false;
+                    addFormVisible1 = false;addFormVisible2 = false">
+                        Cancel
+                    </el-button>
+                    <el-button type="primary" @click="addPerson();
+                    addFormVisible = false;addFormVisible1 = false;
+                    addFormVisible2 = false;">
+                        Confirm
+                    </el-button>
                 </div>
             </el-dialog>
             <el-dialog title="Add Team Advisor" :visible.sync="addFormVisible2">
@@ -61,8 +72,15 @@
                     </el-form-item>
                 </el-form>
                 <div slot="footer" class="dialog-footer">
-                    <el-button @click="addFormVisible = false;addFormVisible1 = false;addFormVisible2 = false;">Cancel</el-button>
-                    <el-button type="primary" @click="addPerson();addFormVisible = false;addFormVisible1 = false;addFormVisible2 = false;">Confirm</el-button>
+                    <el-button @click="addFormVisible = false;
+                    addFormVisible1 = false;addFormVisible2 = false;">
+                        Cancel
+                    </el-button>
+                    <el-button type="primary" @click="addPerson();
+                    addFormVisible = false;addFormVisible1 = false;
+                    addFormVisible2 = false;">
+                        Confirm
+                    </el-button>
                 </div>
             </el-dialog>
             <el-dialog title="Add FTE/Vendor Member" :visible.sync="addFormVisible">
@@ -75,8 +93,15 @@
                     </el-form-item>
                 </el-form>
                 <div slot="footer" class="dialog-footer">
-                    <el-button @click="addFormVisible = false;addFormVisible1 = false;addFormVisible2 = false;">Cancel</el-button>
-                    <el-button type="primary" @click="addPerson();addFormVisible = false;addFormVisible1 = false;addFormVisible2 = false;">Confirm</el-button>
+                    <el-button @click="addFormVisible = false;
+                    addFormVisible1 = false;addFormVisible2 = false;">
+                        Cancel
+                    </el-button>
+                    <el-button type="primary" @click="addPerson();
+                    addFormVisible = false;addFormVisible1 = false;
+                    addFormVisible2 = false;">
+                        Confirm
+                    </el-button>
                 </div>
             </el-dialog>
             <el-dialog title="Delete Team Manager" :visible.sync="delFormVisible1">
@@ -86,8 +111,15 @@
                     </el-form-item>
                 </el-form>
                 <div slot="footer" class="dialog-footer">
-                    <el-button @click="delFormVisible = false;delFormVisible1 = false;delFormVisible2 = false;">Cancel</el-button>
-                    <el-button type="primary" @click="delPerson();delFormVisible = false;delFormVisible1 = false;delFormVisible2 = false;">Confirm</el-button>
+                    <el-button @click="delFormVisible = false;
+                    delFormVisible1 = false;delFormVisible2 = false;">
+                        Cancel
+                    </el-button>
+                    <el-button type="primary" @click="delPerson();
+                    delFormVisible = false;delFormVisible1 = false;
+                    delFormVisible2 = false;">
+                        Confirm
+                    </el-button>
                 </div>
             </el-dialog>
             <el-dialog title="Delete Team Advisor" :visible.sync="delFormVisible2">
@@ -97,8 +129,15 @@
                     </el-form-item>
                 </el-form>
                 <div slot="footer" class="dialog-footer">
-                    <el-button @click="delFormVisible = false;delFormVisible1 = false;delFormVisible2 = false;">Cancel</el-button>
-                    <el-button type="primary" @click="delPerson();delFormVisible = false;delFormVisible1 = false;delFormVisible2 = false;">Confirm</el-button>
+                    <el-button @click="delFormVisible = false;
+                    delFormVisible1 = false;delFormVisible2 = false;">
+                        Cancel
+                    </el-button>
+                    <el-button type="primary" @click="delPerson();
+                    delFormVisible = false;delFormVisible1 = false;
+                    delFormVisible2 = false;">
+                        Confirm
+                    </el-button>
                 </div>
             </el-dialog>
             <el-dialog title="Delete FTE/Vendor Member" :visible.sync="delFormVisible">
@@ -108,11 +147,18 @@
                     </el-form-item>
                 </el-form>
                 <div slot="footer" class="dialog-footer">
-                    <el-button @click="delFormVisible = false;delFormVisible1 = false;delFormVisible2 = false;">Cancel</el-button>
-                    <el-button type="primary" @click="delPerson();delFormVisible = false;delFormVisible1 = false;delFormVisible2 = false;">Confirm</el-button>
+                    <el-button @click="delFormVisible = false;
+                    delFormVisible1 = false;delFormVisible2 = false;">
+                        Cancel
+                    </el-button>
+                    <el-button type="primary" @click="delPerson();
+                    delFormVisible = false;delFormVisible1 = false;
+                    delFormVisible2 = false;">
+                        Confirm
+                    </el-button>
                 </div>
             </el-dialog>
-            <el-form v-if="topic === 0"   :model="initForm" label-width="140px">
+            <el-form v-if="topic === 0" :model="initForm" label-width="140px">
                 <el-form-item label="Month">
                     <el-date-picker
                     v-model="globalMonth"
@@ -121,9 +167,6 @@
                     placeholder="Pick a month">
                     </el-date-picker>
                 </el-form-item>
-                <!-- <el-form-item label="Team Name">
-                    <el-input v-model="initForm.TeamName" placeholder="Team name should not include number, '/' , '\' or SPACE"></el-input>
-                </el-form-item> -->
                  <el-form-item label="Team Name">
                     <el-autocomplete class="autoFill"
                         v-model="initForm.TeamName"
@@ -133,17 +176,15 @@
                     >
                     </el-autocomplete>
                 </el-form-item>
-                <!-- <el-form-item label="Team Manager">
-                    <el-input v-model="initForm.TeamManager" placeholder="example: karenzhe"></el-input>
-                </el-form-item>
-                <el-form-item label="Technic Advisor">
-                    <el-input v-model="initForm.TeamAdvisor" placeholder="example: danzha;anikshen;"></el-input> 
-                </el-form-item> -->
                 <el-form-item label="FTE">
-                    <el-input v-model="initForm.FTE" placeholder="eg. Roronoa Zoro(zor);Vinsmoke Sanji(sav);"></el-input>
+                    <el-input v-model="initForm.FTE"
+                    placeholder="eg. Roronoa Zoro(zor);Vinsmoke Sanji(sav);">
+                    </el-input>
                 </el-form-item>
                 <el-form-item label="Vendor">
-                    <el-input v-model="initForm.Vendor" placeholder="eg. Skeleton Brook(v-brs);"></el-input>
+                    <el-input v-model="initForm.Vendor"
+                    placeholder="eg. Skeleton Brook(v-brs);">
+                    </el-input>
                 </el-form-item>
                 <span>
                     <el-button @click="cleanInitForm">Cancel</el-button>
@@ -171,48 +212,67 @@
                 <el-form-item label="Team Manager">
                     <el-input v-model="teamForm.TeamManager" :disabled="true"></el-input>
                     <div class="functionalButton">
-                    <el-button type="primary" icon="el-icon-plus" circle v-on:click="addTMTA=true;addPersonView('FTE', 'TM', 0)"></el-button>
-                    <el-button type="primary" icon="el-icon-minus" circle v-on:click="delPersonView('TM',0)"></el-button>
+                    <el-button type="primary" icon="el-icon-plus" circle
+                    v-on:click="addTMTA=true;addPersonView('FTE', 'TM', 0)"></el-button>
+                    <el-button type="primary" icon="el-icon-minus" circle
+                    v-on:click="delPersonView('TM',0)"></el-button>
                     </div>
                 </el-form-item>
                 <el-form-item label="Technical Advisor">
                     <el-input v-model="teamForm.TeamAdvisor" :disabled="true"></el-input>
                     <div class="functionalButton">
-                    <el-button type="primary" icon="el-icon-plus" circle v-on:click="addTMTA=true;addPersonView('', 'TA', 1)"></el-button>
-                    <el-button type="primary" icon="el-icon-minus" circle v-on:click="delPersonView('TA', 1)"></el-button>
+                    <el-button type="primary" icon="el-icon-plus" circle
+                     v-on:click="addTMTA=true;addPersonView('', 'TA', 1)"></el-button>
+                    <el-button type="primary" icon="el-icon-minus" circle
+                     v-on:click="delPersonView('TA', 1)"></el-button>
                     </div>
                 </el-form-item>
                 <el-form-item label="FTE Member">
                     <el-input v-model="teamForm.FTE" :disabled="true"></el-input>
                     <div class="functionalButton">
-                    <el-button type="primary" icon="el-icon-plus" circle v-on:click="addTMTA=false;addPersonView('FTE', 'None',2)"></el-button>
-                    <el-button type="primary" icon="el-icon-minus" circle v-on:click="delPersonView('None',2)"></el-button>
+                    <el-button type="primary" icon="el-icon-plus" circle
+                     v-on:click="addTMTA=false;addPersonView('FTE', 'None',2)"></el-button>
+                    <el-button type="primary" icon="el-icon-minus" circle
+                     v-on:click="delPersonView('None',2)"></el-button>
                     </div>
                 </el-form-item>
                 <el-form-item label="Vendor member">
                     <el-input v-model="teamForm.Vendor" :disabled="true"></el-input>
                     <div class="functionalButton">
-                    <el-button type="primary" icon="el-icon-plus" circle v-on:click="addTMTA=false;addPersonView('Vendor', 'None',2)"></el-button>
-                    <el-button type="primary" icon="el-icon-minus" circle v-on:click="delPersonView('None',2)"></el-button>
+                    <el-button type="primary" icon="el-icon-plus" circle
+                     v-on:click="addTMTA=false;addPersonView('Vendor', 'None',2)"></el-button>
+                    <el-button type="primary" icon="el-icon-minus" circle
+                     v-on:click="delPersonView('None',2)"></el-button>
                     </div>
                 </el-form-item>
                 <el-form-item label="">
-                    <p style="width:10% !important;margin-left:-25px;">Shortening</p><p style="width:10% !important;margin-left:-5px; ">Color</p>
+                    <p style="width:10% !important;margin-left:-25px;">Shortening</p>
+                    <p style="width:10% !important;margin-left:-5px; ">Color</p>
                 </el-form-item>
                 <el-form-item label="Custom DayType I">
-                    <el-input style="width:10% !important;"  :placeholder="teamForm.customDayType.customDayType.Type[0]"
-                    v-model="teamForm.updateCustomDayType.customDayType.Type[0]"></el-input>
-                    <el-input style="width:20% !important;"  :placeholder="teamForm.customDayType.customDayType.color[0]"
-                    v-model="teamForm.updateCustomDayType.customDayType.color[0]"></el-input>
+                    <el-input style="width:10% !important;"
+                     :placeholder="teamForm.customDayType.customDayType.Type[0]"
+                    v-model="teamForm.updateCustomDayType.customDayType.Type[0]">
+                    </el-input>
+                    <el-input style="width:20% !important;"
+                     :placeholder="teamForm.customDayType.customDayType.color[0]"
+                    v-model="teamForm.updateCustomDayType.customDayType.color[0]">
+                    </el-input>
                 </el-form-item>
                 <el-form-item label="Custom DayType II">
-                    <el-input style="width:10% !important;"  :placeholder="teamForm.customDayType.customDayType.Type[1]"
-                    v-model="teamForm.updateCustomDayType.customDayType.Type[1]"></el-input>
-                    <el-input style="width:20% !important;"  :placeholder="teamForm.customDayType.customDayType.color[1]"
-                    v-model="teamForm.updateCustomDayType.customDayType.color[1]"></el-input>
+                    <el-input style="width:10% !important;"
+                     :placeholder="teamForm.customDayType.customDayType.Type[1]"
+                    v-model="teamForm.updateCustomDayType.customDayType.Type[1]">
+                    </el-input>
+                    <el-input style="width:20% !important;"
+                     :placeholder="teamForm.customDayType.customDayType.color[1]"
+                    v-model="teamForm.updateCustomDayType.customDayType.color[1]">
+                    </el-input>
                 </el-form-item>
                 <el-form-item label="">
-                    <el-button type="primary" v-on:click="setCustomDayType()">Update Custom DayType</el-button>
+                    <el-button type="primary" v-on:click="setCustomDayType()">
+                        Update Custom DayType
+                    </el-button>
                 </el-form-item>
             </el-form>
             <el-form v-if="topic === 2"  :model="teamForm" label-width="140px">
@@ -236,18 +296,21 @@
                 <el-form-item label="Morning Shift">
                     <el-input v-model="teamForm.MorningShift" :disabled="true"></el-input>
                     <div class="functionalButton">
-                    <el-button type="primary" icon="el-icon-plus" v-on:click="sftPersonView('MS')" circle></el-button>
+                    <el-button type="primary" icon="el-icon-plus"
+                    v-on:click="sftPersonView('MS')" circle></el-button>
                     </div>
                 </el-form-item>
                 <el-form-item label="Night Shift">
                     <el-input v-model="teamForm.NightShift" :disabled="true"></el-input>
                     <div class="functionalButton">
-                    <el-button type="primary" icon="el-icon-plus" v-on:click="sftPersonView('NS')" circle></el-button>
+                    <el-button type="primary" icon="el-icon-plus"
+                    v-on:click="sftPersonView('NS')" circle></el-button>
                     </div>
                 </el-form-item>
                 <el-form-item label="Normal Shift">
                     <div class="functionalButton">
-                    <el-button type="primary" v-on:click="sftPersonView('W')" >Set Person to Normal Shift</el-button>
+                    <el-button type="primary"
+                     v-on:click="sftPersonView('W')" >Set Person to Normal Shift</el-button>
                     </div>
                 </el-form-item>
             </el-form>
@@ -272,30 +335,50 @@
 
                 <el-form-item label="Send Report">
                     <div>
-                        <el-button type="primary" icon="el-icon-message" @click="dialogTableVisible = true" ></el-button>
+                        <el-button type="primary" icon="el-icon-message"
+                         @click="dialogTableVisible = true" ></el-button>
 
-                        <el-dialog title="WFM Shift Data" width="70%" :visible.sync="dialogTableVisible" @open="openShiftTable" :before-close="beforeTableViewClose">
+                        <el-dialog title="WFM Shift Data" width="70%"
+                         :visible.sync="dialogTableVisible" @open="openShiftTable"
+                         :before-close="beforeTableViewClose">
                             <el-row id="copy-table" style="background-color:white">
                                 <span>Team Shift</span>
                                 <el-table :data=WFMData border width="100%">
-                                    <el-table-column prop="alias" label="Alias" :formatter="sliceAlise" width="120"> </el-table-column>
-                                    <el-table-column prop="region"  label="Region" width="120"> {{copyShiftInfoData}} </el-table-column>
-                                    <el-table-column prop="dayofshift" label="Days of Shift" width="150"> </el-table-column>
-                                    <el-table-column prop="weekdayshift" label="Weekday Shift Time" > </el-table-column>
-                                    <el-table-column prop="weekendshift" label="Weekend Shift Time" > </el-table-column>
-                                    <el-table-column prop="lunchtime" label="Lunch Time" > </el-table-column>
+                                    <el-table-column prop="alias" label="Alias"
+                                    :formatter="sliceAlise" width="120">
+                                    </el-table-column>
+                                    <el-table-column prop="region" label="Region"
+                                     width="120"> {{copyShiftInfoData}}
+                                    </el-table-column>
+                                    <el-table-column prop="dayofshift"
+                                     label="Days of Shift" width="150">
+                                    </el-table-column>
+                                    <el-table-column prop="weekdayshift"
+                                     label="Weekday Shift Time" >
+                                    </el-table-column>
+                                    <el-table-column prop="weekendshift"
+                                     label="Weekend Shift Time" >
+                                    </el-table-column>
+                                    <el-table-column prop="lunchtime"
+                                     label="Lunch Time" >
+                                    </el-table-column>
                                 </el-table>
                                 <br>
                                 <span>Individual Shift</span>
                                 <el-table :data=WFMData border width="100%">
-                                    <el-table-column prop="alias" label="Engineer" width="120" :formatter="sliceAlise"> </el-table-column>
-                                    <el-table-column prop="status" label="Status"> </el-table-column>
-                                    <el-table-column prop="date" label="Date"> </el-table-column>
+                                    <el-table-column prop="alias" label="Engineer"
+                                     width="120" :formatter="sliceAlise"> </el-table-column>
+                                    <el-table-column prop="status" label="Status">
+                                    </el-table-column>
+                                    <el-table-column prop="date" label="Date">
+                                    </el-table-column>
                                 </el-table>
                             </el-row>
                             <span slot="footer" class="dialog-footer">
                                 <el-button @click=copyShiftInfo>{{ copyShiftInfoData }}</el-button>
-                                <el-button type="primary" @click=openOutlook>Open Outlook</el-button>
+                                <el-button type="primary" @click=openOutlook>
+                                    Open Outlook
+                                </el-button>
                             </span>
                         </el-dialog>
 
@@ -317,14 +400,20 @@
                             <div class="report_cell">{{month.customDayType.Type[0]}}</div>
                             <div class="report_cell">{{month.customDayType.Type[1]}}</div>
                         </div>
-                        <Personsum v-for="(p,index) in month.people" v-show="p.principle != 'TM' " v-bind:key="p._id" v-bind:pindex="index" v-bind:person="p" :customType="month.customDayType.Type"/>
+                        <Personsum v-for="(p,index) in month.people"
+                         v-show="p.principle != 'TM' " v-bind:key="p._id"
+                         v-bind:pindex="index" v-bind:person="p"
+                         :customType="month.customDayType.Type"/>
                     </div>
                 </div>
             </el-form>
             <el-form v-if="topic === 4" label-width="140px">
-                    <h1>Contact</h1> 
+                    <p class= "title_font">Contact</p>
                     <p class="contactPage">Please email to </p>
-                    <a href="mailto:eyesoncalendar2@microsoft.com" class="contactPage" >eyesoncalendar2@microsoft.com</a>
+                    <a href="mailto:eyesoncalendar2@microsoft.com"
+                     class="contactPage" >
+                     eyesoncalendar2@microsoft.com
+                    </a>
                     <p class="contactPage">for any question or further support.</p>
             </el-form>
         </el-main>
@@ -334,345 +423,342 @@
 </template>
 
 <script>
-var store = require('store') // global store
-import _ from 'lodash'
-import Personsum from "@/components/PersonRowSum" // report
+import _ from 'lodash';
+import Personsum from "@/components/PersonRowSum"; // report
+
+const store = require('store'); // global store
+
 export default {
-    components: { Personsum },
-    data: function () {
-        return {
-            links: [], // get team name for auto-complete
-            su: false, // admin permission
-            displayName: '',
-            globalMonth: new Date().getFullYear() + '/' + (new Date().getMonth() + 1),
-            topic: 1,
-            
-            addTMTA: false,
+  components: { Personsum },
+  data() {
+    return {
+      links: [], // get team name for auto-complete
+      su: false, // admin permission
+      displayName: '',
+      globalMonth: new Date().getFullYear() + '/' + (new Date().getMonth() + 1),
+      topic: 1,
+      addTMTA: false,
 
-            addFormVisible1:false,
-            addFormVisible2:false,
-            addFormVisible:false,
+      addFormVisible1: false,
+      addFormVisible2: false,
+      addFormVisible: false,
 
-            delFormVisible1:false,
-            delFormVisible2:false,
-            delFormVisible:false,
+      delFormVisible1: false,
+      delFormVisible2: false,
+      delFormVisible: false,
 
-            sftFormVisible:false,
+      sftFormVisible: false,
 
-            addForm: {
-                alias: '',
-                name: '',
-                role: '',
-                principle: ''
-            },
-            delForm: {
-                alias: '',
-                name: 'default',
-                role: 'default',
-                principle: ''
-            },
-            sftForm: {
-                alias: '',
-                workType: '',
-            },
-            initForm: {
-                TeamName: '',
-                Month: null,
-                TeamManager: '',
-                TeamAdvisor: '',
-                FTE: '',
-                Vendor: '',
-                MorningShift: '',
-                NightShift: '',
-            },
-            teamForm: {
-                TeamName: store.get('user').team,
-                Month: null,
-                TeamManager:'',
-                TeamAdvisor:'',
-                FTE:'',
-                Vendor:'',
-                MorningShift: '',
-                NightShift: '',
-                customDayType:{
-                    customDayType: {
-                        Type: ["WS", "WD"],
-                        color: ["#73937E", "#E09891"]
-                    }
-                },
-                updateCustomDayType:{
-                    customDayType: {
-                        Type: ['', ''],
-                        color: ['', '']
-                    }
-                },
-            },
-            people: 
-                [{
-                    principle:"None",
-                    role:"default",
-                    alias:"default",
-                    name:"default"
-                }],
-            formLabelWidth: '100px', // <-- table format start
-            scrolled: false,
-            changed: false, // <-- table format end
+      addForm: {
+        alias: '',
+        name: '',
+        role: '',
+        principle: '',
+      },
+      delForm: {
+        alias: '',
+        name: 'default',
+        role: 'default',
+        principle: '',
+      },
+      sftForm: {
+        alias: '',
+        workType: '',
+      },
+      initForm: {
+        TeamName: '',
+        Month: null,
+        TeamManager: '',
+        TeamAdvisor: '',
+        FTE: '',
+        Vendor: '',
+        MorningShift: '',
+        NightShift: '',
+      },
+      teamForm: {
+        TeamName: store.get('user').team,
+        Month: null,
+        TeamManager: '',
+        TeamAdvisor: '',
+        FTE: '',
+        Vendor: '',
+        MorningShift: '',
+        NightShift: '',
+        customDayType: {
+          customDayType: {
+            Type: ["WS", "WD"],
+            color: ["#73937E", "#E09891"]
+          },
+        },
+        updateCustomDayType: {
+          customDayType: {
+            Type: ['', ''],
+            color: ['', ''],
+          },
+        },
+      },
+      people:
+        [{
+          principle: "None",
+          role: "default",
+          alias: "default",
+          name: "default",
+        }],
+      formLabelWidth: '100px', // <-- table format start
+      scrolled: false,
+      changed: false, // <-- table format end
 
-            dialogTableVisible: false,
-            copyShiftInfoData: 'Copy Shift Data',
-            WFMData: [],
-            shiftData: [],
-            Region:{
-                gcr: "GCR",
-                eu: "EMEA",
-                us: "US"
-            },
-            DayOfShift:{
-                normal: "Mon-Fri",
-                weekendshift: "Sun-Thu"
-            },
-            WeekdayShiftType:{
-                normal: "9:00am~18:00pm",
-                morningshift: "7:00am~16:00pm",
-                nightshift: "2:00pm~23:00pm"
-            },
-            WeekendShiftType:{
-                saturday: "Sat: 7:00am~16:00pm",
-                sunday: "Sun: 7:00am~16:00pm",
-            },
-            LunchTime:{
-                normal: "12:30~13:30pm",
-                morningshift: "11:30~12:30pm",
-            },
+      dialogTableVisible: false,
+      copyShiftInfoData: 'Copy Shift Data',
+      WFMData: [],
+      shiftData: [],
+      Region: {
+        gcr: 'GCR',
+        eu: 'EMEA',
+        us: 'US',
+      },
+      DayOfShift: {
+        normal: 'Mon-Fri',
+        weekendshift: 'Sun-Thu',
+      },
+      WeekdayShiftType: {
+        normal: '9:00am~18:00pm',
+        morningshift: '7:00am~16:00pm',
+        nightshift: '2:00pm~23:00pm',
+      },
+      WeekendShiftType: {
+        saturday: 'Sat: 7:00am~16:00pm',
+        sunday: 'Sun: 7:00am~16:00pm',
+      },
+      LunchTime: {
+        normal: '12:30~13:30pm',
+        morningshift: '11:30~12:30pm',
+      },
+    };
+  },
+  asyncComputed: {
+    month: {
+      async get() {
+        this.cleanTeamForm();
+        this.cleanInitForm();
+        this.teamForm.Month = this.globalMonth;
+        this.initForm.Month = this.globalMonth;
+        let globalform = this.teamForm;
+        let year = this.globalMonth.split('/')[0];
+        let month = (this.globalMonth.split('/')[1] - 1);
+        if (month === 0) {
+          year -= 1;
+          month = 12;
         }
-    },
-    asyncComputed: {
-        month: {
-            async get() {
-                this.cleanTeamForm()
-                this.cleanInitForm()
-                this.teamForm.Month = this.globalMonth
-                this.initForm.Month = this.globalMonth
-                let globalform = this.teamForm
-                var year = this.globalMonth.split('/')[0]
-                var month = (this.globalMonth.split('/')[1] - 1)
-                if(month === 0) {
-                    year = year - 1
-                    month = 12
-                }
-                this.initForm.Month = year +'/'+ month
-                if(this.topic === 0) {
-                    globalform = this.initForm
-                }
-                try {
-                    let res = await this.$http.get(`/api/${globalform.TeamName}/${globalform.Month}`)
+        this.initForm.Month = year +'/'+ month
+        if (this.topic === 0) {
+          globalform = this.initForm;
+        }
+        try {
+          const res = await this.$http.get(`/api/${globalform.TeamName}/${globalform.Month}`)
 
-                    this.socket = io({
-                        query: {
-                            path: this.teamForm.Month,
-                        },
-                    });
-                    this.socket.on("update", data => {
-                        if (data.randomNumber == this.$randomNumber) return;
-                        this.month.people[data.indexes.p].days[data.indexes.d].workDay =
-                        data.workDay;
-                        this.month.people[data.indexes.p].days[data.indexes.d].workType =
-                        data.workType;
-                    });
-                    if(res.data) {
-                        this.teamForm.customDayType.customDayType = res.data.customDayType
-                        res.data.people = res.data.people.sort((x, y) => x.name.localeCompare(y.name));
-                        res.data.people.forEach(person=> {
-                            if(person.principle == 'TM') { globalform.TeamManager += person.name + person.alias + ';'}
-                            else if(person.principle == 'TA') { globalform.TeamAdvisor += person.name + person.alias + ';'}
-                            
-                            if(person.role == 'FTE') { globalform.FTE += person.name + person.alias + ';'}
-                            else if(person.role == 'Vendor') { globalform.Vendor += person.name + person.alias + ';'}
-                            var cntM = 0, cntN = 0, cntW = 0 
-                            person.days.forEach(day => {
-                                if(day.workType === 'W') {cntW += 1}
-                                else if(day.workType === 'MS') {cntM += 1}
-                                else if(day.workType === 'NS') {cntN += 1}
-                            })
-                            if(cntM > cntW && cntM > cntN) {globalform.MorningShift += person.name + ';'}
-                            if(cntN > cntW && cntN > cntM) {globalform.NightShift += person.name + ';'}
-                        })
-
-                        return res.data;
-                    }
-                } catch (error) {
-                    console.log(error);
-                    if(((error.toString()).split(':')[1]).match('404') == '404') {
-                        // this.addFeedback('notify', 'Sorry, we didn\'t find your team data of this month. Please initiate your team & calendar first.')
-                    }else if(((error.toString()).split(':')[1]).match('sort') == 'sort' ) {
-                        //
-                    }else if(((error.toString()).split(':')[1]).match('500') == '500') {
-                        //
-                    }
-                    else {this.addFeedback('error', (error.toString()).split(':')[1] + '\nPlease contact eyesoncalendar team.');}
-                    this.socket = null;
-                    return null;
-                }
+          this.socket = io({
+            query: {
+              path: this.teamForm.Month,
             },
-            watch() {
-                this.changed;
-            },
-        },
+          });
+          this.socket.on('update', (data) => {
+            if (data.randomNumber == this.$randomNumber) return;
+            this.month.people[data.indexes.p].days[data.indexes.d].workDay = data.workDay;
+            this.month.people[data.indexes.p].days[data.indexes.d].workType = data.workType;
+          });
+          if (res.data) {
+            this.teamForm.customDayType.customDayType = res.data.customDayType
+            res.data.people = res.data.people.sort((x, y) => x.name.localeCompare(y.name));
+            res.data.people.forEach((person) => {
+              if (person.principle == 'TM') { globalform.TeamManager += person.name + person.alias + ';'}
+              else if(person.principle == 'TA') { globalform.TeamAdvisor += person.name + person.alias + ';'}
+
+              if (person.role == 'FTE') { globalform.FTE += person.name + person.alias + ';'}
+              else if (person.role == 'Vendor') { globalform.Vendor += person.name + person.alias + ';'}
+              let cntM = 0;
+              let cntN = 0;
+              let cntW = 0;
+              person.days.forEach((day) => {
+                if (day.workType === 'W') {
+                  cntW += 1;
+                } else if (day.workType === 'MS') {
+                  cntM += 1;
+                } else if (day.workType === 'NS') {
+                  cntN += 1;
+                }
+              });
+              if (cntM > cntW && cntM > cntN) { globalform.MorningShift += person.name + ';' }
+              if (cntN > cntW && cntN > cntM) { globalform.NightShift += person.name + ';' }
+            });
+
+            return res.data;
+          }
+        } catch (error) {
+          console.log(error);
+          if (((error.toString()).split(':')[1]).match('404') == '404') {
+            ;
+          } else if (((error.toString()).split(':')[1]).match('sort') == 'sort' ) {
+            ;
+          } else if (((error.toString()).split(':')[1]).match('500') == '500') {
+            ;
+          } else {
+            this.addFeedback('error', (error.toString()).split(':')[1] + '\nPlease contact eyesoncalendar team.');
+          }
+          this.socket = null;
+          return null;
+        }
+      },
+      watch: ['changed'],
     },
-    methods: {
-        formatUsrName(str) {
-            var arr = str.split(" ")
-            var ans = ''
-            var elem;
-            for (elem in arr) { arr[elem] = arr[elem][0].toUpperCase() + arr[elem].slice(1);ans += arr[elem] + ' '}
-            ans.trim()
-            return ans.trim()
-        },
-        setCustomDayType() {
+  },
+  methods: {
+    formatUsrName(str) {
+      let arr = str.split(' ');
+      let ans = '';
+      let elem;
+      for (elem in arr) { 
+          arr[elem] = arr[elem][0].toUpperCase() +
+          arr[elem].slice(1);ans += arr[elem] + ' '
+      }
+      ans.trim();
+      return ans.trim();
+    },
+    setCustomDayType() {
+      let updateCustomDayType = this.teamForm.updateCustomDayType
+      updateCustomDayType.customDayType.Type[0] =
+        this.teamForm.updateCustomDayType.customDayType.Type[0]
+        || this.teamForm.customDayType.customDayType.Type[0];
+      updateCustomDayType.customDayType.Type[1] =
+        this.teamForm.updateCustomDayType.customDayType.Type[1]
+        || this.teamForm.customDayType.customDayType.Type[1];
+      updateCustomDayType.customDayType.color[0] =
+        this.teamForm.updateCustomDayType.customDayType.color[0]
+        || this.teamForm.customDayType.customDayType.color[0];
+      updateCustomDayType.customDayType.color[1] =
+        this.teamForm.updateCustomDayType.customDayType.color[1]
+        || this.teamForm.customDayType.customDayType.color[1];
 
-            var updateCustomDayType = this.teamForm.updateCustomDayType
-            updateCustomDayType.customDayType.Type[0] = 
-            this.teamForm.updateCustomDayType.customDayType.Type[0] ||
-             this.teamForm.customDayType.customDayType.Type[0]
-            updateCustomDayType.customDayType.Type[1] = 
-            this.teamForm.updateCustomDayType.customDayType.Type[1] ||
-             this.teamForm.customDayType.customDayType.Type[1]
-            updateCustomDayType.customDayType.color[0] = 
-            this.teamForm.updateCustomDayType.customDayType.color[0] ||
-             this.teamForm.customDayType.customDayType.color[0]
-            updateCustomDayType.customDayType.color[1] = 
-            this.teamForm.updateCustomDayType.customDayType.color[1] ||
-             this.teamForm.customDayType.customDayType.color[1]
+      this.$http.post("api/" + this.teamForm.TeamName +
+        "/setCustomDayType/"+this.teamForm.Month,
+        this.teamForm.updateCustomDayType);
+    },
 
-            this.$http.post("api/" + this.teamForm.TeamName +
-                "/setCustomDayType/"+this.teamForm.Month,
-                this.teamForm.updateCustomDayType)
+    goCalendar() {
+      let path = '';
+      if (this.topic === 0 && this.initForm.TeamName !== '') {
+        path = '/' + this.initForm.TeamName +'/' + this.globalMonth
+      } else if (this.teamForm.TeamName !== '') {
+        path = '/' + this.teamForm.TeamName +'/' + this.globalMonth
+      } else {
+        path = '/TEMPLATE/' + this.globalMonth
+      }
+      this.$router.push({ path });
+      window.location.reload();
+    },
 
-        },
+    topicView(type) {
+      this.topic = type;
+    },
 
-        goCalendar() {
-            let path = ''
-            if(this.topic === 0 && this.initForm.TeamName !== '') {
-                path = '/' + this.initForm.TeamName +'/' + this.globalMonth
-            } else if( this.teamForm.TeamName !== ''){
-                path = '/' + this.teamForm.TeamName +'/' + this.globalMonth
-            } else {
-                path = '/TEMPLATE/' + this.globalMonth
-            }
-            this.$router.push({ path });
-            location.reload();
-        },
-        
-        topicView(type) {
-            this.topic = type
-        },
+    cleanInitForm() {
+      this.initForm.FTE = '';
+      this.initForm.Vendor = '';
+    },
+    cleanTeamForm() {
+      this.teamForm.TeamManager = '';
+      this.teamForm.TeamAdvisor = '';
+      this.teamForm.FTE = '';
+      this.teamForm.Vendor = '';
+      this.teamForm.MorningShift = '';
+      this.teamForm.NightShift = '';
+    },
+    cleanAddForm() {
+      this.addForm.name = '';
+      this.addForm.alias = '';
+    },
+    cleanDelForm() {
+      this.delForm.alias = '';
+      this.delForm.principle = '';
+    },
+    cleanSftForm() {
+      this.sftForm.alias = '';
+    },
 
-        cleanInitForm: function () {
-            this.initForm.FTE = ""
-            this.initForm.Vendor = ""
-        },
-        cleanTeamForm: function () {
-            this.teamForm.TeamManager = ""
-            this.teamForm.TeamAdvisor = ""
-            this.teamForm.FTE = ""
-            this.teamForm.Vendor = ""
-            this.teamForm.MorningShift = ""
-            this.teamForm.NightShift = ""
-        },
-        cleanAddForm: function () {
-            this.addForm.name = ""
-            this.addForm.alias = ""
-        },
-        cleanDelForm: function () {
-            this.delForm.alias = ""
-            this.delForm.principle = ""
-        },
-        cleanSftForm: function () {
-            this.sftForm.alias = ""
-        },
+    addPersonView(role, principle, num) {
+      this.cleanAddForm();
+      this.addForm.role = role;
+      this.addForm.principle = principle;
+      if (num === 0) {
+        this.addFormVisible1 = true;
+      } else if (num === 1) {
+        this.addFormVisible2 = true;
+      } else if (num === 2) {
+        this.addFormVisible = true;
+      }
+    },
+    delPersonView(principle, num) {
+      this.cleanDelForm();
+      this.delForm.principle = principle;
+      if (num === 0) {
+        this.delFormVisible1 = true;
+      } else if (num === 1) {
+        this.delFormVisible2 = true;
+      } else if (num === 2) {
+        this.delFormVisible = true;
+      }
+    },
+    sftPersonView(workType) {
+      this.cleanSftForm();
+      this.sftForm.workType = workType;
+      this.sftFormVisible = true;
+    },
 
-        addPersonView(role, principle, num) {
-            this.cleanAddForm()
-            this.addForm.role = role
-            this.addForm.principle = principle
-            if(num === 0) {
-                this.addFormVisible1 = true
-            } else if(num === 1) {
-                this.addFormVisible2 = true
-            } else if(num === 2) {
-                this.addFormVisible = true
-            }
-        },
-        delPersonView: function(principle, num) {
-            this.cleanDelForm()
-            this.delForm.principle = principle
-            
-            if(num === 0) {
-                this.delFormVisible1 = true
-            } else if(num === 1) {
-                this.delFormVisible2 = true
-            } else if(num === 2) {
-                this.delFormVisible = true
-            }
-        },
-        sftPersonView(workType) {
-            this.cleanSftForm()
-            this.sftForm.workType = workType
-            this.sftFormVisible = true
-        },
-        
-        initFormatCheck: function () {
-            // var MontArr = (this.initForm.Month).split("/");
-            // if(MontArr.length != 2 || MontArr[1] < 1 || MontArr[1] > 12) {
-            //     return -1;
-            // }
-            var str = this.initForm.TeamName
-            var ilen
-            for(ilen=0;ilen<str.length;ilen++)
-            {
-                if(str.charAt(ilen) > '0' && str.charAt(ilen) < '9' )
-                {
-                    return -1
-                } 
-                if(str.charAt(ilen) === '/' || str.charAt(ilen) === '\\' || str.charAt(ilen) === ' ')
-                {
-                    return -2
-                } 
-            }
-            // if the last letter is not ';' then insert ';'
-            if((this.initForm.Vendor).length !== 0 && (this.initForm.Vendor)[(this.initForm.Vendor).length - 1] != ';') {
-                this.initForm.Vendor = this.initForm.Vendor + ";"
-            }
-            if((this.initForm.FTE).length !== 0 && (this.initForm.FTE)[(this.initForm.FTE).length - 1] != ';') {
-                this.initForm.FTE = this.initForm.FTE + ";"
-            }
-        },
-        initiateCalendar: function () {
-            if(this.initFormatCheck() === -1) {
-                this.addFeedback('notify', 'Team-Name can not include a number')
-                return;
-            }
-            else if(this.initFormatCheck() === -2) {
-                this.addFeedback('notify', 'Team-Name can not include \'/\'  or \'\\\' or SPACE')
-                return;
-            }
-            var initiaterExist = false
-            var peopleArr = (this.initForm.Vendor + this.initForm.FTE).split(";");
-            for(var cnt = 1; cnt<peopleArr.length-1; cnt++) {
-                this.people[cnt] = Object.assign({}, this.people[0])
-            }
-            var vendorArr = (this.initForm.Vendor).split(";");
-            for(var cnt = 0; cnt<vendorArr.length-1; cnt++) {
-                var tempArr = peopleArr[cnt].split("(")[0].split(" ")
-                if(tempArr.length <= 1) {this.addFeedback('notify', 'Employee Name invalid: '+ peopleArr[cnt].split("(")[0]); return;}
-                console.log('test')
-                this.people[cnt].name = this.formatUsrName((peopleArr[cnt].split("(")[0]).trim())
-                this.people[cnt].alias = ('(' + peopleArr[cnt].split("(")[1]).trim()
-                if(this.people[cnt].alias.match('v-') != 'v-') 
-                { this.addFeedback('notify', 'vendor alias with no \'v-\' is invalid:' + '(' + peopleArr[cnt].split("(")[1]); return; }
-                if(this.people[cnt].alias === this.alias) {initiaterExist = true}
-                this.people[cnt].role = "Vendor"
-            }
+    initFormatCheck() {
+      let str = this.initForm.TeamName;
+      let ilen;
+      for (ilen = 0; ilen < str.length; ilen += 1) {
+        if (str.charAt(ilen) > '0' && str.charAt(ilen) < '9') {
+          return -1;
+        }
+        if (str.charAt(ilen) === '/' || str.charAt(ilen) === '\\' || str.charAt(ilen) === ' ') {
+          return -2;
+        }
+      }
+      // if the last letter is not ';' then insert ';'
+      if ((this.initForm.Vendor).length !== 0 && (this.initForm.Vendor)[(this.initForm.Vendor).length - 1] != ';') {
+        this.initForm.Vendor = this.initForm.Vendor + ";"
+      }
+      if ((this.initForm.FTE).length !== 0 && (this.initForm.FTE)[(this.initForm.FTE).length - 1] != ';') {
+        this.initForm.FTE = this.initForm.FTE + ";"
+      }
+    },
+    initiateCalendar() {
+        if(this.initFormatCheck() === -1) {
+            this.addFeedback('notify', 'Team-Name can not include a number')
+            return;
+        }
+        else if(this.initFormatCheck() === -2) {
+            this.addFeedback('notify', 'Team-Name can not include \'/\'  or \'\\\' or SPACE')
+            return;
+        }
+        var initiaterExist = false
+        var peopleArr = (this.initForm.Vendor + this.initForm.FTE).split(";");
+        for(var cnt = 1; cnt<peopleArr.length-1; cnt++) {
+            this.people[cnt] = Object.assign({}, this.people[0])
+        }
+        var vendorArr = (this.initForm.Vendor).split(";");
+        for(var cnt = 0; cnt<vendorArr.length-1; cnt++) {
+            var tempArr = peopleArr[cnt].split("(")[0].split(" ")
+            if(tempArr.length <= 1) {this.addFeedback('notify', 'Employee Name invalid: '+ peopleArr[cnt].split("(")[0]); return;}
+            console.log('test')
+            this.people[cnt].name = this.formatUsrName((peopleArr[cnt].split("(")[0]).trim())
+            this.people[cnt].alias = ('(' + peopleArr[cnt].split("(")[1]).trim()
+            if(this.people[cnt].alias.match('v-') != 'v-') 
+            { this.addFeedback('notify', 'vendor alias with no \'v-\' is invalid:' + '(' + peopleArr[cnt].split("(")[1]); return; }
+            if(this.people[cnt].alias === this.alias) {initiaterExist = true}
+            this.people[cnt].role = "Vendor"
+        }
             var fteArr = (this.initForm.FTE).split(";");
             for(var cnt = vendorArr.length-1; cnt<peopleArr.length-1; cnt++) {
                 var tempArr = peopleArr[cnt].split("(")[0].split(" ")
