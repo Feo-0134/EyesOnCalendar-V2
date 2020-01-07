@@ -253,8 +253,9 @@ import moment from 'moment';
 import Person from '@/components/PersonRow';
 import HelpScreen from '@/components/HelpScreen';
 // import Loading from '@/components/LoadButton';
-var axios = require('axios');
-var store = require('store');
+const axios = require('axios');
+const store = require('store');
+
 export default {
   components: { Person, HelpScreen },
   data() {
@@ -262,7 +263,7 @@ export default {
       su: false,
       alias: '',
       links: [],
-      timeout:  null,
+      timeout: null,
       message: 'Loading month...',
       scrolled: false,
       changed: false,
@@ -272,7 +273,7 @@ export default {
       openflag: false,
       state: null,
       teamName: this.$router.currentRoute.path.split('/')[1],
-      loading:false,
+      loading: false,
       teamForm: {
         MorningShift: '',
         NightShift: '',
@@ -280,22 +281,22 @@ export default {
       dialogVisible: false,
       dialogTableVisible: false,
       copyShiftInfoData: 'Copy Shift Data',
-      TeamShiftText: "Team Shift",
+      TeamShiftText: 'Team Shift',
       WFMData: [],
       shiftData: [],
-      Region:{
-          gcr: "GCR",
-          eu: "EMEA",
-          us: "US"
+      Region: {
+        gcr: 'GCR',
+        eu: 'EMEA',
+        us: 'US',
       },
-      DayOfShift:{
-          normal: "Mon-Fri",
-          weekendshift: "Sun-Thu"
+      DayOfShift: {
+        normal: 'Mon-Fri',
+        weekendshift: 'Sun-Thu',
       },
-      WeekdayShiftType:{
-          normal: "9:00am~18:00pm",
-          morningshift: "7:00am~16:00pm",
-          nightshift: "2:00pm~23:00pm"
+      WeekdayShiftType: {
+        normal: '9:00am~18:00pm',
+        morningshift: '7:00am~16:00pm',
+        nightshift: '2:00pm~23:00pm',
       },
       WeekendShiftType:{
           saturday: "Sat: 7:00am~16:00pm",
