@@ -87,7 +87,8 @@
                       </div></el-col>
                   <el-col :span="1"><div class="grid-content bg-purple-light">
                           <div class="grid-content bg-purple-light">
-                          <div class = "cmtCell" style="display:inline; width:10px; height:50%; background-color: #403259;">H(M)</div>
+                          <div class = "cmtCell" style="display:inline;
+                           width:10px; height:50%; background-color: #403259;">H(M)</div>
                           <div class = "comment">Morning SL</div>
                       </div>
                   </div></el-col>
