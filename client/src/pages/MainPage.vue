@@ -298,15 +298,15 @@ export default {
         morningshift: '7:00am~16:00pm',
         nightshift: '2:00pm~23:00pm',
       },
-      WeekendShiftType:{
-          saturday: "Sat: 7:00am~16:00pm",
-          sunday: "Sun: 7:00am~16:00pm",
+      WeekendShiftType: {
+        saturday: 'Sat: 7:00am~16:00pm',
+        sunday: 'Sun: 7:00am~16:00pm',
       },
-      LunchTime:{
-          normal: "12:30~13:30pm",
-          morningshift: "11:30~12:30pm",
+      LunchTime: {
+        normal: '12:30~13:30pm',
+        morningshift: '11:30~12:30pm',
       },
-      TeamEmails: []
+      TeamEmails: [],
     };
   },
   asyncComputed: {
@@ -314,7 +314,7 @@ export default {
       async get() {
         try {
           const res = await this.$http.get(`/api${this.date}`);
-          this.socket = io({
+          this.socket = io ({
             query: {
               path: this.date,
             },
@@ -325,7 +325,7 @@ export default {
             this.month.people[data.indexes.p].days[data.indexes.d].workType = data.workType;
           });
           res.data.people = res.data.people.sort((x, y) => x.name.localeCompare(y.name));
-          
+
           // console.log(res.data.people);
           for(let key of res.data.people){
             let newalias = key.alias.slice(1, -1);
@@ -333,36 +333,33 @@ export default {
             this.TeamEmails.push(newalias + "@microsoft.com");
           }
           // console.log(this.TeamEmails);
-          
+
           this.getCaeNumber();
 
           return res.data;
         } catch (e) {
-          console.log(e);
+          window.console.log(e);
           this.socket = null;
           this.message = 'Month not found';
-          this.dialogVisible = true
+          this.dialogVisible = true;
           return null;
         }
       },
-      watch() {
-        this.changed;
-      },
-    }
+      watch: ['changed'],
+    },
   },
   computed: {
     displayName() {
       return store.get('user').displayName;
     },
     displayTitle() {
-      var title = store.get('user').title
-      if(title === 'default') { return }
-      else{ return '(' + title + ')'}
+      const title = store.get('user').title
+      return '(' + title + ')'
     },
     admin() {
-      var path = '/'
-      if(store.get('user')===undefined) {
-        this.$message("Please Login.")
+      const path = '/';
+      if (store.get('user') === undefined) {
+        this.$message('Please Login.');
         this.$router.push({ path })
         setTimeout(()=>{location.reload()},2000)
       }
@@ -415,7 +412,6 @@ export default {
           .subtract(1, 'M')
           .format('/YYYY/M')}`);
     },
-    
     goReport() {
       return (`/${this.date.split('/')[1].toString()}${moment(this.date, '/YYYY/M').format('/YYYY/M')}/report`);
     },
@@ -502,10 +498,10 @@ export default {
       };
     },
     getTeamApiPath() {
-      if(this.su === true) {return ( `/api${ this.$router.currentRoute.path}/allTeamName`);}
-      else {
-        return '/api'+ this.$router.currentRoute.path +'/ownTeamName/'+ this.alias;
+      if (this.su === true) {
+        return (`/api${this.$router.currentRoute.path}/allTeamName`);
       }
+      return '/api'+ this.$router.currentRoute.path +'/ownTeamName/'+ this.alias;
     },
   },
   created() {
@@ -515,87 +511,87 @@ export default {
     window.removeEventListener('scroll', this.handleScroll);
   },
   mounted() {
-    this.loadTeamName()
-    this.state = this.$store.state
-    window.addEventListener('keyup', (ev) => {
-      //this.callUndo(ev);
-    });
+    this.loadTeamName();
+    this.state = this.$store.state;
+    // window.addEventListener('keyup', (ev) => {
+    //   this.callUndo(ev);
+    // });
   },
 
   methods: {
     addFeedback(type, msg) {
-        const h = this.$createElement;
-        if(type == 'error') {
-            this.$notify.error({
-                title:'Error',
-                message: msg,
-                position:'top-left',
-                duration: 0
-            });
-        }
-        if(type == 'notify') {
-            this.$notify({
-                title:'Notification',
-                message: msg,
-                position:'top-left',
-                type:'warning',
-                duration: 6000
-            });
-        }
-        if(type == 'success') {
-            this.$notify({
-                title: 'Success',
-                message: h('i', { style: 'color: teal'}, msg),
-                position:'top-left',
-                type: 'success',
-                
-            });
-        }
+      const h = this.$createElement;
+      if (type === 'error') {
+        this.$notify.error({
+          title: 'Error',
+          message: msg,
+          position: 'top-left',
+          duration: 0,
+        });
+      }
+      if (type === 'notify') {
+        this.$notify({
+          title: 'Notification',
+          message: msg,
+          position: 'top-left',
+          type: 'warning',
+          duration: 6000,
+        });
+      }
+      if(type === 'success') {
+        this.$notify({
+          title: 'Success',
+          message: h('i', { style: 'color: teal' }, msg),
+          position: 'top-left',
+          type: 'success',
+        });
+      }
     },
     extendCalendar() {
-      try{
-        this.loading = true
-        var that = this
+      try {
+        let that = this;
+        this.loading = true;
         this.$http.post("/api/"+this.teamName+"/extendCalendar/"+this.$router.currentRoute.path.split('/')[2]+'/'+this.$router.currentRoute.path.split('/')[3])
-        .then((response)=>{
-          // location.reload();
-          console.log(response)
-          if(response.data === 'no last month data') {
-            that.loading = false
-            that.addFeedback('notify', 'Please initiate last month data.');
-            return;
-          }
-        })
+          .then((response) => {
+            window.console.log(response);
+            if (response.data === 'no last month data') {
+              that.loading = false;
+              that.addFeedback('notify', 'Please initiate last month data.');
+              return;
+            }
+          });
         setTimeout(() => {
-          if(this.loading === true ) location.reload();
+          if (this.loading === true) window.location.reload();
         }, 4000);
-      }catch(e){
-        console.log(e)
+      } catch (e) {
+        window.console.log(e);
       }
     },
     goPortal() {
-        const path = '/portal'
-        this.$router.push({ path });
-        // location.reload();
+      const path = '/portal';
+      this.$router.push({ path });
+      // location.reload();
     },
-    loadTeamName () {
+    loadTeamName() {
       this.$http.get(this.getTeamApiPath)
-      .then((response)=> {
-        this.links = response.data;
-      })
-      .catch((error) => {
+        .then((response) => {
+          this.links = response.data;
+        })
+        .catch((error) => {
           this.addFeedback('error', 'System Error. Please contact eyesoncalendar team.');
+          window.console.log(error);
           return [];
-      })
+        });
     },
     querySearchAsync(queryString, cb) {
-      var links = this.links;
-      //var results = queryString ? links.filter(this.createFilter(queryString)) : links;
-      var results = links
+      const links = this.links;
+      // var results = queryString ? links.filter(this.createFilter(queryString)) : links;
+      const results = links;
       clearTimeout(this.timeout);
       this.timeout = setTimeout(() => {
         cb(results);
-      }, 500);// * Math.random()); // what is this?? check it out later
+      }, 500);
+      // * Math.random()); // what is this?? check it out later
     },
     createFilter(queryString) {
       return (link) => {
@@ -603,9 +599,9 @@ export default {
       };
     },
     handleSelect(item) {
-      const path = item.link
+      const path = item.link;
       this.$router.push({ path });
-      location.reload();
+      window.location.reload();
     },
     addMonth() {
       const path = moment(this.date, '/YYYY/M')
@@ -631,7 +627,7 @@ export default {
         if (newMon == thisMon[3]) { // 弱类型相等；
           flag = true;
         } else {
-          this.initDeny('forbid', 'Only the month after the current month can be initiated. The current month is ');          
+          this.initDeny('forbid', 'Only the month after the current month can be initiated. The current month is ');
         }
         if (flag) {
           this.isLoading = true;
@@ -665,7 +661,7 @@ export default {
       if (this.initUndo === false) {
         this.$http.post(this.apiPath2, this.apiPayload2);
         setTimeout(() => {
-          location.reload();
+          window.location.reload();
         }, 4000);
       }
     },
@@ -685,9 +681,9 @@ export default {
         this.scrolled = false;
       }
     },
-    handleClick(tab, event) {
-      // console.log(tab, event);
-    },
+    // handleClick(tab, event) {
+    //   console.log(tab, event);
+    // },
     // callUndo(ev) {
     //   if (ev.code !== "KeyZ" || ev.ctrlKey !== true) return;
     //   else if (this.$history.length == 0) return;
@@ -701,9 +697,8 @@ export default {
     //     this.$http.post(x.path, x.payload);
     //   }
     // },
-    
-    openShiftTable(){
-      console.log('opening shift data');
+    openShiftTable() {
+      window.console.log('opening shift data');
       this.WFMData = this.month.people;
       // console.log(this.WFMData);
 
@@ -768,75 +763,75 @@ export default {
 
       // let shiftData = this.teamForm;
       // console.log(shiftData);
-  },
+    },
 
-  copyShiftInfo() {
-    console.log("copying shift data");
+    copyShiftInfo() {
+      console.log("copying shift data");
 
-    const table = document.getElementById('copy-table');
-    const range = document.createRange();
+      const table = document.getElementById('copy-table');
+      const range = document.createRange();
 
-    range.selectNode(table);  // define copy data is table
+      range.selectNode(table);  // define copy data is table
 
-    const selection = window.getSelection();
-    if (selection.rangeCount > 0) selection.removeAllRanges();
-    selection.addRange(range);
+      const selection = window.getSelection();
+      if (selection.rangeCount > 0) selection.removeAllRanges();
+      selection.addRange(range);
 
-    var successful = document.execCommand('copy');  // execute copy
-    var msg = successful ? 'successful' : 'unsuccessful';
+      var successful = document.execCommand('copy');  // execute copy
+      var msg = successful ? 'successful' : 'unsuccessful';
 
-    if(msg === 'successful'){
-        this.copyShiftInfoData = 'Copied!!'
-    }else {
-        this.addFeedback('notify', 'Sorry, failed to copy, please try manually');
-    }
-
-    selection.removeAllRanges();  // remove selection
-  },
-  beforeTableViewClose() {
-      this.dialogTableVisible = false;
-      this.copyShiftInfoData = 'Copy Shift Data'
-  },
-  openOutlook() {
-      console.log("opening outlook");
-      window.location.href = "mailto:wfms@microsoft.com?subject=[REVIEW REQUIRED] WFM Update List";
-      this.dialogTableVisible = false;
-      this.copyShiftInfoData = 'Copy Shift Data'
-  },
-  sliceAlise(row, column) {
-    // console.log('slice alice');
-    return row.alias.slice(1, -1);
-  },
-  getCaeNumber() {
-    // console.log("get caseNumber from main page");
-    // console.log(this.TeamEmails);
-
-    axios({
-      method: 'post',
-      url: 'https://pta-eyes-on-api.azurewebsites.net/api/GetDailyVolumeByUpn?code=C5ugr1rsTkjAy6OrjfwPaPsDvuW0tnbee8c8tcJdxCmKkJSt0SRdIQ==',
-      data: {
-        "upn":this.TeamEmails
+      if(msg === 'successful'){
+          this.copyShiftInfoData = 'Copied!!'
+      }else {
+          this.addFeedback('notify', 'Sorry, failed to copy, please try manually');
       }
-    })
-    .then((response)=>{
 
-      // let jsondata = JSON.stringify(response.data);
-      let jsondata = response.data;
-      console.log(jsondata);
+      selection.removeAllRanges();  // remove selection
+    },
+    beforeTableViewClose() {
+      this.dialogTableVisible = false;
+      this.copyShiftInfoData = 'Copy Shift Data';
+    },
+    openOutlook() {
+      window.console.log('opening outlook');
+      window.location.href = 'mailto:wfms@microsoft.com?subject=[REVIEW REQUIRED] WFM Update List';
+      this.dialogTableVisible = false;
+      this.copyShiftInfoData = 'Copy Shift Data';
+    },
+    sliceAlise(row, column) {
+      window.console.log(column);
+      return row.alias.slice(1, -1);
+    },
+    getCaeNumber() {
+      // console.log("get caseNumber from main page");
+      // console.log(this.TeamEmails);
 
-      let arrayAlias = [];
-      
-      for(let i in jsondata){
-        arrayAlias.push({alias: i, casenumber: jsondata[i]});
-      }
-      // console.log(arrayAlias);
+      axios({
+        method: 'post',
+        url: 'https://pta-eyes-on-api.azurewebsites.net/api/GetDailyVolumeByUpn?code=C5ugr1rsTkjAy6OrjfwPaPsDvuW0tnbee8c8tcJdxCmKkJSt0SRdIQ==',
+        data: {
+          "upn":this.TeamEmails
+        }
+      })
+      .then((response)=>{
 
-      this.$store.commit('getDailyCaseNumber', arrayAlias);
-    })
-    .catch((error)=>{
-      console.log(error);
-    });
-  },
+        // let jsondata = JSON.stringify(response.data);
+        let jsondata = response.data;
+        console.log(jsondata);
+
+        let arrayAlias = [];
+        
+        for(let i in jsondata){
+          arrayAlias.push({alias: i, casenumber: jsondata[i]});
+        }
+        // console.log(arrayAlias);
+
+        this.$store.commit('getDailyCaseNumber', arrayAlias);
+      })
+      .catch((error)=>{
+        console.log(error);
+      });
+    },
   },
 };
 </script>
