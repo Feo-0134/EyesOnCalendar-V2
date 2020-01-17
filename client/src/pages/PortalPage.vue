@@ -555,7 +555,7 @@ export default {
           globalform = this.initForm;
         }
         try {
-          const res = await this.$http.get(`/api/${globalform.TeamName}/${globalform.Month}`)
+          const res = await this.$http.get(`/api/${globalform.TeamName}/${globalform.Month}`);
 
           this.socket = io({
             query: {
@@ -568,14 +568,14 @@ export default {
             this.month.people[data.indexes.p].days[data.indexes.d].workType = data.workType;
           });
           if (res.data) {
-            this.teamForm.customDayType.customDayType = res.data.customDayType
+            this.teamForm.customDayType.customDayType = res.data.customDayType;
             res.data.people = res.data.people.sort((x, y) => x.name.localeCompare(y.name));
             res.data.people.forEach((person) => {
-              if (person.principle == 'TM') { globalform.TeamManager += person.name + person.alias + ';'}
-              else if(person.principle == 'TA') { globalform.TeamAdvisor += person.name + person.alias + ';'}
+              if (person.principle === 'TM') { globalform.TeamManager += person.name + person.alias + ';'}
+              else if (person.principle === 'TA') { globalform.TeamAdvisor += person.name + person.alias + ';'}
 
-              if (person.role == 'FTE') { globalform.FTE += person.name + person.alias + ';'}
-              else if (person.role == 'Vendor') { globalform.Vendor += person.name + person.alias + ';'}
+              if (person.role === 'FTE') { globalform.FTE += person.name + person.alias + ';'}
+              else if (person.role === 'Vendor') { globalform.Vendor += person.name + person.alias + ';'}
               let cntM = 0;
               let cntN = 0;
               let cntW = 0;
@@ -596,11 +596,11 @@ export default {
           }
         } catch (error) {
           console.log(error);
-          if (((error.toString()).split(':')[1]).match('404') == '404') {
+          if (((error.toString()).split(':')[1]).match('404') === '404') {
             ;
-          } else if (((error.toString()).split(':')[1]).match('sort') == 'sort' ) {
+          } else if (((error.toString()).split(':')[1]).match('sort') === 'sort') {
             ;
-          } else if (((error.toString()).split(':')[1]).match('500') == '500') {
+          } else if (((error.toString()).split(':')[1]).match('500') === '500') {
             ;
           } else {
             this.addFeedback('error', (error.toString()).split(':')[1] + '\nPlease contact eyesoncalendar team.');
@@ -734,405 +734,402 @@ export default {
       }
     },
     initiateCalendar() {
-        if(this.initFormatCheck() === -1) {
-            this.addFeedback('notify', 'Team-Name can not include a number')
-            return;
+      if (this.initFormatCheck() === -1) {
+        this.addFeedback('notify', 'Team-Name can not include a number')
+        return;
+      } else if (this.initFormatCheck() === -2) {
+        this.addFeedback('notify', 'Team-Name can not include \'/\'  or \'\\\' or SPACE')
+        return;
+      }
+      var initiaterExist = false
+      var peopleArr = (this.initForm.Vendor + this.initForm.FTE).split(";");
+      for (var cnt = 1; cnt<peopleArr.length-1; cnt++) {
+        this.people[cnt] = Object.assign({}, this.people[0])
+      }
+    var vendorArr = (this.initForm.Vendor).split(";");
+    for(var cnt = 0; cnt<vendorArr.length-1; cnt++) {
+        var tempArr = peopleArr[cnt].split("(")[0].split(" ")
+        if(tempArr.length <= 1) {this.addFeedback('notify', 'Employee Name invalid: '+ peopleArr[cnt].split("(")[0]); return;}
+        console.log('test')
+        this.people[cnt].name = this.formatUsrName((peopleArr[cnt].split("(")[0]).trim())
+        this.people[cnt].alias = ('(' + peopleArr[cnt].split("(")[1]).trim()
+        if(this.people[cnt].alias.match('v-') != 'v-') 
+        { this.addFeedback('notify', 'vendor alias with no \'v-\' is invalid:' + '(' + peopleArr[cnt].split("(")[1]); return; }
+        if(this.people[cnt].alias === this.alias) {initiaterExist = true}
+        this.people[cnt].role = "Vendor"
+    }
+    var fteArr = (this.initForm.FTE).split(";");
+    for(var cnt = vendorArr.length-1; cnt<peopleArr.length-1; cnt++) {
+        var tempArr = peopleArr[cnt].split("(")[0].split(" ")
+        if(tempArr.length <= 1) {this.addFeedback('notify', 'Employee Name invalid: '+ peopleArr[cnt].split("(")[0]); return;}
+        this.people[cnt].name = this.formatUsrName((peopleArr[cnt].split("(")[0]).trim())
+        if(peopleArr[cnt].split("(")[1] === undefined) {this.addFeedback('notify', 'Alias invalid: '+ peopleArr[cnt].split("(")[0]); return;}
+        this.people[cnt].alias = ('(' + peopleArr[cnt].split("(")[1]).trim()
+        if(this.people[cnt].alias === this.alias) {initiaterExist = true}
+        this.people[cnt].role = "FTE"
+    }
+    if(initiaterExist === false ) { // && this.su === false
+        var cnt = this.people.length
+        this.people[cnt] = Object.assign({}, this.people[0])
+        this.people[cnt].name = this.displayName
+        this.people[cnt].alias = this.alias
+        if(this.alias.match('v-') != 'v-') {this.people[cnt].role = "FTE"} else {this.people[cnt].role = "Vendor"}
+        this.addFeedback('notify', 'We have add you to this team. Please add yourself to the team for further team management later.')
+    }
+    var teamManager = (this.initForm.TeamManager).split(";");
+    var teamAdvisor = (this.initForm.TeamAdvisor).split(";");
+    this.people.forEach(person => {
+        teamManager.forEach(tm => {
+        // console.log(tm)
+        if(person.alias == '(' + tm.split('(')[1]){person.principle = "TM";}
+        })
+        teamAdvisor.forEach(ta => {
+        // console.log(ta)
+        if (person.alias == '(' + ta.split('(')[1]){person.principle = "TA";}
+        })
+    });
+    this.$http.post(this.initPath, this.initPayload)
+    .then((response)=> {
+        if(response.data == "success") {
+        this. addFeedback('success', 'Team Added to Calendar')}
+    })
+    .catch((error) => {
+        // potential bug caution!!!
+        if(((error.toString()).split(':')[1]).match('400') == '400') {
+            this.addFeedback('notify', 'It seemed you have already initiated your teams\' calendar for this month.')
         }
-        else if(this.initFormatCheck() === -2) {
-            this.addFeedback('notify', 'Team-Name can not include \'/\'  or \'\\\' or SPACE')
-            return;
-        }
-        var initiaterExist = false
-        var peopleArr = (this.initForm.Vendor + this.initForm.FTE).split(";");
-        for(var cnt = 1; cnt<peopleArr.length-1; cnt++) {
-            this.people[cnt] = Object.assign({}, this.people[0])
-        }
-        var vendorArr = (this.initForm.Vendor).split(";");
-        for(var cnt = 0; cnt<vendorArr.length-1; cnt++) {
-            var tempArr = peopleArr[cnt].split("(")[0].split(" ")
-            if(tempArr.length <= 1) {this.addFeedback('notify', 'Employee Name invalid: '+ peopleArr[cnt].split("(")[0]); return;}
-            console.log('test')
-            this.people[cnt].name = this.formatUsrName((peopleArr[cnt].split("(")[0]).trim())
-            this.people[cnt].alias = ('(' + peopleArr[cnt].split("(")[1]).trim()
-            if(this.people[cnt].alias.match('v-') != 'v-') 
-            { this.addFeedback('notify', 'vendor alias with no \'v-\' is invalid:' + '(' + peopleArr[cnt].split("(")[1]); return; }
-            if(this.people[cnt].alias === this.alias) {initiaterExist = true}
-            this.people[cnt].role = "Vendor"
-        }
-            var fteArr = (this.initForm.FTE).split(";");
-            for(var cnt = vendorArr.length-1; cnt<peopleArr.length-1; cnt++) {
-                var tempArr = peopleArr[cnt].split("(")[0].split(" ")
-                if(tempArr.length <= 1) {this.addFeedback('notify', 'Employee Name invalid: '+ peopleArr[cnt].split("(")[0]); return;}
-                this.people[cnt].name = this.formatUsrName((peopleArr[cnt].split("(")[0]).trim())
-                if(peopleArr[cnt].split("(")[1] === undefined) {this.addFeedback('notify', 'Alias invalid: '+ peopleArr[cnt].split("(")[0]); return;}
-                this.people[cnt].alias = ('(' + peopleArr[cnt].split("(")[1]).trim()
-                if(this.people[cnt].alias === this.alias) {initiaterExist = true}
-                this.people[cnt].role = "FTE"
-            }
-            if(initiaterExist === false ) { // && this.su === false
-                var cnt = this.people.length
-                this.people[cnt] = Object.assign({}, this.people[0])
-                this.people[cnt].name = this.displayName
-                this.people[cnt].alias = this.alias
-                if(this.alias.match('v-') != 'v-') {this.people[cnt].role = "FTE"} else {this.people[cnt].role = "Vendor"}
-                this.addFeedback('notify', 'We have add you to this team. Please add yourself to the team for further team management later.')
-            }
-            var teamManager = (this.initForm.TeamManager).split(";");
-            var teamAdvisor = (this.initForm.TeamAdvisor).split(";");
-            this.people.forEach(person => {
-                teamManager.forEach(tm => {
-                    // console.log(tm)
-                    if(person.alias == '(' + tm.split('(')[1]){person.principle = "TM";}
-                })
-                teamAdvisor.forEach(ta => {
-                    // console.log(ta)
-                    if(person.alias == '(' + ta.split('(')[1]){person.principle = "TA";}
-                })
-            });
-            this.$http.post(this.initPath, this.initPayload)
-            .then((response)=> {
-                if(response.data == "success") {
-                this. addFeedback('success', 'Team Added to Calendar')}
-            })
-            .catch((error)=>{
-                // potential bug caution!!!
-                if(((error.toString()).split(':')[1]).match('400') == '400') {
-                    this.addFeedback('notify', 'It seemed you have already initiated your teams\' calendar for this month.')
-                }
-                else{this.addFeedback('error', (error.toString()).split(':')[1] + '\nPlease contact eyesoncalendar team.');}
-                console.log(error)
-            })
+        else{this.addFeedback('error', (error.toString()).split(':')[1] + '\nPlease contact eyesoncalendar team.');}
+        console.log(error);
+    });
 
         },
 
-        addPerson() {
-            if(this.addForm.alias == "") {
-                this.addFeedback('notify', 'Please fill the alias.'); return
-            }
-            if(this.addTMTA === false && this.addForm.name == "") {
-                this.addFeedback('notify', 'Please fill the name.'); return
-                // we dont need name to promote an engineer
-            }
+    addPerson() {
+      if (this.addForm.alias == "") {
+        this.addFeedback('notify', 'Please fill the alias.'); return
+      }
+      if (this.addTMTA === false && this.addForm.name == "") {
+        this.addFeedback('notify', 'Please fill the name.'); return
+        // we dont need name to promote an engineer
+      }
 
-            // format name
-            var nameArr = this.addForm.name.toString().toLowerCase().trim().split(" ");
-            if( nameArr.length > 1) { 
-                var firstName = (nameArr[0].toString())[0].toUpperCase() +
-                 (nameArr[0].toString()).substr(1);
-                var lastName = nameArr[nameArr.length - 1][0].toUpperCase() +
-                 nameArr[nameArr.length - 1].substr(1);
-                this.addForm.name = firstName + " " + lastName;
-            }else {
-                if(this.addTMTA === false) {
-                    this.addFeedback('notify', 'Name length invalid. eg. Danielle Zhao')
-                    return;
-                }
+      // format name
+      var nameArr = this.addForm.name.toString().toLowerCase().trim().split(" ");
+      if( nameArr.length > 1) { 
+        var firstName = (nameArr[0].toString())[0].toUpperCase() +
+            (nameArr[0].toString()).substr(1);
+        var lastName = nameArr[nameArr.length - 1][0].toUpperCase() +
+            nameArr[nameArr.length - 1].substr(1);
+        this.addForm.name = firstName + " " + lastName;
+      }else {
+        if(this.addTMTA === false) {
+            this.addFeedback('notify', 'Name length invalid. eg. Danielle Zhao')
+            return;
+        }
+      }
+    // role
+      if (this.addForm.role == "FTE" || this.addForm.role == "fte" ||
+        this.addForm.role == "Fte" || this.addForm.role == "FTe") {
+        this.addForm.role = "FTE";
+      } else if (this.addForm.role == "Vendor" || this.addForm.role == "vendor" ||
+        this.addForm.role == "v") {
+        this.addForm.role = "Vendor"
+      }else if(this.addTMTA === false) {
+        this.addFeedback('notify', "Role invalid. Please use 'FTE' or 'Vendor'");
+        return;
+      }
+      // alias
+      var aliasToken = this.addForm.alias.trim()
+      this.addForm.alias = aliasToken;
+      if (this.addForm.role === 'Vendor') {
+        if (this.addForm.alias.toString().match('v-') !== 'v-') {
+          this.addFeedback('notify', 'vendor alias with no \'v-\' is invalid.');
+          return;
+        }
+      }
+
+      // check parentheses
+      if (this.addForm.alias[0] === '('
+      && this.addForm.alias[(this.addForm.alias).length - 1] === ')') {
+          ;
+      } else { this.addForm.alias = "(" + this.addForm.alias + ")";}
+
+      if (this.admin) {
+        this.$http.post(this.addPath, this.addPayload)
+          .then((response) => {
+            if (response.data === 'Person is Added to the Team'
+            || response.data === 'Permission is Added to the Person') {
+              // the below lines is a stupid way to sync the display memeber
+              // which should be replaced by stocket.io later >_<
+              this.teamForm.Month = this.teamForm.Month.split('/')[0] +
+                '/' + (this.teamForm.Month.split('/')[1]-1).toString()
+              this.teamForm.Month = this.teamForm.Month.split('/')[0] +
+                '/' + (this.teamForm.Month.split('/')[1]-(-1)).toString()                            
+              this.addFeedback('success', response.data);
+            } else {
+              this.addFeedback('notify', response.data);
             }
-            // role
-            if(this.addForm.role == "FTE" || this.addForm.role == "fte" ||
-             this.addForm.role == "Fte" || this.addForm.role == "FTe"){
-                this.addForm.role = "FTE";
-            }else if(this.addForm.role == "Vendor" || this.addForm.role == "vendor" ||
-             this.addForm.role == "v") {
-                this.addForm.role = "Vendor"
-            }else if(this.addTMTA === false) {
-                this.addFeedback('notify', "Role invalid. Please use 'FTE' or 'Vendor'")
-                return;
-            }
-            // alias
-            var aliasToken = this.addForm.alias.trim()
-            this.addForm.alias = aliasToken
-            if(this.addForm.role == "Vendor") {
-                if(this.addForm.alias.toString().match('v-') != 'v-') {
-                    this.addFeedback('notify',
-                     'vendor alias with no \'v-\' is invalid.')
-                    return;
-                }
-            }
+          })
+          .catch((error) => {
+            this.addFeedback('error', (error.toString()).split(':')[1] +
+                '\nPlease contact eyesoncalendar team.');
+          })
+      }
+    },
+    delPerson() {
+      if (this.delForm.alias[0] == "(" &&
+        this.delForm.alias[(this.delForm.alias).length-1] == ")") {
+        ;
+      } else {
+        this.delForm.alias = "(" + this.delForm.alias + ")";
+      }
+      this.$http.post(this.delPath, this.delPayload)
+        .then((response) => {
+          if (response.data === 'Person is Removed from the Team'
+          || response.data === 'Permission is Removed from the Person') {
+            // the below lines is a stupid way to sync the display memeber
+            // which should be replaced by stocket.io later >_<
+            this.teamForm.Month = this.teamForm.Month.split('/')[0] +
+                '/' + (this.teamForm.Month.split('/')[1]-1).toString()
+            this.teamForm.Month = this.teamForm.Month.split('/')[0] +
+                '/' + (this.teamForm.Month.split('/')[1]-(-1)).toString()                           
+            this.addFeedback('success', response.data)
+          } else { this.addFeedback('notify', response.data); }
+        })
+        .catch((error) => {
+          this.addFeedback('error', (error.toString()).split(':')[1] +
+          '\nPlease contact eyesoncalendar team.')
+        });
+
+    },
+    sftPerson() {
+      if (this.sftForm.alias[0] === '(') {
+        var strSft = this.sftForm.alias.substring(1)
+        this.sftForm.alias = strSft
+      }
+      if(this.sftForm.alias[this.sftForm.alias.length - 1] === ')') {
+        var strSft = this.sftForm.alias.substring(0,this.sftForm.alias.length - 1)
+        this.sftForm.alias = strSft
+      }
+      this.sftForm.alias = '(' + this.sftForm.alias + ')'
+      this.$http.post(this.sftPath, this.sftPayload)
+        .then((response) => {
+        // console.log("shift success")
+        // the below lines is a stupid way to sync the display memeber
+        // which should be replaced by stocket.io later >_<
+          this.teamForm.Month = this.teamForm.Month.split('/')[0] +
+              '/' + (this.teamForm.Month.split('/')[1]-1).toString()
+          this.teamForm.Month = this.teamForm.Month.split('/')[0] +
+              '/' + (this.teamForm.Month.split('/')[1]-(-1)).toString()
+        if(response.data === 'No Record') { 
+            this.addFeedback('notify', 'Person Not Exist')
+        } else { 
+            this.addFeedback('success', 'Shift is Ready')
+        }
+      })
+      .catch((error)=> {
+      this.addFeedback('error', (error.toString()).split(':')[1] +
+          '\nPlease contact eyesoncalendar team.')
+      })
+
+    },
+
+    addFeedback(type, msg) {
+        const h = this.$createElement;
+        if(type == 'error') {
+        this.$notify.error({
+            title:'Error',
+            message: msg,
+            position:'top-left',
+            duration: 0
+        });
+        }
+        if(type == 'notify') {
+        this.$notify({
+            title:'Notification',
+            message: msg,
+            position:'top-left',
+            type:'warning',
+            duration: 6000
+        });
+        }
+        if(type == 'success') {
+        this.$notify({
+            title: 'Success',
+            message: h('i', { style: 'color: teal'}, msg),
+            position:'top-left',
+            type: 'success',
             
-            // check parentheses
-            if(this.addForm.alias[0] == "(" &&
-             this.addForm.alias[(this.addForm.alias).length-1] == ")") {
-                ;
-            }else { this.addForm.alias = "(" + this.addForm.alias + ")";}
-
-            if(this.admin) {
-                this.$http.post(this.addPath, this.addPayload)
-                .then((response)=> {
-                    if(response.data == 'Person is Added to the Team' ||
-                        response.data == 'Permission is Added to the Person') { 
-                        // the below lines is a stupid way to sync the display memeber 
-                        // which should be replaced by stocket.io later >_<
-                        this.teamForm.Month = this.teamForm.Month.split('/')[0] +
-                            '/' + (this.teamForm.Month.split('/')[1]-1).toString()
-                        this.teamForm.Month = this.teamForm.Month.split('/')[0] +
-                            '/' + (this.teamForm.Month.split('/')[1]-(-1)).toString()                            
-                        this. addFeedback('success', response.data) }
-                    else{
-                        this.addFeedback('notify', response.data);   
-                    }
-                })
-                .catch((error) => {
-                this.addFeedback('error', (error.toString()).split(':')[1] +
-                    '\nPlease contact eyesoncalendar team.');
-                })
-            }
-        },
-        delPerson() {
-            if(this.delForm.alias[0] == "(" &&
-             this.delForm.alias[(this.delForm.alias).length-1] == ")") {
-                ;
-            }else {
-                this.delForm.alias = "(" + this.delForm.alias + ")";
-            }
-            this.$http.post(this.delPath, this.delPayload)
-            .then((response)=> {
-            if(response.data == 'Person is Removed from the Team' ||
-                response.data == 'Permission is Removed from the Person')  {
-                // the below lines is a stupid way to sync the display memeber
-                // which should be replaced by stocket.io later >_<
-                this.teamForm.Month = this.teamForm.Month.split('/')[0] +
-                    '/' + (this.teamForm.Month.split('/')[1]-1).toString()
-                this.teamForm.Month = this.teamForm.Month.split('/')[0] +
-                    '/' + (this.teamForm.Month.split('/')[1]-(-1)).toString()                           
-                this.addFeedback('success', response.data)}
-            else{this.addFeedback('notify', response.data);}
-            })
-            .catch((error)=> {
-            this.addFeedback('error', (error.toString()).split(':')[1] +
-                '\nPlease contact eyesoncalendar team.')
-            })
-
-        },
-        sftPerson() {
-            if(this.sftForm.alias[0] === '(') {
-                var strSft = this.sftForm.alias.substring(1)
-                this.sftForm.alias = strSft
-            }
-            if(this.sftForm.alias[this.sftForm.alias.length - 1] === ')') {
-                var strSft = this.sftForm.alias.substring(0,this.sftForm.alias.length - 1)
-                this.sftForm.alias = strSft
-            }
-            this.sftForm.alias = '(' + this.sftForm.alias + ')'
-            // console.log(this.apiPathSftPerson)
-            this.$http.post(this.sftPath, this.sftPayload)
-            .then((response) => {
-                // console.log("shift success")
-                // the below lines is a stupid way to sync the display memeber 
-                // which should be replaced by stocket.io later >_<
-                this.teamForm.Month = this.teamForm.Month.split('/')[0] +
-                    '/' + (this.teamForm.Month.split('/')[1]-1).toString()
-                this.teamForm.Month = this.teamForm.Month.split('/')[0] +
-                    '/' + (this.teamForm.Month.split('/')[1]-(-1)).toString()
-                if(response.data === 'No Record') { 
-                    this.addFeedback('notify', 'Person Not Exist')
-                } else { 
-                    this.addFeedback('success', 'Shift is Ready')
-                }
-            })
-            .catch((error)=> {
-            this.addFeedback('error', (error.toString()).split(':')[1] +
-                '\nPlease contact eyesoncalendar team.')
-            })
-
-        },
-
-        addFeedback(type, msg) {
-            const h = this.$createElement;
-            if(type == 'error') {
-            this.$notify.error({
-                title:'Error',
-                message: msg,
-                position:'top-left',
-                duration: 0
-            });
-            }
-            if(type == 'notify') {
-            this.$notify({
-                title:'Notification',
-                message: msg,
-                position:'top-left',
-                type:'warning',
-                duration: 6000
-            });
-            }
-            if(type == 'success') {
-            this.$notify({
-                title: 'Success',
-                message: h('i', { style: 'color: teal'}, msg),
-                position:'top-left',
-                type: 'success',
-                
-            });
-            }
-        },
+        });
+        }
+    },
         
-        /* Start-- load team name for auto-complete component */
-        loadTeamName () {
-            if(this.topic === 0) {
-                this.$http.get(this.getTeamPathInit)
-                .then((response)=> {
-                    this.links = response.data;
-                })
-                .catch((error) => {
-                    console.log((error.toString()).split(':')[1])
-                    if(((error.toString()).split(':')[1]).match('404') == '404') {return [];}
-                    //{ this.addFeedback('notify', 'Sorry, we didn\'t find your team data of this month.');}
-                    // else {this.addFeedback('error', (error.toString()).split(':')[1] +
-                    // '\nPlease contact eyesoncalendar team.');}
-                    return [];
-                })
-            }else {
-                this.$http.get(this.getTeamPath)
-                .then((response)=> {
-                    this.links = response.data;
-                })
-                .catch((error) => {
-                    console.log((error.toString()).split(':')[1])
-                    if(((error.toString()).split(':')[1]).match('404') == '404') {return [];}
-                    // else {this.addFeedback('error', (error.toString()).split(':')[1] +
-                    // '\nPlease contact eyesoncalendar team.');}
-                    return [];
-                })
+    /* Start-- load team name for auto-complete component */
+    loadTeamName () {
+        if(this.topic === 0) {
+            this.$http.get(this.getTeamPathInit)
+            .then((response)=> {
+                this.links = response.data;
+            })
+            .catch((error) => {
+                console.log((error.toString()).split(':')[1])
+                if(((error.toString()).split(':')[1]).match('404') == '404') {return [];}
+                //{ this.addFeedback('notify', 'Sorry, we didn\'t find your team data of this month.');}
+                // else {this.addFeedback('error', (error.toString()).split(':')[1] +
+                // '\nPlease contact eyesoncalendar team.');}
+                return [];
+            })
+        }else {
+            this.$http.get(this.getTeamPath)
+            .then((response)=> {
+                this.links = response.data;
+            })
+            .catch((error) => {
+                console.log((error.toString()).split(':')[1])
+                if(((error.toString()).split(':')[1]).match('404') == '404') {return [];}
+                // else {this.addFeedback('error', (error.toString()).split(':')[1] +
+                // '\nPlease contact eyesoncalendar team.');}
+                return [];
+            })
+        }
+    },
+    querySearchAsync(queryString, cb) {
+        this.loadTeamName()
+        // console.log('0')
+        
+        clearTimeout(this.timeout);
+        this.timeout = setTimeout(() => {
+            let links = this.links;
+            // let results = queryString ? links.filter(this.createFilter(queryString)) : links;
+            let results = links
+            cb(results);
+        }, 1500) //* Math.random());
+    },
+    createFilter(queryString) {
+        // console.log('1')
+        return (link) => {
+            return (link.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
+        };
+    },
+    handleSelect(item) {
+        // console.log('2')
+        const path = item.link
+        this.teamForm.TeamName = item.value
+        // this.$router.push({ path });
+        // location.reload();
+    },
+    handleSelect2(item) {
+        this.initForm.TeamName = item.value
+    },
+    /* End-- load team name for auto-complete component */
+
+    openShiftTable(){
+        console.log('opening shift data');
+        this.WFMData = this.month.people;
+        // console.log(this.WFMData);
+
+        // get all weekends in this month
+        let year = this.month.year;
+        let month = this.month.month;
+
+        for(let key of this.WFMData) {
+            // get client region
+            let newdate = new Date();
+            let timezone = newdate.getTimezoneOffset() / 60;
+            // console.log(timezone);
+            if(timezone == '-8'){
+                key.region = this.Region.gcr;
+            } else if (timezone == '5') {
+                key.region = this.Region.eu;
+            } else if (timezone == '1') {
+                key.region = this.Region.us;
             }
-        },
-        querySearchAsync(queryString, cb) {
-            this.loadTeamName()
-            // console.log('0')
-            
-            clearTimeout(this.timeout);
-            this.timeout = setTimeout(() => {
-                let links = this.links;
-                // let results = queryString ? links.filter(this.createFilter(queryString)) : links;
-                let results = links
-                cb(results);
-            }, 1500) //* Math.random());
-        },
-        createFilter(queryString) {
-            // console.log('1')
-            return (link) => {
-                return (link.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
-            };
-        },
-        handleSelect(item) {
-            // console.log('2')
-            const path = item.link
-            this.teamForm.TeamName = item.value
-            // this.$router.push({ path });
-            // location.reload();
-        },
-        handleSelect2(item) {
-            this.initForm.TeamName = item.value
-        },
-        /* End-- load team name for auto-complete component */
-
-        openShiftTable(){
-            console.log('opening shift data');
-            this.WFMData = this.month.people;
-            // console.log(this.WFMData);
-
-            // get all weekends in this month
-            let year = this.month.year;
-            let month = this.month.month;
-
-            for(let key of this.WFMData) {
-                // get client region
-                let newdate = new Date();
-                let timezone = newdate.getTimezoneOffset() / 60;
-                // console.log(timezone);
-                if(timezone == '-8'){
-                    key.region = this.Region.gcr;
-                } else if (timezone == '5') {
-                    key.region = this.Region.eu;
-                } else if (timezone == '1') {
-                    key.region = this.Region.us;
-                }
-                // get day of shift
-                // console.log(key.days);
-                let weekendcount = 0;
-                for(let days of key.days){
-                    // console.log(days.day + days.workType);
-                    let d = new Date(year + "-" + month + "-" + days.day);
+            // get day of shift
+            // console.log(key.days);
+            let weekendcount = 0;
+            for(let days of key.days){
+                // console.log(days.day + days.workType);
+                let d = new Date(year + "-" + month + "-" + days.day);
+                // console.log(d.getDay() + days.workType);
+                if((d.getDay() == 6 && days.workType == "MS") || (d.getDay() == 0 && days.workType == "MS")) {
+                    weekendcount ++;
+                    // console.log(weekendcount);
                     // console.log(d.getDay() + days.workType);
-                    if((d.getDay() == 6 && days.workType == "MS") || (d.getDay() == 0 && days.workType == "MS")) {
-                        weekendcount ++;
-                        // console.log(weekendcount);
-                        // console.log(d.getDay() + days.workType);
-                    };
-                }
-                if(weekendcount > 2){
-                    // engineer is on weekend shift
-                    key.dayofshift = this.DayOfShift.weekendshift;
-                    key.weekendshift = this.WeekendShiftType.sunday;
-                } else {
-                    key.dayofshift = this.DayOfShift.normal;
-                }
-                
-                // get weekdayshift
-                let morningsft = this.teamForm.MorningShift;
-                let nightsft = this.teamForm.NightShift;
-
-                let utctime = 0 - timezone;
-                let timezonesign = (utctime >= 0)? "+" : "";
-                if(morningsft.includes(key.name)) {
-                    // console.log(utctime);
-                    // console.log(timezonesign);
-                    // console.log(timezone);
-                    key.weekdayshift = this.WeekdayShiftType.morningshift + " UTC" + timezonesign + utctime;
-                    key.lunchtime = this.LunchTime.morningshift + " UTC" + timezonesign + utctime;
-                } else if(nightsft.includes(key.name)){
-                    key.weekdayshift = this.WeekdayShiftType.nightshift + " UTC" + timezonesign + utctime;
-                } else {
-                    key.weekdayshift = this.WeekdayShiftType.normal + " UTC" + timezonesign + utctime;
-                    key.lunchtime = this.LunchTime.normal + " UTC" + timezonesign + utctime;
-                }
-                key.status = "";
-                key.date = "2019-10-01";
+                };
             }
+            if(weekendcount > 2){
+                // engineer is on weekend shift
+                key.dayofshift = this.DayOfShift.weekendshift;
+                key.weekendshift = this.WeekendShiftType.sunday;
+            } else {
+                key.dayofshift = this.DayOfShift.normal;
+            }
+            
+            // get weekdayshift
+            let morningsft = this.teamForm.MorningShift;
+            let nightsft = this.teamForm.NightShift;
+
+            let utctime = 0 - timezone;
+            let timezonesign = (utctime >= 0)? "+" : "";
+            if(morningsft.includes(key.name)) {
+                // console.log(utctime);
+                // console.log(timezonesign);
+                // console.log(timezone);
+                key.weekdayshift = this.WeekdayShiftType.morningshift + " UTC" + timezonesign + utctime;
+                key.lunchtime = this.LunchTime.morningshift + " UTC" + timezonesign + utctime;
+            } else if(nightsft.includes(key.name)){
+                key.weekdayshift = this.WeekdayShiftType.nightshift + " UTC" + timezonesign + utctime;
+            } else {
+                key.weekdayshift = this.WeekdayShiftType.normal + " UTC" + timezonesign + utctime;
+                key.lunchtime = this.LunchTime.normal + " UTC" + timezonesign + utctime;
+            }
+            key.status = "";
+            key.date = "2019-10-01";
+        }
 
             // let shiftData = this.teamForm;
             // console.log(shiftData);
-        },
-
-        copyShiftInfo() {
-            console.log("copying shift data");
-
-            const table = document.getElementById('copy-table');
-            const range = document.createRange();
-
-            range.selectNode(table);  // define copy data is table
-
-            const selection = window.getSelection();
-            if (selection.rangeCount > 0) selection.removeAllRanges();
-            selection.addRange(range);
-
-            var successful = document.execCommand('copy');  // execute copy
-            var msg = successful ? 'successful' : 'unsuccessful';
-
-            if(msg === 'successful'){
-                this.copyShiftInfoData = 'Copied!!'
-            }else {
-                this.addFeedback('notify', 'Sorry, failed to copy, please try manually');
-            }
-
-            selection.removeAllRanges();  // remove selection
-        },
-        beforeTableViewClose() {
-            this.dialogTableVisible = false;
-            this.copyShiftInfoData = 'Copy Shift Data'
-        },
-        openOutlook() {
-            console.log("opening outlook");
-            window.location.href = "mailto:wfms@microsoft.com?subject=[LOOK REQUIRED] WFM Update List";
-            this.dialogTableVisible = false;
-            this.copyShiftInfoData = 'Copy Shift Data'
-        },
-        sliceAlise(row, column) {
-            // console.log('slice alice');
-            return row.alias.slice(1, -1);
-        },
-
     },
+
+    copyShiftInfo() {
+        console.log("copying shift data");
+
+        const table = document.getElementById('copy-table');
+        const range = document.createRange();
+
+        range.selectNode(table);  // define copy data is table
+
+        const selection = window.getSelection();
+        if (selection.rangeCount > 0) selection.removeAllRanges();
+        selection.addRange(range);
+
+        var successful = document.execCommand('copy');  // execute copy
+        var msg = successful ? 'successful' : 'unsuccessful';
+
+        if(msg === 'successful'){
+            this.copyShiftInfoData = 'Copied!!'
+        }else {
+            this.addFeedback('notify', 'Sorry, failed to copy, please try manually');
+        }
+
+        selection.removeAllRanges();  // remove selection
+    },
+    beforeTableViewClose() {
+        this.dialogTableVisible = false;
+        this.copyShiftInfoData = 'Copy Shift Data'
+    },
+    openOutlook() {
+        console.log("opening outlook");
+        window.location.href = "mailto:wfms@microsoft.com?subject=[LOOK REQUIRED] WFM Update List";
+        this.dialogTableVisible = false;
+        this.copyShiftInfoData = 'Copy Shift Data'
+    },
+    sliceAlise(row, column) {
+        // console.log('slice alice');
+        return row.alias.slice(1, -1);
+    },
+
+  },
     computed:{
         admin() {
             var path = '/'
