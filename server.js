@@ -49,6 +49,16 @@ router.get('/:pod/:year/:month/ownTeamName/:alias', getTeamName.listTeamName)
 /* API return all team name data for su */
 router.get('/:pod/:year/:month/allTeamName', getTeamName.listAllTeamName)
 
+/* API to update group_names
+*/
+router.post('/:pod/updateGroupNames/:year/:month', bodyParser(),
+  updateRecords.setGroupNames)
+
+/* API to assign member to group
+*/  
+router.post('/:pod/updateGroupArrangement/:year/:month', bodyParser(),
+  updateRecords.setGroupArrangement)
+
 /* ##################################################
  * CURD Operations with the person record and dayType
  * ##################################################
@@ -93,8 +103,10 @@ router.post('/:pod/newupload2/:year/:month',
 router.post('/:pod/extendCalendar/:year/:month',
   upload.any('csv'), bodyParser(), updateRecords.extendCalendar)
 
+/* API to update customDayType */
 router.post('/:pod/setCustomDayType/:year/:month',
  bodyParser(), updateRecords.setCustomDayType)
+
 
 io.on('connection', socket => {
   socket.join(socket.handshake.query.path)

@@ -380,6 +380,38 @@ const setCustomDayType = async (ctx) => {
   }
 }
 
+const setGroupNames = async (ctx) => {
+  var p = ctx.params
+  var b = ctx.request.body
+  try {
+    var currentMonth =
+      await Month.findOne({ year: p.year, month: p.month, pod: p.pod })
+    currentMonth.group_names = b.group_names
+    const payload = currentMonth
+    await payload.save()
+    ctx.body = 'success'
+  } catch (e) {
+    console.log(e)
+    ctx.body = e
+  }
+}
+
+const setGroupArrangement = async (ctx) => {
+  var p = ctx.params
+  var b = ctx.request.body
+  try {
+    var currentMonth =
+      await Month.findOne({ year: p.year, month: p.month, pod: p.pod })
+    currentMonth.group_arrangement = b.member_group
+    const payload = currentMonth
+    await payload.save()
+    ctx.body = 'success2'
+  } catch (e) {
+    console.log(e)
+    ctx.body = e
+  }
+}
+
 const updateRecords = {
   getMonth: getMonth,
   rmMonth: rmMonth,
@@ -389,7 +421,9 @@ const updateRecords = {
   removePerson: removePerson,
   initCalendar: initCalendar,
   extendCalendar: extendCalendar,
-  setCustomDayType: setCustomDayType
+  setCustomDayType: setCustomDayType,
+  setGroupNames: setGroupNames,
+  setGroupArrangement: setGroupArrangement
 }
 
 module.exports = updateRecords
