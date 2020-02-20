@@ -27,9 +27,12 @@ var personSchema = new Schema({
 })
 
 var monthSchema = new Schema({
+  group_names: [],
+  group_arrangement: [],
   customDayType: {
     Type: [],
     color: [],
+    explain: [],
   },
   year: Number,
   month: Number,
