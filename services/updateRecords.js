@@ -58,6 +58,7 @@ function incrementMonth (month, people) {
   // console.log('Incremental push')
   people.forEach(person => {
     month.people.push(person)
+    month.group_arrangement.push({alias:person.alias, name: person.name, group:'Default00', group_index:month.group_names.length - 1})
   })
   return month
 }
@@ -69,8 +70,16 @@ function decrementMonth (month, alias) {
   var flag = 0
   month.people.forEach(person => {
     if (person.alias === alias) {
-      flag = 1
+      flag += 1
       month.people.splice(position, 1)
+    }
+    position = position + 1
+  })
+  position = 0
+  month.group_arrangement.forEach(person => {
+    if (person.alias === alias) {
+      flag += 1
+      month.group_arrangement.splice(position, 1)
     }
     position = position + 1
   })
