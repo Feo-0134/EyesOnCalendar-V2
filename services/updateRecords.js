@@ -366,6 +366,8 @@ const extendCalendar = async (ctx) => {
     // eslint-disable-next-line no-array-constructor
     var daylock = new Array()
     var payload = newMonth(p.year, p.month, p.pod, daylock, people, currentMonth.customDayType)
+    payload.group_names = currentMonth.group_names
+    payload.group_arrangement = currentMonth.group_arrangement
     await payload.save()
   } catch (e) {
     console.log(e)
@@ -389,6 +391,26 @@ const setCustomDayType = async (ctx) => {
   }
 }
 
+const initGroupArrangement = async (ctx) => {
+  var p = ctx.params
+  var b = ctx.request.body
+  try {
+    var currentMonth =
+      await Month.findOne({ year: p.year, month: p.month, pod: p.pod })
+    currentMonth.group_names = ['Default00']
+    currentMonth.group_arrangement = []
+    for (const member of currentMonth.people) {
+      currentMonth.group_arrangement.push({alias: member.alias, name: member.name, group: 'Default00', group_index: currentMonth.group_names.length - 1})
+    }
+    const payload = currentMonth
+    await payload.save()
+    ctx.body = 'success0'
+  } catch (e) {
+    console.log(e)
+    ctx.body = e
+  }
+}
+
 const setGroupNames = async (ctx) => {
   var p = ctx.params
   var b = ctx.request.body
@@ -398,7 +420,38 @@ const setGroupNames = async (ctx) => {
     currentMonth.group_names = b.group_names
     const payload = currentMonth
     await payload.save()
-    ctx.body = 'success'
+    ctx.body = 'success1'
+  } catch (e) {
+    console.log(e)
+    ctx.body = e
+  }
+}
+
+const delGroupNames = async (ctx) => {
+  var p = ctx.params
+  var b = ctx.request.body
+  if (b.group == 'Default00') {
+    ctx.body = 'group no found'; return
+  } 
+  try {
+    var currentMonth =
+      await Month.findOne({ year: p.year, month: p.month, pod: p.pod })
+    let position = -1
+    for (const name_index in currentMonth.group_names) {
+      if (currentMonth.group_names[name_index] == b.group)
+        position = name_index
+    }
+    if (position == -1) {
+      ctx.body = 'group no found'; return
+    } else {
+      currentMonth.group_names.splice(position, 1)
+    }
+
+    const payload = currentMonth
+    console.log(payload)
+    console.log('new')
+    await payload.save()
+    ctx.body = 'success1'
   } catch (e) {
     console.log(e)
     ctx.body = e
@@ -432,7 +485,9 @@ const updateRecords = {
   extendCalendar: extendCalendar,
   setCustomDayType: setCustomDayType,
   setGroupNames: setGroupNames,
-  setGroupArrangement: setGroupArrangement
+  setGroupArrangement: setGroupArrangement,
+  initGroupArrangement: initGroupArrangement,
+  delGroupNames: delGroupNames
 }
 
 module.exports = updateRecords

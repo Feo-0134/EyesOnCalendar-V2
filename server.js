@@ -49,10 +49,20 @@ router.get('/:pod/:year/:month/ownTeamName/:alias', getTeamName.listTeamName)
 /* API return all team name data for su */
 router.get('/:pod/:year/:month/allTeamName', getTeamName.listAllTeamName)
 
+/* API to init group arrangement feature
+*/  
+router.post('/:pod/initGroupArrangement/:year/:month', bodyParser(),
+  updateRecords.initGroupArrangement)
+
 /* API to update group_names
 */
 router.post('/:pod/updateGroupNames/:year/:month', bodyParser(),
   updateRecords.setGroupNames)
+
+/* API to update group_names
+*/
+router.post('/:pod/delGroupNames/:year/:month', bodyParser(),
+  updateRecords.delGroupNames)
 
 /* API to assign member to group
 */  
